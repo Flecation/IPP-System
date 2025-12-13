@@ -74,6 +74,21 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.jensd/fontawesomefx-fontawesome -->
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-9.1.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.kordamp.ikonli/ikonli-fontawesome-pack -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-fontawesome-pack</artifactId>
+            <version>12.4.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -96,7 +111,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>projectgroup1.group1/projectgroup1.Main.HelloApplication</mainClass>
+                            <mainClass>projectgroup1.Main/projectgroup1.Main.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
