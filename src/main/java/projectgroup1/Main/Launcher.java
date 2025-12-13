@@ -1,4 +1,4 @@
-package projectgroup1.group1;
+package projectgroup1.Main;
 
 import javafx.application.Application;
 
