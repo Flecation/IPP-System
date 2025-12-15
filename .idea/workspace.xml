@@ -77,6 +77,13 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration name="start" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
+      <option name="MAIN_CLASS_NAME" value="projectgroup1.Main.Launcher" />
+      <option name="PROGRAM_PARAMETERS" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="group1" />
       <option name="ENV_FILES" value="" />
@@ -99,13 +106,6 @@
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
       <method v="2" />
-    </configuration>
-    <configuration name="start" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
-      <option name="MAIN_CLASS_NAME" value="projectgroup1.Main.Launcher" />
-      <option name="PROGRAM_PARAMETERS" value="$MODULE_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
   </component>
   <component name="SharedIndexes">
