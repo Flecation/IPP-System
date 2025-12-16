@@ -9,6 +9,7 @@ public class transitionEffect {
 
         }
 
+
         public static void setTranslateForBoxShow(Parent showBox,int translateX,int translateY){
 
         }
