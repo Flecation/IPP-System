@@ -10,26 +10,28 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class titleBar {
+public class titleBar extends effect{
 
 //    For all pane of the title bar
     private static Parent root;
 
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn){
-            root = basePane;
+        root = basePane;
 
         FontIcon sizeIcon = new FontIcon("fas-window-restore");
         sizeIcon.setIconSize(12);
         restoreBtn.setGraphic(sizeIcon);
+        setToolTip(restoreBtn,"restore");
 
         FontIcon miniIcon = new FontIcon("fas-window-minimize");
         miniIcon.setIconSize(12);
         minimizeBtn.setGraphic(miniIcon);
+        setToolTip(minimizeBtn,"minimize");
 
         FontIcon exitIcon = new FontIcon("fas-times");
         exitIcon.setIconSize(12);
         exitBtn.setGraphic(exitIcon);
-
+        setToolTip(exitBtn,"exit");
 
 
         minimizeBtn.setOnAction(event -> {
