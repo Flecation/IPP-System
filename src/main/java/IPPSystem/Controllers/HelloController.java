@@ -1,4 +1,4 @@
-package projectgroup1.Controllers;
+package IPPSystem.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -1,6 +1,5 @@
-package projectgroup1.Utils;
+package IPPSystem.Utils;
 
-import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
 
 public class transitionEffect {

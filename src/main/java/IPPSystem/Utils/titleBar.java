@@ -1,4 +1,4 @@
-package projectgroup1.Utils;
+package IPPSystem.Utils;
 
 import javafx.animation.*;
 import javafx.scene.Parent;

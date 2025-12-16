@@ -1,4 +1,4 @@
-package projectgroup1.DAO;
+package IPPSystem.DAO;
 
 public class database {
 

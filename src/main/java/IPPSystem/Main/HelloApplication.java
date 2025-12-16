@@ -1,4 +1,4 @@
-package projectgroup1.Main;
+package IPPSystem.Main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
