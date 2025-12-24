@@ -2,6 +2,7 @@ DROP DATABASE IPPSystem;
 
 CREATE DATABASE IPPSystem;
 
+USE IPPSystem;
 -- for master tables 
  
 CREATE TABLE users (
@@ -10,6 +11,7 @@ CREATE TABLE users (
     userRole enum('manager','supervisor'),
     userPhone varchar(255),
     userEmail varchar(255),
+    userDOB date,
     userPassword varchar(255) not null,
     userStartDate Date ,
     userEndDate Date Default null,

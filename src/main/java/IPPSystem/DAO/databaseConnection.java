@@ -1,5 +1,6 @@
 package IPPSystem.DAO;
 
+import IPPSystem.Models.user;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -29,7 +30,10 @@ public class databaseConnection {
         return dataSource.getConnection();
     }
 
-
+    public static user getUserByUserId(int id){
+        user user = new user();
+        return user;
+    }
 
 
 
