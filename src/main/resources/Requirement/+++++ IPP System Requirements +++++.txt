@@ -1,0 +1,139 @@
++++++ IPP System Requirements +++++
+
+======================================
+|				                     |
+|	Functional Requirements	         |
+|				                     |
+======================================
+
++ Login Function
++ Create the New Project
++ Adding the Schedule and tasks in each project ( include start and end date of the project)
++ Enter the planed value (PV), Earned value (EV) 
++ Calculate the project cost and performance (BAC)
++ Update project information
++ view project progress
++ Record the project (Stopped the project, Finished project, Doing Project)
++ Database store
++ 
+
+
+
+
+======================================
+|				                     |
+|     Non Functional Requirements    |     
+|				                     |
+======================================
+
++ Secure in system
++ User Access checking
++ user friendly interface
++ HikariCP for the database connection
++ multiple process without performance loss
++ must be clean code
++ fast response time
++ 
+
+
+======================================
+|				                     |
+|	  Data Requirements    	         |
+|				                     |
+======================================
+
++ Project (Create or Edit or Delete)
++++ Project Name/Description
++++ Project Type
++++ Start Date 
++++ Planned End Date
++++ Actual End Date
++++ Project Status (Planned/InProgress/Completed/Deleted)
++++ Project Manager
++++ Client/Owner
++++
+
+
++ Task/Activity Data
++++ Task Name/Description
++++ Project Name
++++ planned start date
++++ planned finished date
++++ Actual Start Date
++++ Actual Finish Date
++++ Task Duration
++++ Task Status
+
++ Time Management Data (For Schedule Control )
++++ Planned Duration (days)
++++ Actual Duration
++++ Delay Days
++++ Critical Task (Yes/No) <==
++++ Task Dependencies <==
+
++ Cost/Finical Data (Important) (Engineering Cost Control)
++++ Budgeted Cost (Planned Cost)
++++ Actual Cost
++++ Cost Type (Labor/Material/Equipment)
++++ Payment Date
++++ Cost Status <== 
+
++ Earned Value Management (EVM) Data
++++ Planned Value(PV)
++++ Earned Value(EV)
++++ Actual Cost(AC)
++++ Cost Variance(CV = EV - AC)
++++ Schedule Variance (SV = EV - PV)
++++ Cost Performance Index (CPI)
++++ Schedule Performance Index (SPI)
+
++ Labor/Human Resource Data
+
++++ Name
++++ Role (Engineer/Workers/Supervisor/manager)
++++ Skill Type
++++ Assigned Project
++++ Working Hours
++++ Hourly Rate
++++ Total Labor Cost
+
++ Material Management Data
+
++++ Material Name
++++ Quantity Planned <==
++++ Quantity Used <==
++++ Unit Cost
++++ Supplier <==
++++ Total Material Cost
+
++ Equipment Data <===*** (Not Necessary)
++++ Equipment Name
++++ Usage Hours
++++ Rental Cost/Purchase Cost
++++ Maintenance Cost
+
++ Risk Management Data <==
++++ Risk Description
++++ Risk Type (Cost/Time/Safety)
++++ Probability 
++++ Impact
++++ Mitigation Plan
+
+
+
+
+
+
+
+======================================
+|				                     |
+|	  For UI/UX Design               |
+|				                     |
+======================================
+
+
++ For Manager Role
++++
+
++ For Supervisor Role
++++

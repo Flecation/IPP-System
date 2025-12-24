@@ -1,0 +1,299 @@
+ Data Resources Document
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Project Data
+
+>>Purpose: Store overall project information.
+
+ .  Project ID
+ 
+ .  Project Name
+
+ .  Location
+
+ .  Start Date	
+
+ .  Planned End Date
+
+ .  Planned Duration (days/months)
+
+ .  Total Budget
+
+ .  Project Status (On Track /Delayed / Completed)
+
+
+
+
+2. User Data
+
+>>Purpose:  Identify system users and their roles.
+
+ .  User ID
+ 
+ .  User Name
+
+ .  Password
+
+ .  Role (Manager /Supervisor)
+
+
+
+ 
+ 3. Worker Data
+ 
+ >>Purpose: Manage workforce information.
+
+   .  Worker ID
+
+   .  Worker Name
+
+   .  Role / Skill
+
+   .  Daily Wage
+
+   .  Assigned Supervisor
+
+   
+   
+
+4. Cost Data
+
+>>Purpose: Manage and track project cost.
+
+4.1  Budget Data
+					                                                                                            
+   .  Total Budget    
+
+   .  Allocated Budget
+
+   .  Remaining Budget
+
+                                                                                                                                                                                                                                                                  
+
+ 4.2  Labour Cost Data
+				                                                                                            
+    .  Date	
+
+    .  Worker ID
+
+    .  Work Hours
+
+    .  Daily Wage
+
+    .  Daily Labour Cost
+
+    .  Total Labour Cost
+
+
+
+4.3  Material Cost Data(Optional)
+
+   .  Date
+
+   .  Material Name
+
+   .  Quantity
+
+   .  Unit Cost
+
+   .  Total Material Cost
+
+
+
+
+ 5. Time Data                                                                                                                                
+ 
+ >>Purpose: Track project schedule and progress.								      
+
+  .  Planned Duration																				
+
+  .  Actual Working Days												 
+
+  .  Daily Progress (%)
+																			 
+  .  Total Progress (%)	
+
+  .  Delay Days
+
+
+
+
+6.  Attendance Data		
+												   
+ >>Purpose: Track daily worker attendance.
+									    
+  .  Date
+
+  .  Worker ID
+
+  .  Attendance Status (Present / Absent)
+
+  .  Work Hours
+
+
+
+
+ 7. Productivity Data
+
+ >>Purpose: Measure worker and project productivity.
+
+  .  Worker ID
+
+  .  Date
+
+  .  Work Hours
+
+  .  Completed Work Unit
+
+  .  Productivity Rate
+
+
+
+
+8. Report Data
+
+ >>Purpose: Store generated reports for management review.
+
+  .  Report ID
+
+  .  Report Date
+
+  .  Supervisor ID
+
+  .  Summary
+
+  .  Total Daily Cost
+
+  .  Daily Progress
+
+
+
+
+9. Calculated Data (Derived Data)
+
+ >>Purpose: Auto-calculated values (not manually entered).
+
+  .  Total Project Cost (Labour  Cost+ Material Cost + Other Costs) ;    (End  or Summary)
+
+  .  Remaining Budget (Total Budget - Total Project Cost(spent cost))
+  
+  .  Actual Cost  (Total Labour Cost + Total  Material Cost + Other Expenses) ;    (In Progress)
+
+  .  Cost Variance (Planned Cost -  Actual Cost);  (can be check over-budget  and under-budget)
+
+  .  Time Variance (Planned Time -  Actual Time) ; (to show Ahead of schedule ,On Schedule, Behind  schedule)
+
+  .  Overall Productivity (Total output / Total work hours)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+																			      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
