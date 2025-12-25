@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 
 public class linkButtonController {
     @FXML
-    Button textBtn,IconBtn;
+    Button textBtn,iconBtn;
 
     @FXML
     private void initialize(){
