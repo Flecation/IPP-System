@@ -30,10 +30,7 @@ public class databaseConnection {
         return dataSource.getConnection();
     }
 
-    public static user getUserByUserId(int id){
-        user user = new user();
-        return user;
-    }
+
 
 
 

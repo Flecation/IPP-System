@@ -5,11 +5,12 @@ import java.util.Date;
 public class user {
     private String userName,userEmail,userPhone,userPassword,userRole;
     private int userId;
-    private boolean userStatus;
+    private boolean isActive;
     private Date userDOB,userStartDate,userEndDate;
 
     public user(){}
 
+    // to use when the user input
     public user(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate) {
         this.userName = userName;
         this.userEmail = userEmail;
@@ -18,6 +19,32 @@ public class user {
         this.userRole = userRole;
         this.userDOB = userDOB;
         this.userStartDate = userStartDate;
+    }
+
+
+    public user(String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userRole = userRole;
+        this.userDOB = userDOB;
+        this.userStartDate = userStartDate;
+        this.userEndDate = userEndDate;
+        this.isActive = isActive;
+    }
+
+    // to get all users
+    public user(int userId, String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive, String userPassword) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userRole = userRole;
+        this.userDOB = userDOB;
+        this.userStartDate = userStartDate;
+        this.userEndDate = userEndDate;
+        this.isActive = isActive;
+        this.userPassword = userPassword;
     }
 
     public String getUserName() {
@@ -68,12 +95,12 @@ public class user {
         this.userId = userId;
     }
 
-    public boolean isUserStatus() {
-        return userStatus;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setUserStatus(boolean userStatus) {
-        this.userStatus = userStatus;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     public Date getUserDOB() {
