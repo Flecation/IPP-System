@@ -1,8 +1,10 @@
 package IPPSystem.Utils;
 
 import javafx.animation.*;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -17,20 +19,25 @@ public class titleBar extends effect{
 
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn){
         root = basePane;
-
         FontIcon sizeIcon = new FontIcon("fas-window-restore");
         sizeIcon.setIconSize(12);
         restoreBtn.setGraphic(sizeIcon);
+        restoreBtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        restoreBtn.setAlignment(Pos.CENTER);
         setToolTip(restoreBtn,"restore");
 
-        FontIcon miniIcon = new FontIcon("fas-window-minimize");
+        FontIcon miniIcon = new FontIcon("fas-minus");
         miniIcon.setIconSize(12);
         minimizeBtn.setGraphic(miniIcon);
+        minimizeBtn.setContentDisplay(ContentDisplay.CENTER);
+        minimizeBtn.setAlignment(Pos.CENTER);
         setToolTip(minimizeBtn,"minimize");
 
         FontIcon exitIcon = new FontIcon("fas-times");
         exitIcon.setIconSize(12);
         exitBtn.setGraphic(exitIcon);
+        exitBtn.setContentDisplay(ContentDisplay.CENTER);
+        exitBtn.setAlignment(Pos.CENTER);
         setToolTip(exitBtn,"exit");
 
 

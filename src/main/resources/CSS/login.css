@@ -1,0 +1,22 @@
+@import url("main.css");
+
+#root{
+    -fx-background-color : linear-gradient(to left ,-dark-background-color, -light-background-color);
+}
+
+#userNameLbl , #passwordLbl {
+    -fx-background-color: transparent;
+    -fx-font-size: 15px;
+}
+
+#forgetBtn {
+      -fx-underline: true;
+      -fx-text-fill: -danger-color;
+      -fx-cursor: hand;
+      -fx-background-color: transparent;
+}
+
+.loginTitle {
+     -fx-font-size: 20px;
+     -fx-font-weight: bold;
+}

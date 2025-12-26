@@ -28,23 +28,25 @@ public class effect {
 
             showPasswordCheckBox.setOnAction(event -> {
                 if(showPasswordCheckBox.isSelected()){
-
-                    hidePasswordField.setText(showPasswordField.getText());
-                    showPasswordField.setVisible(true);
-                    hidePasswordField.setVisible(false);
+                   showPasswordField.setText(hidePasswordField.getText());
+                   hidePasswordField.setVisible(false);
+                   showPasswordField.setVisible(true);
 
                 }else{
-
-                    showPasswordField.setText(hidePasswordField.getText());
-                    hidePasswordField.setVisible(false);
-                    showPasswordField.setVisible(true);
-
+                    hidePasswordField.setText(showPasswordField.getText());
+                    hidePasswordField.setVisible(true);
+                    showPasswordField.setVisible(false);
                 }
             });
 
 
         }
 
+        public static void setFloatTextFieldStyle(Label textLabel , TextField textField){
+            textFieldStyle.floatTextFieldStyle(textLabel,textField);
+        }
 
-
+        public static void setFloatPasswordFieldStyle(Label pwLabel, TextField showPwTxt , PasswordField hidePwTxt){
+            textFieldStyle.floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
+        }
 }

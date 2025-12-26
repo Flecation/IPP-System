@@ -7,7 +7,7 @@
     -dark-background-color: #1F3A5F;
 
     /* For the Background base color */
-    -light-base-color: #f4f6f8;
+    -light-base-color: rgba(213,221,228,0.5);
     -dark-base-color: #2c3380;
 
     /* For the Text color */
@@ -36,16 +36,72 @@
 
 }
 
-.label{
-
+.cardPane {
+    -fx-background-color: -light-base-color;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
 }
+
+.label{
+    -fx-font-size: 12px;
+}
+
 .button {
-    -fx-font-size: 15px;
+    -fx-font-size: 12px;
     -fx-cursor: hand;
     -fx-font-weight: bold;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
     -fx-border-width: 0;
     -fx-background-insets: 0;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
 }
+
+
+.text-field{
+    -fx-font-size: 20px;
+    -fx-text-fill: -light-text-color;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
+    -fx-border-radius: 10px;
+    -fx-padding-left: 5px;
+    -fx-background-radius:10px;
+}
+.password-field{
+    -fx-font-size: 20px;
+    -fx-text-fill: -light-text-color;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
+    -fx-border-radius: 10px;
+    -fx-padding-left: 5px;
+    -fx-background-radius:10px;
+}
+
+.check-box {
+    -fx-font-size : 12 px;
+    -fx-text-fill : -light-text-color;
+    -fx-cursor : hand;
+}
+
+/*For the exit mini button*/
+ #exitBtn ,#minimizeBtn  ,#restoreBtn{
+     -fx-font-size: 15px;
+     -fx-border-color: none;
+     -fx-background-color: transparent;
+     -fx-padding: 0;
+     -fx-margin: 0;
+     -fx-border-radius: 0;
+     -fx-background-radius: 0;
+ }
+ #exitBtn:hover{
+     -fx-fill: rgb(242,242,242);
+     -fx-background-color: #d91f1f;
+ }
+
+ #minimizeBtn:hover, #restoreBtn:hover{
+    -fx-background-color : -light-base-color;
+ }
+
+
