@@ -6,10 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="creation of the basic frame">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/projects.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/user.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Requirement/+++++ IPP System Requirements +++++.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Requirement/+++++ IPP System Requirements +++++.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +72,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="AISelfReview" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -291,7 +296,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766737916386</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766771261835</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1766771261835</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -317,6 +330,132 @@
           <url>file://$PROJECT_DIR$/src/main/java/projectgroup1/Utils/titleBar.java</url>
           <line>50</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java</url>
+          <line>101</line>
+          <properties class="IPPSystem.DAO.userDatabase" method="loginUser">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>19</line>
+          <properties class="IPPSystem.DAO.projectDatabase" method="getAllProjects">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>19</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="getAllWorkItemByAssignProjectId">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>54</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="getAllWorkItemDetailsByAssignProjectId">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>83</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheCostOfWorkItem">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>100</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheLaborQtyOfWorkItem">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>117</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheDurationOfWorkItem">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>135</line>
+          <properties class="IPPSystem.DAO.workItemDatabase" method="assignWorkItems">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>50</line>
+          <properties class="IPPSystem.DAO.projectDatabase" method="assignProjects">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>78</line>
+          <properties class="IPPSystem.DAO.projectDatabase" method="getAllProjectsBySupervisor">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>23</line>
+          <properties class="IPPSystem.DAO.taskDatabase" method="getAllTasksByAssignProjectOfWorkItem">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>62</line>
+          <properties class="IPPSystem.DAO.taskDatabase" method="getAllTasksDetailsByProjectOfWorkItem">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>89</line>
+          <properties class="IPPSystem.DAO.taskDatabase" method="changeTheDurationOfTasks">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>107</line>
+          <properties class="IPPSystem.DAO.taskDatabase" method="assignTasks">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,6 +1,6 @@
 package IPPSystem.DAO;
 
-import IPPSystem.Models.user;
+import IPPSystem.Models.users;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class userDatabase {
         }
     }
 
-    public static user getUserByUserId(int id){
-        user info = new user();
+    public static users getUserByUserId(int id){
+        users info = new users();
         try {
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userId = ?");
             pstmt.setInt(1,id);
@@ -40,7 +40,7 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                info = new user(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -48,8 +48,8 @@ public class userDatabase {
         return info;
     }
 
-    public static List<user> getAllUser(){
-        List<user> ls = new ArrayList<user>();
+    public static List<users> getAllUser(){
+        List<users> ls = new ArrayList<users>();
         try {
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users");
             ResultSet rs = pstmt.executeQuery();
@@ -64,8 +64,8 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                user user = new user(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
-                ls.add(user);
+                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                ls.add(users);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -73,8 +73,8 @@ public class userDatabase {
         return ls;
     }
 
-    public static user getUserByRole(String role){
-        user info = new user();
+    public static users getUserByRole(String role){
+        users info = new users();
         try {
 
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ?");
@@ -91,7 +91,7 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                info = new user(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -99,7 +99,32 @@ public class userDatabase {
         return info;
     }
 
-    public static user loginUser(String userName,String userPassword){
+    public static users loginUser(String userName, String userPassword){
+        users users = new users();
+
+        try {
+            CallableStatement cstmt = con.prepareCall("");
+            cstmt.setString(1,userName);
+            cstmt.setString(2,userPassword);
+            ResultSet rs = cstmt.executeQuery();
+            if(rs.next()){
+                users = new users(
+                        rs.getInt("userId"),
+                        rs.getString("userName"),
+                        rs.getString("userEmail"),
+                        rs.getString("userPhone"),
+                        rs.getString("userRole"),
+                        rs.getDate("userDOB"),
+                        rs.getDate("userStartDate"),
+                        rs.getDate("userEndDate"),
+                        rs.getBoolean("isActive"),
+                        rs.getString("userPassword")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
 
     }
 

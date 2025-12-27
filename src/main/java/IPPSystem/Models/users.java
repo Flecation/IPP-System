@@ -2,16 +2,16 @@ package IPPSystem.Models;
 
 import java.util.Date;
 
-public class user {
+public class users {
     private String userName,userEmail,userPhone,userPassword,userRole;
     private int userId;
     private boolean isActive;
     private Date userDOB,userStartDate,userEndDate;
 
-    public user(){}
+    public users(){}
 
-    // to use when the user input
-    public user(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate) {
+    // to use when the users input
+    public users(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
@@ -22,7 +22,7 @@ public class user {
     }
 
 
-    public user(String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive) {
+    public users(String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
@@ -34,7 +34,7 @@ public class user {
     }
 
     // to get all users
-    public user(int userId, String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive, String userPassword) {
+    public users(int userId, String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive, String userPassword) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;

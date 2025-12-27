@@ -28,7 +28,7 @@
 
 + Secure in system
 + User Access checking
-+ user friendly interface
++ users friendly interface
 + HikariCP for the database connection
 + multiple process without performance loss
 + must be clean code
@@ -90,7 +90,7 @@
 + Labor/Human Resource Data
 
 +++ Name
-+++ Role (Engineer/Workers/Supervisor/manager)
++++ Role (Engineer/Workers/Supervisor/supervisor)
 +++ Skill Type
 +++ Assigned Project
 +++ Working Hours

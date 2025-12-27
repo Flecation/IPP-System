@@ -70,7 +70,6 @@ create table workItemDetails (
     projectDetailId int, 
 	minDuration double,
     maxDuration double,
-    unitDuration enum('day','month','year'),
     minLabors double,
     maxLabors double,
     minCost double,
@@ -82,8 +81,7 @@ create table taskDetails (
     workItemDetailId int,
     taskId int,
     minDuration double,
-    maxDuration double,
-    unitDuration enum('day','month','year')
+    maxDuration double
 );
 
 create table workItemRequireSkills (
@@ -108,9 +106,9 @@ create table assignProjects (
     totalStories int, -- for all floors
     totalUnits int, -- for all units/ rooms ,in the backend the unit per floor will calculate 
     managerId int,
+    projectLocation long,
     startDate date,
     duration double,
-    unitDuration enum('day','month','year'),
     totalCost double,
     projectStatus enum('planning','inProgress','delay','finished','cancel')
 );
@@ -120,8 +118,10 @@ create table assignWorkItems (
     assignProjectId int,
     workItemId int,
     autoDuration double,
+    autoLaborQty double,
+    autoCost double,
     isCustomize boolean,
-    isCancel boolean
+    isCancel boolean default false
 );
 
 create table assignTasks (
@@ -129,10 +129,8 @@ create table assignTasks (
     assignWorkItemId int,
     taskId int,
     autoDuration double,
-    autoCost double,
-    autoLaborQty double,
     isCustomize boolean,
-    isCancel boolean
+    isCancel boolean default false
 );
 
 create table assignWorkItemSkills (
@@ -141,7 +139,7 @@ create table assignWorkItemSkills (
     skillId int,
     autoLaborQty int,
     isCustomize boolean,
-    isCancel boolean
+    isCancel boolean default false
 );
 
 create table assignWorkers (
@@ -150,7 +148,7 @@ create table assignWorkers (
     oldWorkerId int, 
     isCustomize boolean,
     newWorkerId int default null,
-    isCancel boolean
+    isCancel boolean default false
 );
 
 -- for the customize tables
@@ -173,6 +171,10 @@ create table customWorkItemSkills (
     assignWorkItemSkillId int ,
     customLaborQty double
 );
+
+-- for the project of the real data tables
+
+
 -- =====================
 -- adding foreign key 
 -- =====================
