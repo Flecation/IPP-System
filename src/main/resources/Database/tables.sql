@@ -67,7 +67,8 @@ create table projectDetails (
 
 create table workItemDetails (
 	workItemDetailId int primary key auto_increment,
-    projectDetailId int, 
+    projectDetailId int,
+    workItemId int not null,
 	minDuration double,
     maxDuration double,
     minLabors double,
@@ -106,10 +107,17 @@ create table assignProjects (
     totalStories int, -- for all floors
     totalUnits int, -- for all units/ rooms ,in the backend the unit per floor will calculate 
     managerId int,
-    projectLocation long,
+    projectLocation varchar(255),
     startDate date,
+    endDate date,
     duration double,
     totalCost double,
+
+    -- for the actual path
+    actualStartDate date,
+    actualEndDate date,
+    actualDuration double,
+    actualCost double,
     projectStatus enum('planning','inProgress','delay','finished','cancel')
 );
 
@@ -117,10 +125,29 @@ create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
     workItemId int,
+
+    -- for the auto path
+    autoStartDate date,
+    autoEndDate date,
     autoDuration double,
     autoLaborQty double,
     autoCost double,
+
+    -- for the custom path
     isCustomize boolean,
+    customStartDate date,
+    customEndDate date,
+    customDuration double,
+    customLaborQty double,
+    customCost double,
+
+    -- for the actual path
+    actualStartDate date,
+    actualEndDate date,
+    actualDuration double,
+    actualLaborQty double,
+    actualCost double,
+
     isCancel boolean default false
 );
 
@@ -128,8 +155,22 @@ create table assignTasks (
 	assignTaskId int primary key auto_increment,
     assignWorkItemId int,
     taskId int,
+    -- for the auto path
+    autoStartDate date,
+    autoEndDate date,
     autoDuration double,
+
+    -- for the custom path
     isCustomize boolean,
+    customStartDate date,
+    customEndDate date,
+    customDuration double,
+
+    -- for the actual path
+    actualStartDate date,
+    actualEndDate date,
+    actualDuration double,
+
     isCancel boolean default false
 );
 
@@ -137,46 +178,28 @@ create table assignWorkItemSkills (
 	assignWorkItemSkillId int primary key auto_increment,
     assignWorkItemId int,
     skillId int,
-    autoLaborQty int,
+
+    -- for the auto path
+    autoLaborQty double,
+
+    -- for the custom path
     isCustomize boolean,
+    customLaborQty double,
     isCancel boolean default false
 );
 
 create table assignWorkers (
 	assignWorkerId int primary key auto_increment,
     assignProjectId int,
-    oldWorkerId int, 
+    oldWorkerId int,
     isCustomize boolean,
     newWorkerId int default null,
     isCancel boolean default false
 );
 
--- for the customize tables
-create table customWorkItems (
-	customWorkItemId int primary key auto_increment,
-    assignWorkItemId int,
-    customDuration double,
-    customCost double,
-    customLaborQty double
-);
-
-create table customTasks (
-	customTaskId int primary key auto_increment,
-    assignTaskId int,
-    customDuration double
-);
-
-create table customWorkItemSkills (
-	customWorkItemSkillId int primary key auto_increment,
-    assignWorkItemSkillId int ,
-    customLaborQty double
-);
-
--- for the project of the real data tables
-
 
 -- =====================
--- adding foreign key 
+-- adding foreign key
 -- =====================
 
 -- master file link foreign key
@@ -185,20 +208,20 @@ ADD CONSTRAINT fk_labors_skill
 FOREIGN KEY (skillId)
 REFERENCES skills(skillId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 -- template structure
 ALTER TABLE projectDetails
 ADD CONSTRAINT fk_pd_projectType
 FOREIGN KEY (projectTypeId)
-REFERENCES projectTypes(projectTypeId)
+REFERENCES projectTypes(typeId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 ALTER TABLE projectDetails
 ADD CONSTRAINT fk_pd_level
 FOREIGN KEY (levelId)
-REFERENCES projectLevels(projectLevelId)
+REFERENCES projectLevels(levelId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -216,6 +239,13 @@ REFERENCES projectDetails(projectDetailId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
+ALTER TABLE workItemDetails
+ADD CONSTRAINT fk_wid_workItemId
+FOREIGN KEY (workItemId)
+REFERENCES workItems(workItemId)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
 ALTER TABLE taskDetails
 ADD CONSTRAINT fk_td_workItemDetail
 FOREIGN KEY (workItemDetailId)
@@ -228,7 +258,7 @@ ADD CONSTRAINT fk_td_task
 FOREIGN KEY (taskId)
 REFERENCES tasks(taskId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE workItemRequireSkills
 ADD CONSTRAINT fk_wirs_taskDetail
@@ -242,21 +272,36 @@ ADD CONSTRAINT fk_wirs_skill
 FOREIGN KEY (skillId)
 REFERENCES skills(skillId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_projectType
 FOREIGN KEY (projectTypeId)
-REFERENCES projectTypes(projectTypeId)
+REFERENCES projectTypes(typeId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
+
+ALTER TABLE assignProjects
+ADD CONSTRAINT fk_ap_level
+FOREIGN KEY (levelId)
+REFERENCES projectLevels(levelId)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+ALTER TABLE assignProjects
+ADD CONSTRAINT fk_ap_building
+FOREIGN KEY (buildingId)
+REFERENCES buildings(buildingId)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_manager
 FOREIGN KEY (managerId)
 REFERENCES users(userId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignWorkItems
 ADD CONSTRAINT fk_awi_project
@@ -270,7 +315,7 @@ ADD CONSTRAINT fk_awi_workItem
 FOREIGN KEY (workItemId)
 REFERENCES workItems(workItemId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignTasks
 ADD CONSTRAINT fk_at_assignWorkItem
@@ -284,7 +329,7 @@ ADD CONSTRAINT fk_at_task
 FOREIGN KEY (taskId)
 REFERENCES tasks(taskId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignWorkItemSkills
 ADD CONSTRAINT fk_awis_assignWorkItem
@@ -298,7 +343,7 @@ ADD CONSTRAINT fk_awis_skill
 FOREIGN KEY (skillId)
 REFERENCES skills(skillId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignWorkers
 ADD CONSTRAINT fk_aw_project
@@ -312,32 +357,11 @@ ADD CONSTRAINT fk_aw_oldWorker
 FOREIGN KEY (oldWorkerId)
 REFERENCES labors(laborId)
 ON UPDATE CASCADE
-ON DELETE RESTRICT;
+ON DELETE CASCADE;
 
 ALTER TABLE assignWorkers
 ADD CONSTRAINT fk_aw_newWorker
 FOREIGN KEY (newWorkerId)
 REFERENCES labors(laborId)
-ON UPDATE CASCADE
-ON DELETE SET NULL;
-
-ALTER TABLE customWorkItems
-ADD CONSTRAINT fk_cwi_assignWorkItem
-FOREIGN KEY (assignWorkItemId)
-REFERENCES assignWorkItems(assignWorkItemId)
-ON UPDATE CASCADE
-ON DELETE CASCADE;
-
-ALTER TABLE customTasks
-ADD CONSTRAINT fk_ct_assignTask
-FOREIGN KEY (assignTaskId)
-REFERENCES assignTasks(assignTaskId)
-ON UPDATE CASCADE
-ON DELETE CASCADE;
-
-ALTER TABLE customWorkItemSkills
-ADD CONSTRAINT fk_cwis_assignWorkItemSkill
-FOREIGN KEY (assignWorkItemSkillId)
-REFERENCES assignWorkItemSkills(assignWorkItemSkillId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
