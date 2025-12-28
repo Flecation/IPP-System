@@ -27,12 +27,14 @@ public class workItemDatabase {
             while (rs.next()){
                 if(rs.getBoolean("isCustomize")) {
                     workItems.add(new workItems(
-                            rs.getInt("projectTypeId"),
-                            rs.getInt("workItemId"),
-                            rs.getString("workItemName"),
+                            rs.getInt("assignProjectId"),
+                            rs.getInt("projectWorkItemId"),
+                            rs.getString("projectWorkItemName"),
                             rs.getDouble("customDuration"),
                             rs.getDouble("customCost"),
-                            rs.getDouble("customLaborQty")
+                            rs.getDouble("customLaborQty"),
+                            rs.getDate("customStartDate"),
+                            rs.getDate("customEndDate")
                     ));
                 }else{
                     workItems.add(new workItems(
@@ -41,7 +43,9 @@ public class workItemDatabase {
                             rs.getString("workItemName"),
                             rs.getDouble("autoDuration"),
                             rs.getDouble("autoCost"),
-                            rs.getDouble("autoLaborQty")
+                            rs.getDouble("autoLaborQty"),
+                            rs.getDate("autoStartDate"),
+                            rs.getDate("autoEndDate")
                     ));
                 }
             }
@@ -61,8 +65,8 @@ public class workItemDatabase {
             while (rs.next()){
                 workItems.add(new workItems(
                         rs.getInt("projectTypeId"),
-                        rs.getInt("workItemId"),
-                        rs.getString("workItemName"),
+                        rs.getInt("projectWorkItemId"),
+                        rs.getString("projectWorkItemName"),
                         rs.getDouble("minDuration"),
                         rs.getDouble("maxDuration"),
                         rs.getDouble("minCost"),
@@ -81,11 +85,11 @@ public class workItemDatabase {
     //to make the changes in the work item
 
     //for the cost
-    public static boolean changeTheCostOfWorkItem(int assignProjectId,int workItemId,double changeCost){
+    public static boolean changeTheCostOfWorkItem(int assignProjectId, int projectWorkItemId, double changeCost){
         try {
             CallableStatement cstmt = con.prepareCall("");
             cstmt.setInt(1,assignProjectId);
-            cstmt.setInt(2,workItemId);
+            cstmt.setInt(2, projectWorkItemId);
             cstmt.setDouble(3,changeCost);
             ResultSet rs = cstmt.executeQuery();
 
@@ -98,11 +102,11 @@ public class workItemDatabase {
     }
 
     //for the labors qty
-    public static boolean changeTheLaborQtyOfWorkItem(int assignProjectId,int workItemId,double changeLaborQty){
+    public static boolean changeTheLaborQtyOfWorkItem(int assignProjectId, int projectWorkItemId, double changeLaborQty){
         try {
             CallableStatement cstmt = con.prepareCall("");
             cstmt.setInt(1,assignProjectId);
-            cstmt.setInt(2,workItemId);
+            cstmt.setInt(2, projectWorkItemId);
             cstmt.setDouble(3,changeLaborQty);
             ResultSet rs = cstmt.executeQuery();
 
@@ -138,10 +142,12 @@ public class workItemDatabase {
             CallableStatement cstmt = con.prepareCall("");
             cstmt.setInt(1,assign.getProjectTypeId());
             cstmt.setInt(2,assign.getWorkItemId());
-            cstmt.setDouble(3,assign.getDuration());
-            cstmt.setDouble(4,assign.getCost());
-            cstmt.setDouble(5,assign.getLaborQty());
-            cstmt.setBoolean(6,isCustomize);
+            cstmt.setDouble(3,assign.getProjectDuration());
+            cstmt.setDouble(4,assign.getProjectCost());
+            cstmt.setDouble(5,assign.getProjectLaborQty());
+            cstmt.setDate(6,assign.getStartDate());
+            cstmt.setDate(7,assign.getEndDate());
+            cstmt.setBoolean(8,isCustomize);
             ResultSet rs = cstmt.executeQuery();
             return rs.getBoolean(1);
         } catch (SQLException e) {

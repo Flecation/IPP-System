@@ -1,23 +1,30 @@
 package IPPSystem.Models;
 
+import java.sql.Date;
+
 public class tasks extends workItems{
-        protected  int taskId;
-        protected String taskName;
+    private int taskId;
+    private String taskName;
 
-        public tasks(){}
+    public tasks(){}
 
-
-    //for the task details
-    public tasks(int assignProjectId, int workItemId, int taskId, String taskName, double minDuration, double maxDuration) {
-        super(assignProjectId, workItemId, minDuration, maxDuration);
+    //for the tasks details
+    public tasks(int projectTypeId, int workItemId, int taskId, String taskName, double minDuration, double maxDuration) {
+        super(projectTypeId, workItemId, minDuration, maxDuration);
         this.taskId = taskId;
         this.taskName = taskName;
     }
 
-    //for the assign tasks( auto assign or custom assign)
-    public tasks(int assignProjectId, int workItemId, int taskId, String taskName, double duration, double cost, double laborQty) {
-        super(assignProjectId, workItemId, duration, cost, laborQty);
+    //for the assign tasks (view)
+    public tasks(int assignProjectId, int workItemId, int taskId, String taskName, Date startDate, Date endDate, double projectDuration) {
+        super(assignProjectId, workItemId, startDate, endDate, projectDuration);
         this.taskId = taskId;
+        this.taskName = taskName;
+    }
+
+    //for the assign tasks (inserts)
+    public tasks(String projectInstanceName, String workItemName, String taskName, double projectDuration) {
+        super(projectInstanceName, workItemName, projectDuration);
         this.taskName = taskName;
     }
 

@@ -24,28 +24,28 @@ create table skills (
 );
 
 create table projectTypes (
-	typeId int primary key auto_increment,
+	projectTypeId int primary key auto_increment,
     typeName varchar(255)
 );
 
 create table projectLevels (
-	levelId int primary key auto_increment,
-    levelName varchar(255)
+	projectLevelId int primary key auto_increment,
+    projectLevelName varchar(255)
 );
 
 create table workItems (
-	workItemId int primary key auto_increment,
-    workItemName varchar(255)
+	projectWorkItemId int primary key auto_increment,
+    projectWorkItemName varchar(255)
 );
 
 create table tasks (
-	taskId int primary key auto_increment,
-    taskName varchar(255)
+	projectTaskId int primary key auto_increment,
+    projectTaskName varchar(255)
 );
 
 create table buildings (
-	buildingId int primary key auto_increment,
-    buildingName varchar(255)
+	projectBuildingId int primary key auto_increment,
+    projectBuildingName varchar(255)
 );
 
 create table labors (
@@ -59,7 +59,7 @@ create table labors (
 create table projectDetails (
 	projectDetailId int primary key auto_increment,
     projectTypeId int not null,
-    levelId int,
+    projectLevelId int,
     buildingId int,
 	minOverHeadCost double,
     maxOverHeadCost double
@@ -68,7 +68,7 @@ create table projectDetails (
 create table workItemDetails (
 	workItemDetailId int primary key auto_increment,
     projectDetailId int,
-    workItemId int not null,
+    projectWorkItemId int not null,
 	minDuration double,
     maxDuration double,
     minLabors double,
@@ -80,7 +80,7 @@ create table workItemDetails (
 create table taskDetails (
 	taskDetailId int primary key auto_increment,
     workItemDetailId int,
-    taskId int,
+    projectTaskId int,
     minDuration double,
     maxDuration double
 );
@@ -100,18 +100,20 @@ create table assignProjects (
 	assignProjectId int primary key auto_increment,
     projectTypeId int,
     projectInstanceName varchar(255),
-    levelId int,
-    buildingId int,
+    projectLevelId int,
+    projectBuildingId int,
     projectArea double, -- only for sq ft unit
     projectHeight double default 0, -- only for religious
-    totalStories int, -- for all floors
-    totalUnits int, -- for all units/ rooms ,in the backend the unit per floor will calculate 
+    totalStories double, -- for all floors
+    totalUnits double, -- for all units/ rooms ,in the backend the unit per floor will calculate
     managerId int,
     projectLocation varchar(255),
     startDate date,
     endDate date,
-    duration double,
-    totalCost double,
+    projectDuration double,
+    projectCost double, -- construction cost
+    projectLaborQty double,
+    projectOverHeadCost double,
 
     -- for the actual path
     actualStartDate date,
@@ -124,7 +126,7 @@ create table assignProjects (
 create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
-    workItemId int,
+    projectWorkItemId int,
 
     -- for the auto path
     autoStartDate date,
@@ -154,7 +156,7 @@ create table assignWorkItems (
 create table assignTasks (
 	assignTaskId int primary key auto_increment,
     assignWorkItemId int,
-    taskId int,
+    projectTaskId int,
     -- for the auto path
     autoStartDate date,
     autoEndDate date,
@@ -214,21 +216,21 @@ ON DELETE CASCADE;
 ALTER TABLE projectDetails
 ADD CONSTRAINT fk_pd_projectType
 FOREIGN KEY (projectTypeId)
-REFERENCES projectTypes(typeId)
+REFERENCES projectTypes(projectTypeId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 ALTER TABLE projectDetails
 ADD CONSTRAINT fk_pd_level
-FOREIGN KEY (levelId)
-REFERENCES projectLevels(levelId)
+FOREIGN KEY (projectLevelId)
+REFERENCES projectLevels(projectLevelId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 ALTER TABLE projectDetails
 ADD CONSTRAINT fk_pd_building
-FOREIGN KEY (buildingId)
-REFERENCES buildings(buildingId)
+FOREIGN KEY (projectBuildingId)
+REFERENCES buildings(projectBuildingId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -241,8 +243,8 @@ ON DELETE CASCADE;
 
 ALTER TABLE workItemDetails
 ADD CONSTRAINT fk_wid_workItemId
-FOREIGN KEY (workItemId)
-REFERENCES workItems(workItemId)
+FOREIGN KEY (projectWorkItemId)
+REFERENCES workItems(projectWorkItemId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -255,8 +257,8 @@ ON DELETE CASCADE;
 
 ALTER TABLE taskDetails
 ADD CONSTRAINT fk_td_task
-FOREIGN KEY (taskId)
-REFERENCES tasks(taskId)
+FOREIGN KEY (projectTaskId)
+REFERENCES tasks(projectTaskId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -277,21 +279,21 @@ ON DELETE CASCADE;
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_projectType
 FOREIGN KEY (projectTypeId)
-REFERENCES projectTypes(typeId)
+REFERENCES projectTypes(projectTypeId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_level
-FOREIGN KEY (levelId)
-REFERENCES projectLevels(levelId)
+FOREIGN KEY (projectLevelId)
+REFERENCES projectLevels(projectLevelId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_building
-FOREIGN KEY (buildingId)
-REFERENCES buildings(buildingId)
+FOREIGN KEY (projectBuildingId)
+REFERENCES buildings(projectBuildingId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -312,8 +314,8 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignWorkItems
 ADD CONSTRAINT fk_awi_workItem
-FOREIGN KEY (workItemId)
-REFERENCES workItems(workItemId)
+FOREIGN KEY (projectWorkItemId)
+REFERENCES workItems(projectWorkItemId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
@@ -326,8 +328,8 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignTasks
 ADD CONSTRAINT fk_at_task
-FOREIGN KEY (taskId)
-REFERENCES tasks(taskId)
+FOREIGN KEY (projectTaskId)
+REFERENCES tasks(projectTaskId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
