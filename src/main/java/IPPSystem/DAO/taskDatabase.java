@@ -83,8 +83,8 @@ public class taskDatabase {
         return ls;
     }
 
-    //to make the changes in the tasks
 
+    //to make the changes in the tasks
     //for the duration
     public static boolean changeTheDurationOfTasks(int assignProjectId,int projectWorkItemId,int projectTaskId,double changeDuration){
         try {

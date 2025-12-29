@@ -60,7 +60,7 @@ create table projectDetails (
 	projectDetailId int primary key auto_increment,
     projectTypeId int not null,
     projectLevelId int,
-    buildingId int,
+    projectBuildingId int,
 	minOverHeadCost double,
     maxOverHeadCost double
 );
@@ -108,94 +108,81 @@ create table assignProjects (
     totalUnits double, -- for all units/ rooms ,in the backend the unit per floor will calculate
     managerId int,
     projectLocation varchar(255),
+    projectOverHeadCost double,
+    projectStatus enum('planning','inProgress','delay','finished','cancel')
+);
+
+create table assignProjectDetails(
+    assignProjectDetailId int primary key auto_increment,
+    assignProjectId int ,
+    detailStatus enum('autoAssign','customAssign','actualResult'),
+    projectDuration double,
+    projectCost double,
+    projectLaborQty double,
     startDate date,
     endDate date,
-    projectDuration double,
-    projectCost double, -- construction cost
-    projectLaborQty double,
-    projectOverHeadCost double,
-
-    -- for the actual path
-    actualStartDate date,
-    actualEndDate date,
-    actualDuration double,
-    actualCost double,
-    projectStatus enum('planning','inProgress','delay','finished','cancel')
+    foreign key (assignProjectId)
+    references assignProjects (assignProjectId)
+    on update cascade
+    on delete cascade
 );
 
 create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
     projectWorkItemId int,
+);
 
-    -- for the auto path
-    autoStartDate date,
-    autoEndDate date,
-    autoDuration double,
-    autoLaborQty double,
-    autoCost double,
-
-    -- for the custom path
-    isCustomize boolean,
-    customStartDate date,
-    customEndDate date,
-    customDuration double,
-    customLaborQty double,
-    customCost double,
-
-    -- for the actual path
-    actualStartDate date,
-    actualEndDate date,
-    actualDuration double,
-    actualLaborQty double,
-    actualCost double,
-
-    isCancel boolean default false
+create table assignWorkItemDetails(
+    assignWorkItemDetailId int primary key auto_increment,
+    assignWorkItemId int,
+    detailStatus enum('autoAssign','customAssign','actualResult'),
+    workItemDuration double,
+    workItemCost double,
+    workItemLaborQty double,
+    startDate date,
+    endDate date,
+    foreign key (assignWorkItemId)
+    references assignWorkItems (assignWorkItemId)
+    on update cascade
+    on delete cascade
 );
 
 create table assignTasks (
 	assignTaskId int primary key auto_increment,
     assignWorkItemId int,
     projectTaskId int,
-    -- for the auto path
-    autoStartDate date,
-    autoEndDate date,
-    autoDuration double,
-
-    -- for the custom path
-    isCustomize boolean,
-    customStartDate date,
-    customEndDate date,
-    customDuration double,
-
-    -- for the actual path
-    actualStartDate date,
-    actualEndDate date,
-    actualDuration double,
-
     isCancel boolean default false
 );
+
+create table assignTaskDetails(
+    assignTakDetailId int primary key auto_increment,
+    assignTaskId int,
+    detailStatus enum('autoAssign','customAssign','actualResult'),
+    taskDuration double,
+    startDate date,
+    endDate date,
+    foreign key (assignTaskId)
+    references assignTasks (assignTaskId)
+    on update cascade
+    on delete cascade
+);
+
 
 create table assignWorkItemSkills (
 	assignWorkItemSkillId int primary key auto_increment,
     assignWorkItemId int,
     skillId int,
-
-    -- for the auto path
-    autoLaborQty double,
-
-    -- for the custom path
+    laborQty double,
     isCustomize boolean,
-    customLaborQty double,
     isCancel boolean default false
 );
 
 create table assignWorkers (
 	assignWorkerId int primary key auto_increment,
     assignProjectId int,
-    oldWorkerId int,
+    workerId int,
     isCustomize boolean,
-    newWorkerId int default null,
     isCancel boolean default false
 );
 
@@ -356,14 +343,7 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignWorkers
 ADD CONSTRAINT fk_aw_oldWorker
-FOREIGN KEY (oldWorkerId)
-REFERENCES labors(laborId)
-ON UPDATE CASCADE
-ON DELETE CASCADE;
-
-ALTER TABLE assignWorkers
-ADD CONSTRAINT fk_aw_newWorker
-FOREIGN KEY (newWorkerId)
+FOREIGN KEY (workerId)
 REFERENCES labors(laborId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
