@@ -1,7 +1,7 @@
 @import url("main.css");
 
 #root{
-    -fx-background-color : linear-gradient(to left ,-dark-background-color, -light-background-color);
+    -fx-background-color :  -light-primary-color;
 }
 
 #userNameLbl , #passwordLbl {

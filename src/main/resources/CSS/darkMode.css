@@ -1,1 +1,20 @@
-@import url ("main.css");
+*{
+    /* for background color */
+    -primary-bg-color: #233D4D;
+    -secondary-bg-color: #254962;
+
+    /* for the text color */
+    -primary-text-color: #F8FAFC;
+    -secondary-text-color: #CBD5E1;
+    -muted-text-color: #94A3B8;
+
+    /* for the navigation bar */
+    -nav-color: #234256;
+
+    /* for the underline */
+    -underline-color: #D68C2F;
+
+    /* for the border color */
+    -border-color : #3F6478;
+
+}
