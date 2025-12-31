@@ -2,25 +2,13 @@
     /* font family */
     -fx-font-family: Inter,Arial;
 
-    /* For the Background color */
-
-
-    /* for the navigation bar color */
-
-
-    /* For the Background base color */
-    -light-base-color: #FFF5E6;
-    -dark-base-color: #2F5568;
-
     /* For the specific color */
     -warning-color: #E09F3E;
     -success-color : #3FA37A;
     -danger-color : #C44536;
     -info-color : #3A86A8;
-
-
-
 }
+
 .cardPane {
     -fx-background-color: -light-base-color;
     -fx-border-radius: 20px;

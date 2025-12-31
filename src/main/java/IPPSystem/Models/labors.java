@@ -19,4 +19,20 @@ public class labors extends skills{
         this.laborId = laborId;
         this.laborName = laborName;
     }
+
+    public int getLaborId() {
+        return laborId;
+    }
+
+    public void setLaborId(int laborId) {
+        this.laborId = laborId;
+    }
+
+    public String getLaborName() {
+        return laborName;
+    }
+
+    public void setLaborName(String laborName) {
+        this.laborName = laborName;
+    }
 }
