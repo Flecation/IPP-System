@@ -1,15 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="152.0" prefWidth="213.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="IPPSystem.Controllers.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="1000"
+            prefHeight="520" fx:controller="IPPSystem.Controllers.HelloController">
 
-    <Label fx:id="welcomeText" />
-    <Button onAction="#onHelloButtonClick" text="Hello!" />
-</VBox>
+    <HBox prefWidth="1000" prefHeight="520">
+
+        <!-- LEFT : IMAGE + OVERLAY -->
+        <StackPane prefWidth="600">
+
+            <ImageView fitWidth="600"
+                       fitHeight="520"
+                       preserveRatio="false">
+                <image>
+                    <Image url="@system_image.jpg"/>
+                </image>
+            </ImageView>
+
+            <!-- Dark Overlay -->
+            <Pane style="-fx-background-color: rgba(0,0,0,0.45);" />
+
+            <!-- Branding -->
+            <VBox alignment="CENTER_LEFT"
+                  spacing="14"
+                  style="-fx-padding: 60;">
+
+                <Label text="SmartSys"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 34px;
+                              -fx-font-weight: bold;" />
+
+                <Label text="Next-generation system for smarter management"
+                       wrapText="true"
+                       style="-fx-text-fill: #e5e7eb;
+                              -fx-font-size: 15px;" />
+
+            </VBox>
+
+        </StackPane>
+
+        <!-- RIGHT : LOGIN PANEL -->
+        <VBox prefWidth="400"
+              alignment="CENTER"
+              spacing="20"
+              style="-fx-background-color: #0f172a;
+                     -fx-padding: 50;">
+
+            <Label text="Welcome Back"
+                   style="-fx-text-fill: white;
+                          -fx-font-size: 22px;
+                          -fx-font-weight: bold;" />
+
+            <Label text="Sign in to your account"
+                   style="-fx-text-fill: #94a3b8;
+                          -fx-font-size: 13px;" />
+
+            <TextField promptText="Username"
+                       prefHeight="44"
+                       style="-fx-background-color: transparent;
+                              -fx-text-fill: white;
+                              -fx-border-color: #334155;
+                              -fx-border-width: 0 0 1 0;
+                              -fx-background-radius: 0;" />
+
+            <!-- Password Container -->
+            <VBox spacing="6">
+
+                <!-- Hidden Password -->
+                <PasswordField fx:id="passwordField"
+                               promptText="Password"
+                               prefHeight="44"
+                               style="-fx-background-color: transparent;
+                          -fx-text-fill: white;
+                          -fx-border-color: #334155;
+                          -fx-border-width: 0 0 1 0;" />
+
+                <!-- Visible Password -->
+                <TextField fx:id="passwordTextField"
+                           promptText="Password"
+                           prefHeight="44"
+                           visible="false"
+                           managed="false"
+                           style="-fx-background-color: transparent;
+                      -fx-text-fill: white;
+                      -fx-border-color: #334155;
+                      -fx-border-width: 0 0 1 0;" />
+
+                <!-- Show Password -->
+                <CheckBox fx:id="showPasswordCheck"
+                          text="Show password"
+                          onAction="#togglePassword"
+                          style="-fx-text-fill: #94a3b8;
+                     -fx-font-size: 12px;" />
+
+            </VBox>
+
+
+            <Button text="SIGN IN"
+                    prefHeight="46"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #3b82f6;
+                           -fx-text-fill: white;
+                           -fx-font-size: 14px;
+                           -fx-font-weight: bold;" />
+
+            <Label text="Secure login • All activities monitored"
+                   style="-fx-text-fill: #64748b;
+                          -fx-font-size: 11px;" />
+
+        </VBox>
+
+    </HBox>
+
+</AnchorPane>

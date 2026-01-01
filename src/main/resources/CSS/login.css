@@ -1,22 +1,56 @@
 @import url("main.css");
+@import url("darkMode.css");
 
 #root{
-    -fx-background-color :  -light-primary-color;
+    -fx-background-color :  -secondary-bg-color;
+}
+
+.leftPane{
+    -fx-background-color: -secondary-bg-color;
+}
+.cardPane{
+    -fx-background-color: -primary-bg-color;
+}
+.rightPane{
+    -fx-background-color : -primary-bg-color;
+}
+
+.loginTitle {
+    -fx-font-size: 20px;
+    -fx-text-fill: -primary-text-color;
+    -fx-fill: -primary-text-color;
+}
+.loginLogoName {
+    -fx-font-size: 38px;
+    -fx-text-fill: -primary-text-color;
+    -fx-fill: -primary-text-color;
 }
 
 #userNameLbl , #passwordLbl {
+    -fx-color: -primary-text-color;
     -fx-background-color: transparent;
     -fx-font-size: 15px;
 }
 
+#loginBtn{
+    -fx-background-color:  #3b82f6;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: -primary-text-color;
+}
 #forgetBtn {
       -fx-underline: true;
-      -fx-text-fill: -danger-color;
+      -fx-font-size: 10px;
+      -fx-text-fill: -muted-text-color;
       -fx-cursor: hand;
       -fx-background-color: transparent;
 }
 
-.loginTitle {
-     -fx-font-size: 20px;
-     -fx-font-weight: bold;
+.shape {
+    -fx-fill: -secondary-bg-color;
+    -fx-stoke: none;
+}
+
+.rightShape {
+    -fx-fill: -primary-bg-color;
 }

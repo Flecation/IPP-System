@@ -3,8 +3,10 @@ package IPPSystem.Controllers;
 import IPPSystem.Utils.effect;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class loginController {
 
@@ -27,7 +29,12 @@ public class loginController {
     VBox root;
 
     @FXML
+    ImageView imageView;
+
+    @FXML
     public void initialize(){
+//        Font.getFamilies().forEach(System.out::println);
+
         effect.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
         effect.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         restoreBtn.setDisable(true);

@@ -2,6 +2,8 @@ package IPPSystem.Utils;
 
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 //This is collected place for all effect
@@ -48,5 +50,11 @@ public class effect {
 
         public static void setFloatPasswordFieldStyle(Label pwLabel, TextField showPwTxt , PasswordField hidePwTxt){
             textFieldStyle.floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
+        }
+
+        public static void setFocusAnimation(Region underline,String from, String to){
+            Color From = Color.web(from);
+            Color To = Color.web(to);
+            focusAnimation.animateUnderline(underline,From,To);
         }
 }
