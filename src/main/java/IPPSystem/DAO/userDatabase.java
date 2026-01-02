@@ -1,6 +1,7 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
+import IPPSystem.Utils.passwordCrafting;
 
 import java.sql.*;
 import java.util.ArrayList;

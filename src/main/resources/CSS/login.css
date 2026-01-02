@@ -1,5 +1,4 @@
 @import url("main.css");
-@import url("darkMode.css");
 
 #root{
     -fx-background-color :  -secondary-bg-color;

@@ -9,7 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
 
-public class textFieldStyle extends effect{
+public class textFieldStyle extends utils {
 
         private static Label textLabel,passwordLabel;
 

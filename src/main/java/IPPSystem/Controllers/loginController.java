@@ -1,12 +1,15 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.Utils.effect;
+import Constants.notificationType;
+import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+
+import java.io.IOException;
 
 public class loginController {
 
@@ -29,17 +32,19 @@ public class loginController {
     VBox root;
 
     @FXML
+    StackPane overlayPane;
+
+    @FXML
     ImageView imageView;
 
     @FXML
     public void initialize(){
-//        Font.getFamilies().forEach(System.out::println);
-
-        effect.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
-        effect.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
+        utils.setTheme(root);
+        utils.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
+        utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         restoreBtn.setDisable(true);
-        effect.setFloatTextFieldStyle(userNameLbl,userNameTxt);
-        effect.setFloatPasswordFieldStyle(passwordLbl,showPasswordTxt,hidePasswordTxt);
+        utils.setFloatTextFieldStyle(userNameLbl,userNameTxt);
+        utils.setFloatPasswordFieldStyle(passwordLbl,showPasswordTxt,hidePasswordTxt);
 
         userNameTxt.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER){
@@ -55,8 +60,6 @@ public class loginController {
                 }else {
                     hidePasswordTxt.requestFocus();
                 }
-            }else{
-
             }
         });
 
@@ -75,6 +78,18 @@ public class loginController {
             }
             if (keyEvent.getCode() == KeyCode.UP){
                 userNameTxt.requestFocus();
+            }
+        });
+
+        loginBtn.setOnAction(event -> {
+            String name = userNameTxt.getText();
+            String password = hidePasswordTxt.isVisible() ? hidePasswordTxt.getText() : showPasswordTxt.getText();
+            if(name.isEmpty()){
+                try {
+                    utils.setAlertBox(overlayPane,"Empty UserName","Please Enter Your Name", notificationType.WARNING,true);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

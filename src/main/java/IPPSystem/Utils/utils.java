@@ -1,13 +1,19 @@
 package IPPSystem.Utils;
 
+import Constants.notificationType;
+import IPPSystem.Controllers.messageBoxController;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-//This is collected place for all effect
-public class effect {
+import java.io.IOException;
+
+//This is collected place for all utils
+public class utils {
 
         //setting the tile bar of the exit,mini,restore buttons called from the tileBar class
         public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn) {
@@ -57,4 +63,42 @@ public class effect {
             Color To = Color.web(to);
             focusAnimation.animateUnderline(underline,From,To);
         }
+
+    public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
+            Parent msgRoot = loader.load();
+            IPPSystem.Controllers.messageBoxController controller = loader.getController();
+
+            if (root instanceof Pane pane) {
+                if (!pane.getChildren().contains(msgRoot)) {
+                    pane.getChildren().add(msgRoot);
+
+                }
+            } else if (root.getScene() != null && root.getScene().getRoot() instanceof Pane pane) {
+                if (!pane.getChildren().contains(msgRoot)) {
+                    pane.getChildren().add(msgRoot);
+                }
+            }
+            msgRoot.setTranslateX(300);
+            msgRoot.toFront();
+            if (onlyShow) {
+                controller.toastMessage(msgRoot, title, message, type);
+
+            } else {
+                controller.confirmMessage(msgRoot, title, message, type);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setTheme(Parent root){
+            themeToggle.getInstance().setTheme(root,"/CSS/lightMode.css","/CSS/darkMode.css");
+    }
+
+    public static void changeTheme(Parent root){
+            themeToggle.getInstance().toggleTheme();
+    }
+
 }

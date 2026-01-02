@@ -14,7 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class switchPage extends effect{
+public class switchPage extends utils {
 
     //For dashBoard Change For Example From the home page to the edit page
     public static void setSwitchPane(Parent basePane,Parent fromPane, String toPane, Button titleUrlButton,Button clickedButton){

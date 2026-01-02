@@ -24,7 +24,7 @@
             <Button fx:id="restoreBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
             <Button fx:id="exitBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
          </children></HBox>
-      <StackPane VBox.vgrow="NEVER">
+      <StackPane fx:id="overlayPane" VBox.vgrow="NEVER">
          <children>
             <HBox alignment="CENTER_RIGHT" maxHeight="500.0" maxWidth="900.0" minHeight="500.0" minWidth="900.0" StackPane.alignment="CENTER">
                <children>

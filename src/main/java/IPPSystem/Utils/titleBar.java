@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class titleBar extends effect{
+public class titleBar extends utils {
 
 //    For all pane of the title bar
     private static Parent root;
@@ -76,7 +76,7 @@ public class titleBar extends effect{
                         new KeyValue(blur.radiusProperty(), 0, Interpolator.EASE_BOTH),
                         new KeyValue(region.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
-                new KeyFrame(Duration.millis(250),
+                new KeyFrame(Duration.millis(100),
                         new KeyValue(blur.radiusProperty(), 5, Interpolator.EASE_BOTH),
                         new KeyValue(region.opacityProperty(), 0.5, Interpolator.EASE_BOTH)
                 )
