@@ -72,7 +72,8 @@ public class messageBoxController {
         toastIcon.setText("");
 
         toastBox.getStyleClass().removeAll("warning-toast","wrong-toast","success-toast","info-toast");
-        toastBox.getStyleClass().add(type.toString() + "-toast");
+        toastBox.getStyleClass().add( type.toString()+ "-toast");
+        System.out.println( type.toString()+ "-toast");
 
         toastTitle.setText(title);
         toastMessage.setText(message);

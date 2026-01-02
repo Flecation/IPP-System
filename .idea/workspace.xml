@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="login Changes">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_25_2025_5_43_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_25_2025_5_43_PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/effect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/textFieldStyle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/textFieldStyle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/titleBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/titleBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/login.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/messageBoxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/messageBoxController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/messageBox.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/messageBox.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -367,7 +355,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767277883074</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767378996461</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1767378996461</updated>
+    </task>
+    <task id="LOCAL-00031" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767379308868</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1767379308868</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
