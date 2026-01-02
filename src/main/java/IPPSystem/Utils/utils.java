@@ -98,6 +98,7 @@ public class utils {
     }
 
     public static void changeTheme(Parent root){
+            themeToggle.setRoot(root);
             themeToggle.getInstance().toggleTheme();
     }
 

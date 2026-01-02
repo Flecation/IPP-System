@@ -31,7 +31,7 @@ public class themeToggle {
         root = basePane;
         lightTheme = lightCss;
         darkTheme = darkCss;
-        toggleTheme();
+        applyThemeFirstTIme();
     }
 
     public static Parent getRoot() {
@@ -40,7 +40,15 @@ public class themeToggle {
 
     public static void setRoot(Parent root) {
         themeToggle.root = root;
+    }
 
+    public void applyThemeFirstTIme(){
+        root.getStylesheets().removeAll();
+        if (darkModeProperty.get()){
+            root.getStylesheets().add(darkTheme);
+        }else{
+            root.getStylesheets().add(lightTheme);
+        }
     }
 
     public void toggleTheme(){
