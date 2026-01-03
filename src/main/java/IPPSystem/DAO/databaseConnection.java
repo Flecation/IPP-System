@@ -28,7 +28,9 @@ public class databaseConnection {
         return dataSource.getConnection();
     }
 
-
+    public static void closeConnection(){
+        dataSource.close();
+    }
 
 
 

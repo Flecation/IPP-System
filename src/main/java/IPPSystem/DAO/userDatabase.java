@@ -2,6 +2,7 @@ package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
 import IPPSystem.Utils.passwordCrafting;
+import IPPSystem.Utils.utils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -104,10 +105,10 @@ public class userDatabase {
         users users = new users();
 
         try {
-            CallableStatement cstmt = con.prepareCall("");
+            PreparedStatement cstmt = con.prepareStatement("SELECT * FROM users WHERE userName = ?");
             cstmt.setString(1,userName);
-            cstmt.setString(2,userPassword);
             ResultSet rs = cstmt.executeQuery();
+
             if(rs.next()){
                 users = new users(
                         rs.getInt("userId"),
@@ -121,12 +122,36 @@ public class userDatabase {
                         rs.getBoolean("isActive"),
                         rs.getString("userPassword")
                 );
+            }else {
+                return null;
             }
+            if(utils.checkPassword(userPassword,users.getUserPassword())) return users;
+            else return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return users;
 
     }
 
+    public static void addUser(users user){
+
+        try {
+            PreparedStatement pstmt = con.prepareStatement(
+                    "INSERT INTO users (userName,userRole,userPhone," +
+                    "userEmail,userDOB,userPassword,userStartDate)" +
+                    " values (?,?,?,?,?,?,?)"
+            );
+            pstmt.setString(1,user.getUserName());
+            pstmt.setString(2,user.getUserRole());
+            pstmt.setString(3,user.getUserPhone());
+            pstmt.setString(4,user.getUserEmail());
+            pstmt.setDate(5, (Date) user.getUserDOB());
+            pstmt.setString(6,user.getUserPassword());
+            pstmt.setDate(7, (Date) user.getUserStartDate());
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

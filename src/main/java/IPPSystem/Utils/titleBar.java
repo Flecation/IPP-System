@@ -1,5 +1,6 @@
 package IPPSystem.Utils;
 
+import IPPSystem.DAO.databaseConnection;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -84,6 +85,7 @@ public class titleBar extends utils {
         );
 
         blurIn.setOnFinished(event -> {
+            databaseConnection.closeConnection();
             System.exit(0);
         });
 

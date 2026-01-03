@@ -64,42 +64,50 @@ public class utils {
             focusAnimation.animateUnderline(underline,From,To);
         }
 
-    public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) throws IOException {
-        try {
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
-            Parent msgRoot = loader.load();
-            IPPSystem.Controllers.messageBoxController controller = loader.getController();
+        public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) throws IOException {
+            try {
+                FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
+                Parent msgRoot = loader.load();
+                IPPSystem.Controllers.messageBoxController controller = loader.getController();
 
-            if (root instanceof Pane pane) {
-                if (!pane.getChildren().contains(msgRoot)) {
-                    pane.getChildren().add(msgRoot);
+                if (root instanceof Pane pane) {
+                    if (!pane.getChildren().contains(msgRoot)) {
+                        pane.getChildren().add(msgRoot);
 
+                    }
+                } else if (root.getScene() != null && root.getScene().getRoot() instanceof Pane pane) {
+                    if (!pane.getChildren().contains(msgRoot)) {
+                        pane.getChildren().add(msgRoot);
+                    }
                 }
-            } else if (root.getScene() != null && root.getScene().getRoot() instanceof Pane pane) {
-                if (!pane.getChildren().contains(msgRoot)) {
-                    pane.getChildren().add(msgRoot);
-                }
-            }
-            msgRoot.setTranslateX(300);
-            msgRoot.toFront();
-            if (onlyShow) {
-                controller.toastMessage(msgRoot, title, message, type);
+                msgRoot.setTranslateX(300);
+                msgRoot.toFront();
+                if (onlyShow) {
+                    controller.toastMessage(msgRoot, title, message, type);
 
-            } else {
-                controller.confirmMessage(msgRoot, title, message, type);
+                } else {
+                    controller.confirmMessage(msgRoot, title, message, type);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
 
-    public static void setTheme(Parent root){
-            themeToggle.getInstance().setTheme(root,"/CSS/lightMode.css","/CSS/darkMode.css");
-    }
+        public static void setTheme(Parent root){
+                themeToggle.getInstance().setTheme(root,"/CSS/lightMode.css","/CSS/darkMode.css");
+        }
 
-    public static void changeTheme(Parent root){
-            themeToggle.setRoot(root);
-            themeToggle.getInstance().toggleTheme();
-    }
+        public static void changeTheme(Parent root){
+                themeToggle.setRoot(root);
+                themeToggle.getInstance().toggleTheme();
+        }
+
+        public static String hashPassword(String password){
+            return passwordCrafting.hashPassword(password);
+        }
+
+        public static boolean checkPassword(String inputPassword, String realPassword){
+            return passwordCrafting.checkPassword(inputPassword,realPassword);
+        }
 
 }

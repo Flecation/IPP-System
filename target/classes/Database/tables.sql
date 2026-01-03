@@ -52,6 +52,8 @@ create table labors (
 	laborId int primary key auto_increment,
      laborName varchar(255),
      skillId int,
+     laborStartDate Date,
+     laborEndDate Date,
      isActive boolean default true
 );
 
@@ -87,7 +89,7 @@ create table taskDetails (
 
 create table workItemRequireSkills (
 	workItemRequireSkills int primary key auto_increment,
-    taskDetailId int,
+    workItemDetailId int,
     skillId int,
     minRequireLabors double,
     maxRequireLabors double,
@@ -130,7 +132,7 @@ create table assignProjectDetails(
 create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
-    projectWorkItemId int,
+    projectWorkItemId int
 );
 
 create table assignWorkItemDetails(
@@ -251,8 +253,8 @@ ON DELETE CASCADE;
 
 ALTER TABLE workItemRequireSkills
 ADD CONSTRAINT fk_wirs_taskDetail
-FOREIGN KEY (taskDetailId)
-REFERENCES taskDetails(taskDetailId)
+FOREIGN KEY (workItemDetailId)
+REFERENCES workItemDetails(workItemDetailId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
