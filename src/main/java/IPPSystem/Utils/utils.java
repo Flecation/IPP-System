@@ -1,7 +1,6 @@
 package IPPSystem.Utils;
 
 import Constants.notificationType;
-import IPPSystem.Controllers.messageBoxController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -108,6 +107,10 @@ public class utils {
 
         public static boolean checkPassword(String inputPassword, String realPassword){
             return passwordCrafting.checkPassword(inputPassword,realPassword);
+        }
+
+        public static void switchNewScene(Button clickButton, String fxmlName){
+            switchPage.switchScene(clickButton,fxmlName);
         }
 
 }

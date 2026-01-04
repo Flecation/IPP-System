@@ -6,15 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="login Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/messageBoxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/messageBoxController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/passwordCrafting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/passwordCrafting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/titleBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/titleBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/basePane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -394,7 +389,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767444822964</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767467902250</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1767467902250</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -1,10 +1,10 @@
 package IPPSystem.Controllers;
 
 import Constants.notificationType;
-import Constants.role;
+import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
-import IPPSystem.Utils.dateFormatter;
+import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,6 +14,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class loginController {
 
@@ -41,11 +43,17 @@ public class loginController {
     @FXML
     ImageView imageView;
 
-    users user = new users();
+    public static session user = session.getInstance();
+
 
     @FXML
     public void initialize(){
 //        userDatabase.addUser(new users("ant","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today()));
+        try {
+            Connection con = databaseConnection.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         utils.setTheme(root);
         utils.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
@@ -104,8 +112,8 @@ public class loginController {
                     throw new RuntimeException(e);
                 }
             }else{
-                user = userDatabase.loginUser(name,password);
-                if (user == null){
+                users check = userDatabase.loginUser(name,password);
+                if (check == null){
                     try {
 
                         utils.setAlertBox(overlayPane,"Wrong User","Please Check Your Name or Password",notificationType.WRONG,true);
@@ -113,7 +121,8 @@ public class loginController {
                         throw new RuntimeException(e);
                     }
                 }else {
-                    // try to do role
+                   user.setUser(check);
+                    utils.switchNewScene(loginBtn,"navigationPane.fxml");
                 }
             }
 
