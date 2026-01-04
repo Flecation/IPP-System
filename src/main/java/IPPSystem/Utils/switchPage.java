@@ -11,6 +11,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -115,7 +116,6 @@ public class switchPage extends utils {
             throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
         }
     }
-
     public static void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;
@@ -136,8 +136,8 @@ public class switchPage extends utils {
         GaussianBlur blur = new GaussianBlur(0);
         oldRoot.setEffect(blur);
 
-
-        PauseTransition pause = new PauseTransition(Duration.millis(100));
+        // Allow UI to render spinner
+        PauseTransition pause = new PauseTransition(Duration.millis(80));
         pause.setOnFinished(p -> {
 
             Timeline fadeOut = new Timeline(
@@ -171,7 +171,10 @@ public class switchPage extends utils {
                 GaussianBlur newBlur = new GaussianBlur(6);
                 newRoot.setEffect(newBlur);
 
-                stage.setScene(new Scene(newRoot));
+                Scene newScene = new Scene(newRoot);
+                newScene.setFill(Color.TRANSPARENT);
+
+                stage.setScene(newScene);
 
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,
