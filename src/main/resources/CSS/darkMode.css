@@ -1,1 +1,57 @@
-@import url ("main.css");
+*{
+    /* for background color */
+    -primary-bg-color: #233D4D;
+    -secondary-bg-color: #254962;
+
+    /* for the text color */
+    -primary-text-color: #F8FAFC;
+    -secondary-text-color: #CBD5E1;
+    -muted-text-color: #94A3B8;
+
+    /* for the navigation bar */
+    -nav-color: #234256;
+
+    /* for the underline */
+    -underline-color: #D68C2F;
+
+    /* for the border color */
+    -border-color : #3F6478;
+
+    /* for the focus color */
+    -focus-color: #FF881F;
+}
+
+.label{
+    -fx-text-fill: -primary-text-color;
+}
+
+ /* fo the text field and password field of the colors */
+.text-field, .password-field{
+    -fx-text-fill: -secondary-text-color;
+    -fx-border-color: -secondary-text-color;
+}
+
+.text-field:focused , .password-field:focused{
+    -fx-border-color: -focus-color;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* for the check box field */
+.check-box {
+    -fx-text-fill: -secondary-text-color;
+}
+
+.check-box .box {
+    -fx-border-color: -secondary-bg-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -primary-text-color;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -info-color;
+    -fx-border-color: -info-color;
+}
+
+

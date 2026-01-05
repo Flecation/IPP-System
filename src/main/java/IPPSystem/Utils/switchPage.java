@@ -1,96 +1,200 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Main.HelloApplication;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class switchPage extends effect{
+import java.io.IOException;
 
-    //For dashBoard Change For Example From the home page to the edit page
-    public static void setSwitchPane(Parent basePane,Parent fromPane, String toPane, Button titleUrlButton,Button clickedButton){
+import static IPPSystem.Utils.utils.setToolTip;
 
-        //For inserting the spinner like it is loading
+public class switchPage extends utils {
+
+    // Dashboard page switch animation
+    public static void setSwitchPane(
+            StackPane basePane,
+            Parent fromPane,
+            String toPane,
+            Button titleUrlButton,
+            Button clickedButton
+    ) {
+
+        // Loading spinner
         ProgressIndicator spinner = new ProgressIndicator();
-        spinner.setMaxSize(14,14);
+        spinner.setMaxSize(14, 14);
         titleUrlButton.setGraphic(spinner);
-        titleUrlButton.setText("loading...");
+        titleUrlButton.setText("Loading...");
 
-        //Setting the toPane
+        // Load next pane safely
         Parent nextPane;
-        try{
-            nextPane = FXMLLoader.load(HelloApplication.class.getResource(toPane));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    HelloApplication.class.getResource(toPane)
+            );
+            nextPane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            titleUrlButton.setGraphic(null);
+            titleUrlButton.setText("Error");
+            return;
         }
 
-        //For inserting the region on the fromPane and will change to the toPane
+        // Overlay region
         Region region = new Region();
-        region.setPrefSize(fromPane.getBoundsInLocal().getWidth(), fromPane.getBoundsInLocal().getHeight());
+        region.prefWidthProperty().bind(basePane.widthProperty());
+        region.prefHeightProperty().bind(basePane.heightProperty());
         region.setManaged(false);
         region.setMouseTransparent(true);
         region.setOpacity(0);
 
-        GaussianBlur blur = new GaussianBlur(1);
+        // Blur effect
+        GaussianBlur blur = new GaussianBlur(0);
         fromPane.setEffect(blur);
 
+        Timeline blurIn = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(blur.radiusProperty(), 0),
+                        new KeyValue(region.opacityProperty(), 0)
+                ),
+                new KeyFrame(Duration.millis(250),
+                        new KeyValue(blur.radiusProperty(), 5),
+                        new KeyValue(region.opacityProperty(), 0.5)
+                )
+        );
 
+        blurIn.setOnFinished(event -> {
 
-        Timeline in = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                    new KeyValue(blur.radiusProperty(),0, Interpolator.EASE_BOTH),
-                    new KeyValue(region.opacityProperty(), 0, Interpolator.EASE_BOTH)
-            ),
-            new KeyFrame(Duration.millis(250),
-                    new KeyValue(blur.radiusProperty(),5,Interpolator.EASE_BOTH),
-                    new KeyValue(region.opacityProperty(),0.5,Interpolator.EASE_BOTH)
-            )
-            );
-
-        in.setOnFinished(event -> {
-            //For re set the name of the title url button
-            titleUrlButton.setEffect(null);
-            setToolTip(titleUrlButton,clickedButton.getText());
+            // Update title button
+            titleUrlButton.setGraphic(null);
+            setToolTip(titleUrlButton, clickedButton.getText());
             titleUrlButton.setText(clickedButton.getText());
 
-            //Pane Switch
-            StackPane container = (StackPane) basePane;
-            container.getChildren().add(region);
-            container.getChildren().add(nextPane);
-            container.getChildren().remove(fromPane);
+            // Switch panes
+            basePane.getChildren().addAll(region, nextPane);
+            basePane.getChildren().remove(fromPane);
 
-
-            Timeline out = new Timeline(
+            Timeline blurOut = new Timeline(
                     new KeyFrame(Duration.ZERO,
-                        new KeyValue(blur.radiusProperty(),5,Interpolator.EASE_BOTH),
-                        new KeyValue(region.opacityProperty(),0.5,Interpolator.EASE_BOTH)
+                            new KeyValue(blur.radiusProperty(), 5),
+                            new KeyValue(region.opacityProperty(), 0.5)
                     ),
                     new KeyFrame(Duration.millis(250),
-                            new KeyValue(blur.radiusProperty(),0,Interpolator.EASE_BOTH),
-                            new KeyValue(region.opacityProperty(),0,Interpolator.EASE_BOTH)
+                            new KeyValue(blur.radiusProperty(), 0),
+                            new KeyValue(region.opacityProperty(), 0)
                     )
             );
 
-            out.setOnFinished(e -> {
-                    fromPane.setEffect(null);
-                    container.getChildren().remove(region);
+            blurOut.setOnFinished(e -> {
+                nextPane.setEffect(null);
+                basePane.getChildren().remove(region);
             });
 
-            out.play();
-
+            blurOut.play();
         });
 
-        in.play();
-
+        blurIn.play();
     }
+
+    // Simple FXML opener utility
+    public static Parent openFxml(String fxmlFile) {
+        try {
+            return FXMLLoader.load(
+                    HelloApplication.class.getResource(fxmlFile)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
+        }
+    }
+    public static void switchScene(Button button, String fxmlPath) {
+
+        String fxml = "/View/" + fxmlPath;
+
+        String originalText = button.getText();
+        Node originalGraphic = button.getGraphic();
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setMaxSize(16, 16);
+
+        button.setText("Loading...");
+        button.setGraphic(spinner);
+        button.setDisable(true);
+
+        Stage stage = (Stage) button.getScene().getWindow();
+        Parent oldRoot = stage.getScene().getRoot();
+
+        GaussianBlur blur = new GaussianBlur(0);
+        oldRoot.setEffect(blur);
+
+        // Allow UI to render spinner
+        PauseTransition pause = new PauseTransition(Duration.millis(80));
+        pause.setOnFinished(p -> {
+
+            Timeline fadeOut = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(oldRoot.opacityProperty(), 1),
+                            new KeyValue(blur.radiusProperty(), 0)
+                    ),
+                    new KeyFrame(Duration.millis(300),
+                            new KeyValue(oldRoot.opacityProperty(), 0),
+                            new KeyValue(blur.radiusProperty(), 6)
+                    )
+            );
+
+            fadeOut.setOnFinished(event -> {
+
+                Parent newRoot;
+                try {
+                    newRoot = FXMLLoader.load(
+                            HelloApplication.class.getResource(fxml)
+                    );
+                } catch (IOException e) {
+                    button.setText(originalText);
+                    button.setGraphic(originalGraphic);
+                    button.setDisable(false);
+                    oldRoot.setEffect(null);
+                    e.printStackTrace();
+                    return;
+                }
+
+                newRoot.setOpacity(0);
+                GaussianBlur newBlur = new GaussianBlur(6);
+                newRoot.setEffect(newBlur);
+
+                Scene newScene = new Scene(newRoot);
+                newScene.setFill(Color.TRANSPARENT);
+
+                stage.setScene(newScene);
+
+                Timeline fadeIn = new Timeline(
+                        new KeyFrame(Duration.ZERO,
+                                new KeyValue(newRoot.opacityProperty(), 0),
+                                new KeyValue(newBlur.radiusProperty(), 6)
+                        ),
+                        new KeyFrame(Duration.millis(300),
+                                new KeyValue(newRoot.opacityProperty(), 1),
+                                new KeyValue(newBlur.radiusProperty(), 0)
+                        )
+                );
+
+                fadeIn.setOnFinished(e -> newRoot.setEffect(null));
+                fadeIn.play();
+            });
+
+            fadeOut.play();
+        });
+
+        pause.play();
+    }
+
 }
