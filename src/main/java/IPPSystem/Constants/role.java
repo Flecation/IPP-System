@@ -1,4 +1,4 @@
-package Constants;
+package IPPSystem.Constants;
 
 public enum role {
     MANAGER ("manager"),

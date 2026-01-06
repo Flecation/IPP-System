@@ -1,6 +1,6 @@
 package IPPSystem.Controllers;
 
-import Constants.notificationType;
+import IPPSystem.Constants.notificationType;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
@@ -55,6 +55,7 @@ public class loginController {
             throw new RuntimeException(e);
         }
         utils.setTheme(root);
+        utils.changeTheme(root);
         utils.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         restoreBtn.setDisable(true);

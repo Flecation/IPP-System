@@ -3,3 +3,6 @@
 #root{
     -fx-background-color: -primary-bg-color;
 }
+.tapBar {
+    -fx-background-color: -secondary-bg-color;
+}

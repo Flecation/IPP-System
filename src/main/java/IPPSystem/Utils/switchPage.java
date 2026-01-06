@@ -17,8 +17,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-import static IPPSystem.Utils.utils.setToolTip;
-
 public class switchPage extends utils {
 
     // Dashboard page switch animation
@@ -116,6 +114,8 @@ public class switchPage extends utils {
             throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
         }
     }
+
+    //from the login controller to the dashboard with animation
     public static void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;

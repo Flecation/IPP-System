@@ -15,10 +15,10 @@
                   <Insets left="5.0" />
                </HBox.margin>
                <children>
-                  <Button fx:id="pageAddBtn" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="pageAddBtn" mnemonicParsing="false" />
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="TOP_RIGHT" maxWidth="100.0" minWidth="100.0" prefHeight="100.0" HBox.hgrow="NEVER">
                <children>
                   <Button fx:id="minimizeBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
                   <Button fx:id="restoreBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
