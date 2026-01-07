@@ -45,11 +45,11 @@
                   </VBox>
                   <VBox alignment="CENTER" maxHeight="500.0" maxWidth="450.0" minHeight="500.0" minWidth="400.0" styleClass="rightPane">
                      <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="Sign in your Account" translateY="-20.0" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Sign in your Account" translateY="-20.0" />
                         <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
                            <children>
                               <TextField fx:id="userNameTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" />
-                              <Label fx:id="userNameLbl" text="UserName" StackPane.alignment="CENTER_LEFT">
+                              <Label fx:id="userNameLbl" styleClass="info-text" text="UserName" StackPane.alignment="CENTER_LEFT">
                                  <StackPane.margin>
                                     <Insets left="60.0" />
                                  </StackPane.margin>
@@ -63,12 +63,12 @@
                            <children>
                               <TextField fx:id="showPasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
                               <PasswordField fx:id="hidePasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
-                              <Label fx:id="passwordLbl" text="Password" StackPane.alignment="CENTER_LEFT">
+                              <Label fx:id="passwordLbl" styleClass="info-text" text="Password" StackPane.alignment="CENTER_LEFT">
                                  <StackPane.margin>
                                     <Insets left="60.0" />
                                  </StackPane.margin>
                               </Label>
-                              <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" text="Show Password" translateY="10.0" StackPane.alignment="BOTTOM_LEFT">
+                              <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="10.0" StackPane.alignment="BOTTOM_LEFT">
                                  <StackPane.margin>
                                     <Insets left="50.0" />
                                  </StackPane.margin>

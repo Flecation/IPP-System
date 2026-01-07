@@ -15,7 +15,10 @@
     -fx-background-radius: 20px;
 }
 
-.label{
+.header-text{
+    -fx-font-size: 25px;
+}
+.info-text{
     -fx-font-size: 18px;
 }
 
@@ -75,6 +78,7 @@
     -fx-border-width: 1;
     -fx-background-radius: 2;
 }
+
 
 
 
