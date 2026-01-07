@@ -1,6 +1,6 @@
 package IPPSystem.Controllers;
 
-import Constants.notificationType;
+import IPPSystem.Constants.notificationType;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;

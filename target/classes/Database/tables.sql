@@ -188,6 +188,62 @@ create table assignWorkers (
     isCancel boolean default false
 );
 
+CREATE TABLE dailyReports (
+    dailyReportId INT PRIMARY KEY AUTO_INCREMENT,
+    assignProjectId INT NOT NULL,
+    reportDate DATE NOT NULL,
+    supervisorId INT,
+    weather VARCHAR(100),
+    generalRemark TEXT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (assignProjectId, reportDate),
+
+    FOREIGN KEY (assignProjectId)
+        REFERENCES assignProjects(assignProjectId)
+        ON DELETE CASCADE,
+    FOREIGN KEY (supervisorId)
+        REFERENCES users(userId)
+        ON DELETE SET NULL
+);
+
+CREATE TABLE dailyReportTasks (
+    dailyReportTaskId INT PRIMARY KEY AUTO_INCREMENT,
+    dailyReportId INT NOT NULL,
+    assignWorkItemId INT,
+    assignTaskId INT,
+    progressDescription TEXT,
+    workHours DOUBLE,
+    completedQty DOUBLE,
+    isCompleted BOOLEAN DEFAULT FALSE,
+
+    FOREIGN KEY (dailyReportId)
+        REFERENCES dailyReports(dailyReportId)
+        ON DELETE CASCADE,
+    FOREIGN KEY (assignWorkItemId)
+        REFERENCES assignWorkItems(assignWorkItemId),
+    FOREIGN KEY (assignTaskId)
+        REFERENCES assignTasks(assignTaskId)
+);
+
+CREATE TABLE dailyReportLabors (
+    dailyReportLaborId INT PRIMARY KEY AUTO_INCREMENT,
+    dailyReportId INT NOT NULL,
+    laborId INT NOT NULL,
+    skillId INT,
+    workHours DOUBLE,
+    dailyWage DOUBLE,
+    remark TEXT,
+
+    FOREIGN KEY (dailyReportId)
+        REFERENCES dailyReports(dailyReportId)
+        ON DELETE CASCADE,
+    FOREIGN KEY (laborId)
+        REFERENCES labors(laborId),
+    FOREIGN KEY (skillId)
+        REFERENCES skills(skillId)
+);
+
+
 
 -- =====================
 -- adding foreign key

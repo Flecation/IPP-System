@@ -27,6 +27,7 @@ public class navigationPaneController{
     @FXML
     private void initialize(){
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
-        utils.changeTheme(root);
+        utils.setTheme(root);
+
     }
 }

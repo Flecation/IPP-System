@@ -1,6 +1,6 @@
 package IPPSystem.Utils;
 
-import Constants.notificationType;
+import IPPSystem.Constants.notificationType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
