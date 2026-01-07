@@ -50,7 +50,7 @@
             </Label>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="179.0" spacing="20.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="179.0" spacing="15.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
          <children>
             <Button mnemonicParsing="false" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View">
                <styleClass>

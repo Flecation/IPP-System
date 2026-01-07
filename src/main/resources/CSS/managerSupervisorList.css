@@ -32,8 +32,9 @@
 }
 
 .managerAccSpProjectType{
-     -fx-text-fill: #00000;
+     -fx-text-fill: #000000;
      -fx-font-size: 8;
+     -fx-opacity: 0.8;
 }
 
 .managerAccSpProgressCtn{
@@ -66,14 +67,17 @@
 
 .managerAccSpBtnView{
     -fx-background-color: #11C04C;
-    -fx-opacity:0.5;
+    -fx-opacity:0.3;
     -fx-text-fill: #000000;
+    -fx-background-radius: 5;
+
 }
 
 .managerAccSpBtnDel{
     -fx-background-color: #C01111;
     -fx-opacity:0.5;
     -fx-text-fill: #dedede;
+    -fx-background-radius: 5;
 }
 
 

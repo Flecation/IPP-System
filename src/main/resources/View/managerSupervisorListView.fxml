@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="60.0" prefWidth="670.0">
@@ -26,7 +25,7 @@
                   </Label>
                   <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="73.0" prefWidth="625.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/viewAllSiteEngineerList.css" text="+ Create" textFill="WHITE">
+                        <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
                            <HBox.margin>
                               <Insets top="15.0" />
                            </HBox.margin>
