@@ -1,0 +1,8 @@
+@import url("main.css");
+
+#root{
+    -fx-background-color: -primary-bg-color;
+}
+.tapBar {
+    -fx-background-color: -secondary-bg-color;
+}
