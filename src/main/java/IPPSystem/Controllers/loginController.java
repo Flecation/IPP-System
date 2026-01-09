@@ -55,7 +55,7 @@ public class loginController {
             throw new RuntimeException(e);
         }
         utils.setTheme(root);
-        utils.changeTheme(root);
+//        utils.changeTheme(root);
         utils.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         restoreBtn.setDisable(true);

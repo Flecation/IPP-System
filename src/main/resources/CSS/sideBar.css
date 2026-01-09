@@ -5,6 +5,32 @@
     -fx-background-color: -primary-bg-color;
 }
 
+/* for all icons symbol fonts style */
+.icons{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-color: -muted-text-color;
+}
+
+#newTabBtn,#reloadBtn,#searchClearBtn,#searchBtn,#notificationBtn,#toggleBox,
+#dashboardViewBtn,#projectViewBtn,#userViewBtn,#reportViewBtn,#settingViewBtn,
+#backBtn,#profileViewBtn,#toggleBtn,#changePasswordBtn,#logoutBtn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+#newTabBtn:hover ,#reloadBtn:hover ,#searchClearBtn:hover ,
+#searchBtn:hover , #notificationBtn:hover {
+    -fx-background-color: -secondary-bg-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: rgba(0,0,0,0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+
 /* ====== top bar and side bar ====== */
 .topBar{
     -fx-background-color: -nav-color;
@@ -12,6 +38,59 @@
     -fx-border-color: -muted-text-color;
 }
 
-#sideBar {
+.sideBar {
     -fx-background-color : -nav-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 0);
 }
+
+/* for the toggle effect */
+
+#togglePane {
+    -fx-border-width: 1px;
+    -fx-background-color: -primary-bg-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+#toggleBox {
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-border-color: -muted-text-color;
+}
+
+#toggleCircle {
+    -fx-fill: -secondary-bg-color;
+}
+
+/* for the search box and directory Box */
+
+.searchBox ,#directoryViewBox {
+    -fx-background-color: -primary-bg-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+#searchTextField {
+    -fx-border-width: 0;
+}
+#searchViewBox {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -secondary-text-color;
+    -fx-padding: 0 2px;
+}
+
+#searchViewBox .active {
+    -fx-border-color: -focus-color;
+}
+
+/* for the user info view Card */
+#userInfoCard {
+    -fx-cursor: hand;
+}
+
+
