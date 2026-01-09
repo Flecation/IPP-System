@@ -1,0 +1,18 @@
+Index: target/classes/CSS/main.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*{\n    /* font family */\n    -fx-font-family: \"Arial\";\n    -fx-font-weight: bold;\n\n    /* For the specific color */\n    -warning-color: #E09F3E;\n    -success-color : #3FA37A;\n    -danger-color : #C44536;\n    -info-color : #3A86A8;\n}\n\n.cardPane {\n    -fx-border-radius: 20px;\n    -fx-background-radius: 20px;\n}\n\n.label{\n    -fx-font-size: 18px;\n}\n\n.button {\n    -fx-font-size: 14px;\n    -fx-cursor: hand;\n    -fx-font-weight: bold;\n    -fx-border-radius: 2px;\n    -fx-background-radius: 2px;\n}\n\n\n.text-field{\n    -fx-font-size:20px;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius: 0;\n}\n.password-field{\n    -fx-font-size: 20px;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius:0;\n}\n\n.check-box {\n    -fx-font-size : 12 px;\n    -fx-cursor : hand;\n}\n\n/*For the exit mini button*/\n #exitBtn ,#minimizeBtn  ,#restoreBtn{\n     -fx-font-size: 15px;\n     -fx-border-color: none;\n     -fx-background-color: transparent;\n     -fx-padding: 0;\n     -fx-margin: 0;\n     -fx-border-radius: 0;\n     -fx-background-radius: 0;\n }\n #exitBtn:hover{\n     -fx-fill: rgb(242,242,242);\n     -fx-background-color: #d91f1f;\n }\n\n #minimizeBtn:hover, #restoreBtn:hover{\n    -fx-background-color : red;\n }\n\n.check-box {\n    -fx-font-size: 12px;\n}\n\n/* Box */\n.check-box .box {\n    -fx-background-color: transparent;\n    -fx-border-width: 1;\n    -fx-background-radius: 2;\n}\n\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/CSS/main.css b/target/classes/CSS/main.css
+--- a/target/classes/CSS/main.css	(revision 58675ff0934bcc52c583ccb8a7c24663d51207e3)
++++ b/target/classes/CSS/main.css	(date 1767968504999)
+@@ -1,6 +1,6 @@
+ *{
+     /* font family */
+-    -fx-font-family: "Arial";
++    -fx-font-family: "Poppins";
+     -fx-font-weight: bold;
+ 
+     /* For the specific color */
