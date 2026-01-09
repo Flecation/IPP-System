@@ -1,4 +1,3 @@
-
 package IPPSystem.Controllers;
 
 import javafx.event.ActionEvent;
@@ -40,27 +39,6 @@ public class managerSupervisorListController {
     @FXML
     private Button paginationPrevBtn;
 
-    public void initialize() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/managerSupervisorRow.fxml"));
-        Parent row = fxmlLoader.load();
-        managerSupervisorListPane.getChildren().add(row);
-    }
-
-    @FXML
-    void clickManagerSpCreateBtn(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickManagerSpProjectTypeCombo(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickManagerSpStatusCombo(ActionEvent event) {
-
-    }
-
     @FXML
     void clickon1(ActionEvent event) {
 
@@ -86,4 +64,11 @@ public class managerSupervisorListController {
 
     }
 
+    public void initialize() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/managerSupervisorRow.fxml"));
+        Parent row = fxmlLoader.load();
+        managerSupervisorListPane.getChildren().add(row);
+    }
+
 }
+
