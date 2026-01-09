@@ -5,15 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="login Changes">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/OFL.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Black.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-BlackItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Bold.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-BoldItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraBold.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraBoldItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraLight.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraLightItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Italic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Light.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-LightItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Medium.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-MediumItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-SemiBold.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-SemiBoldItalic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Thin.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ThinItalic.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/linkButtonController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/linkButton.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/managerASupervisorRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/managerASupervisorRowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/linkButton.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorListView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorListView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorRow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorRow.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,8 +78,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,
-    &quot;accountId&quot;: &quot;545db981-124c-4d88-a8fd-f9a2827bf7db&quot;
+    &quot;url&quot;: &quot;git@github.com:Flecation/IPP-System.git&quot;,
+    &quot;accountId&quot;: &quot;e3bb5386-7ed8-4c6c-a353-9df31291fc27&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -94,7 +111,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Hsu-Myat-Rain&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -113,7 +130,7 @@
       <recent name="D:\group1\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Unnamed">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="IPPSystem.Main.HelloApplication" />
       <module name="group1" />
@@ -121,6 +138,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Unnamed" />
+      <item itemvalue="Application.start" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -410,15 +438,7 @@
       <option name="project" value="LOCAL" />
       <updated>1767547141389</updated>
     </task>
-    <task id="LOCAL-00036" summary="login Changes">
-      <option name="closed" value="true" />
-      <created>1767548952429</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1767548952429</updated>
-    </task>
-    <option name="localTasksCounter" value="37" />
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -443,141 +463,141 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/projectgroup1/Utils/titleBar.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/projectgroup1/Utils/titleBar.java</url>
           <line>50</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>35</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>46</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
           <line>19</line>
-          <properties class="IPPSystem.DAO.projectDatabase" method="getAllProjects">
+          <properties class="IPPSystem.DAO.projectDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>19</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="getAllWorkItemByAssignProjectId">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>58</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="getAllWorkItemDetailsByAssignProjectId">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>87</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheCostOfWorkItem">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>104</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheLaborQtyOfWorkItem">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>121</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="changeTheDurationOfWorkItem">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>139</line>
-          <properties class="IPPSystem.DAO.workItemDatabase" method="assignWorkItems">
+          <properties class="IPPSystem.DAO.workItemDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
           <line>52</line>
-          <properties class="IPPSystem.DAO.projectDatabase" method="assignProjects">
+          <properties class="IPPSystem.DAO.projectDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
           <line>80</line>
-          <properties class="IPPSystem.DAO.projectDatabase" method="getAllProjectsBySupervisor">
+          <properties class="IPPSystem.DAO.projectDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
           <line>22</line>
-          <properties class="IPPSystem.DAO.taskDatabase" method="getAllTasksByAssignProjectOfWorkItem">
+          <properties class="IPPSystem.DAO.taskDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
           <line>61</line>
-          <properties class="IPPSystem.DAO.taskDatabase" method="getAllTasksDetailsByProjectOfWorkItem">
+          <properties class="IPPSystem.DAO.taskDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
           <line>88</line>
-          <properties class="IPPSystem.DAO.taskDatabase" method="changeTheDurationOfTasks">
+          <properties class="IPPSystem.DAO.taskDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
           <line>106</line>
-          <properties class="IPPSystem.DAO.taskDatabase" method="assignTasks">
+          <properties class="IPPSystem.DAO.taskDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
           <line>115</line>
-          <properties class="IPPSystem.DAO.projectDatabase" method="getProjectDetails">
+          <properties class="IPPSystem.DAO.projectDatabase">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
