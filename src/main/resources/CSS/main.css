@@ -32,13 +32,13 @@
 
 
 .text-field{
-    -fx-font-size:20px;
+    -fx-font-size:18px;
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
     -fx-background-radius: 0;
 }
 .password-field{
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
     -fx-background-radius:0;

@@ -11,12 +11,15 @@
    <children>
       <HBox maxHeight="35.0" minHeight="35.0" styleClass="tapBar" VBox.vgrow="NEVER">
          <children>
-            <HBox fx:id="tapBar" maxWidth="1190.0" spacing="5.0" HBox.hgrow="ALWAYS">
+            <HBox fx:id="tapBar" maxWidth="1190.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
                <children>
-                  <Button fx:id="pageAddBtn" mnemonicParsing="false" />
+                  <Button fx:id="pageAddBtn" mnemonicParsing="false">
+                     <HBox.margin>
+                        <Insets left="2.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
             <Region minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
@@ -31,6 +34,9 @@
                </HBox.margin>
             </HBox>
          </children>
+         <VBox.margin>
+            <Insets top="2.0" />
+         </VBox.margin>
       </HBox>
       <StackPane fx:id="loadPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
    </children>

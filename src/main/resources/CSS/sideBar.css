@@ -1,0 +1,17 @@
+@import url("main.css");
+
+/* ===== Root ===== */
+.root {
+    -fx-background-color: -primary-bg-color;
+}
+
+/* ====== top bar and side bar ====== */
+.topBar{
+    -fx-background-color: -nav-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -muted-text-color;
+}
+
+#sideBar {
+    -fx-background-color : -nav-color;
+}
