@@ -93,4 +93,14 @@
     -fx-cursor: hand;
 }
 
+/* for the view Btn */
+#dashboardViewBtn:hover,#projectViewBtn:hover,
+#userViewBtn:hover,#reportViewBtn:hover,#settingViewBtn:hover{
+      -fx-background-color: -primary-bg-color;
+        -fx-border-radius: 6px;
+        -fx-background-radius: 6px;
+        -fx-padding: 0 5px;
+        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+
+}
 

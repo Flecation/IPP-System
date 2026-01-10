@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="login Changes">
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="navigationPane">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/linkButtonController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/linkButton.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/linkButton.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +87,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -418,7 +411,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767548952429</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1767987016799</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1767987016799</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -437,7 +438,8 @@
     <MESSAGE value="creation of the basic frame" />
     <MESSAGE value="css changes" />
     <MESSAGE value="login Changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="login Changes" />
+    <MESSAGE value="navigationPane" />
+    <option name="LAST_COMMIT_MESSAGE" value="navigationPane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
