@@ -3,6 +3,7 @@ package IPPSystem.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -20,9 +21,10 @@ public class HelloApplication extends Application {
                 getClass().getResource("/fonts/Poppins-SemiBold.ttf").toExternalForm(),12
         );
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/managerSupervisorListView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 900, 535);
-        stage.setTitle("Hello!");
+        stage.setResizable(false);
+        scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
 
         stage.show();
