@@ -1,0 +1,53 @@
+.paginationPrevBtn{
+    -fx-background-color: #F9F9F9;
+    -fx-background-radius:20;
+    -fx-text-fill:#000000;
+    -fx-opacity: 0.2;
+    -fx-border-color: #00000041;
+    -fx-border-radius: 20;
+    -fx-border-width:0.3px;
+
+
+}
+.paginationBtn1{
+    -fx-background-color: #7FB8B6;
+    -fx-background-radius:20;
+   
+}
+..paginationBtn1:hover{
+    -fx-background-color: #7baeac;
+    -fx-background-radius:20;
+   
+}
+
+.paginationBtn2{
+    -fx-background-color:#F1F1F1 ;
+    -fx-background-radius:20;
+    -fx-border-color: #00000041;
+    -fx-border-radius: 20;
+    -fx-border-width:0.3px;
+}
+.paginationBtn3{
+    -fx-background-color:#F1F1F1 ;
+    -fx-background-radius:20;
+    -fx-border-color: #00000041;
+    -fx-border-radius: 20;
+    -fx-border-width:0.3px;
+
+
+}
+.paginationNextBtn{
+    -fx-background-color: #F9F9F9;
+    -fx-background-radius:20;
+    -fx-text-fill:#0ba380;
+    -fx-border-color: #00000041;
+    -fx-border-radius: 20;
+    -fx-border-width:0.3px;
+
+
+}
+
+.paginationNextBtn:hover{
+    -fx-background-color: #f7f3f3;
+
+}

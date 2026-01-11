@@ -1,0 +1,433 @@
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>DATABASE_NAME=IPPSystem\n\nMYSQL_USERNAME=root\nMYSQL_PASSWORD=123456\nMYSQL_HOST=localhost\nMYSQL_PORT=3306\nMYSQL_URL=jdbc:mysql://localhost:3306/IPPSystem\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.env b/.env
+--- a/.env	(revision 6f770976674a053796c12453f84a51c5f3e49850)
++++ b/.env	(date 1767626952236)
+@@ -1,7 +1,7 @@
+ DATABASE_NAME=IPPSystem
+ 
+ MYSQL_USERNAME=root
+-MYSQL_PASSWORD=123456
++MYSQL_PASSWORD=
+ MYSQL_HOST=localhost
+ MYSQL_PORT=3306
+ MYSQL_URL=jdbc:mysql://localhost:3306/IPPSystem
+Index: target/classes/CSS/main.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/CSS/main.css b/target/classes/CSS/main.css
+--- a/target/classes/CSS/main.css	(revision 6f770976674a053796c12453f84a51c5f3e49850)
++++ b/target/classes/CSS/main.css	(date 1767626952236)
+@@ -1,0 +1,51 @@
++*{
++    /* font family */
++    -fx-font-family: Inter,Arial;
++
++    /* For the Background color */
++    -light-background-color: #c3c3c3;
++    -dark-background-color: #1F3A5F;
++
++    /* For the Background base color */
++    -light-base-color: #f4f6f8;
++    -dark-base-color: #2c3380;
++
++    /* For the Text color */
++    -light-text-color: #000000;
++    -dark-text-color: #ffffff;
++
++    /* For the selection color */
++    -light-selection-color: #e89b17;
++    -dark-selection-color: #fc811a;
++
++    /* For the hover button color */
++    -light-hover-button-color: #5e5e5e;
++    -dark-hover-button-color: #b3b7e5;
++
++    /* For the border color */
++    -light-border-color:#e9e9e9 ;
++    -dark-border-color: #d1d5db;
++
++    /* For the specific color */
++    -warning-color: #ED6C02;
++    -success-color : #2E7D32;
++    -danger-color : #c62828;
++    -info-color : #1565C0;
++
++
++
++}
++
++.label{
++
++}
++.button {
++    -fx-font-size: 20px;
++    -fx-cursor: hand;
++    -fx-font-weight: bold;
++    -fx-border-radius: 10px;
++    -fx-background-radius: 10px;
++    -fx-border-width: 0;
++    -fx-background-insets: 0;
++    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
++}
+Index: target/classes/Database/tables.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\nDROP DATABASE IPPSystem;\n\nCREATE DATABASE IPPSystem;\n\nCREATE TABLE \n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/Database/tables.sql b/target/classes/Database/tables.sql
+--- a/target/classes/Database/tables.sql	(revision 6f770976674a053796c12453f84a51c5f3e49850)
++++ b/target/classes/Database/tables.sql	(date 1767626952236)
+@@ -1,6 +1,341 @@
+-
+ DROP DATABASE IPPSystem;
+ 
+ CREATE DATABASE IPPSystem;
+ 
+-CREATE TABLE 
++USE IPPSystem;
++-- for master tables 
++ 
++CREATE TABLE users (
++	userId int primary key auto_increment,
++    userName varchar(255),
++    userRole enum('manager','supervisor'),
++    userPhone varchar(255),
++    userEmail varchar(255),
++    userDOB date,
++    userPassword varchar(255) not null,
++    userStartDate Date ,
++    userEndDate Date Default null,
++    isActive boolean default true
++);
++
++create table skills (
++	skillId int primary key auto_increment,
++    skillName varchar(255)
++);
++
++create table projectTypes (
++	projectTypeId int primary key auto_increment,
++    projectTypeName varchar(255)
++);
++
++create table projectLevels (
++	projectLevelId int primary key auto_increment,
++    projectLevelName varchar(255)
++);
++
++create table workItems (
++	workItemId int primary key auto_increment,
++    workItemName varchar(255)
++);
++
++create table tasks (
++	taskId int primary key auto_increment,
++    taskName varchar(255)
++);
++
++create table buildings (
++	buildingId int primary key auto_increment,
++    buildingName varchar(255)
++);
++
++create table labors (
++	laborId int primary key auto_increment,
++     laborName varchar(255),
++     skillId int,
++     isActive boolean default true
++);
++
++-- for template tables (standard assign tables)
++create table projectDetails (
++	projectDetailId int primary key auto_increment,
++    projectTypeId int not null,
++    levelId int,
++    buildingId int,
++	minOverHeadCost double,
++    maxOverHeadCost double
++);
++
++create table workItemDetails (
++	workItemDetailId int primary key auto_increment,
++    projectDetailId int, 
++	minDuration double,
++    maxDuration double,
++    unitDuration enum('day','month','year'),
++    minLabors double,
++    maxLabors double,
++    minCost double,
++    maxCost double
++);
++
++create table taskDetails (
++	taskDetailId int primary key auto_increment,
++    workItemDetailId int,
++    taskId int,
++    minDuration double,
++    maxDuration double,
++    unitDuration enum('day','month','year')
++);
++
++create table workItemRequireSkills (
++	workItemRequireSkills int primary key auto_increment,
++    taskDetailId int,
++    skillId int,
++    minRequireLabors double,
++    maxRequireLabors double,
++    basicDailyWage double,
++    maxDailyWage double
++);
++
++-- for the real project assign
++create table assignProjects (
++	assignProjectId int primary key auto_increment,
++    projectTypeId int,
++    projectInstanceName varchar(255),
++    levelId int,
++    buildingId int,
++    projectArea double, -- only for sq ft unit
++    projectHeight double default 0, -- only for religious
++    totalStories int, -- for all floors
++    totalUnits int, -- for all units/ rooms ,in the backend the unit per floor will calculate 
++    managerId int,
++    startDate date,
++    duration double,
++    unitDuration enum('day','month','year'),
++    totalCost double,
++    projectStatus enum('planning','inProgress','delay','finished','cancel')
++);
++
++create table assignWorkItems (
++	assignWorkItemId int primary key auto_increment,
++    assignProjectId int,
++    workItemId int,
++    autoDuration double,
++    isCustomize boolean,
++    isCancel boolean
++);
++
++create table assignTasks (
++	assignTaskId int primary key auto_increment,
++    assignWorkItemId int,
++    taskId int,
++    autoDuration double,
++    autoCost double,
++    autoLaborQty double,
++    isCustomize boolean,
++    isCancel boolean
++);
++
++create table assignWorkItemSkills (
++	assignWorkItemSkillId int primary key auto_increment,
++    assignWorkItemId int,
++    skillId int,
++    autoLaborQty int,
++    isCustomize boolean,
++    isCancel boolean
++);
++
++create table assignWorkers (
++	assignWorkerId int primary key auto_increment,
++    assignProjectId int,
++    oldWorkerId int, 
++    isCustomize boolean,
++    newWorkerId int default null,
++    isCancel boolean
++);
++
++-- for the customize tables
++create table customWorkItems (
++	customWorkItemId int primary key auto_increment,
++    assignWorkItemId int,
++    customDuration double,
++    customCost double,
++    customLaborQty double
++);
++
++create table customTasks (
++	customTaskId int primary key auto_increment,
++    assignTaskId int,
++    customDuration double
++);
++
++create table customWorkItemSkills (
++	customWorkItemSkillId int primary key auto_increment,
++    assignWorkItemSkillId int ,
++    customLaborQty double
++);
++-- =====================
++-- adding foreign key 
++-- =====================
++
++-- master file link foreign key
++ALTER TABLE labors
++ADD CONSTRAINT fk_labors_skill
++FOREIGN KEY (skillId)
++REFERENCES skills(skillId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++-- template structure
++ALTER TABLE projectDetails
++ADD CONSTRAINT fk_pd_projectType
++FOREIGN KEY (projectTypeId)
++REFERENCES projectTypes(projectTypeId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE projectDetails
++ADD CONSTRAINT fk_pd_level
++FOREIGN KEY (levelId)
++REFERENCES projectLevels(projectLevelId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE projectDetails
++ADD CONSTRAINT fk_pd_building
++FOREIGN KEY (buildingId)
++REFERENCES buildings(buildingId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE workItemDetails
++ADD CONSTRAINT fk_wid_projectDetail
++FOREIGN KEY (projectDetailId)
++REFERENCES projectDetails(projectDetailId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE taskDetails
++ADD CONSTRAINT fk_td_workItemDetail
++FOREIGN KEY (workItemDetailId)
++REFERENCES workItemDetails(workItemDetailId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE taskDetails
++ADD CONSTRAINT fk_td_task
++FOREIGN KEY (taskId)
++REFERENCES tasks(taskId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE workItemRequireSkills
++ADD CONSTRAINT fk_wirs_taskDetail
++FOREIGN KEY (taskDetailId)
++REFERENCES taskDetails(taskDetailId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE workItemRequireSkills
++ADD CONSTRAINT fk_wirs_skill
++FOREIGN KEY (skillId)
++REFERENCES skills(skillId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignProjects
++ADD CONSTRAINT fk_ap_projectType
++FOREIGN KEY (projectTypeId)
++REFERENCES projectTypes(projectTypeId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignProjects
++ADD CONSTRAINT fk_ap_manager
++FOREIGN KEY (managerId)
++REFERENCES users(userId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignWorkItems
++ADD CONSTRAINT fk_awi_project
++FOREIGN KEY (assignProjectId)
++REFERENCES assignProjects(assignProjectId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE assignWorkItems
++ADD CONSTRAINT fk_awi_workItem
++FOREIGN KEY (workItemId)
++REFERENCES workItems(workItemId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignTasks
++ADD CONSTRAINT fk_at_assignWorkItem
++FOREIGN KEY (assignWorkItemId)
++REFERENCES assignWorkItems(assignWorkItemId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE assignTasks
++ADD CONSTRAINT fk_at_task
++FOREIGN KEY (taskId)
++REFERENCES tasks(taskId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignWorkItemSkills
++ADD CONSTRAINT fk_awis_assignWorkItem
++FOREIGN KEY (assignWorkItemId)
++REFERENCES assignWorkItems(assignWorkItemId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE assignWorkItemSkills
++ADD CONSTRAINT fk_awis_skill
++FOREIGN KEY (skillId)
++REFERENCES skills(skillId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignWorkers
++ADD CONSTRAINT fk_aw_project
++FOREIGN KEY (assignProjectId)
++REFERENCES assignProjects(assignProjectId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE assignWorkers
++ADD CONSTRAINT fk_aw_oldWorker
++FOREIGN KEY (oldWorkerId)
++REFERENCES labors(laborId)
++ON UPDATE CASCADE
++ON DELETE RESTRICT;
++
++ALTER TABLE assignWorkers
++ADD CONSTRAINT fk_aw_newWorker
++FOREIGN KEY (newWorkerId)
++REFERENCES labors(laborId)
++ON UPDATE CASCADE
++ON DELETE SET NULL;
++
++ALTER TABLE customWorkItems
++ADD CONSTRAINT fk_cwi_assignWorkItem
++FOREIGN KEY (assignWorkItemId)
++REFERENCES assignWorkItems(assignWorkItemId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE customTasks
++ADD CONSTRAINT fk_ct_assignTask
++FOREIGN KEY (assignTaskId)
++REFERENCES assignTasks(assignTaskId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
++
++ALTER TABLE customWorkItemSkills
++ADD CONSTRAINT fk_cwis_assignWorkItemSkill
++FOREIGN KEY (assignWorkItemSkillId)
++REFERENCES assignWorkItemSkills(assignWorkItemSkillId)
++ON UPDATE CASCADE
++ON DELETE CASCADE;
