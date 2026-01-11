@@ -5,6 +5,52 @@
 }
 .tapBar {
     -fx-background-color: -secondary-bg-color;
-    -fx-border-color: -border-color;
-    -fx-border-width: 0 0 1 0;
+    -fx-border-color: none;
+    -fx-border-width: 0;
+}
+
+/* for the navigation bar of style */
+.linkButton {
+    -fx-background-color: transparent;
+    -fx-border-radius: 12 12 0 0;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.linkButton .active-tab{
+    -fx-background-color: -nav-color;
+    -fx-text-fill: -focus-color;
+    -fx-background-radius: 12 0 0 0;
+    -fx-border-radius: 12 0 0 0 ;
+}
+.linkButton:hover {
+    -fx-border-color: -focus-color;
+    -fx-border-width: 1 1 0 1;
+
+}
+.pageBtn,.closeBtn,.closeIcon,.pageAddIcon {
+    -fx-background-color:transparent;
+    -fx-border-color: transparent;
+    -fx-border-width:0;
+    -fx-text-fill: -secondary-text-color;
+    -fx-fill: -secondary-text-color;
+}
+
+.closeBtn:hover{
+    -fx-border-radius: 0 12 0 0;
+    -fx-background-radius: 0 12 0 0;
+    -fx-background-color: -primary-bg-color;
+}
+#pageAddBtn{
+    -fx-fill: -secondary-text-color;
+    -fx-background-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 0;
+}
+#pageAddBtn:hover {
+    -fx-background-color:-primary-bg-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
 }

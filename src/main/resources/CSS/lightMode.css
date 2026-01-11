@@ -17,10 +17,16 @@
      /* for the border color */
      -border-color: #D6C7B2;
 
+     /* for the hover color */
+     -hover-color: #BAD3E1;
+
      /* for the focus color */
-     -focus-color: #E09F3E;
+     -focus-color: #faa424;
 
 }
+ .miniIcon,.restoreIcon,.exitIcon{
+    -fx-fill: -secondary-text-color;
+ }
 
 .label{
     -fx-text-fill: -primary-text-color;

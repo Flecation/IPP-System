@@ -4,34 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="login Changes">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/OFL.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Black.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-BlackItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Bold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-BoldItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraBold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraBoldItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraLight.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ExtraLightItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Italic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Light.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-LightItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Medium.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-MediumItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-SemiBold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-SemiBoldItalic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-Thin.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Fonts/Poppins-ThinItalic.ttf" afterDir="false" />
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="navigationPane">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/managerASupervisorRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/managerASupervisorRowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorListView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorListView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorRow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/managerSupervisorRow.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +87,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Hsu-Myat-Rain&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -438,7 +414,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767547141389</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767548952429</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1767548952429</updated>
+    </task>
+    <task id="LOCAL-00037" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1767987016799</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1767987016799</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -457,7 +449,8 @@
     <MESSAGE value="creation of the basic frame" />
     <MESSAGE value="css changes" />
     <MESSAGE value="login Changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="login Changes" />
+    <MESSAGE value="navigationPane" />
+    <option name="LAST_COMMIT_MESSAGE" value="navigationPane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
