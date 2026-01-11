@@ -1,9 +1,11 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.notificationType;
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
+import IPPSystem.Utils.dateFormatter;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
@@ -48,14 +50,14 @@ public class loginController {
 
     @FXML
     public void initialize(){
-//        userDatabase.addUser(new users("ant","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today()));
+//        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today()));
         try {
             Connection con = databaseConnection.getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         utils.setTheme(root);
-        utils.changeTheme(root);
+//        utils.changeTheme(root);
         utils.setPasswordField(showPasswordTxt,hidePasswordTxt,showPasswordCheckBox);
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         restoreBtn.setDisable(true);

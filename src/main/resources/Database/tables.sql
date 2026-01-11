@@ -51,6 +51,7 @@ create table buildings (
 create table labors (
 	laborId int primary key auto_increment,
      laborName varchar(255),
+     laborNRC varchar(255) unique not null,
      skillId int,
      laborStartDate Date,
      laborEndDate Date,

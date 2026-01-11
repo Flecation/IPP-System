@@ -20,8 +20,14 @@
     /* for the focus color */
     -focus-color: #FF881F;
 
+    /* for the hover color */
+    -hover-color: #5B81A5;
+
 
 }
+ .miniIcon,.restoreIcon,.exitIcon{
+    -fx-fill: -secondary-text-color;
+ }
 
 .label{
     -fx-text-fill: -primary-text-color;

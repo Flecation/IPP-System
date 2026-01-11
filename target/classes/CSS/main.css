@@ -63,10 +63,15 @@
      -fx-fill: rgb(242,242,242);
      -fx-background-color: #d91f1f;
  }
+ #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,
+ #restoreBtn:hover .restoreIcon{
+    -fx-font-size: 20px;
+ }
 
  #minimizeBtn:hover, #restoreBtn:hover{
-    -fx-background-color : red;
+    -fx-background-color : #314E63;
  }
+
 
 .check-box {
     -fx-font-size: 12px;
