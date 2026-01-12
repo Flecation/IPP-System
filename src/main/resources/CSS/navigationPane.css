@@ -22,8 +22,10 @@
 .linkButton .active-tab{
     -fx-background-color: -nav-color;
     -fx-text-fill: -focus-color;
-    -fx-background-radius: 12 0 0 0;
-    -fx-border-radius: 12 0 0 0 ;
+}
+.linkButton:hover .active-tab{
+     -fx-background-radius: 12 0 0 0;
+     -fx-border-radius: 12 0 0 0 ;
 }
 .linkButton:hover {
     -fx-border-color: -focus-color;
