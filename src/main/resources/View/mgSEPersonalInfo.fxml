@@ -9,23 +9,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="650.0" minWidth="1100.0" prefHeight="650.0" prefWidth="1100.0" styleClass="personalInfoBasePane" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="650.0" minWidth="1100.0" prefHeight="650.0" prefWidth="1100.0" styleClass="personalInfoBasePane" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEPersonalInfoController">
    <children>
       <HBox prefHeight="0.0" prefWidth="1100.0">
          <children>
             <HBox prefHeight="89.0" prefWidth="1075.0" HBox.hgrow="SOMETIMES">
                <children>
-                  <Label cache="true" maxHeight="63.0" maxWidth="416.0" minHeight="40.0" minWidth="176.0" prefHeight="40.0" prefWidth="303.0" styleClass="managerAccSpSub-Label" stylesheets="@../CSS/managerSupervisorList.css" text="Personal Information" textOverrun="CLIP" HBox.hgrow="SOMETIMES">
+                  <Label fx:id="mgSEPersonalInfoTitl" cache="true" maxHeight="63.0" maxWidth="416.0" minHeight="40.0" minWidth="176.0" prefHeight="40.0" prefWidth="303.0" styleClass="managerAccSpSubLabel" stylesheets="@../CSS/managerSupervisorList.css" text="Personal Information" textOverrun="CLIP" HBox.hgrow="SOMETIMES">
                      <HBox.margin>
                         <Insets bottom="10.0" left="20.0" right="10.0" top="15.0" />
                      </HBox.margin>
                      <font>
-                        <Font size="85.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
                   <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="65.0" prefWidth="662.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Personal" textFill="WHITE">
+                        <Button fx:id="mgSEPersonalInfoPersonalBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#clickMgSEPersonalInfoPersonalBtn" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Personal" textFill="WHITE">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -37,7 +37,7 @@
                               <String fx:value="personalInfoPersonalBtn" />
                            </styleClass>
                         </Button>
-                        <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Projects" textFill="WHITE">
+                        <Button fx:id="mgSEPersonalInfoProjectsBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#ClickMgSEPersonalInfoProjectsBtn" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Projects" textFill="WHITE">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -69,7 +69,7 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
-            <StackPane minHeight="410.0" minWidth="620.0" prefHeight="418.0" prefWidth="620.0" HBox.hgrow="ALWAYS">
+            <StackPane fx:id="mgSEPersonalInfoBodyPane" minHeight="410.0" minWidth="620.0" prefHeight="418.0" prefWidth="620.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

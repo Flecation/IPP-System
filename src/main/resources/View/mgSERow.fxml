@@ -13,14 +13,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1100.0" minHeight="-Infinity" minWidth="620.0" prefHeight="70.0" prefWidth="1100.0" spacing="5.0" style="-fx-background-color: #ffffff;" styleClass="managerAccSupervisorCtn" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.managerASupervisorRowController">
+<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1100.0" minHeight="-Infinity" minWidth="620.0" prefHeight="70.0" prefWidth="1100.0" spacing="5.0" style="-fx-background-color: #ffffff;" styleClass="managerAccSupervisorCtn" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSERowController">
    <children>
       <HBox alignment="TOP_CENTER" minWidth="45.0" prefHeight="50.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets />
          </HBox.margin>
          <children>
-            <ImageView fx:id="managerSupervisorImg" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
+            <ImageView fx:id="mgSEImg" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -32,11 +32,11 @@
       </HBox>
       <VBox alignment="CENTER_LEFT" maxWidth="144.0" minWidth="144.0" prefHeight="53.0" prefWidth="144.0" spacing="5.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
          <children>
-            <Label fx:id="managerSpNameTxt" minWidth="120.0" prefHeight="21.0" prefWidth="187.0" styleClass="managerAccSupervisorName" stylesheets="@../CSS/managerSupervisorList.css" text="Hsu Myat Moe">
+            <Label fx:id="mgSENameTxt" minWidth="120.0" prefHeight="21.0" prefWidth="187.0" styleClass="managerAccSupervisorName" stylesheets="@../CSS/managerSupervisorList.css" text="Hsu Myat Moe">
                <VBox.margin>
                   <Insets />
                </VBox.margin></Label>
-            <Label fx:id="managerSpRoleTxt" styleClass="managerAccSupervisor" stylesheets="@../CSS/managerSupervisorList.css" text="Engineer" VBox.vgrow="SOMETIMES" />
+            <Label fx:id="mgSERoleTxt" styleClass="managerAccSupervisor" stylesheets="@../CSS/managerSupervisorList.css" text="Engineer" VBox.vgrow="SOMETIMES" />
          </children>
          <HBox.margin>
             <Insets left="10.0" />
@@ -44,7 +44,7 @@
       </VBox>
       <VBox alignment="CENTER" maxWidth="140.0" minWidth="140.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Label fx:id="managerSpProjectTypeTxt" alignment="TOP_CENTER" maxWidth="100.0" minWidth="80.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css" text="Small house">
+            <Label fx:id="mgSEProjectTypeTxt" alignment="TOP_CENTER" maxWidth="100.0" minWidth="80.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css" text="Small house">
                <VBox.margin>
                   <Insets />
                </VBox.margin></Label>
@@ -53,7 +53,7 @@
       <HBox alignment="CENTER" maxWidth="90.0" minWidth="80.0" prefHeight="100.0" prefWidth="80.0" spacing="5.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css">
          <children>
             <Circle fill="DODGERBLUE" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-            <Label text="Active" />
+            <Label fx:id="mgSEActive" text="Active" />
          </children>
       </HBox>
       <HBox alignment="CENTER" maxWidth="200.0" minWidth="200.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
@@ -72,12 +72,12 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" minWidth="179.0" prefHeight="53.0" prefWidth="179.0" spacing="15.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
          <children>
-            <Button mnemonicParsing="false" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View">
+            <Button fx:id="mgSEViewBtn" mnemonicParsing="false" onAction="#clickMgSEViewBtn" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View">
                <styleClass>
                   <String fx:value="managerAccSpBtn" />
                   <String fx:value="managerAccSpBtnView" />
                </styleClass></Button>
-            <Button mnemonicParsing="false" stylesheets="@../CSS/managerSupervisorList.css" text="Delete">
+            <Button fx:id="mgSEDeleteBtn" mnemonicParsing="false" onAction="#clickMgSEDeleteBtn" stylesheets="@../CSS/managerSupervisorList.css" text="Delete">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

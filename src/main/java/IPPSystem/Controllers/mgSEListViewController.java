@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class managerSupervisorListController {
+public class mgSEListViewController {
 
     @FXML
     private Button managerSpCreateBtn;
@@ -65,7 +65,7 @@ public class managerSupervisorListController {
     }
 
     public void initialize() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/managerSupervisorRow.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/mgSERow.fxml"));
         Parent row = fxmlLoader.load();
         managerSupervisorListPane.getChildren().add(row);
     }

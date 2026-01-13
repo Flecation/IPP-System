@@ -20,8 +20,8 @@ public class HelloApplication extends Application {
                 getClass().getResource("/fonts/Poppins-SemiBold.ttf").toExternalForm(),12
         );
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/managerSupervisorListView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 900, 535);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/mgSENewAccount.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1100, 535);
         stage.setTitle("Hello!");
         stage.setScene(scene);
 

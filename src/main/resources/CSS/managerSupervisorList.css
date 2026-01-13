@@ -1,5 +1,14 @@
 @import url("main.css");
 
+*{
+    -title-font-size:23;
+    -title-line-height: 34.5;
+    -paragraph-font-size: 15;
+
+}
+
+
+/* View Supervisor */
 .createBtn{
     -fx-background-color:#558C8A;
     -fx-text-fill:#ffffff;
@@ -103,4 +112,58 @@
     -fx-text-fill: #EFBF04;
 
 
+}
+
+/* Personal Information  */
+.managerAccSpSubLabel{
+    -fx-font-size: -title-font-size;
+}
+
+
+/* Create Supervisor */
+
+.promtTxt{
+    -fx-font-size: 15;
+}
+
+.datePicker{
+    -fx-font-size: 12;
+}
+
+.inputFields{
+    -fx-font-size: -paragraph-font-size;
+    -fx-border-width: .3;
+    -fx-border-color:#558C8A;
+    -fx-border-radius: 5;
+}
+
+.firstName{
+    -fx-pref-width: 500;
+    -fx-text-fill:#000000;
+    -fx-padding: 2 10 2 10;
+        -fx-font-size: -paragraph-font-size;
+
+
+}
+.email{
+     -fx-pref-width: 500;
+     -fx-text-fill:#000000;
+     -fx-padding: 2 10 2 10;
+     -fx-font-size: -paragraph-font-size;
+
+}
+
+
+.roleAndProjectCombo{
+     -fx-padding: 3 10 3 10;
+}
+
+.date{
+    -fx-pref-width:10;
+}
+
+ /* :: Add Btn */
+.addSupervisorBtn{
+   -fx-background-color:#558C8A;
+   -fx-padding: 3 10 3 10;
 }
