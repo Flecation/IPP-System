@@ -5,18 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="creation of the basic frame">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/arrow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/backward (1).png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/loupe.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/maximize.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/minus (1).png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/plus.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/refresh (1).png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/reject.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_15_2025_8_42_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_15_2025_8_42_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_15_2025_8_47_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_15_2025_8_47_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_16_2025_11_15_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_16_2025_11_15_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_16_2025_9_10_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_16_2025_9_10_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_22_2025_10_02_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_22_2025_10_02_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_8_49_PM_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_8_49_PM__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_16_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_16_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_18_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_18_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_21_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_24_2025_9_21_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_12_15_2025_11_12_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_12_15_2025_11_12_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_12_24_2025_9_33_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_12_24_2025_9_33_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_15_2025_9_46_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_15_2025_9_46_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]3/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/group1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/group1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/TB.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/TB.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,9 +44,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="HTML File" />
         <option value="CSS File" />
+        <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -54,8 +73,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Flecation/group1.git&quot;,
-    &quot;accountId&quot;: &quot;545db981-124c-4d88-a8fd-f9a2827bf7db&quot;
+    &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,
+    &quot;accountId&quot;: &quot;9a53874d-709a-413e-8247-ffb60298bce0&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -82,18 +101,30 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHELLCHECK.PATH": "C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "Latt-Latt-Nanda",
+    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/group1",
+    "last_opened_file_path": "C:/Users/hp/Documents/IPPSystem/ippsystem/src/main/resources/View",
     "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\hp\Documents\IPPSystem\ippsystem\src\main\resources\View" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\hp\IdeaProjects\IPP-System\src\main\resources\icons" />
       <recent name="C:\Users\hp\IdeaProjects\IPP-System\src\main\resources\View\FXML_Photos" />
@@ -173,6 +204,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
       </set>
     </attachedChunks>
   </component>
@@ -183,6 +215,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765548299980</updated>
+      <workItem from="1767965016251" duration="27000" />
+      <workItem from="1767972215193" duration="2296000" />
+      <workItem from="1768055382142" duration="4158000" />
     </task>
     <task id="LOCAL-00001" summary="creation of the basic frame">
       <option name="closed" value="true" />
@@ -267,10 +302,17 @@
     <option name="localTasksCounter" value="11" />
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="creation of the basic frame" />
     <option name="LAST_COMMIT_MESSAGE" value="creation of the basic frame" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
