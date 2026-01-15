@@ -115,7 +115,7 @@ public class loginController {
                     throw new RuntimeException(e);
                 }
             }else{
-                users check = userDatabase.loginUser(name,password);
+                users check = userDatabase.login(name,password);
                 if (check == null){
                     try {
 

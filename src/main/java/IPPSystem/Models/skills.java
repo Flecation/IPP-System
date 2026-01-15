@@ -9,9 +9,17 @@ public class skills extends workItems{
 
     //for the child class
     public skills(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public skills(String skillName){
         this.skillName = skillName;
     }
 
+    public skills(int skillId,String skillName){
+        this.skillId = skillId;
+        this.skillName = skillName;
+    }
 
     //for the child class
     public skills(int assignProjectId, int workItemId, int skillId) {
