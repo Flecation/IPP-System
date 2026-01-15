@@ -13,6 +13,7 @@ CREATE TABLE users (
     userEmail varchar(255),
     userDOB date,
     userPassword varchar(255) not null,
+    userImage varchar(255),
     userStartDate Date ,
     userEndDate Date Default null,
     isActive boolean default true
@@ -98,6 +99,12 @@ create table workItemRequireSkills (
     maxDailyWage double
 );
 
+-- for the project status
+create table assignStatus(
+    assignStatusId int primary key auto_increment,
+    assignStatusName varchar(255) -- autoAssign,customAssign,actualResult, extraAssign
+);
+
 -- for the real project assign
 create table assignProjects (
 	assignProjectId int primary key auto_increment,
@@ -118,7 +125,7 @@ create table assignProjects (
 create table assignProjectDetails(
     assignProjectDetailId int primary key auto_increment,
     assignProjectId int ,
-    detailStatus enum('autoAssign','customAssign','actualResult'),
+    assignStatusId int,
     projectDuration double,
     projectCost double,
     projectLaborQty double,
@@ -127,7 +134,8 @@ create table assignProjectDetails(
     foreign key (assignProjectId)
     references assignProjects (assignProjectId)
     on update cascade
-    on delete cascade
+    on delete cascade,
+    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignWorkItems (
@@ -139,7 +147,7 @@ create table assignWorkItems (
 create table assignWorkItemDetails(
     assignWorkItemDetailId int primary key auto_increment,
     assignWorkItemId int,
-    detailStatus enum('autoAssign','customAssign','actualResult'),
+    assignStatusId int,
     workItemDuration double,
     workItemCost double,
     workItemLaborQty double,
@@ -148,7 +156,8 @@ create table assignWorkItemDetails(
     foreign key (assignWorkItemId)
     references assignWorkItems (assignWorkItemId)
     on update cascade
-    on delete cascade
+    on delete cascade,
+    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignTasks (
@@ -161,14 +170,15 @@ create table assignTasks (
 create table assignTaskDetails(
     assignTakDetailId int primary key auto_increment,
     assignTaskId int,
-    detailStatus enum('autoAssign','customAssign','actualResult'),
+    assignStatusId int,
     taskDuration double,
     startDate date,
     endDate date,
     foreign key (assignTaskId)
     references assignTasks (assignTaskId)
     on update cascade
-    on delete cascade
+    on delete cascade,
+    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -406,3 +416,9 @@ FOREIGN KEY (workerId)
 REFERENCES labors(laborId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
+
+ALTER TABLE assignWorkers
+ADD skillId INT,
+ADD CONSTRAINT fk_aw_skill
+FOREIGN KEY (skillId)
+REFERENCES skills(skillId);
