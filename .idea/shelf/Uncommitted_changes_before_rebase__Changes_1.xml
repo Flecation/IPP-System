@@ -1,0 +1,25 @@
+<changelist name="Uncommitted_changes_before_rebase_[Changes]1" date="1765894143537" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before rebase [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/Controllers/HelloController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/Main/HelloApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/Main/Launcher.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/Utils/transitionEffect.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/DAO/database.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/DAO/databaseConnection.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/projectgroup1/Utils/setEffect.class" />
+  </binary>
+</changelist>

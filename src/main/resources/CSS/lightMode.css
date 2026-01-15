@@ -1,0 +1,61 @@
+*{
+    /* background colors */
+    -primary-bg-color: #FFFFFF;
+    -secondary-bg-color: #E0E0C5;
+
+     /* for the text color */
+     -primary-text-color: #233D4D;
+     -secondary-text-color: #5C6F7C;
+     -muted-text-color: #8A9AA6;
+
+     /* for the navigation bar */
+     -nav-color: #E7E6CB;
+
+     /* for the underline */
+     -underline-color: #E09F3E;
+
+     /* for the border color */
+     -border-color: #D6C7B2;
+
+     /* for the hover color */
+     -hover-color: #BAD3E1;
+
+     /* for the focus color */
+     -focus-color: #faa424;
+
+}
+ .miniIcon,.restoreIcon,.exitIcon{
+    -fx-fill: -secondary-text-color;
+ }
+
+.label{
+    -fx-text-fill: -primary-text-color;
+}
+
+.text-field, .password-field{
+    -fx-text-fill: -secondary-text-color;
+    -fx-border-color: -secondary-text-color;
+}
+
+.text-field:focused , .password-field:focused{
+    -fx-border-color: -focus-color;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* for the check box field */
+.check-box {
+    -fx-text-fill: -secondary-text-color;
+}
+
+.check-box .box {
+    -fx-border-color: -secondary-bg-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -primary-text-color;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -info-color;
+    -fx-border-color: -info-color;
+}
