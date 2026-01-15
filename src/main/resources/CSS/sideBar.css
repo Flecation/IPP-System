@@ -1,0 +1,175 @@
+@import url("main.css");
+
+/* ===== Root ===== */
+.root {
+    -fx-background-color: -primary-bg-color;
+}
+
+/* for all icons symbol fonts style */
+.icons{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-color: -muted-text-color;
+}
+
+#newTabBtn,#reloadBtn,#searchClearBtn,#searchBtn,#notificationBtn,#toggleBox,
+#dashboardViewBtn,#projectViewBtn,#userViewBtn,#reportViewBtn,#settingViewBtn,
+#backBtn,#profileViewBtn,#toggleBtn,#changePasswordBtn,#logoutBtn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+#newTabBtn:hover ,#reloadBtn:hover ,#searchClearBtn:hover ,
+#searchBtn:hover , #notificationBtn:hover {
+    -fx-background-color: -secondary-bg-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: rgba(0,0,0,0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+
+/* ====== top bar and side bar ====== */
+.topBar{
+    -fx-background-color: -nav-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -muted-text-color;
+}
+
+.sideBar {
+    -fx-background-color : -nav-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 0);
+}
+
+/* for the toggle effect */
+
+#togglePane {
+    -fx-border-width: 1px;
+    -fx-background-color: -primary-bg-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+#toggleBox {
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-border-color: -muted-text-color;
+}
+
+#toggleCircle {
+    -fx-fill: -secondary-bg-color;
+}
+
+/* for the search box and directory Box */
+
+.searchBox ,#directoryViewBox {
+    -fx-background-color: -primary-bg-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+#searchTextField {
+    -fx-border-width: 0;
+}
+#searchViewBox {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -secondary-text-color;
+    -fx-padding: 0 2px;
+}
+
+#searchViewBox:hover {
+    -fx-border-color: -focus-color;
+}
+
+#searchViewBox .active {
+    -fx-border-color: -focus-color;
+}
+
+/* for the user info view Card */
+#userInfoCard {
+    -fx-cursor: hand;
+}
+
+/* for the view Btn */
+#dashboardViewBtn,#projectViewBtn,#userViewBtn,
+#reportViewBtn,#settingViewBtn,
+#backBtn,#profileViewBtn,#toggleBtn,#changePasswordBtn{
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+    -fx-border-color:  -primary-bg-color;
+    -fx-border-width: 1 0 1 0;
+}
+
+#dashboardViewBtn:hover,#projectViewBtn:hover,
+#userViewBtn:hover,#reportViewBtn:hover,#settingViewBtn:hover,
+#backBtn:hover,#profileViewBtn:hover,#toggleBtn:hover,#changePasswordBtn:hover{
+      -fx-background-color: -primary-bg-color;
+      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+
+}
+
+.btnActive {
+     -fx-background-color: -primary-bg-color;
+     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+
+}
+
+/* for the logout btn */
+#logoutBtn,#logoutIconBtn{
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+    -fx-border-color: -danger-color;
+    -fx-border-width: 1 0 1 0;
+}
+#logoutBtn:hover,#logoutIconBtn:hover{
+    -fx-border-color: -primary-bg-color;
+    -fx-background-color:  -danger-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}
+
+/* for the icon btn */
+#imageIconBtn,#dashboardIconBtn,
+#projectIconBtn,#userIconBtn,#reportIconBtn,#settingIconBtn,
+#iconBackBtn,#profileViewIconBtn,#darkIcon,#lightIcon,#changePasswordIconBtn,#logoutIconBtn{
+    -fx-cursor: hand;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -muted-text-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+}
+
+#imageIconBtn:hover,#dashboardIconBtn:hover,
+#projectIconBtn:hover,#userIconBtn:hover,#reportIconBtn:hover,
+#settingIconBtn:hover,#iconBackBtn:hover,
+#profileViewIconBtn:hover,#darkIcon:hover,#lightIcon:hover,
+#changePasswordIconBtn:hover {
+    -fx-font-size: 35px;
+    -fx-background-color: -primary-bg-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}
+
+
+/* to change from the icon view to the full name btn */
+#showSettingBtn,#showIconSettingBtn,#showIconSideBtn , #showSideBtn{
+    -fx-cursor: hand;
+    -fx-font-size: 20px;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -primary-bg-color;
+}
+
+#showSettingBtn:hover, #showIconSettingBtn:hover,
+#showIconSideBtn:hover,#showSideBtn:hover {
+    -fx-background-color: -primary-bg-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}

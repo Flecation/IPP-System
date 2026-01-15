@@ -22,12 +22,14 @@ public class titleBar extends utils {
         root = basePane;
         FontIcon sizeIcon = new FontIcon("fas-window-restore");
         sizeIcon.setIconSize(12);
+        sizeIcon.getStyleClass().add("restoreIcon");
         restoreBtn.setGraphic(sizeIcon);
         restoreBtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         restoreBtn.setAlignment(Pos.CENTER);
         setToolTip(restoreBtn,"restore");
 
         FontIcon miniIcon = new FontIcon("fas-minus");
+        miniIcon.getStyleClass().add("miniIcon");
         miniIcon.setIconSize(12);
         minimizeBtn.setGraphic(miniIcon);
         minimizeBtn.setContentDisplay(ContentDisplay.CENTER);
@@ -35,6 +37,7 @@ public class titleBar extends utils {
         setToolTip(minimizeBtn,"minimize");
 
         FontIcon exitIcon = new FontIcon("fas-times");
+        exitIcon.getStyleClass().add("exitIcon");
         exitIcon.setIconSize(12);
         exitBtn.setGraphic(exitIcon);
         exitBtn.setContentDisplay(ContentDisplay.CENTER);

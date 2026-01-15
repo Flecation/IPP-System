@@ -175,6 +175,7 @@ public class switchPage extends utils {
                 newScene.setFill(Color.TRANSPARENT);
 
                 stage.setScene(newScene);
+                stage.setMaximized(true);
 
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,

@@ -22,8 +22,18 @@ public class utils {
         //For setting the tool tip for any buttons
         public static void setToolTip(Button btn,String suggestion){
             Tooltip tooltip = new Tooltip(suggestion);
+//            tooltip.setMaxSize(33,17);
+            tooltip.setStyle("-fx-font-size:12px;");
             tooltip.setShowDelay(Duration.millis(300));
             Tooltip.install(btn,tooltip);
+        }
+        public static void setToolTip(Label lbl,String suggestion){
+            Tooltip tooltip = new Tooltip(suggestion);
+//            tooltip.setMaxSize(33,17);
+            tooltip.setStyle("-fx-font-size:12px;");
+            tooltip.setShowDelay(Duration.millis(300));
+            Tooltip.install(lbl,tooltip);
+
         }
 
         //For setting the password field if in the needed place
@@ -96,8 +106,8 @@ public class utils {
                 themeToggle.getInstance().setTheme(root,"/CSS/lightMode.css","/CSS/darkMode.css");
         }
 
-        public static void changeTheme(Parent root){
-                themeToggle.setRoot(root);
+        public static void changeTheme(){
+
                 themeToggle.getInstance().toggleTheme();
         }
 
