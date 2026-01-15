@@ -1,0 +1,51 @@
+*{
+    /* font family */
+    -fx-font-family: Inter,Arial;
+
+    /* For the Background color */
+    -light-background-color: #c3c3c3;
+    -dark-background-color: #1F3A5F;
+
+    /* For the Background base color */
+    -light-base-color: #f4f6f8;
+    -dark-base-color: #2c3380;
+
+    /* For the Text color */
+    -light-text-color: #000000;
+    -dark-text-color: #ffffff;
+
+    /* For the selection color */
+    -light-selection-color: #e89b17;
+    -dark-selection-color: #fc811a;
+
+    /* For the hover button color */
+    -light-hover-button-color: #5e5e5e;
+    -dark-hover-button-color: #b3b7e5;
+
+    /* For the border color */
+    -light-border-color:#e9e9e9 ;
+    -dark-border-color: #d1d5db;
+
+    /* For the specific color */
+    -warning-color: #ED6C02;
+    -success-color : #2E7D32;
+    -danger-color : #c62828;
+    -info-color : #1565C0;
+
+
+
+}
+
+.label{
+
+}
+.button {
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
+}
