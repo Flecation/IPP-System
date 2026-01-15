@@ -1,0 +1,24 @@
+Index: src/main/java/IPPSystem/Main/HelloApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package IPPSystem.Main;\r\n\r\nimport javafx.application.Application;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.text.Font;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.IOException;\r\n\r\npublic class HelloApplication extends Application {\r\n    @Override\r\n    public void start(Stage stage) throws IOException {\r\n\r\n//        Font Family\r\n        Font.loadFont(\r\n                getClass().getResource(\"/fonts/Poppins-Regular.ttf\").toExternalForm(),12\r\n        );\r\n        Font.loadFont(\r\n                getClass().getResource(\"/fonts/Poppins-SemiBold.ttf\").toExternalForm(),12\r\n        );\r\n\r\n        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(\"/View/managerSupervisorListView.fxml\"));\r\n        Scene scene = new Scene(fxmlLoader.load(), 900, 535);\r\n        stage.setTitle(\"Hello!\");\r\n        stage.setScene(scene);\r\n\r\n        stage.show();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/IPPSystem/Main/HelloApplication.java b/src/main/java/IPPSystem/Main/HelloApplication.java
+--- a/src/main/java/IPPSystem/Main/HelloApplication.java	(revision 091fc459f3a16152d03c3368493bc4876866ed4c)
++++ b/src/main/java/IPPSystem/Main/HelloApplication.java	(date 1768149732543)
+@@ -20,11 +20,10 @@
+                 getClass().getResource("/fonts/Poppins-SemiBold.ttf").toExternalForm(),12
+         );
+ 
+-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/managerSupervisorListView.fxml"));
++        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/login.fxml"));
+         Scene scene = new Scene(fxmlLoader.load(), 900, 535);
+-        stage.setTitle("Hello!");
+         stage.setScene(scene);
+-
++        
+         stage.show();
+     }
+ }

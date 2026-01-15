@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="your.package.MainController">
+
+    <!-- ================= TOP BAR ================= -->
+    <top>
+        <HBox spacing="10"
+              alignment="CENTER_RIGHT"
+              style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc;">
+            <padding>
+                <Insets top="8" right="12" bottom="8" left="12"/>
+            </padding>
+
+            <!-- Notification Button -->
+            <Button fx:id="notificationBtn"
+                    text="🔔"
+                    onAction="#onNotifications"
+                    style="-fx-font-size: 16px;
+                           -fx-background-color: transparent;" />
+        </HBox>
+    </top>
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <VBox prefWidth="240"
+              spacing="12"
+              style="-fx-background-color: #1e1e1e;">
+
+            <padding>
+                <Insets top="24" right="16" bottom="24" left="16"/>
+            </padding>
+
+            <Label text="Desktop App"
+                   style="-fx-text-fill: white;
+                          -fx-font-size: 20px;
+                          -fx-font-weight: bold;" />
+
+            <Separator />
+
+            <Button text="Home"     onAction="#onHome"     maxWidth="Infinity"/>
+            <Button text="Files"    onAction="#onFiles"    maxWidth="Infinity"/>
+            <Button text="Tools"    onAction="#onTools"    maxWidth="Infinity"/>
+            <Button text="Settings" onAction="#onSettings" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator />
+
+            <Button text="Exit"
+                    onAction="#onExit"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #c0392b;
+                           -fx-text-fill: white;" />
+        </VBox>
+    </left>
+
+    <!-- ================= CONTENT ================= -->
+    <center>
+        <StackPane fx:id="contentPane"
+                   style="-fx-background-color: #f4f4f4;" />
+    </center>
+
+</BorderPane>
