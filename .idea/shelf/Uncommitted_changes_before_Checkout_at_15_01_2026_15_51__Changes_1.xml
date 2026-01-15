@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_15_01_2026_15_51_[Changes]1" date="1768468898130" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_15_01_2026_15_51_[Changes]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 15.01.2026 15:51 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_15_01_2026_15_51_[Changes]1/LoginController.class" />
+  </binary>
+</changelist>
