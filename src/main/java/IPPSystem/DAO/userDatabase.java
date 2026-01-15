@@ -50,8 +50,8 @@ public class userDatabase {
         return info;
     }
 
-    public static List<users> getAllUser(){
-        List<users> ls = new ArrayList<users>();
+    public static ArrayList<users> getAllUser(){
+        ArrayList<users> ls = new ArrayList<users>();
         try {
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users");
             ResultSet rs = pstmt.executeQuery();
@@ -75,8 +75,8 @@ public class userDatabase {
         return ls;
     }
 
-    public static users getUserByRole(String role){
-        users info = new users();
+    public static ArrayList<users> getUserByRole(String role){
+        ArrayList<users> info = new ArrayList<>();
         try {
 
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ?");
@@ -93,7 +93,7 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class userDatabase {
         return info;
     }
 
-    public static users loginUser(String userName, String userPassword){
+    public static users login(String userName, String userPassword){
         users users = new users();
 
         try {
@@ -125,6 +125,7 @@ public class userDatabase {
             }else {
                 return null;
             }
+            if (!users.isActive()) return null;
             if(utils.checkPassword(userPassword,users.getUserPassword())) return users;
             else return null;
         } catch (SQLException e) {
@@ -153,5 +154,17 @@ public class userDatabase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void delete(int id){
+        try {
+            PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userId = ?");
+            pstmt.setInt(1,id);
+            ResultSet rs = pstmt.executeQuery();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
