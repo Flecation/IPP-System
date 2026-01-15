@@ -20,9 +20,10 @@ public class database {
 
     public static users getUserById(int userId){return userDatabase.getUserByUserId(userId);}
 
-    public static void deleteUser(int userId){
+    public static Boolean deleteUser(int userId){return userDatabase.delete(userId);}
 
-    }
+    public static Boolean createUser(users users){return userDatabase.addUser(users);}
+
 //    For the labors functions
 
     public static ArrayList<labors> getAllLabors(){return laborDatabase.getAllLabors();}

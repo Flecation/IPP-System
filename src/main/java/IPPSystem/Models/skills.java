@@ -16,6 +16,7 @@ public class skills extends workItems{
         this.skillName = skillName;
     }
 
+
     public skills(int skillId,String skillName){
         this.skillId = skillId;
         this.skillName = skillName;
