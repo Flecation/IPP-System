@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
@@ -21,7 +20,7 @@
 
 <BorderPane maxHeight="1200.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <VBox maxHeight="1300.0" maxWidth="1120.0" minHeight="800.0" minWidth="1120.0" spacing="10.0" style="-fx-background-color: #D3D3D3; -fx-background-radius: 10; -fx-border-radius: 10;" BorderPane.alignment="CENTER">
+      <VBox maxHeight="1300.0" maxWidth="1120.0" minHeight="800.0" minWidth="1120.0" spacing="10.0" style="-fx-background-color: #D3D3D3; -fx-background-radius: 8; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
          <children>
             <VBox maxHeight="130.0" maxWidth="1083.0" minHeight="90.0" minWidth="1083.0" prefWidth="1083.0" style="-fx-background-color: #696D7D; -fx-border-radius: 8; -fx-background-radius: 8;" VBox.vgrow="ALWAYS">
                <children>
@@ -74,7 +73,7 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <ProgressBar fx:id="pbCompletedTask" prefHeight="16.0" prefWidth="216.0" progress="0.3" VBox.vgrow="ALWAYS">
+                        <ProgressBar fx:id="pbDayRemaining" prefHeight="16.0" prefWidth="216.0" progress="0.3" VBox.vgrow="ALWAYS">
                            <effect>
                               <ColorAdjust brightness="-0.15" contrast="0.13" hue="0.06" saturation="-0.96" />
                            </effect>
@@ -102,7 +101,7 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <ProgressBar fx:id="pbCompletedTask1" prefHeight="16.0" prefWidth="216.0" progress="0.6" VBox.vgrow="ALWAYS">
+                        <ProgressBar fx:id="pbCompletedTask" prefHeight="16.0" prefWidth="216.0" progress="0.6" VBox.vgrow="ALWAYS">
                            <effect>
                               <ColorAdjust brightness="-0.15" contrast="0.13" hue="0.06" saturation="-0.96" />
                            </effect>
@@ -336,17 +335,12 @@
                               </ProgressBar>
                               <HBox prefHeight="58.0" prefWidth="266.0">
                                  <children>
-                                    <FontAwesomeIconView fill="#faf7f7ca" glyphName="CALENDAR" size="20" HBox.hgrow="ALWAYS">
-                                       <HBox.margin>
-                                          <Insets left="10.0" top="12.0" />
-                                       </HBox.margin>
-                                    </FontAwesomeIconView>
                                     <Label prefHeight="22.0" prefWidth="202.0" style="-fx-text-fill: RED;" text="Hanover Date: 2024-Jan-01" textFill="#c71111" HBox.hgrow="ALWAYS">
                                        <font>
                                           <Font name="Times New Roman Bold" size="16.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="8.0" top="12.0" />
+                                          <Insets left="18.0" top="12.0" />
                                        </HBox.margin>
                                     </Label>
                                  </children>
@@ -384,6 +378,7 @@
                                     <Insets top="20.0" />
                                  </StackPane.margin>
                               </Label>
+
                               <Circle fx:id="circleCPI" fill="#1f93ff00" radius="75.0" stroke="#f0eded" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stock-dash-array: 50;" StackPane.alignment="CENTER">
                                  <StackPane.margin>
                                     <Insets />

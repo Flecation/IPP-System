@@ -1,0 +1,9 @@
+@import "main.css";
+
+.combo{
+    -fx-font-size: 14px;
+    -fx-font-family: "Times New Roman";
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
