@@ -1,10 +1,8 @@
 package IPPSystem.DAO;
 
-import IPPSystem.Models.user;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -30,7 +28,9 @@ public class databaseConnection {
         return dataSource.getConnection();
     }
 
-
+    public static void closeConnection(){
+        dataSource.close();
+    }
 
 
 

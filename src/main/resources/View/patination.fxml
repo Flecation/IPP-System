@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="paginationPrevBtn" mnemonicParsing="false" onAction="#clickonprev" prefWidth="60.0" styleClass="paginationPrevBtn" stylesheets="@../CSS/pagination.css" text="Prev" textFill="#10ddd05c">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Button>
+      <Button fx:id="paginationBtn1" layoutX="153.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon1" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn1" stylesheets="@../CSS/pagination.css" text="1" textFill="WHITE" />
+      <Button fx:id="paginationBtn2" layoutX="185.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon2" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn2" stylesheets="@../CSS/pagination.css" text="2" textFill="#0ba380" />
+      <Button fx:id="paginationBtn3" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon3" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn3" stylesheets="@../CSS/pagination.css" text="3" textFill="#0ba380" />
+      <Button fx:id="paginationNextBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" styleClass="paginationNextBtn" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</HBox>

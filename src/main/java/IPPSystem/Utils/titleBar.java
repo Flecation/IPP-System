@@ -1,8 +1,11 @@
 package IPPSystem.Utils;
 
+import IPPSystem.DAO.databaseConnection;
 import javafx.animation.*;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -10,27 +13,35 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class titleBar extends effect{
+public class titleBar extends utils {
 
 //    For all pane of the title bar
     private static Parent root;
 
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn){
         root = basePane;
-
         FontIcon sizeIcon = new FontIcon("fas-window-restore");
         sizeIcon.setIconSize(12);
+        sizeIcon.getStyleClass().add("restoreIcon");
         restoreBtn.setGraphic(sizeIcon);
+        restoreBtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        restoreBtn.setAlignment(Pos.CENTER);
         setToolTip(restoreBtn,"restore");
 
-        FontIcon miniIcon = new FontIcon("fas-window-minimize");
+        FontIcon miniIcon = new FontIcon("fas-minus");
+        miniIcon.getStyleClass().add("miniIcon");
         miniIcon.setIconSize(12);
         minimizeBtn.setGraphic(miniIcon);
+        minimizeBtn.setContentDisplay(ContentDisplay.CENTER);
+        minimizeBtn.setAlignment(Pos.CENTER);
         setToolTip(minimizeBtn,"minimize");
 
         FontIcon exitIcon = new FontIcon("fas-times");
+        exitIcon.getStyleClass().add("exitIcon");
         exitIcon.setIconSize(12);
         exitBtn.setGraphic(exitIcon);
+        exitBtn.setContentDisplay(ContentDisplay.CENTER);
+        exitBtn.setAlignment(Pos.CENTER);
         setToolTip(exitBtn,"exit");
 
 
@@ -69,7 +80,7 @@ public class titleBar extends effect{
                         new KeyValue(blur.radiusProperty(), 0, Interpolator.EASE_BOTH),
                         new KeyValue(region.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
-                new KeyFrame(Duration.millis(250),
+                new KeyFrame(Duration.millis(100),
                         new KeyValue(blur.radiusProperty(), 5, Interpolator.EASE_BOTH),
                         new KeyValue(region.opacityProperty(), 0.5, Interpolator.EASE_BOTH)
                 )
@@ -77,6 +88,7 @@ public class titleBar extends effect{
         );
 
         blurIn.setOnFinished(event -> {
+            databaseConnection.closeConnection();
             System.exit(0);
         });
 
