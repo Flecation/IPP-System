@@ -1,0 +1,58 @@
+@import url("main.css");
+
+/* for the confirm message box */
+#confirmMessageBox{
+    -fx-background-radius: 12;
+}
+
+#confirmMessageBox .titleStyle{
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-radius: 12 12 0 0;
+    -fx-padding: 15 20;
+}
+
+#confirmMessageIcon {
+    -fx-font-size: 20;
+    -fx-text-fill: -primary-text-color;
+}
+
+#confirmMessageTitle {
+    -fx-font-size: 16;
+    -fx-text-fill: -primary-text-color;
+}
+
+#confirmMessageLbl {
+    -fx-font-size: 13;
+    -fx-text-fill: -secondary-text-color;
+}
+
+#confirmMessageCancelBtn ,#confirmMessageConfirmBtn{
+    -fx-font-size: 13;
+    -fx-background-radius: 8;
+}
+
+/* for the toast message box */
+
+#toastBox {
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-border-color: -border-color;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);
+}
+
+/* for the showing message box */
+
+.warning-toast {
+    -fx-background-color: -warning-color;
+    -fx-Icon-color: -primary-bg-color;
+    -fx-text-fill: -primary-bg-color;
+}
+
+
+.success-toast{
+    -fx-background-color: -success-color;
+    -fx-Icon-color: -primary-bg-color;
+    -fx-text-fill: -primary-bg-color;
+}
