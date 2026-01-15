@@ -4,19 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="delete one">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_1_5_26,_9_59 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_1_5_26__9_59PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/CustomTabController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/skills.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/skills.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="creation of the basic frame">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/start.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/start.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Main/HelloApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Main/HelloApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Requirement/+++++ IPP System Requirements +++++.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Requirement/+++++ IPP System Requirements +++++.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Requirement/Integrated_Project_Planning_System_Data_Resources.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Requirement/Integrated_Project_Planning_System_Data_Resources.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +85,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Application.start.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
@@ -95,10 +117,10 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/group1",
     "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\group1" />
@@ -117,16 +139,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
-      </set>
-    </attachedChunks>
-  </component>
-  <component name="SvnConfiguration">
-    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -264,12 +276,210 @@
       <option name="project" value="LOCAL" />
       <updated>1765895503520</updated>
     </task>
+    <task id="LOCAL-00017" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766661429565</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1766661429565</updated>
+    </task>
+    <task id="LOCAL-00018" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766665492218</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1766665492218</updated>
+    </task>
+    <task id="LOCAL-00019" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766730300798</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1766730300798</updated>
+    </task>
+    <task id="LOCAL-00020" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766730600062</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1766730600062</updated>
+    </task>
+    <task id="LOCAL-00021" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766737916386</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1766737916386</updated>
+    </task>
+    <task id="LOCAL-00022" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766771261835</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1766771261835</updated>
+    </task>
+    <task id="LOCAL-00023" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766865928393</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1766865928393</updated>
+    </task>
+    <task id="LOCAL-00024" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766905327849</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1766905327849</updated>
+    </task>
+    <task id="LOCAL-00025" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766932841740</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1766932841740</updated>
+    </task>
+    <task id="LOCAL-00026" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1767016289873</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1767016289873</updated>
+    </task>
+    <task id="LOCAL-00027" summary="css changes">
+      <option name="closed" value="true" />
+      <created>1767111788087</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1767111788087</updated>
+    </task>
+    <task id="LOCAL-00028" summary="css changes">
+      <option name="closed" value="true" />
+      <created>1767172778337</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1767172778337</updated>
+    </task>
+    <task id="LOCAL-00029" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767277883074</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1767277883074</updated>
+    </task>
+    <task id="LOCAL-00030" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767378996461</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1767378996461</updated>
+    </task>
+    <task id="LOCAL-00031" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767379308868</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1767379308868</updated>
+    </task>
+    <task id="LOCAL-00032" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767379516684</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1767379516684</updated>
+    </task>
+    <task id="LOCAL-00033" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767444822964</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1767444822964</updated>
+    </task>
+    <task id="LOCAL-00034" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767467902250</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1767467902250</updated>
+    </task>
+    <task id="LOCAL-00035" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767547141389</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1767547141389</updated>
+    </task>
+    <task id="LOCAL-00036" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767548952429</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1767548952429</updated>
+    </task>
+    <task id="LOCAL-00037" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1767987016799</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1767987016799</updated>
+    </task>
+    <task id="LOCAL-00038" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1768149489380</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1768149489380</updated>
+    </task>
+    <task id="LOCAL-00039" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1768150051112</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1768150051112</updated>
+    </task>
+    <task id="LOCAL-00040" summary="delete one">
+      <option name="closed" value="true" />
+      <created>1768200344268</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1768200344268</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="creation of the basic frame" />
+    <MESSAGE value="css changes" />
+    <MESSAGE value="login Changes" />
+    <MESSAGE value="navigationPane" />
+    <MESSAGE value="delete one" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete one" />
     <option name="LAST_COMMIT_MESSAGE" value="creation of the basic frame" />
   </component>
   <component name="XDebuggerManager">
@@ -282,10 +492,6 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
