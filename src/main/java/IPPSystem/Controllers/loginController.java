@@ -50,7 +50,7 @@ public class loginController {
 
     @FXML
     public void initialize(){
-//        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today()));
+//        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
         try {
             Connection con = databaseConnection.getConnection();
         } catch (SQLException e) {
@@ -115,7 +115,7 @@ public class loginController {
                     throw new RuntimeException(e);
                 }
             }else{
-                users check = userDatabase.loginUser(name,password);
+                users check = userDatabase.login(name,password);
                 if (check == null){
                     try {
 

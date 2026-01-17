@@ -34,19 +34,19 @@
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {}
-}</component>
+        &quot;lastFilter&quot;: {}
+        }</component>
   <component name="GitHubPullRequestState">{
-  &quot;prStates&quot;: [
-    {
-      &quot;id&quot;: {
+        &quot;prStates&quot;: [
+        {
+        &quot;id&quot;: {
         &quot;id&quot;: &quot;PR_kwDOQmomhM65KLmC&quot;,
         &quot;number&quot;: 11
-      },
-      &quot;lastSeen&quot;: 1765895659102
-    }
-  ]
-}</component>
+        },
+        &quot;lastSeen&quot;: 1765895659102
+        }
+        ]
+        }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,
@@ -61,8 +61,8 @@
     </option>
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
+        &quot;associatedIndex&quot;: 4
+        }</component>
   <component name="ProjectId" id="36kQspTCW0pUyCmBpXvLIuYomtw" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
