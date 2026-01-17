@@ -28,6 +28,7 @@ public class projects {
     private double minLaborQty;
     private double maxLaborQty;
     private Date startDate,endDate;
+    private String assignStatus;
 
     public projects() {
     }
@@ -80,6 +81,20 @@ public class projects {
 
     public projects(String projectInstanceName, double projectDuration) {
         this.projectInstanceName = projectInstanceName;
+        this.projectDuration = projectDuration;
+    }
+
+    public projects(Date startDate, Date endDate, double projectDuration) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.projectDuration = projectDuration;
+    }
+
+    public projects(String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.projectDuration = projectDuration;
     }
 
@@ -137,6 +152,19 @@ public class projects {
         this.endDate = endDate;
         this.projectLocation = projectLocation;
         this.projectStatus = projectStatus;
+    }
+
+    public projects(int projectTypeId, String projectTypeName) {
+        this.projectTypeId = projectTypeId;
+        this.projectTypeName = projectTypeName;
+    }
+
+    public String getAssignStatus() {
+        return assignStatus;
+    }
+
+    public void setAssignStatus(String assignStatus) {
+        this.assignStatus = assignStatus;
     }
 
     public double getMaxLaborQty() {

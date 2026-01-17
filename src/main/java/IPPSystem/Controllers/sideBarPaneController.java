@@ -283,7 +283,7 @@ public class sideBarPaneController  extends navigationPaneController{
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("login.fxml",loadPane);
+            utils.openFxml("dashboard.fxml",loadPane);
         });
         dashboardIconBtn.setOnMouseClicked(e -> System.out.println());
 

@@ -111,6 +111,16 @@ public class switchPage extends utils {
                     HelloApplication.class.getResource("/View/" + fxmlFile)
             );
 
+            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
+            StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
+
+            if (newContent instanceof Region region) {
+                region.prefWidthProperty().bind(loadPane.widthProperty());
+                region.prefHeightProperty().bind(loadPane.heightProperty());
+                region.setMaxWidth(Double.MAX_VALUE);
+                region.setMaxHeight(Double.MAX_VALUE);
+            }
+
             if (loadPane.getChildren().isEmpty()) {
                 loadPane.getChildren().setAll(newContent);
                 return;
@@ -140,7 +150,6 @@ public class switchPage extends utils {
             e.printStackTrace();
         }
     }
-
     //from the login controller to the dashboard with animation
     public static void switchScene(Button button, String fxmlPath) {
 

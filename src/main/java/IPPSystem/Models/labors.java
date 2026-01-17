@@ -21,6 +21,11 @@ public class labors extends skills{
         this.laborEndDate = laborEndDate;
     }
 
+    public labors(int laborId, String laborName) {
+        this.laborId = laborId;
+        this.laborName = laborName;
+    }
+
     public labors(int skillId, String laborName, String laborNRC, String laborPhone, Date laborStartDate) {
         super(skillId);
         this.laborName = laborName;

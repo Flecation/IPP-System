@@ -1,6 +1,7 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
+import IPPSystem.Utils.dateFormatter;
 import IPPSystem.Utils.passwordCrafting;
 import IPPSystem.Utils.utils;
 
@@ -144,7 +145,7 @@ public class userDatabase {
             PreparedStatement pstmt = con.prepareStatement(
                     "INSERT INTO users (userName,userRole,userPhone," +
                     "userEmail,userDOB,userPassword,userStartDate,userPhoto)" +
-                    " values (?,?,?,?,?,?,?)"
+                    " values (?,?,?,?,?,?,?,?)"
             );
             pstmt.setString(1,user.getUserName());
             pstmt.setString(2,user.getUserRole());
@@ -164,13 +165,17 @@ public class userDatabase {
 
     public static Boolean delete(int id){
         try {
-            PreparedStatement pstmt = con.prepareCall("UPDATE users SET isActive = false WHERE userId = ?");
-            pstmt.setInt(1,id);
-            Boolean rs = pstmt.execute();
-            return rs;
+            PreparedStatement pstmt = con.prepareCall("UPDATE users " +
+                    "SET isActive = FALSE, " +
+                    " userEndDate = ?" +
+                    "WHERE userId = ?;");
+            pstmt.setDate(1, dateFormatter.today());
+            pstmt.setInt(2,id);
+            return  pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
     }
+
 }

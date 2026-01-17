@@ -3,7 +3,7 @@ package IPPSystem.Models;
 import java.sql.Date;
 
 public class workItems extends projects {
-    private int workItemId;
+    private int workItemId,assignWorkItemId;
     private String workItemName;
 
     public workItems(){}
@@ -29,6 +29,10 @@ public class workItems extends projects {
         this.workItemName = workItemName;
     }
 
+    public workItems(String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
+        super(projectStatus,assignStatus, startDate, endDate, projectDuration);
+    }
+
     //for the workItems details
     public workItems(int projectId,int workItemId, String workItemName, double minDuration, double maxDuration, double minCost, double maxCost, double minLaborQty, double maxLaborQty) {
         super(projectId, minDuration, maxDuration, minCost, maxCost, minLaborQty, maxLaborQty);
@@ -47,6 +51,19 @@ public class workItems extends projects {
     public workItems(String projectInstanceName, String workItemName, double projectDuration, double projectCost, double projectLaborQty, Date startDate, Date endDate) {
         super(projectInstanceName, projectDuration, projectCost, projectLaborQty, startDate, endDate);
         this.workItemName = workItemName;
+    }
+
+    public workItems( int assignWorkItemId,Date startDate, Date endDate, double projectDuration) {
+        super(startDate, endDate, projectDuration);
+        this.assignWorkItemId = assignWorkItemId;
+    }
+
+    public int getAssignWorkItemId() {
+        return assignWorkItemId;
+    }
+
+    public void setAssignWorkItemId(int assignWorkItemId) {
+        this.assignWorkItemId = assignWorkItemId;
     }
 
     public String getWorkItemName() {
