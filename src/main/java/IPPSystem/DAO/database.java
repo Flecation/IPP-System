@@ -1,14 +1,11 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
-import IPPSystem.Models.labors;
-import IPPSystem.Models.skills;
-import IPPSystem.Models.tasks;
-import IPPSystem.Models.users;
+import IPPSystem.Models.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class database {
@@ -58,13 +55,13 @@ public class database {
 
     public static ArrayList<skills> getAllSkill(){return skillDatabase.getAllSkills();}
 
-    public static ArrayList<skills> getSkillByWorkItemId(int workItemId){return skillDatabase.getSkillByWorkItemId(workItemId);}
+    public static ArrayList<skills> getSkillDetails(int projectTypeId,int workItemId){return skillDatabase.getSkillByWorkItem(projectTypeId,workItemId);}
 
 //    For the project tasks
 
     public static boolean editAssignTasks(tasks task, assignStatus status){return taskDatabase.addTaskDetailRecord(task,status);}
 
-    public static boolean createAssignTaskToWorkItem(tasks assign,assignStatus status){return taskDatabase.assignTasks(assign,status);}
+    public static boolean setAssignTaskToWorkItem(tasks assign, projectStatus projectStatus, assignStatus assignStatus){return taskDatabase.assignTasks(assign,projectStatus,assignStatus);}
 
     public static ArrayList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){return taskDatabase.getAllTasksByAssignWorkItem(assignWorkItemId);}
 
@@ -72,9 +69,27 @@ public class database {
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
-//    For the Projects functions
-
 //    For the WorkItems functions
+
+    public static ArrayList<workItems> getAllWorkItemsForAutoGeneration(int projectTypeId,int buildingId, int levelId){return workItemDatabase.getAllWorkItemDetails(projectTypeId,buildingId,levelId);}
+
+    public static ArrayList<workItems> getAllWorkItemsByAssignProject(int assignProjectId){return workItemDatabase.getAllWorkItemByAssignProjectId(assignProjectId);}
+
+    public static boolean setAssignWorkItems(workItems assignWorkItem,projectStatus projectStatus,assignStatus assignStatus){return workItemDatabase.assignWorkItems(assignWorkItem,projectStatus,assignStatus);}
+
+    public static boolean deleteWorkItem(int assignWorkItemId){return workItemDatabase.deleteWorkItem(assignWorkItemId);}
+
+    public static boolean deleteSkillFromWorkItem(int assignWorkItemId,int skillId){return workItemDatabase.deleteSkillFromWorkItem(assignWorkItemId,skillId);}
+
+    public static ArrayList<skills> getAllAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
+
+    public static boolean setSkillsToWorkItem(skills skill,assignStatus status){return workItemDatabase.addSkillToWorkItem(skill,status);}
+
+//    For the project functions
+
+    public static boolean deleteAssignProject(int assignProjectId){return projectDatabase.deleteAssignProject(assignProjectId);}
+
+
 
 //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}

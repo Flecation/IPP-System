@@ -36,15 +36,20 @@ public class skillDatabase  {
 
     }
 
-    public static ArrayList<skills> getSkillByWorkItemId(int workItemId){
+    public static ArrayList<skills> getSkillByWorkItem(int projectTypeId, int workItemId){
         ArrayList<skills> skill = new ArrayList<>();
-        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItemId(?);")){
-            cs.setInt(1,workItemId);
+        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?);")){
+            cs.setInt(1,projectTypeId);
+            cs.setInt(2,workItemId);
             ResultSet rs = cs.executeQuery();
             while (rs.next()){
                 skill.add(new skills(
                         rs.getInt("skillId"),
-                        rs.getString("skillName")
+                        rs.getString("skillName"),
+                        rs.getDouble("minRequireLabors"),
+                        rs.getDouble("maxRequireLabors"),
+                        rs.getDouble("minDailyWage"),
+                        rs.getDouble("maxDailyWage")
                 ));
             }
             return skill;
