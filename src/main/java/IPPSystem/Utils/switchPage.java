@@ -105,13 +105,39 @@ public class switchPage extends utils {
     }
 
     // Simple FXML opener utility
-    public static Parent openFxml(String fxmlFile) {
+    public static void openFxml(String fxmlFile, StackPane loadPane) {
         try {
-            return FXMLLoader.load(
-                    HelloApplication.class.getResource(fxmlFile)
+            Parent newContent = FXMLLoader.load(
+                    HelloApplication.class.getResource("/View/" + fxmlFile)
             );
+
+            if (loadPane.getChildren().isEmpty()) {
+                loadPane.getChildren().setAll(newContent);
+                return;
+            }
+
+            Parent oldContent = (Parent) loadPane.getChildren().get(0);
+            newContent.setOpacity(0);
+
+            loadPane.getChildren().setAll(oldContent, newContent);
+
+            Timeline fadeOut = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
+                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
+            );
+
+            fadeOut.setOnFinished(e -> {
+                Timeline fadeIn = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
+                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
+                );
+                fadeIn.play();
+            });
+
+            fadeOut.play();
+
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
+            e.printStackTrace();
         }
     }
 

@@ -3,8 +3,8 @@ DROP DATABASE IPPSystem;
 CREATE DATABASE IPPSystem;
 
 USE IPPSystem;
--- for master tables 
- 
+-- for master tables
+
 CREATE TABLE users (
 	userId int primary key auto_increment,
     userName varchar(255),
@@ -53,6 +53,7 @@ create table labors (
 	laborId int primary key auto_increment,
      laborName varchar(255),
      laborNRC varchar(255) unique not null,
+     laborPhone varchar(255),
      skillId int,
      laborStartDate Date,
      laborEndDate Date,
@@ -135,7 +136,7 @@ create table assignProjectDetails(
     references assignProjects (assignProjectId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignWorkItems (
@@ -157,7 +158,7 @@ create table assignWorkItemDetails(
     references assignWorkItems (assignWorkItemId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignTasks (
@@ -178,7 +179,7 @@ create table assignTaskDetails(
     references assignTasks (assignTaskId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
