@@ -119,7 +119,6 @@ public class loginController {
                 users check = database.loginUser(name,password);
                 if (check == null){
                     try {
-
                         utils.setAlertBox(overlayPane,"Wrong User","Please Check Your Name or Password",notificationType.WRONG,true);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
