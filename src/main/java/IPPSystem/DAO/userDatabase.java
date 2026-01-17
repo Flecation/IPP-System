@@ -1,6 +1,7 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
+import IPPSystem.Utils.dateFormatter;
 import IPPSystem.Utils.passwordCrafting;
 import IPPSystem.Utils.utils;
 
@@ -12,7 +13,7 @@ public class userDatabase {
 
     private static Connection con;
 
-        private static String userName,userEmail,userPhone,userPassword,userRole;
+        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto;
         private static int userId;
         private static boolean isActive;
         private static java.util.Date userDOB,userStartDate,userEndDate;
@@ -42,7 +43,8 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                userPhoto = rs.getString("userPhoto");
+                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -66,7 +68,8 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword);
+                userPhoto = rs.getString("userPhoto");
+                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
                 ls.add(users);
             }
         } catch (Exception e) {
@@ -93,7 +96,8 @@ public class userDatabase {
                 isActive = rs.getBoolean("isActive");
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
-                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword));
+                userPhoto = rs.getString("userPhoto");
+                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -120,7 +124,8 @@ public class userDatabase {
                         rs.getDate("userStartDate"),
                         rs.getDate("userEndDate"),
                         rs.getBoolean("isActive"),
-                        rs.getString("userPassword")
+                        rs.getString("userPassword"),
+                        rs.getString("userPhoto")
                 );
             }else {
                 return null;
@@ -134,13 +139,13 @@ public class userDatabase {
 
     }
 
-    public static void addUser(users user){
+    public static boolean addUser(users user){
 
         try {
             PreparedStatement pstmt = con.prepareStatement(
                     "INSERT INTO users (userName,userRole,userPhone," +
-                    "userEmail,userDOB,userPassword,userStartDate)" +
-                    " values (?,?,?,?,?,?,?)"
+                    "userEmail,userDOB,userPassword,userStartDate,userPhoto)" +
+                    " values (?,?,?,?,?,?,?,?)"
             );
             pstmt.setString(1,user.getUserName());
             pstmt.setString(2,user.getUserRole());
@@ -149,22 +154,28 @@ public class userDatabase {
             pstmt.setDate(5, (Date) user.getUserDOB());
             pstmt.setString(6,user.getUserPassword());
             pstmt.setDate(7, (Date) user.getUserStartDate());
-            pstmt.execute();
+            pstmt.setString(8,user.getUserPhoto());
+            boolean rs = pstmt.execute();
+            return rs;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void delete(int id){
+    public static Boolean delete(int id){
         try {
-            PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userId = ?");
-            pstmt.setInt(1,id);
-            ResultSet rs = pstmt.executeQuery();
-
+            PreparedStatement pstmt = con.prepareCall("UPDATE users " +
+                    "SET isActive = FALSE, " +
+                    " userEndDate = ?" +
+                    "WHERE userId = ?;");
+            pstmt.setDate(1, dateFormatter.today());
+            pstmt.setInt(2,id);
+            return  pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
     }
+
 }

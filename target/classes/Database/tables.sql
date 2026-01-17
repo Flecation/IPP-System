@@ -3,8 +3,8 @@ DROP DATABASE IPPSystem;
 CREATE DATABASE IPPSystem;
 
 USE IPPSystem;
--- for master tables 
- 
+-- for master tables
+
 CREATE TABLE users (
 	userId int primary key auto_increment,
     userName varchar(255),
@@ -13,7 +13,7 @@ CREATE TABLE users (
     userEmail varchar(255),
     userDOB date,
     userPassword varchar(255) not null,
-    userImage varchar(255),
+    userPhoto varchar(255),
     userStartDate Date ,
     userEndDate Date Default null,
     isActive boolean default true
@@ -53,6 +53,7 @@ create table labors (
 	laborId int primary key auto_increment,
      laborName varchar(255),
      laborNRC varchar(255) unique not null,
+     laborPhone varchar(255),
      skillId int,
      laborStartDate Date,
      laborEndDate Date,
@@ -90,7 +91,7 @@ create table taskDetails (
 );
 
 create table workItemRequireSkills (
-	workItemRequireSkills int primary key auto_increment,
+	workItemRequireSkillId int primary key auto_increment,
     workItemDetailId int,
     skillId int,
     minRequireLabors double,
@@ -99,10 +100,15 @@ create table workItemRequireSkills (
     maxDailyWage double
 );
 
--- for the project status
+-- for the status enum
 create table assignStatus(
     assignStatusId int primary key auto_increment,
     assignStatusName varchar(255) -- autoAssign,customAssign,actualResult, extraAssign
+);
+
+create table projectStatus(
+    projectStatusId int primary key auto_increment,
+    projectStatusName varchar(255) -- planning,inProgress,delay,finished,cancel
 );
 
 -- for the real project assign
@@ -119,7 +125,8 @@ create table assignProjects (
     managerId int,
     projectLocation varchar(255),
     projectOverHeadCost double,
-    projectStatus enum('planning','inProgress','delay','finished','cancel')
+    projectStatus int,
+    FOREIGN KEY (projectStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignProjectDetails(
@@ -135,13 +142,16 @@ create table assignProjectDetails(
     references assignProjects (assignProjectId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
-    projectWorkItemId int
+    projectWorkItemId int,
+    isCancel boolean default false,
+    workItemStatus int,
+    FOREIGN KEY (workItemStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignWorkItemDetails(
@@ -157,18 +167,20 @@ create table assignWorkItemDetails(
     references assignWorkItems (assignWorkItemId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignTasks (
 	assignTaskId int primary key auto_increment,
     assignWorkItemId int,
     projectTaskId int,
-    isCancel boolean default false
+    isCancel boolean default false,
+    taskStatus int,
+    FOREIGN KEY (taskStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignTaskDetails(
-    assignTakDetailId int primary key auto_increment,
+    assignTaskDetailId int primary key auto_increment,
     assignTaskId int,
     assignStatusId int,
     taskDuration double,
@@ -178,7 +190,7 @@ create table assignTaskDetails(
     references assignTasks (assignTaskId)
     on update cascade
     on delete cascade,
-    FOREIGN KEY assignStatusId REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -187,7 +199,7 @@ create table assignWorkItemSkills (
     assignWorkItemId int,
     skillId int,
     laborQty double,
-    isCustomize boolean,
+    isCustomize boolean default false,
     isCancel boolean default false
 );
 
@@ -220,18 +232,14 @@ CREATE TABLE dailyReports (
 CREATE TABLE dailyReportTasks (
     dailyReportTaskId INT PRIMARY KEY AUTO_INCREMENT,
     dailyReportId INT NOT NULL,
-    assignWorkItemId INT,
     assignTaskId INT,
     progressDescription TEXT,
     workHours DOUBLE,
     completedQty DOUBLE,
     isCompleted BOOLEAN DEFAULT FALSE,
-
     FOREIGN KEY (dailyReportId)
         REFERENCES dailyReports(dailyReportId)
         ON DELETE CASCADE,
-    FOREIGN KEY (assignWorkItemId)
-        REFERENCES assignWorkItems(assignWorkItemId),
     FOREIGN KEY (assignTaskId)
         REFERENCES assignTasks(assignTaskId)
 );
@@ -240,7 +248,6 @@ CREATE TABLE dailyReportLabors (
     dailyReportLaborId INT PRIMARY KEY AUTO_INCREMENT,
     dailyReportId INT NOT NULL,
     laborId INT NOT NULL,
-    skillId INT,
     workHours DOUBLE,
     dailyWage DOUBLE,
     remark TEXT,
@@ -249,9 +256,7 @@ CREATE TABLE dailyReportLabors (
         REFERENCES dailyReports(dailyReportId)
         ON DELETE CASCADE,
     FOREIGN KEY (laborId)
-        REFERENCES labors(laborId),
-    FOREIGN KEY (skillId)
-        REFERENCES skills(skillId)
+        REFERENCES labors(laborId) ON DELETE CASCADE
 );
 
 
@@ -416,9 +421,3 @@ FOREIGN KEY (workerId)
 REFERENCES labors(laborId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
-
-ALTER TABLE assignWorkers
-ADD skillId INT,
-ADD CONSTRAINT fk_aw_skill
-FOREIGN KEY (skillId)
-REFERENCES skills(skillId);
