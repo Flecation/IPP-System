@@ -96,7 +96,7 @@ create table workItemRequireSkills (
     skillId int,
     minRequireLabors double,
     maxRequireLabors double,
-    basicDailyWage double,
+    minDailyWage double,
     maxDailyWage double
 );
 
@@ -133,9 +133,9 @@ create table assignProjectDetails(
     assignProjectDetailId int primary key auto_increment,
     assignProjectId int ,
     assignStatusId int,
-    projectDuration double,
     projectCost double,
     projectLaborQty double,
+    projectDuration double,
     startDate date,
     endDate date,
     foreign key (assignProjectId)
@@ -149,7 +149,6 @@ create table assignWorkItems (
 	assignWorkItemId int primary key auto_increment,
     assignProjectId int,
     projectWorkItemId int,
-    isCancel boolean default false,
     workItemStatus int,
     FOREIGN KEY (workItemStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -158,9 +157,9 @@ create table assignWorkItemDetails(
     assignWorkItemDetailId int primary key auto_increment,
     assignWorkItemId int,
     assignStatusId int,
-    workItemDuration double,
     workItemCost double,
     workItemLaborQty double,
+    workItemDuration double,
     startDate date,
     endDate date,
     foreign key (assignWorkItemId)
@@ -198,16 +197,23 @@ create table assignWorkItemSkills (
 	assignWorkItemSkillId int primary key auto_increment,
     assignWorkItemId int,
     skillId int,
-    laborQty double,
-    isCustomize boolean default false,
     isCancel boolean default false
+);
+
+CREATE TABLE assignWorkItemSkillDetails(
+    assignWorkItemSkillDetailId int primary key auto_increment,
+    assignWorkItemSKillId int,
+    assignStatus int,
+    laborQty double,
+    dailyWagePerLabor double,
+    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (assignWorkItemSkillId) REFERENCES assignWorkItemSKills(assignWorkItemSkillId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table assignWorkers (
 	assignWorkerId int primary key auto_increment,
     assignProjectId int,
     workerId int,
-    isCustomize boolean,
     isCancel boolean default false
 );
 

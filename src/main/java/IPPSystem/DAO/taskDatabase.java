@@ -1,6 +1,7 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.tasks;
 import IPPSystem.Utils.dateFormatter;
 
@@ -92,16 +93,17 @@ public class taskDatabase {
     }
 
     //assign the task
-    public static boolean assignTasks(tasks assign, assignStatus status){
+    public static boolean assignTasks(tasks assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL assignTaskToWorkItem(?,?,?,?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL assignTaskToWorkItem(?,?,?,?,?,?,?,?)}");
             cstmt.setInt(1,assign.getAssignProjectId());
             cstmt.setInt(2,assign.getWorkItemId());
             cstmt.setInt(3,assign.getTaskId());
             cstmt.setDouble(4,assign.getProjectDuration());
             cstmt.setDate(5,assign.getStartDate());
             cstmt.setDate(6,assign.getEndDate());
-            cstmt.setString(7,status.toString());
+            cstmt.setString(7,projectStatus.toString());
+            cstmt.setString(8,assignStatus.toString());
             ResultSet rs = cstmt.executeQuery();
 
             return rs.getBoolean(1);
@@ -113,7 +115,7 @@ public class taskDatabase {
 
     public static boolean deleteTask(int assignTaskId){
         String sql = "UPDATE assignTasks " +
-                "SET isCancel = true" +
+                "SET taskStatus = 5" +
                 "WHERE assignTaskId = ?;";
         try {
             PreparedStatement pstmt = con.prepareCall(sql);

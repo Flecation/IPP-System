@@ -76,20 +76,31 @@ END$$
 DELIMITER ;
 
 -- for the skill procedures
-
 DELIMITER $$
 
-CREATE PROCEDURE getSkillByWorkItemId(IN p_workItemId INT)
+CREATE PROCEDURE getSkillByWorkItem(
+    IN p_projectTypeId INT,
+    IN p_workItemId INT
+)
 BEGIN
-    SELECT DISTINCT
+    SELECT
         s.skillId,
-        s.skillName
-    FROM workItemDetails wid
+        s.skillName,
+        wirs.minRequireLabors,
+        wirs.maxRequireLabors,
+        wirs.minDailyWage,
+        wirs.maxDailyWage
+
+    FROM projectDetails pd
+    INNER JOIN workItemDetails wid
+        ON wid.projectDetailId = pd.projectDetailId
     INNER JOIN workItemRequireSkills wirs
         ON wirs.workItemDetailId = wid.workItemDetailId
     INNER JOIN skills s
         ON s.skillId = wirs.skillId
-    WHERE wid.projectWorkItemId = p_workItemId;
+
+    WHERE pd.projectTypeId = p_projectTypeId
+      AND wid.projectWorkItemId = p_workItemId;
 END$$
 
 DELIMITER ;
@@ -119,9 +130,7 @@ BEGIN
         ON atd.assignTaskId = at.assignTaskId
     LEFT JOIN assignStatus ast
         ON ast.assignStatusId = atd.assignStatusId
-
     WHERE at.assignWorkItemId = p_assignWorkItemId
-      AND (at.isCancel IS NULL OR at.isCancel = FALSE)
       AND atd.assignTaskDetailId IS NOT NULL;
 END$$
 
@@ -157,7 +166,6 @@ END$$
 DELIMITER ;
 
 -- adding the extra or custom data for the tasks
-
 DELIMITER $$
 
 CREATE PROCEDURE addTaskDetailRecord(
@@ -169,18 +177,32 @@ CREATE PROCEDURE addTaskDetailRecord(
 )
 BEGIN
     DECLARE v_statusId INT;
+    DECLARE v_assignTaskDetailId INT;
 
-        SELECT assignStatusId
-        INTO v_statusId
-        FROM assignStatus
-        WHERE assignStatusName = p_statusName
-        LIMIT 1;
+    SELECT assignStatusId
+    INTO v_statusId
+    FROM assignStatus
+    WHERE assignStatusName = p_statusName
+    LIMIT 1;
 
-        IF v_statusId IS NULL THEN
-            SELECT FALSE AS success;
+    IF v_statusId IS NULL THEN
+        SELECT FALSE AS success;
+    ELSE
+        SELECT atd.assignTaskDetailId INTO v_assignTaskDetailId
+        FROM assignTaskDetails atd
+        WHERE atd.assignTaskId = p_assignTaskId
+          AND atd.assignStatusId = v_statusId;
+
+        IF v_assignTaskDetailId IS NOT NULL THEN
+            UPDATE assignTaskDetails
+            SET taskDuration = p_duration, startDate = p_startDate, endDate = p_endDate
+            WHERE assignTaskDetailId = v_assignTaskDetailId;
+
+            SELECT TRUE AS success;
         ELSE
             INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate)
             VALUES (p_assignTaskId, v_statusId, p_duration, p_startDate, p_endDate);
+
             SELECT TRUE AS success;
         END IF;
     END IF;
@@ -198,7 +220,8 @@ CREATE PROCEDURE assignTaskToWorkItem(
     IN p_duration DOUBLE,
     IN p_startDate DATE,
     IN p_endDate DATE,
-    IN p_statusName VARCHAR(255)
+    IN p_projectStatusName VARCHAR(255),
+    IN p_assignStatusName VARCHAR(255)
 )
 BEGIN
     DECLARE v_assignWorkItemId INT;
@@ -216,7 +239,7 @@ BEGIN
     SELECT projectStatus
     INTO v_projectStatusId
     FROM projectStatus
-    WHERE projectStatusName = "inPlanning";
+    WHERE projectStatusName = p_projectStatusName;
 
     IF v_assignWorkItemId IS NULL THEN
         INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId,projectStatus)
@@ -224,14 +247,14 @@ BEGIN
         SET v_assignWorkItemId = LAST_INSERT_ID();
     END IF;
 
-    INSERT INTO assignTasks(assignWorkItemId, projectTaskId, isCancel)
-    VALUES (v_assignWorkItemId, p_projectTaskId, FALSE);
+    INSERT INTO assignTasks(assignWorkItemId, projectTaskId)
+    VALUES (v_assignWorkItemId, p_projectTaskId);
     SET v_assignTaskId = LAST_INSERT_ID();
 
     SELECT assignStatusId
     INTO v_projectStatusId
     FROM assignStatus
-    WHERE assignStatusName = p_statusName
+    WHERE assignStatusName = p_assignStatusName
     LIMIT 1;
 
     IF v_projectStatusId IS NULL THEN
@@ -246,6 +269,272 @@ BEGIN
     VALUES (v_assignTaskId, v_projectStatusId, p_duration, p_startDate, p_endDate);
 
     SELECT TRUE AS success;
+END$$
+
+DELIMITER ;
+
+-- for the work items procedures
+
+DELIMITER $$
+
+CREATE PROCEDURE getAllWorkItemDetails(
+    IN p_projectTypeId INT,
+    IN p_buildingId INT,
+    IN p_levelId INT
+)
+BEGIN
+    SELECT
+        pd.projectTypeId,
+        wid.projectWorkItemId,
+        wi.projectWorkItemName,
+        wid.minDuration,
+        wid.maxDuration,
+        wid.minCost,
+        wid.maxCost,
+        wid.minLabors AS minLaborQty,
+        wid.maxLabors AS maxLaborQty
+
+    FROM projectDetails pd
+    INNER JOIN workItemDetails wid
+        ON wid.projectDetailId = pd.projectDetailId
+    INNER JOIN workItems wi
+        ON wi.projectWorkItemId = wid.projectWorkItemId
+
+    WHERE pd.projectTypeId = p_projectTypeId
+      AND (p_buildingId IS NULL OR pd.projectBuildingId = p_buildingId)
+      AND (p_levelId IS NULL OR pd.projectLevelId = p_levelId);
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE getAllWorkItemByAssignProjectId(
+    IN p_assignProjectId INT
+)
+BEGIN
+    SELECT
+        awi.assignWorkItemId,
+        wi.projectWorkItemName AS workItemName,
+        ps.projectStatusName AS workItemStatus,
+        ast.assignStatusName AS assignStatus,
+        awid.workItemCost AS cost,
+        awid.workItemLaborQty AS laborQty,
+        awid.workItemDuration AS duration,
+        awid.startDate AS startDate,
+        awid.endDate AS endDate,
+        awi.isCustomize AS isCustomize
+    FROM assignWorkItems awi
+    INNER JOIN workItems wi
+        ON wi.projectWorkItemId = awi.projectWorkItemId
+    INNER JOIN assignProjects ap
+        ON ap.assignProjectId = awi.assignProjectId
+    INNER JOIN projectStatus ps
+        ON ps.projectStatusId = ap.projectStatus
+    LEFT JOIN assignWorkItemDetails awid
+        ON awid.assignWorkItemId = awi.assignWorkItemId
+    LEFT JOIN assignStatus ast
+        ON ast.assignStatusId = awid.assignStatusId
+
+    WHERE awi.assignProjectId = p_assignProjectId
+      AND awid.assignWorkItemDetailId IS NOT NULL;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE assignWorkItems(
+    IN p_assignProjectId INT,
+    IN p_workItemId INT,
+    IN p_projectStatusName VARCHAR(255),
+    IN p_assignStatusName VARCHAR(255),
+    IN p_cost DOUBLE,
+    IN p_laborQty DOUBLE,
+    IN p_duration DOUBLE,
+    IN p_startDate DATE,
+    IN p_endDate DATE
+)
+BEGIN
+    DECLARE v_assignWorkItemId INT;
+    DECLARE v_projectStatusId INT;
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignWorkItemDetailId INT;
+
+    -- Get projectStatusId
+    SELECT projectStatusId
+    INTO v_projectStatusId
+    FROM projectStatus
+    WHERE projectStatusName = p_projectStatusName
+    LIMIT 1;
+
+    IF v_projectStatusId IS NULL THEN
+        SELECT FALSE AS success;
+    ELSE
+
+        -- Find or create assignWorkItem
+        SELECT assignWorkItemId
+        INTO v_assignWorkItemId
+        FROM assignWorkItems
+        WHERE assignProjectId = p_assignProjectId
+          AND projectWorkItemId = p_workItemId
+        LIMIT 1;
+
+        IF v_assignWorkItemId IS NULL THEN
+            INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId,workItemStatus)
+            VALUES (p_assignProjectId, p_workItemId,v_projectStatusId);
+            SET v_assignWorkItemId = LAST_INSERT_ID();
+        END IF;
+
+        -- Get assignStatusId
+        SELECT assignStatusId
+        INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = p_assignStatusName
+        LIMIT 1;
+
+        IF v_assignStatusId IS NULL THEN
+            SELECT FALSE AS success;
+        ELSE
+            -- Check if assignWorkItemDetails already exists for this status
+            SELECT assignWorkItemDetailId
+            INTO v_assignWorkItemDetailId
+            FROM assignWorkItemDetails
+            WHERE assignWorkItemId = v_assignWorkItemId
+              AND assignStatusId = v_assignStatusId
+            LIMIT 1;
+
+            IF v_assignWorkItemDetailId IS NULL THEN
+                INSERT INTO assignWorkItemDetails(
+                    assignWorkItemId,
+                    assignStatusId,
+                    workItemCost,
+                    workItemLaborQty,
+                    workItemDuration,
+                    startDate,
+                    endDate
+                )
+                VALUES (
+                    v_assignWorkItemId,
+                    v_assignStatusId,
+                    p_cost,
+                    p_laborQty,
+                    p_duration,
+                    p_startDate,
+                    p_endDate
+                );
+            ELSE
+                UPDATE assignWorkItemDetails
+                SET workItemCost = p_cost,
+                    workItemLaborQty = p_laborQty,
+                    workItemDuration = p_duration,
+                    startDate = p_startDate,
+                    endDate = p_endDate
+                WHERE assignWorkItemDetailId = v_assignWorkItemDetailId;
+            END IF;
+
+            SELECT TRUE AS success;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE getAllSkillDetailsByAssignWorkItem(
+    IN p_assignWorkItemId INT
+)
+BEGIN
+    SELECT
+        awis.assignWorkItemSkillId,
+        s.skillName,
+        ast.assignStatusName AS assignStatus,
+        awisd.laborQty,
+        awisd.dailyWagePerLabor,
+        awis.isCancel
+
+    FROM assignWorkItemSkills awis
+    INNER JOIN skills s
+        ON s.skillId = awis.skillId
+    LEFT JOIN assignWorkItemSkillDetails awisd
+        ON awisd.assignWorkItemSkillId = awis.assignWorkItemSkillId
+    LEFT JOIN assignStatus ast
+        ON ast.assignStatusId = awisd.assignStatus
+
+    WHERE awis.assignWorkItemId = p_assignWorkItemId;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE addSkillToWorkItem(
+    IN p_assignWorkItemId INT,
+    IN p_skillId INT,
+    IN p_assignStatusName VARCHAR(255),
+    IN p_laborQty DOUBLE,
+    IN p_dailyWage DOUBLE
+)
+BEGIN
+    DECLARE v_assignWorkItemSkillId INT;
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignWorkItemSkillDetailId INT;
+
+    -- Find or create assignWorkItemSkill
+    SELECT assignWorkItemSkillId
+    INTO v_assignWorkItemSkillId
+    FROM assignWorkItemSkills
+    WHERE assignWorkItemId = p_assignWorkItemId
+      AND skillId = p_skillId
+    LIMIT 1;
+
+    IF v_assignWorkItemSkillId IS NULL THEN
+        INSERT INTO assignWorkItemSkills(assignWorkItemId, skillId)
+        VALUES (p_assignWorkItemId, p_skillId);
+        SET v_assignWorkItemSkillId = LAST_INSERT_ID();
+    END IF;
+
+    -- Get assignStatusId
+    SELECT assignStatusId
+    INTO v_assignStatusId
+    FROM assignStatus
+    WHERE assignStatusName = p_assignStatusName
+    LIMIT 1;
+
+    IF v_assignStatusId IS NULL THEN
+        SELECT FALSE AS success;
+    ELSE
+        -- Check if assignWorkItemSkillDetails already exists for this status
+        SELECT assignWorkItemSkillDetailId
+        INTO v_assignWorkItemSkillDetailId
+        FROM assignWorkItemSkillDetails
+        WHERE assignWorkItemSkillId = v_assignWorkItemSkillId
+          AND assignStatus = v_assignStatusId
+        LIMIT 1;
+
+        IF v_assignWorkItemSkillDetailId IS NULL THEN
+            INSERT INTO assignWorkItemSkillDetails(
+                assignWorkItemSkillId,
+                assignStatus,
+                laborQty,
+                dailyWagePerLabor
+            )
+            VALUES (
+                v_assignWorkItemSkillId,
+                v_assignStatusId,
+                p_laborQty,
+                p_dailyWage
+            );
+        ELSE
+            UPDATE assignWorkItemSkillDetails
+            SET laborQty = p_laborQty,
+                dailyWagePerLabor = p_dailyWage
+            WHERE assignWorkItemSkillDetailId = v_assignWorkItemSkillDetailId;
+        END IF;
+
+        SELECT TRUE AS success;
+    END IF;
 END$$
 
 DELIMITER ;

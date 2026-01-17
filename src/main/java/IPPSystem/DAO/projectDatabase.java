@@ -50,7 +50,7 @@ public class projectDatabase {
     }
 
     //to assign the project
-    public static int assignProjects(projects assign){
+    public static boolean assignProjects(projects assign){
         try {
             CallableStatement cstmt = con.prepareCall("");
             cstmt.setInt(1,assign.getProjectTypeId());
@@ -66,9 +66,8 @@ public class projectDatabase {
             cstmt.setDate(11,assign.getStartDate());
             cstmt.setDouble(12,assign.getProjectDuration());
             cstmt.setString(13,assign.getProjectStatus());
-            ResultSet rs = cstmt.executeQuery();
 
-            return rs.getInt(1);
+            return cstmt.execute();
 
 
         } catch (SQLException e) {
@@ -129,7 +128,6 @@ public class projectDatabase {
                         rs.getString("projectBuildingName"),
                         rs.getDouble("minOverHeadCost"),
                         rs.getDouble("maxOverHeadCost")
-
                 );
             }
         } catch (SQLException e) {
@@ -138,4 +136,16 @@ public class projectDatabase {
         return projects;
     }
 
+    public static boolean deleteAssignProject(int assignProjectId){
+        String sql = "UPDATE assignProjects " +
+                "SET projectStatus = 5" +
+                "WHERE assignProjectId = ?;";
+        try {
+            PreparedStatement pstmt = con.prepareCall(sql);
+            pstmt.setInt(1,assignProjectId);
+            return  pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
