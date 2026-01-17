@@ -2,6 +2,7 @@ package IPPSystem.Controllers;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
+import IPPSystem.DAO.database;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
@@ -115,7 +116,7 @@ public class loginController {
                     throw new RuntimeException(e);
                 }
             }else{
-                users check = userDatabase.login(name,password);
+                users check = database.loginUser(name,password);
                 if (check == null){
                     try {
 
