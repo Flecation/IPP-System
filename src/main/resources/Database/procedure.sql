@@ -538,3 +538,271 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE assignProjects(
+    IN p_projectTypeId INT,
+    IN p_projectInstanceName VARCHAR(255),
+    IN p_projectBuildingId INT,
+    IN p_projectLevelId INT,
+    IN p_projectArea DOUBLE,
+    IN p_projectHeight DOUBLE,
+    IN p_totalStories DOUBLE,
+    IN p_totalUnits DOUBLE,
+    IN p_managerId INT,
+    IN p_projectLocation VARCHAR(255),
+    IN p_projectOverHeadCost DOUBLE,
+    IN p_projectStatusName VARCHAR(255),
+    IN p_assignStatusName VARCHAR(255),
+    IN p_projectCost DOUBLE,
+    IN p_projectLaborQty DOUBLE,
+    IN p_projectDuration DOUBLE,
+    IN p_startDate DATE,
+    IN p_endDate DATE
+)
+BEGIN
+    DECLARE v_assignProjectId INT;
+    DECLARE v_projectStatusId INT;
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignProjectDetailId INT;
+
+    -- Get projectStatusId
+    SELECT projectStatusId
+    INTO v_projectStatusId
+    FROM projectStatus
+    WHERE projectStatusName = p_projectStatusName
+    LIMIT 1;
+
+    IF v_projectStatusId IS NULL THEN
+        SELECT FALSE AS success;
+    ELSE
+        -- Insert into assignProjects
+        INSERT INTO assignProjects(
+            projectTypeId,
+            projectInstanceName,
+            projectBuildingId,
+            projectLevelId,
+            projectArea,
+            projectHeight,
+            totalStories,
+            totalUnits,
+            managerId,
+            projectLocation,
+            projectOverHeadCost,
+            projectStatus
+        )
+        VALUES (
+            p_projectTypeId,
+            p_projectInstanceName,
+            p_projectBuildingId,
+            p_projectLevelId,
+            p_projectArea,
+            p_projectHeight,
+            p_totalStories,
+            p_totalUnits,
+            p_managerId,
+            p_projectLocation,
+            p_projectOverHeadCost,
+            v_projectStatusId
+        );
+        SET v_assignProjectId = LAST_INSERT_ID();
+
+        -- Get assignStatusId
+        SELECT assignStatusId
+        INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = p_assignStatusName
+        LIMIT 1;
+
+        IF v_assignStatusId IS NULL THEN
+            SELECT FALSE AS success;
+        ELSE
+            -- Check if assignProjectDetails already exists for this status
+            SELECT assignProjectDetailId
+            INTO v_assignProjectDetailId
+            FROM assignProjectDetails
+            WHERE assignProjectId = v_assignProjectId
+              AND assignStatusId = v_assignStatusId
+            LIMIT 1;
+
+            IF v_assignProjectDetailId IS NULL THEN
+                INSERT INTO assignProjectDetails(
+                    assignProjectId,
+                    assignStatusId,
+                    projectCost,
+                    projectLaborQty,
+                    projectDuration,
+                    startDate,
+                    endDate
+                )
+                VALUES (
+                    v_assignProjectId,
+                    v_assignStatusId,
+                    p_projectCost,
+                    p_projectLaborQty,
+                    p_projectDuration,
+                    p_startDate,
+                    p_endDate
+                );
+            ELSE
+                UPDATE assignProjectDetails
+                SET projectCost = p_projectCost,
+                    projectLaborQty = p_projectLaborQty,
+                    projectDuration = p_projectDuration,
+                    startDate = p_startDate,
+                    endDate = p_endDate
+                WHERE assignProjectDetailId = v_assignProjectDetailId;
+            END IF;
+
+            SELECT TRUE AS success;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE updateAssignProject(
+    IN p_assignProjectId INT,
+    IN p_assignStatusName VARCHAR(255),
+    IN p_projectCost DOUBLE,
+    IN p_projectLaborQty DOUBLE,
+    IN p_projectDuration DOUBLE,
+    IN p_startDate DATE,
+    IN p_endDate DATE
+)
+BEGIN
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignProjectDetailId INT;
+
+    -- Get assignStatusId
+    SELECT assignStatusId
+    INTO v_assignStatusId
+    FROM assignStatus
+    WHERE assignStatusName = p_assignStatusName
+    LIMIT 1;
+
+    IF v_assignStatusId IS NULL THEN
+        SELECT FALSE AS success;
+    ELSE
+        -- Check if assignProjectDetails already exists for this status
+        SELECT assignProjectDetailId
+        INTO v_assignProjectDetailId
+        FROM assignProjectDetails
+        WHERE assignProjectId = p_assignProjectId
+          AND assignStatusId = v_assignStatusId
+        LIMIT 1;
+
+        IF v_assignProjectDetailId IS NULL THEN
+            INSERT INTO assignProjectDetails(
+                assignProjectId,
+                assignStatusId,
+                projectCost,
+                projectLaborQty,
+                projectDuration,
+                startDate,
+                endDate
+            )
+            VALUES (
+                p_assignProjectId,
+                v_assignStatusId,
+                p_projectCost,
+                p_projectLaborQty,
+                p_projectDuration,
+                p_startDate,
+                p_endDate
+            );
+        ELSE
+            UPDATE assignProjectDetails
+            SET projectCost = p_projectCost,
+                projectLaborQty = p_projectLaborQty,
+                projectDuration = p_projectDuration,
+                startDate = p_startDate,
+                endDate = p_endDate
+            WHERE assignProjectDetailId = v_assignProjectDetailId;
+        END IF;
+
+        SELECT TRUE AS success;
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE getProjectDetails(
+    IN p_projectTypeId INT
+)
+BEGIN
+    SELECT
+        pd.projectTypeId,
+        pt.typeName AS projectTypeName,
+        pd.projectLevelId,
+        pl.projectLevelName,
+        pd.projectBuildingId,
+        pb.projectBuildingName,
+        pd.minOverHeadCost,
+        pd.maxOverHeadCost
+
+    FROM projectDetails pd
+    INNER JOIN projectTypes pt
+        ON pt.projectTypeId = pd.projectTypeId
+    LEFT JOIN projectLevels pl
+        ON pl.projectLevelId = pd.projectLevelId
+    LEFT JOIN buildings pb
+        ON pb.projectBuildingId = pd.projectBuildingId
+
+    WHERE pd.projectTypeId = p_projectTypeId;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE getAllProjects()
+BEGIN
+    SELECT
+        ap.assignProjectId,
+        ap.projectInstanceName,
+        ap.projectTypeId,
+        pt.typeName AS projectTypeName,
+        ap.projectBuildingId AS buildingId,
+        pb.projectBuildingName AS buildingName,
+        ap.projectLevelId AS levelId,
+        pl.projectLevelName AS levelName,
+        ap.managerId AS userId,
+        u.userName,
+        ap.projectArea,
+        ap.projectHeight,
+        ap.totalStories,
+        ap.totalUnits,
+        apd.projectCost,
+        apd.projectLaborQty,
+        ap.projectOverHeadCost,
+        apd.projectDuration,
+        apd.startDate,
+        apd.endDate,
+        ap.projectLocation,
+        ps.projectStatusName AS projectStatus,
+        ast.assignStatusName AS assignStatus
+
+    FROM assignProjects ap
+    INNER JOIN projectTypes pt
+        ON pt.projectTypeId = ap.projectTypeId
+    LEFT JOIN buildings pb
+        ON pb.projectBuildingId = ap.projectBuildingId
+    LEFT JOIN projectLevels pl
+        ON pl.projectLevelId = ap.projectLevelId
+    LEFT JOIN users u
+        ON u.userId = ap.managerId
+    LEFT JOIN projectStatus ps
+        ON ps.projectStatusId = ap.projectStatus
+    LEFT JOIN assignProjectDetails apd
+		ON apd.assignProjectId = ap.assignProjectId
+	LEFT JOIN assignStatus ast
+		ON ast.assignStatusId = apd.assignStatusId;
+END$$
+
+DELIMITER ;
