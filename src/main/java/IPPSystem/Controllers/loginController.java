@@ -2,6 +2,7 @@ package IPPSystem.Controllers;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
+import IPPSystem.DAO.database;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
@@ -50,7 +51,7 @@ public class loginController {
 
     @FXML
     public void initialize(){
-//        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today()));
+//        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
         try {
             Connection con = databaseConnection.getConnection();
         } catch (SQLException e) {
@@ -115,10 +116,9 @@ public class loginController {
                     throw new RuntimeException(e);
                 }
             }else{
-                users check = userDatabase.loginUser(name,password);
+                users check = database.loginUser(name,password);
                 if (check == null){
                     try {
-
                         utils.setAlertBox(overlayPane,"Wrong User","Please Check Your Name or Password",notificationType.WRONG,true);
                     } catch (IOException e) {
                         throw new RuntimeException(e);

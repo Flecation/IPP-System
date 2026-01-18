@@ -53,10 +53,6 @@
 
    .  Assigned Supervisor
 
-   .  Contact Number
-
-   .  Status (Available / On-Site / On Leave)
-
    
    
 

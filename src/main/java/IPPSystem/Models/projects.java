@@ -28,6 +28,8 @@ public class projects {
     private double minLaborQty;
     private double maxLaborQty;
     private Date startDate,endDate;
+    private String assignStatus;
+    private boolean isCancel;
 
     public projects() {
     }
@@ -37,7 +39,23 @@ public class projects {
         this.assignProjectId = assignProjectId;
     }
 
-    public projects(int assignProjectId, Date startDate, Date endDate,double projectDuration) {
+    public projects(String projectStatus, String assignStatus, double projectCost, double projectLaborQty, double projectDuration, Date startDate, Date endDate) {
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+        this.projectCost = projectCost;
+        this.projectLaborQty = projectLaborQty;
+        this.projectDuration = projectDuration;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public projects(String assignStatus, double projectLaborQty, boolean isCancel) {
+        this.assignStatus = assignStatus;
+        this.projectLaborQty = projectLaborQty;
+        this.isCancel = isCancel;
+    }
+
+    public projects(int assignProjectId, Date startDate, Date endDate, double projectDuration) {
         this.assignProjectId = assignProjectId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -80,6 +98,20 @@ public class projects {
 
     public projects(String projectInstanceName, double projectDuration) {
         this.projectInstanceName = projectInstanceName;
+        this.projectDuration = projectDuration;
+    }
+
+    public projects(Date startDate, Date endDate, double projectDuration) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.projectDuration = projectDuration;
+    }
+
+    public projects(String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.projectDuration = projectDuration;
     }
 
@@ -137,6 +169,27 @@ public class projects {
         this.endDate = endDate;
         this.projectLocation = projectLocation;
         this.projectStatus = projectStatus;
+    }
+
+    public projects(int projectTypeId, String projectTypeName) {
+        this.projectTypeId = projectTypeId;
+        this.projectTypeName = projectTypeName;
+    }
+
+    public boolean isCancel() {
+        return isCancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        isCancel = cancel;
+    }
+
+    public String getAssignStatus() {
+        return assignStatus;
+    }
+
+    public void setAssignStatus(String assignStatus) {
+        this.assignStatus = assignStatus;
     }
 
     public double getMaxLaborQty() {

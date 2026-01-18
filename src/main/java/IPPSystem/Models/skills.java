@@ -1,17 +1,47 @@
 package IPPSystem.Models;
 
 public class skills extends workItems{
-    protected int skillId ;
+    protected int skillId,assignWorkItemSkillId;
     protected String skillName;
-    protected double minRequireLabors,maxRequireLabors,basicDailyWage,maxDailyWage;
+    protected double minRequireLabors,maxRequireLabors, minDailyWage,maxDailyWage,dailyWagePerLabor;
 
     public skills (){}
 
     //for the child class
     public skills(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public skills(String skillName){
         this.skillName = skillName;
     }
 
+
+    public skills(int skillId,String skillName){
+        this.skillId = skillId;
+        this.skillName = skillName;
+    }
+
+    public skills(int assignWorkItemId, int skillId, Double projectLaborQty, double dailyWagePerLabor) {
+        super(assignWorkItemId, projectLaborQty);
+        this.skillId = skillId;
+        this.dailyWagePerLabor = dailyWagePerLabor;
+    }
+
+    public skills(int skillId, String skillName, double minRequireLabors, double maxRequireLabors, double minDailyWage, double maxDailyWage) {
+        this.skillId = skillId;
+        this.skillName = skillName;
+        this.minRequireLabors = minRequireLabors;
+        this.maxRequireLabors = maxRequireLabors;
+        this.minDailyWage = minDailyWage;
+        this.maxDailyWage = maxDailyWage;
+    }
+
+    public skills(int assignWorkItemSkillId, String skillName, String assignStatus, Double projectLaborQty,Double dailyWagePerLabor, boolean isCancel){
+        super(assignStatus,projectLaborQty,isCancel);
+        this.assignWorkItemSkillId = assignWorkItemSkillId;
+        this.skillName = skillName;
+    }
 
     //for the child class
     public skills(int assignProjectId, int workItemId, int skillId) {
@@ -20,14 +50,30 @@ public class skills extends workItems{
     }
 
     //for the skill details
-    public skills(int assignProjectId, int workItemId, int skillId, String skillName, double minRequireLabors, double maxRequireLabors, double basicDailyWage, double maxDailyWage) {
+    public skills(int assignProjectId, int workItemId, int skillId, String skillName, double minRequireLabors, double maxRequireLabors, double minDailyWage, double maxDailyWage) {
         super(assignProjectId, workItemId);
         this.skillId = skillId;
         this.skillName = skillName;
         this.minRequireLabors = minRequireLabors;
         this.maxRequireLabors = maxRequireLabors;
-        this.basicDailyWage = basicDailyWage;
+        this.minDailyWage = minDailyWage;
         this.maxDailyWage = maxDailyWage;
+    }
+
+    public int getAssignWorkItemSkillId() {
+        return assignWorkItemSkillId;
+    }
+
+    public void setAssignWorkItemSkillId(int assignWorkItemSkillId) {
+        this.assignWorkItemSkillId = assignWorkItemSkillId;
+    }
+
+    public double getDailyWagePerLabor() {
+        return dailyWagePerLabor;
+    }
+
+    public void setDailyWagePerLabor(double dailyWagePerLabor) {
+        this.dailyWagePerLabor = dailyWagePerLabor;
     }
 
     public int getSkillId() {
@@ -62,12 +108,12 @@ public class skills extends workItems{
         this.maxRequireLabors = maxRequireLabors;
     }
 
-    public double getBasicDailyWage() {
-        return basicDailyWage;
+    public double getMinDailyWage() {
+        return minDailyWage;
     }
 
-    public void setBasicDailyWage(double basicDailyWage) {
-        this.basicDailyWage = basicDailyWage;
+    public void setMinDailyWage(double minDailyWage) {
+        this.minDailyWage = minDailyWage;
     }
 
     public double getMaxDailyWage() {
