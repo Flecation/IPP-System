@@ -1,0 +1,261 @@
+Index: target/classes/View/hello-view.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.Insets?>\r\n<?import javafx.scene.control.Label?>\r\n<?import javafx.scene.layout.VBox?>\r\n\r\n<?import javafx.scene.control.Button?>\r\n<VBox alignment=\"CENTER\" spacing=\"20.0\" xmlns:fx=\"http://javafx.com/fxml\"\r\n      fx:controller=\"IPPSystem.Controllers.HelloController\">\r\n    <padding>\r\n        <Insets bottom=\"20.0\" left=\"20.0\" right=\"20.0\" top=\"20.0\"/>\r\n    </padding>\r\n\r\n    <Label fx:id=\"welcomeText\"/>\r\n    <Button text=\"Hello!\" onAction=\"#onHelloButtonClick\"/>\r\n</VBox>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/View/hello-view.fxml b/target/classes/View/hello-view.fxml
+--- a/target/classes/View/hello-view.fxml	(revision 9e0865e38d75d491733573754ef1e33c1f0b18d9)
++++ b/target/classes/View/hello-view.fxml	(date 1765906999531)
+@@ -1,16 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+ <?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
+ <?import javafx.scene.control.Label?>
+ <?import javafx.scene.layout.VBox?>
+ 
+-<?import javafx.scene.control.Button?>
+-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+-      fx:controller="IPPSystem.Controllers.HelloController">
++<VBox alignment="CENTER" prefHeight="152.0" prefWidth="213.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="IPPSystem.Controllers.HelloController">
+     <padding>
+-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
++        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+     </padding>
+ 
+-    <Label fx:id="welcomeText"/>
+-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
++    <Label fx:id="welcomeText" />
++    <Button onAction="#onHelloButtonClick" text="Hello!" />
+ </VBox>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"8aa0c896-6f5c-4b8c-a953-98d227d66e59\" name=\"Changes\" comment=\"creation of the basic frame\">\r\n      <change beforePath=\"$PROJECT_DIR$/.env\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.env\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIEW_PUSH_PROTECTED_ONLY\" value=\"true\" />\r\n    <option name=\"PUSH_TAGS\">\r\n      <GitPushTagMode>\r\n        <option name=\"argument\" value=\"--tags\" />\r\n        <option name=\"title\" value=\"All\" />\r\n      </GitPushTagMode>\r\n    </option>\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {}\r\n}]]></component>\r\n  <component name=\"GitHubPullRequestState\"><![CDATA[{\r\n  \"prStates\": [\r\n    {\r\n      \"id\": {\r\n        \"id\": \"PR_kwDOQmomhM65KLmC\",\r\n        \"number\": 11\r\n      },\r\n      \"lastSeen\": 1765895659102\r\n    }\r\n  ]\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/Flecation/IPP-System.git\",\r\n    \"accountId\": \"545db981-124c-4d88-a8fd-f9a2827bf7db\"\r\n  }\r\n}]]></component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"36kQspTCW0pUyCmBpXvLIuYomtw\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.HelloApplication.executor\": \"Run\",\r\n    \"Application.Launcher.executor\": \"Run\",\r\n    \"Application.start.executor\": \"Run\",\r\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHELLCHECK.PATH\": \"C:\\\\Users\\\\PC\\\\AppData\\\\Roaming\\\\JetBrains\\\\IdeaIC2025.2\\\\plugins\\\\Shell Script\\\\shellcheck.exe\",\r\n    \"git-widget-placeholder\": \"Ant-Htoo-Aung\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"D:/group1\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.0\",\r\n    \"project.structure.side.proportion\": \"0.0\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\group1\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\group1\\src\\main\\resources\\view\" />\r\n      <recent name=\"D:\\group1\\src\\main\\resources\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"start\" type=\"Application\" factoryName=\"Application\" activateToolWindowBeforeRun=\"false\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"IPPSystem.Main.Launcher\" />\r\n      <module name=\"group1\" />\r\n      <option name=\"PROGRAM_PARAMETERS\" value=\"$MODULE_DIR$\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"8aa0c896-6f5c-4b8c-a953-98d227d66e59\" name=\"Changes\" comment=\"\" />\r\n      <created>1765548299980</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1765548299980</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765613198002</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765613198002</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765613429103</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765613429103</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765625611332</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765625611332</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765625766600</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765625766600</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765630998325</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765630998326</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765636135037</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765636135037</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765636354009</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765636354009</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765801344235</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765801344235</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765801387371</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765801387371</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765801461572</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765801461572</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765815917888</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765815917888</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765853569220</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765853569220</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765853791140</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765853791140</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00014\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765895069922</created>\r\n      <option name=\"number\" value=\"00014\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765895069922</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00015\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765895353615</created>\r\n      <option name=\"number\" value=\"00015\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765895353615</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00016\" summary=\"creation of the basic frame\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1765895503520</created>\r\n      <option name=\"number\" value=\"00016\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1765895503520</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"17\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml\" />\r\n    <MESSAGE value=\"creation of the basic frame\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"creation of the basic frame\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/projectgroup1/Utils/titleBar.java</url>\r\n          <line>50</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n  <component name=\"github-copilot-workspace\">\r\n    <instructionFileLocations>\r\n      <option value=\".github/instructions\" />\r\n    </instructionFileLocations>\r\n    <promptFileLocations>\r\n      <option value=\".github/prompts\" />\r\n    </promptFileLocations>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9e0865e38d75d491733573754ef1e33c1f0b18d9)
++++ b/.idea/workspace.xml	(date 1767769397272)
+@@ -5,8 +5,18 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="creation of the basic frame">
++      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/LoginController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/View/LoginForm.fxml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/View/Supervisor.fxml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_24_2025_9_51_PM_[Changes]/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_24_2025_9_51_PM__Changes_.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_25_2025_5_43_PM_[Changes]/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_25_2025_5_43_PM__Changes_.xml" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/View/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/View/hello-view.fxml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -35,26 +45,26 @@
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {}
+-}]]></component>
+-  <component name="GitHubPullRequestState"><![CDATA[{
+-  "prStates": [
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {}
++}</component>
++  <component name="GitHubPullRequestState">{
++  &quot;prStates&quot;: [
+     {
+-      "id": {
+-        "id": "PR_kwDOQmomhM65KLmC",
+-        "number": 11
++      &quot;id&quot;: {
++        &quot;id&quot;: &quot;PR_kwDOQmomhM65KLmC&quot;,
++        &quot;number&quot;: 11
+       },
+-      "lastSeen": 1765895659102
++      &quot;lastSeen&quot;: 1765895659102
+     }
+   ]
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/Flecation/IPP-System.git",
+-    "accountId": "545db981-124c-4d88-a8fd-f9a2827bf7db"
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,
++    &quot;accountId&quot;: &quot;7914177c-fc0a-492c-9035-2d7995b0fec7&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="MavenImportPreferences">
+     <option name="generalSettings">
+       <MavenGeneralSettings>
+@@ -70,24 +80,32 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.HelloApplication.executor": "Run",
+-    "Application.Launcher.executor": "Run",
+-    "Application.start.executor": "Run",
+-    "ModuleVcsDetector.initialDetectionPerformed": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "SHELLCHECK.PATH": "C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe",
+-    "git-widget-placeholder": "Ant-Htoo-Aung",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "D:/group1",
+-    "project.structure.last.edited": "Project",
+-    "project.structure.proportion": "0.0",
+-    "project.structure.side.proportion": "0.0"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
++    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
++    &quot;Application.start.executor&quot;: &quot;Run&quot;,
++    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
++    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;D:/Aye Thida-workspace/IPP-System&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="D:\group1" />
+@@ -111,6 +129,7 @@
+     <attachedChunks>
+       <set>
+         <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
++        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+       </set>
+     </attachedChunks>
+   </component>
+@@ -121,6 +140,16 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1765548299980</updated>
++      <workItem from="1765907426908" duration="887000" />
++      <workItem from="1765927377727" duration="661000" />
++      <workItem from="1765928076381" duration="3397000" />
++      <workItem from="1765949900971" duration="639000" />
++      <workItem from="1766069503447" duration="12765000" />
++      <workItem from="1766165732511" duration="799000" />
++      <workItem from="1766239277959" duration="1038000" />
++      <workItem from="1766592724322" duration="896000" />
++      <workItem from="1766599577334" duration="4078000" />
++      <workItem from="1767767087256" duration="777000" />
+     </task>
+     <task id="LOCAL-00001" summary="creation of the basic frame">
+       <option name="closed" value="true" />
+@@ -253,6 +282,32 @@
+     <option name="localTasksCounter" value="17" />
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="origin/Aye-Thida-Khine" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+     <MESSAGE value="creation of the basic frame" />
+@@ -268,6 +323,10 @@
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>
++  </component>
++  <component name="XSLT-Support.FileAssociations.UIState">
++    <expand />
++    <select />
+   </component>
+   <component name="github-copilot-workspace">
+     <instructionFileLocations>
+Index: src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+> Data Resources Document\r\n~~~~~~~~~~~~~~~~~~~~~~~~\r\n\r\n1. Project Data\r\n\r\n>>Purpose: Store overall project information.\r\n\r\n .  Project ID\r\n \r\n .  Project Name\r\n\r\n .  Location\r\n\r\n .  Start Date\t\r\n\r\n .  Planned End Date\r\n\r\n .  Planned Duration (days/months)\r\n\r\n .  Total Budget\r\n\r\n .  Project Status (On Track /Delayed / Completed)\r\n\r\n\r\n\r\n\r\n2. User Data\r\n\r\n>>Purpose:  Identify system users and their roles.\r\n\r\n .  User ID\r\n \r\n .  User Name\r\n\r\n .  Password\r\n\r\n .  Role (Manager /Supervisor)\r\n\r\n\r\n\r\n \r\n 3. Worker Data\r\n \r\n >>Purpose: Manage workforce information.\r\n\r\n   .  Worker ID\r\n\r\n   .  Worker Name\r\n\r\n   .  Role / Skill\r\n\r\n   .  Daily Wage\r\n\r\n   .  Assigned Supervisor\r\n\r\n   \r\n   \r\n\r\n4. Cost Data\r\n\r\n>>Purpose: Manage and track project cost.\r\n\r\n4.1  Budget Data\r\n\t\t\t\t\t                                                                                            \r\n   .  Total Budget    \r\n\r\n   .  Allocated Budget\r\n\r\n   .  Remaining Budget\r\n\r\n                                                                                                                                                                                                                                                                  \r\n\r\n 4.2  Labour Cost Data\r\n\t\t\t\t                                                                                            \r\n    .  Date\t\r\n\r\n    .  Worker ID\r\n\r\n    .  Work Hours\r\n\r\n    .  Daily Wage\r\n\r\n    .  Daily Labour Cost\r\n\r\n    .  Total Labour Cost\r\n\r\n\r\n\r\n4.3  Material Cost Data(Optional)\r\n\r\n   .  Date\r\n\r\n   .  Material Name\r\n\r\n   .  Quantity\r\n\r\n   .  Unit Cost\r\n\r\n   .  Total Material Cost\r\n\r\n\r\n\r\n\r\n 5. Time Data                                                                                                                                \r\n \r\n >>Purpose: Track project schedule and progress.\t\t\t\t\t\t\t\t      \r\n\r\n  .  Planned Duration\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\r\n  .  Actual Working Days\t\t\t\t\t\t\t\t\t\t\t\t \r\n\r\n  .  Daily Progress (%)\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t \r\n  .  Total Progress (%)\t\r\n\r\n  .  Delay Days\r\n\r\n\r\n\r\n\r\n6.  Attendance Data\t\t\r\n\t\t\t\t\t\t\t\t\t\t\t\t   \r\n >>Purpose: Track daily worker attendance.\r\n\t\t\t\t\t\t\t\t\t    \r\n  .  Date\r\n\r\n  .  Worker ID\r\n\r\n  .  Attendance Status (Present / Absent)\r\n\r\n  .  Work Hours\r\n\r\n\r\n\r\n\r\n 7. Productivity Data\r\n\r\n >>Purpose: Measure worker and project productivity.\r\n\r\n  .  Worker ID\r\n\r\n  .  Date\r\n\r\n  .  Work Hours\r\n\r\n  .  Completed Work Unit\r\n\r\n  .  Productivity Rate\r\n\r\n\r\n\r\n\r\n8. Report Data\r\n\r\n >>Purpose: Store generated reports for management review.\r\n\r\n  .  Report ID\r\n\r\n  .  Report Date\r\n\r\n  .  Supervisor ID\r\n\r\n  .  Summary\r\n\r\n  .  Total Daily Cost\r\n\r\n  .  Daily Progress\r\n\r\n\r\n\r\n\r\n9. Calculated Data (Derived Data)\r\n\r\n >>Purpose: Auto-calculated values (not manually entered).\r\n\r\n  .  Total Project Cost (Labour  Cost+ Material Cost + Other Costs) ;    (End  or Summary)\r\n\r\n  .  Remaining Budget (Total Budget - Total Project Cost(spent cost))\r\n  \r\n  .  Actual Cost  (Total Labour Cost + Total  Material Cost + Other Expenses) ;    (In Progress)\r\n\r\n  .  Cost Variance (Planned Cost -  Actual Cost);  (can be check over-budget  and under-budget)\r\n\r\n  .  Time Variance (Planned Time -  Actual Time) ; (to show Ahead of schedule ,On Schedule, Behind  schedule)\r\n\r\n  .  Overall Productivity (Total output / Total work hours)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n\r\n\r\n\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t      \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
+===================================================================
+diff --git a/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt b/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt
+--- a/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt	(revision 9e0865e38d75d491733573754ef1e33c1f0b18d9)
++++ b/src/main/resources/Requirement/Integrated_Project_Planning_System_Data_Resources.txt	(date 1766116710666)
+@@ -53,6 +53,10 @@
+ 
+    .  Assigned Supervisor
+ 
++   .  Contact Number
++
++   .  Status (Available / On-Site / On Leave)
++
+    
+    
+ 
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>DATABASE_NAME=IPPSystem\r\n\r\nMYSQL_USERNAME=root\r\nMYSQL_PASSWORD=123456\r\nMYSQL_HOST=localhost\r\nMYSQL_PORT=3306\r\nMYSQL_URL=jdbc:mysql://localhost:3306/IPPSystem\r\n
+===================================================================
+diff --git a/.env b/.env
+--- a/.env	(revision 9e0865e38d75d491733573754ef1e33c1f0b18d9)
++++ b/.env	(date 1766662652904)
+@@ -1,7 +1,7 @@
+ DATABASE_NAME=IPPSystem
+ 
+-MYSQL_USERNAME=root
+-MYSQL_PASSWORD=123456
++MYSQL_USERNAME=Aye_Thida
++MYSQL_PASSWORD=862003aye862003
+ MYSQL_HOST=localhost
+ MYSQL_PORT=3306
+ MYSQL_URL=jdbc:mysql://localhost:3306/IPPSystem
+diff --git a/src/main/resources/View/Supervisor.fxml b/src/main/resources/View/Supervisor.fxml
+new file mode 100644

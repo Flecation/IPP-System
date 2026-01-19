@@ -1,7 +1,11 @@
 package IPPSystem.DAO;
 
+import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.projectStatus;
+import IPPSystem.Models.skills;
 import IPPSystem.Models.workItems;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -21,33 +25,22 @@ public class workItemDatabase {
         ArrayList<workItems> workItems = new ArrayList<>();
 
         try {
-            CallableStatement cstmt = con.prepareCall("");
+            CallableStatement cstmt = con.prepareCall("{CALL getAllWorkItemByAssignProjectId(?)}");
             cstmt.setInt(1,assignProjectId);
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()){
-                if(rs.getBoolean("isCustomize")) {
                     workItems.add(new workItems(
-                            rs.getInt("assignProjectId"),
-                            rs.getInt("projectWorkItemId"),
-                            rs.getString("projectWorkItemName"),
-                            rs.getDouble("customDuration"),
-                            rs.getDouble("customCost"),
-                            rs.getDouble("customLaborQty"),
-                            rs.getDate("customStartDate"),
-                            rs.getDate("customEndDate")
-                    ));
-                }else{
-                    workItems.add(new workItems(
-                            rs.getInt("projectTypeId"),
-                            rs.getInt("workItemId"),
+                            rs.getInt("assignWorkItemId"),
                             rs.getString("workItemName"),
-                            rs.getDouble("autoDuration"),
-                            rs.getDouble("autoCost"),
-                            rs.getDouble("autoLaborQty"),
-                            rs.getDate("autoStartDate"),
-                            rs.getDate("autoEndDate")
+                            rs.getString("workItemStatus"),
+                            rs.getString("assignStatus"),
+                            rs.getDouble("cost"),
+                            rs.getDouble("laborQty"),
+                            rs.getDouble("duration"),
+                            rs.getDate("startDate"),
+                            rs.getDate("endDate")
                     ));
-                }
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -56,11 +49,13 @@ public class workItemDatabase {
     }
 
     //for the workItems detail (all)
-    public static ArrayList<workItems> getAllWorkItemDetailsByAssignProjectId(String projectType){
+    public static ArrayList<workItems> getAllWorkItemDetails(int projectTypeId, int buildingId, int levelId){
         ArrayList<workItems> workItems = new ArrayList<>();
         try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setString(1,projectType);
+            CallableStatement cstmt = con.prepareCall("{CALL getAllWorkItemDetails(?,?,?)}");
+            cstmt.setInt(1,projectTypeId);
+            cstmt.setInt(2,buildingId);
+            cstmt.setInt(3,levelId);
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()){
                 workItems.add(new workItems(
@@ -84,74 +79,88 @@ public class workItemDatabase {
 
     //to make the changes in the work item
 
-    //for the cost
-    public static boolean changeTheCostOfWorkItem(int assignProjectId, int projectWorkItemId, double changeCost){
-        try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,assignProjectId);
-            cstmt.setInt(2, projectWorkItemId);
-            cstmt.setDouble(3,changeCost);
-            ResultSet rs = cstmt.executeQuery();
-
-            return rs.getBoolean(1);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    //for the labors qty
-    public static boolean changeTheLaborQtyOfWorkItem(int assignProjectId, int projectWorkItemId, double changeLaborQty){
-        try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,assignProjectId);
-            cstmt.setInt(2, projectWorkItemId);
-            cstmt.setDouble(3,changeLaborQty);
-            ResultSet rs = cstmt.executeQuery();
-
-            return rs.getBoolean(1);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    //for the duration
-    public static boolean changeTheDurationOfWorkItem(int assignProjectId,int workItemId,double changeDuration){
-        try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,assignProjectId);
-            cstmt.setInt(2,workItemId);
-            cstmt.setDouble(3,changeDuration);
-            ResultSet rs = cstmt.executeQuery();
-
-            return rs.getBoolean(1);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-
     //to assign the workItems
-    public static boolean assignWorkItems(workItems assign,boolean isCustomize){
+    public static boolean assignWorkItems(workItems assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,assign.getProjectTypeId());
+            CallableStatement cstmt = con.prepareCall("{CALL assignWorkItems(?,?,?,?,?,?,?,?,?)}");
+            cstmt.setInt(1,assign.getAssignProjectId());
             cstmt.setInt(2,assign.getWorkItemId());
-            cstmt.setDouble(3,assign.getProjectDuration());
-            cstmt.setDouble(4,assign.getProjectCost());
-            cstmt.setDouble(5,assign.getProjectLaborQty());
-            cstmt.setDate(6,assign.getStartDate());
-            cstmt.setDate(7,assign.getEndDate());
-            cstmt.setBoolean(8,isCustomize);
+            cstmt.setString(3,projectStatus.toString());
+            cstmt.setString(4,assignStatus.toString());
+            cstmt.setDouble(5,assign.getProjectCost());
+            cstmt.setDouble(6,assign.getProjectLaborQty());
+            cstmt.setDouble(7,assign.getProjectDuration());
+            cstmt.setDate(8,assign.getStartDate());
+            cstmt.setDate(9,assign.getEndDate());
             ResultSet rs = cstmt.executeQuery();
             return rs.getBoolean(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean deleteWorkItem(int assignWorkItemId){
+        String sql = "UPDATE assignWorkItems " +
+                "SET workItemStatus = 5" +
+                "WHERE assignWorkItemId = ?;";
+        try {
+            PreparedStatement pstmt = con.prepareCall(sql);
+            pstmt.setInt(1,assignWorkItemId);
+            return  pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static boolean deleteSkillFromWorkItem(int assignWorkItemId,int skillId){
+        String sql = "UPDATE assignWorkItemSkills " +
+                "SET isCancel = true" +
+                "WHERE assignWorkItemId = ?" +
+                "AND skillId = ?;";
+        try {
+            PreparedStatement pstmt = con.prepareCall(sql);
+            pstmt.setInt(1,assignWorkItemId);
+            pstmt.setInt(2,skillId);
+            return  pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ArrayList<skills> getAllSkillDetailsByAssignWorkItem(int assignWorkItemId){
+        ArrayList<skills> skill = new ArrayList<>();
+        try(CallableStatement cs = con.prepareCall("{CALL getAllSkillDetailsByAssignWorkItem(?)}")){
+            cs.setInt(1,assignWorkItemId);
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()){
+                skill.add(new skills(
+                        rs.getInt("assignWorkItemSkillId"),
+                        rs.getString("skillName"),
+                        rs.getString("assignStatus"),
+                        rs.getDouble("laborQty"),
+                        rs.getDouble("dailyWagePerLabor"),
+                        rs.getBoolean("isCancel")
+                ));
+            }
+            return skill;
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean addSkillToWorkItem(skills assign, assignStatus assignStatus){
+        try (CallableStatement cs = con.prepareCall("")){
+            cs.setInt(1,assign.getAssignWorkItemId());
+            cs.setInt(2,assign.getSkillId());
+            cs.setString(3,assignStatus.toString());
+            cs.setDouble(4,assign.getProjectLaborQty());
+            cs.setDouble(5,assign.getDailyWagePerLabor());
+            return cs.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

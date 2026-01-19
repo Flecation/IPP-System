@@ -3,7 +3,7 @@ package IPPSystem.Models;
 import java.util.Date;
 
 public class users {
-    private String userName,userEmail,userPhone,userPassword,userRole;
+    private String userName,userEmail,userPhone,userPassword,userRole,userPhoto;
     private int userId;
     private boolean isActive;
     private Date userDOB,userStartDate,userEndDate;
@@ -11,7 +11,7 @@ public class users {
     public users(){}
 
     // to use when the users input
-    public users(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate) {
+    public users(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate,String userPhoto) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
@@ -19,10 +19,11 @@ public class users {
         this.userRole = userRole;
         this.userDOB = userDOB;
         this.userStartDate = userStartDate;
+        this.userPhoto = userPhoto;
     }
 
 
-    public users(String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive) {
+    public users(String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive,String userPhoto) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
@@ -31,10 +32,11 @@ public class users {
         this.userStartDate = userStartDate;
         this.userEndDate = userEndDate;
         this.isActive = isActive;
+        this.userPhoto = userPhoto;
     }
 
     // to get all users
-    public users(int userId, String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive, String userPassword) {
+    public users(int userId, String userName, String userEmail, String userPhone, String userRole, Date userDOB, Date userStartDate, Date userEndDate, boolean isActive, String userPassword,String userPhoto) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -45,6 +47,15 @@ public class users {
         this.userEndDate = userEndDate;
         this.isActive = isActive;
         this.userPassword = userPassword;
+        this.userPhoto = userPhoto;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 
     public String getUserName() {

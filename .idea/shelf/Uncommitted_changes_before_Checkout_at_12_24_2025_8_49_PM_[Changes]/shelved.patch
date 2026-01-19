@@ -1,0 +1,92 @@
+Index: src/main/resources/View/TB.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.Insets?>\r\n<?import javafx.scene.control.Button?>\r\n<?import javafx.scene.control.TextField?>\r\n<?import javafx.scene.image.Image?>\r\n<?import javafx.scene.image.ImageView?>\r\n<?import javafx.scene.layout.BorderPane?>\r\n<?import javafx.scene.layout.HBox?>\r\n<?import javafx.scene.layout.StackPane?>\r\n<?import javafx.scene.layout.VBox?>\r\n\r\n<BorderPane maxHeight=\"-Infinity\" maxWidth=\"-Infinity\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"800.0\" prefWidth=\"1280.0\" xmlns=\"http://javafx.com/javafx/8.0.171\" xmlns:fx=\"http://javafx.com/fxml/1\">\r\n   <top>\r\n      <VBox prefHeight=\"114.0\" prefWidth=\"1280.0\" BorderPane.alignment=\"CENTER\">\r\n         <children>\r\n            <HBox prefHeight=\"47.0\" prefWidth=\"1280.0\">\r\n               <children>\r\n                  <HBox prefHeight=\"37.0\" prefWidth=\"158.0\">\r\n                     <children>\r\n                        <StackPane prefHeight=\"150.0\" prefWidth=\"200.0\" HBox.hgrow=\"ALWAYS\">\r\n                           <children>\r\n                              <Button mnemonicParsing=\"false\" prefHeight=\"40.0\" prefWidth=\"208.0\" text=\"New Tab\">\r\n                                 <padding>\r\n                                    <Insets left=\"-60.0\" />\r\n                                 </padding>\r\n                              </Button>\r\n                              <Button mnemonicParsing=\"false\" prefHeight=\"39.0\" prefWidth=\"65.0\" style=\"-fx-background-color: transparent;\">\r\n                                 <StackPane.margin>\r\n                                    <Insets right=\"-100.0\" />\r\n                                 </StackPane.margin>\r\n                                 <graphic>\r\n                                    <ImageView fitHeight=\"21.0\" fitWidth=\"30.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                       <image>\r\n                                          <Image url=\"@../../../../../../Downloads/reject.png\" />\r\n                                       </image>\r\n                                    </ImageView>\r\n                                 </graphic>\r\n                              </Button>\r\n                           </children>\r\n                        </StackPane>\r\n                     </children>\r\n                  </HBox>\r\n                  <HBox prefHeight=\"35.0\" prefWidth=\"49.0\" HBox.hgrow=\"ALWAYS\">\r\n                     <children>\r\n                        <Button mnemonicParsing=\"false\" prefHeight=\"38.0\" prefWidth=\"49.0\" style=\"-fx-background-color: transparent;\">\r\n                           <graphic>\r\n                              <ImageView fitHeight=\"21.0\" fitWidth=\"24.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                 <image>\r\n                                    <Image url=\"@../../../../../../Downloads/plus.png\" />\r\n                                 </image>\r\n                              </ImageView>\r\n                           </graphic>\r\n                           <HBox.margin>\r\n                              <Insets top=\"5.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                     </children>\r\n                  </HBox>\r\n                  <HBox prefHeight=\"35.0\" prefWidth=\"49.0\">\r\n                     <children>\r\n                        <Button mnemonicParsing=\"false\" prefHeight=\"38.0\" prefWidth=\"49.0\" style=\"-fx-background-color: transparent;\">\r\n                           <HBox.margin>\r\n                              <Insets top=\"5.0\" />\r\n                           </HBox.margin>\r\n                        </Button>\r\n                        <HBox prefHeight=\"34.0\" prefWidth=\"181.0\">\r\n                           <HBox.margin>\r\n                              <Insets left=\"900.0\" />\r\n                           </HBox.margin>\r\n                           <children>\r\n                              <Button mnemonicParsing=\"false\" prefHeight=\"47.0\" prefWidth=\"59.0\" style=\"-fx-background-color: transparent;\">\r\n                                 <graphic>\r\n                                    <ImageView fitHeight=\"21.0\" fitWidth=\"24.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                       <image>\r\n                                          <Image url=\"@../../../../../../Downloads/minus%20(1).png\" />\r\n                                       </image>\r\n                                    </ImageView>\r\n                                 </graphic>\r\n                              </Button>\r\n                              <Button mnemonicParsing=\"false\" prefHeight=\"60.0\" prefWidth=\"61.0\" style=\"-fx-background-color: transparent;\">\r\n                                 <graphic>\r\n                                    <ImageView fitHeight=\"22.0\" fitWidth=\"24.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                       <image>\r\n                                          <Image url=\"@../../../../../../Downloads/maximize.png\" />\r\n                                       </image>\r\n                                    </ImageView>\r\n                                 </graphic>\r\n                              </Button>\r\n                              <Button mnemonicParsing=\"false\" prefHeight=\"55.0\" prefWidth=\"63.0\" style=\"-fx-background-color: transparent;\">\r\n                                 <graphic>\r\n                                    <ImageView fitHeight=\"26.0\" fitWidth=\"26.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                       <image>\r\n                                          <Image url=\"@../../../../../../Downloads/reject.png\" />\r\n                                       </image>\r\n                                    </ImageView>\r\n                                 </graphic>\r\n                              </Button>\r\n                           </children>\r\n                        </HBox>\r\n                     </children>\r\n                  </HBox>\r\n               </children>\r\n            </HBox>\r\n            <HBox prefHeight=\"41.0\" prefWidth=\"1280.0\">\r\n               <children>\r\n                  <HBox prefHeight=\"34.0\" prefWidth=\"181.0\" HBox.hgrow=\"ALWAYS\">\r\n                     <HBox.margin>\r\n                        <Insets />\r\n                     </HBox.margin>\r\n                     <children>\r\n                        <Button mnemonicParsing=\"false\" prefHeight=\"47.0\" prefWidth=\"59.0\" style=\"-fx-background-color: transparent;\">\r\n                           <graphic>\r\n                              <ImageView fitHeight=\"20.0\" fitWidth=\"23.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                 <image>\r\n                                    <Image url=\"@../../../../../../Downloads/backward%20(1).png\" />\r\n                                 </image>\r\n                              </ImageView>\r\n                           </graphic>\r\n                        </Button>\r\n                        <Button mnemonicParsing=\"false\" prefHeight=\"60.0\" prefWidth=\"61.0\" style=\"-fx-background-color: transparent;\">\r\n                           <graphic>\r\n                              <ImageView fitHeight=\"29.0\" fitWidth=\"22.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                 <image>\r\n                                    <Image url=\"@../../../../../../Downloads/arrow.png\" />\r\n                                 </image>\r\n                              </ImageView>\r\n                           </graphic>\r\n                        </Button>\r\n                        <Button mnemonicParsing=\"false\" prefHeight=\"55.0\" prefWidth=\"63.0\" style=\"-fx-background-color: transparent;\">\r\n                           <graphic>\r\n                              <ImageView fitHeight=\"26.0\" fitWidth=\"26.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                 <image>\r\n                                    <Image url=\"@../../../../../../Downloads/refresh%20(1).png\" />\r\n                                 </image>\r\n                              </ImageView>\r\n                           </graphic>\r\n                        </Button>\r\n                        <HBox prefHeight=\"41.0\" prefWidth=\"1078.0\" HBox.hgrow=\"ALWAYS\">\r\n                           <children>\r\n                              <StackPane prefHeight=\"41.0\" prefWidth=\"744.0\" HBox.hgrow=\"ALWAYS\">\r\n                                 <children>\r\n                                    <TextField prefHeight=\"39.0\" prefWidth=\"672.0\" />\r\n                                    <Button mnemonicParsing=\"false\" style=\"-fx-background-color: transparent;\" text=\"This PC\">\r\n                                       <StackPane.margin>\r\n                                          <Insets right=\"670.0\" />\r\n                                       </StackPane.margin>\r\n                                    </Button>\r\n                                    <Button mnemonicParsing=\"false\" style=\"-fx-background-color: transparent;\" text=\"&gt;\">\r\n                                       <StackPane.margin>\r\n                                          <Insets right=\"580.0\" />\r\n                                       </StackPane.margin>\r\n                                    </Button>\r\n                                    <Button mnemonicParsing=\"false\" style=\"-fx-background-color: transparent;\" text=\"DATA(D:)\">\r\n                                       <StackPane.margin>\r\n                                          <Insets right=\"480.0\" />\r\n                                       </StackPane.margin>\r\n                                    </Button>\r\n                                 </children>\r\n                              </StackPane>\r\n                              <HBox prefHeight=\"41.0\" prefWidth=\"340.0\" HBox.hgrow=\"ALWAYS\">\r\n                                 <children>\r\n                                    <StackPane prefHeight=\"41.0\" prefWidth=\"350.0\" HBox.hgrow=\"ALWAYS\">\r\n                                       <children>\r\n                                          <HBox prefHeight=\"100.0\" prefWidth=\"200.0\">\r\n                                             <children>\r\n                                                <TextField prefHeight=\"35.0\" prefWidth=\"345.0\" promptText=\"Search\">\r\n                                                   <padding>\r\n                                                      <Insets left=\"10.0\" />\r\n                                                   </padding>\r\n                                                </TextField>\r\n                                                <Button mnemonicParsing=\"false\" prefHeight=\"29.0\" prefWidth=\"65.0\">\r\n                                                   <graphic>\r\n                                                      <ImageView fitHeight=\"23.0\" fitWidth=\"28.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\r\n                                                         <image>\r\n                                                            <Image url=\"@../../../../../../Downloads/loupe.png\" />\r\n                                                         </image>\r\n                                                      </ImageView>\r\n                                                   </graphic>\r\n                                                </Button>\r\n                                             </children>\r\n                                          </HBox>\r\n                                       </children>\r\n                                    </StackPane>\r\n                                 </children>\r\n                              </HBox>\r\n                           </children>\r\n                        </HBox>\r\n                     </children>\r\n                  </HBox>\r\n               </children>\r\n            </HBox>\r\n         </children>\r\n      </VBox>\r\n   </top>\r\n   <center>\r\n      <StackPane prefHeight=\"150.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" />\r\n   </center>\r\n</BorderPane>\r\n
+===================================================================
+diff --git a/src/main/resources/View/TB.fxml b/src/main/resources/View/TB.fxml
+--- a/src/main/resources/View/TB.fxml	(revision c22a39291309f6edf704afaa53b788979ab753cf)
++++ b/src/main/resources/View/TB.fxml	(date 1766585774148)
+@@ -10,7 +10,7 @@
+ <?import javafx.scene.layout.StackPane?>
+ <?import javafx.scene.layout.VBox?>
+ 
+-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
++<BorderPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+       <VBox prefHeight="114.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+          <children>
+@@ -57,13 +57,8 @@
+                         </Button>
+                      </children>
+                   </HBox>
+-                  <HBox prefHeight="35.0" prefWidth="49.0">
++                  <HBox prefHeight="47.0" prefWidth="974.0">
+                      <children>
+-                        <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="49.0" style="-fx-background-color: transparent;">
+-                           <HBox.margin>
+-                              <Insets top="5.0" />
+-                           </HBox.margin>
+-                        </Button>
+                         <HBox prefHeight="34.0" prefWidth="181.0">
+                            <HBox.margin>
+                               <Insets left="900.0" />
+@@ -99,6 +94,9 @@
+                            </children>
+                         </HBox>
+                      </children>
++                     <HBox.margin>
++                        <Insets />
++                     </HBox.margin>
+                   </HBox>
+                </children>
+             </HBox>
+@@ -136,12 +134,12 @@
+                               </ImageView>
+                            </graphic>
+                         </Button>
+-                        <HBox prefHeight="41.0" prefWidth="1078.0" HBox.hgrow="ALWAYS">
++                        <HBox prefHeight="41.0" prefWidth="1078.0">
+                            <children>
+-                              <StackPane prefHeight="41.0" prefWidth="744.0" HBox.hgrow="ALWAYS">
++                              <StackPane prefHeight="41.0" prefWidth="744.0">
+                                  <children>
+                                     <TextField prefHeight="39.0" prefWidth="672.0" />
+-                                    <Button mnemonicParsing="false" style="-fx-background-color: transparent;" text="This PC">
++                                    <Button minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="720.0" prefWidth="1200.0" style="-fx-background-color: transparent;" text="This PC">
+                                        <StackPane.margin>
+                                           <Insets right="670.0" />
+                                        </StackPane.margin>
+@@ -158,20 +156,20 @@
+                                     </Button>
+                                  </children>
+                               </StackPane>
+-                              <HBox prefHeight="41.0" prefWidth="340.0" HBox.hgrow="ALWAYS">
++                              <HBox prefHeight="41.0" prefWidth="340.0">
+                                  <children>
+-                                    <StackPane prefHeight="41.0" prefWidth="350.0" HBox.hgrow="ALWAYS">
++                                    <StackPane prefHeight="41.0" prefWidth="350.0">
+                                        <children>
+                                           <HBox prefHeight="100.0" prefWidth="200.0">
+                                              <children>
+-                                                <TextField prefHeight="35.0" prefWidth="345.0" promptText="Search">
++                                                <TextField minHeight="0.0" minWidth="0.0" prefHeight="38.0" prefWidth="303.0" promptText="Search">
+                                                    <padding>
+                                                       <Insets left="10.0" />
+                                                    </padding>
+                                                 </TextField>
+-                                                <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="65.0">
++                                                <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="54.0" HBox.hgrow="ALWAYS">
+                                                    <graphic>
+-                                                      <ImageView fitHeight="23.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
++                                                      <ImageView fitHeight="57.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                          <image>
+                                                             <Image url="@../../../../../../Downloads/loupe.png" />
+                                                          </image>
+@@ -194,6 +192,6 @@
+       </VBox>
+    </top>
+    <center>
+-      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
++      <StackPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </center>
+ </BorderPane>
