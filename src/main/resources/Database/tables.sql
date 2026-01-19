@@ -18,9 +18,9 @@ CREATE TABLE users (
     isActive boolean default true
 );
 
-create table skills (
-	skillId int primary key auto_increment,
-    skillName varchar(255)
+CREATE TABLE skills (
+    skillId INT PRIMARY KEY AUTO_INCREMENT,
+    skillName VARCHAR(255)
 );
 
 create table projectTypes (
