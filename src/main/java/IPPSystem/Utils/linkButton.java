@@ -21,6 +21,7 @@ public class linkButton {
 
     private final Map<Button, Parent> linkMap = new HashMap<>();
     private Button activeTab;
+    private HBox activeBox;
 
     /**
      * Create a new tab with FXML content
@@ -46,7 +47,9 @@ public class linkButton {
         // ---------- Tab buttons ----------
         Button pageBtn = new Button(title);
         Button closeBtn = new Button();
-        closeBtn.setGraphic(new FontIcon(FontAwesomeSolid.TIMES));
+        FontIcon closeIcon = new FontIcon(FontAwesomeSolid.TIMES);
+        closeIcon.getStyleClass().add("closeIcon");
+        closeBtn.setGraphic(closeIcon);
 
         pageBtn.setMinHeight(35);
         closeBtn.setMinHeight(35);
@@ -56,6 +59,8 @@ public class linkButton {
         HBox tabBox = new HBox(pageBtn, closeBtn);
         tabBox.setAlignment(Pos.CENTER);
         tabBox.getStyleClass().add("linkButton");
+        pageBtn.getStyleClass().add("pageBtn");
+        closeBtn.getStyleClass().add("closeBtn");
 
         HBox.setHgrow(pageBtn, Priority.ALWAYS);
         HBox.setHgrow(closeBtn, Priority.NEVER);
@@ -73,11 +78,7 @@ public class linkButton {
         tabBar.getChildren().add(tabBar.getChildren().size() - 1, tabBox);
 
         // ---------- Activate first tab ----------
-        if (activeTab == null) {
             switchTab(tabBar, pageBtn);
-        } else {
-            updateTabCloseButtons(tabBar);
-        }
     }
 
     // =========================================================
@@ -91,6 +92,10 @@ public class linkButton {
         // Remove active style
         if (activeTab != null) {
             activeTab.getStyleClass().remove("active-tab");
+
+        }
+        if(activeBox != null){
+            activeBox.getStyleClass().remove("active");
         }
 
         // Show selected content
@@ -100,6 +105,8 @@ public class linkButton {
         }
 
         selectedTab.getStyleClass().add("active-tab");
+        tabBar.getStyleClass().add("active");
+        activeBox = tabBar;
         activeTab = selectedTab;
 
         updateTabCloseButtons(tabBar);
@@ -122,8 +129,11 @@ public class linkButton {
         tabBar.getChildren().remove(tabBox);
         linkMap.remove(pageBtn);
 
-        if (pageBtn == activeTab) {
+        if (activeBox == tabBar){
+            activeBox = null;
+        }
 
+        if (pageBtn == activeTab) {
             activeTab = null;
             int tabCount = tabBar.getChildren().size() - 1;
 

@@ -1,121 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefWidth="1000"
-            prefHeight="520" fx:controller="IPPSystem.Controllers.HelloController">
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="your.package.MainController">
 
-    <HBox prefWidth="1000" prefHeight="520">
+    <!-- ================= TOP BAR ================= -->
+    <top>
+        <HBox spacing="10"
+              alignment="CENTER_RIGHT"
+              style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc;">
+            <padding>
+                <Insets top="8" right="12" bottom="8" left="12"/>
+            </padding>
 
-        <!-- LEFT : IMAGE + OVERLAY -->
-        <StackPane prefWidth="600">
+            <!-- Notification Button -->
+            <Button fx:id="notificationBtn"
+                    text="🔔"
+                    onAction="#onNotifications"
+                    style="-fx-font-size: 16px;
+                           -fx-background-color: transparent;" />
+        </HBox>
+    </top>
 
-            <ImageView fitWidth="600"
-                       fitHeight="520"
-                       preserveRatio="false">
-                <image>
-                    <Image url="@system_image.jpg"/>
-                </image>
-            </ImageView>
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <VBox prefWidth="240"
+              spacing="12"
+              style="-fx-background-color: #1e1e1e;">
 
-            <!-- Dark Overlay -->
-            <Pane style="-fx-background-color: rgba(0,0,0,0.45);" />
+            <padding>
+                <Insets top="24" right="16" bottom="24" left="16"/>
+            </padding>
 
-            <!-- Branding -->
-            <VBox alignment="CENTER_LEFT"
-                  spacing="14"
-                  style="-fx-padding: 60;">
-
-                <Label text="SmartSys"
-                       style="-fx-text-fill: white;
-                              -fx-font-size: 34px;
-                              -fx-font-weight: bold;" />
-
-                <Label text="Next-generation system for smarter management"
-                       wrapText="true"
-                       style="-fx-text-fill: #e5e7eb;
-                              -fx-font-size: 15px;" />
-
-            </VBox>
-
-        </StackPane>
-
-        <!-- RIGHT : LOGIN PANEL -->
-        <VBox prefWidth="400"
-              alignment="CENTER"
-              spacing="20"
-              style="-fx-background-color: #0f172a;
-                     -fx-padding: 50;">
-
-            <Label text="Welcome Back"
+            <Label text="Desktop App"
                    style="-fx-text-fill: white;
-                          -fx-font-size: 22px;
+                          -fx-font-size: 20px;
                           -fx-font-weight: bold;" />
 
-            <Label text="Sign in to your account"
-                   style="-fx-text-fill: #94a3b8;
-                          -fx-font-size: 13px;" />
+            <Separator />
 
-            <TextField promptText="Username"
-                       prefHeight="44"
-                       style="-fx-background-color: transparent;
-                              -fx-text-fill: white;
-                              -fx-border-color: #334155;
-                              -fx-border-width: 0 0 1 0;
-                              -fx-background-radius: 0;" />
+            <Button text="Home"     onAction="#onHome"     maxWidth="Infinity"/>
+            <Button text="Files"    onAction="#onFiles"    maxWidth="Infinity"/>
+            <Button text="Tools"    onAction="#onTools"    maxWidth="Infinity"/>
+            <Button text="Settings" onAction="#onSettings" maxWidth="Infinity"/>
 
-            <!-- Password Container -->
-            <VBox spacing="6">
+            <Region VBox.vgrow="ALWAYS"/>
 
-                <!-- Hidden Password -->
-                <PasswordField fx:id="passwordField"
-                               promptText="Password"
-                               prefHeight="44"
-                               style="-fx-background-color: transparent;
-                          -fx-text-fill: white;
-                          -fx-border-color: #334155;
-                          -fx-border-width: 0 0 1 0;" />
+            <Separator />
 
-                <!-- Visible Password -->
-                <TextField fx:id="passwordTextField"
-                           promptText="Password"
-                           prefHeight="44"
-                           visible="false"
-                           managed="false"
-                           style="-fx-background-color: transparent;
-                      -fx-text-fill: white;
-                      -fx-border-color: #334155;
-                      -fx-border-width: 0 0 1 0;" />
-
-                <!-- Show Password -->
-                <CheckBox fx:id="showPasswordCheck"
-                          text="Show password"
-                          onAction="#togglePassword"
-                          style="-fx-text-fill: #94a3b8;
-                     -fx-font-size: 12px;" />
-
-            </VBox>
-
-
-            <Button text="SIGN IN"
-                    prefHeight="46"
+            <Button text="Exit"
+                    onAction="#onExit"
                     maxWidth="Infinity"
-                    style="-fx-background-color: #3b82f6;
-                           -fx-text-fill: white;
-                           -fx-font-size: 14px;
-                           -fx-font-weight: bold;" />
-
-            <Label text="Secure login • All activities monitored"
-                   style="-fx-text-fill: #64748b;
-                          -fx-font-size: 11px;" />
-
+                    style="-fx-background-color: #c0392b;
+                           -fx-text-fill: white;" />
         </VBox>
+    </left>
 
-    </HBox>
+    <!-- ================= CONTENT ================= -->
+    <center>
+        <StackPane fx:id="contentPane"
+                   style="-fx-background-color: #f4f4f4;" />
+    </center>
 
-</AnchorPane>
+</BorderPane>

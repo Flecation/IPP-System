@@ -4,7 +4,6 @@ import IPPSystem.Models.users;
 import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -26,7 +25,7 @@ public class navigationPaneController{
     @FXML
     VBox root;
 
-    private users loginUser = session.getInstance().getUser();
+    protected static users loginUser = session.getInstance().getUser();
 
     private final linkButton linkButton = new linkButton();
     @FXML
@@ -34,7 +33,9 @@ public class navigationPaneController{
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
         linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard");
-        pageAddBtn.setGraphic(new FontIcon(FontAwesomeSolid.PLUS));
+        FontIcon pageAddIcon  = new FontIcon(FontAwesomeSolid.PLUS);
+        pageAddIcon.getStyleClass().add("pageAddIcon");
+        pageAddBtn.setGraphic(pageAddIcon);
         pageAddBtn.setOnAction(e->linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard"));
     }
 }
