@@ -9,7 +9,9 @@ import IPPSystem.Utils.utils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -21,8 +23,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 public class sideBarPaneController  extends navigationPaneController{
@@ -282,7 +286,18 @@ public class sideBarPaneController  extends navigationPaneController{
         dashboardIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // Project navigation
-        projectViewBtn.setOnMouseClicked(e -> System.out.println());
+        projectViewBtn.setOnMouseClicked(e -> {
+                    Parent root = switchPage.openFxml("/View/viewPM.fxml");
+
+                    loadPane.getChildren().add(root);
+                });
+
+
+
+//        dashboardViewBtn.setOnMouseClicked( MouseEvent e -> {
+//            Parent root = switchPage .openFxmL( ExmiFile: "/View/Login. fxml");
+//            LoadPane.getChildren () .add (root) :|
+//]);
         projectIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // User navigation
@@ -425,4 +440,6 @@ public class sideBarPaneController  extends navigationPaneController{
         ParallelTransition run = new ParallelTransition(moving1,moving);
         run.play();
     }
+
+
 }
