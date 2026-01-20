@@ -25,8 +25,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
-<StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.controllers.DashboardController">
    <children>
       <BorderPane maxHeight="750.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;">
          <center>
