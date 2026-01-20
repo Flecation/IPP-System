@@ -10,6 +10,7 @@ public class projectCardController {
     @FXML
     private Button detailsBtn;
 
+
     @FXML
     private Label duration;
 
