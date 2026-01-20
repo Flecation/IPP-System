@@ -66,68 +66,86 @@ VALUES
 (1, 4, 3, 11, 17);   -- Townhouse Medium Rise: 11–17%
 
 
--- Substructure, Superstructure, Finishing, MEP, External
--- // in there the min and max of duration are the total month of % but the labors are not % they are qty //
-INSERT INTO workItemDetails
-(projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost)
-VALUES
--- Apartment Low Rise
-(1,1,0.18,0.22,5,10,10*0.25,15*0.25),  -- Substructure
-(1,2,0.33,0.38,8,15,10*0.35,15*0.35),  -- Superstructure
-(1,3,0.23,0.27,5,10,10*0.20,15*0.20),  -- Finishing
-(1,4,0.13,0.17,4,8,10*0.15,15*0.15),   -- MEP
-(1,5,0.04,0.06,2,5,10*0.05,15*0.05),   -- External
--- Apartment Medium Rise
-(2,1,0.18,0.22,6,12,12*0.25,18*0.25),
-(2,2,0.33,0.38,10,18,12*0.35,18*0.35),
-(2,3,0.23,0.27,6,12,12*0.20,18*0.20),
-(2,4,0.13,0.17,5,10,12*0.15,18*0.15),
-(2,5,0.04,0.06,3,6,12*0.05,18*0.05),
--- Apartment High Rise
-(3,1,0.18,0.22,8,15,15*0.25,20*0.25),  -- Substructure
-(3,2,0.33,0.38,12,22,15*0.35,20*0.35), -- Superstructure
-(3,3,0.23,0.27,8,15,15*0.20,20*0.20),  -- Finishing
-(3,4,0.13,0.17,6,12,15*0.15,20*0.15),  -- MEP
-(3,5,0.04,0.06,4,8,15*0.05,20*0.05);   -- External
--- Condominium Medium Rise
-(4,1,0.18,0.22,6,12,12*0.25,18*0.25),
-(4,2,0.33,0.38,10,18,12*0.35,18*0.35),
-(4,3,0.23,0.27,6,12,12*0.20,18*0.20),
-(4,4,0.13,0.17,5,10,12*0.15,18*0.15),
-(4,5,0.04,0.06,3,6,12*0.05,18*0.05),
--- Condominium High Rise
-(5,1,0.18,0.22,8,15,15*0.25,22*0.25),  -- Substructure
-(5,2,0.33,0.38,12,22,15*0.35,22*0.35), -- Superstructure
-(5,3,0.23,0.27,8,15,15*0.20,22*0.20),  -- Finishing
-(5,4,0.13,0.17,6,12,15*0.15,22*0.15),  -- MEP
-(5,5,0.04,0.06,4,8,15*0.05,22*0.05);   -- External
--- Villa / House Low Rise
-(6,1,0.18,0.22,4,8,8*0.25,12*0.25),
-(6,2,0.33,0.38,6,12,8*0.35,12*0.35),
-(6,3,0.23,0.27,4,8,8*0.20,12*0.20),
-(6,4,0.13,0.17,3,6,8*0.15,12*0.15),
-(6,5,0.04,0.06,2,4,8*0.05,12*0.05),
--- Townhouse Low Rise
-(7,1,0.18,0.22,4,8,9*0.25,13*0.25),
-(7,2,0.33,0.38,6,12,9*0.35,13*0.35),
-(7,3,0.23,0.27,4,8,9*0.20,13*0.20),
-(7,4,0.13,0.17,3,6,9*0.15,13*0.15),
-(7,5,0.04,0.06,2,4,9*0.05,13*0.05),
--- Townhouse Medium Rise
-(8,1,0.18,0.22,5,10,11*0.25,17*0.25),
-(8,2,0.33,0.38,8,14,11*0.35,17*0.35),
-(8,3,0.23,0.27,5,10,11*0.20,17*0.20),
-(8,4,0.13,0.17,4,8,11*0.15,17*0.15),
-(8,5,0.04,0.06,3,6,11*0.05,17*0.05);
+-- =============================================
+-- CORRECTED workItemDetails for RESIDENTIAL BUILDINGS
+-- Realistic cost percentages that sum to ~100%
+-- Based on industry standards
+-- =============================================
 
+-- Clear existing residential data (projectDetailId 1-8)
+DELETE FROM workItemDetails WHERE projectDetailId BETWEEN 1 AND 8;
 
+-- Apartment Low Rise (projectDetailId: 1)
+INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost) VALUES
+(1, 1, 18, 22, 5, 10, 15, 20),   -- Substructure: 15-20% (was 10-15%)
+(1, 2, 33, 38, 8, 15, 30, 35),   -- Superstructure: 30-35% (was 10-15%)
+(1, 3, 23, 27, 5, 10, 25, 30),   -- Finishing: 25-30% (was 10-15%)
+(1, 4, 13, 17, 4, 8, 20, 25),    -- MEP: 20-25% (was 10-15%)
+(1, 5, 4, 6, 2, 5, 5, 10);       -- External: 5-10% (was 10-15%)
+-- Total Cost: 95-120% (with contingency)
 
+-- Apartment Medium Rise (projectDetailId: 2)
+INSERT INTO workItemDetails VALUES
+(2, 1, 18, 22, 6, 12, 15, 20),   -- Substructure
+(2, 2, 33, 38, 10, 18, 32, 38),  -- Superstructure (higher for medium rise)
+(2, 3, 23, 27, 6, 12, 26, 32),   -- Finishing
+(2, 4, 13, 17, 5, 10, 22, 28),   -- MEP (higher for taller buildings)
+(2, 5, 4, 6, 3, 6, 5, 10);       -- External
+-- Total: 100-128%
 
+-- Apartment High Rise (projectDetailId: 3)
+INSERT INTO workItemDetails VALUES
+(3, 1, 18, 22, 8, 15, 15, 20),   -- Substructure
+(3, 2, 33, 38, 12, 22, 35, 42),  -- Superstructure (highest for high rise)
+(3, 3, 23, 27, 8, 15, 28, 35),   -- Finishing
+(3, 4, 13, 17, 6, 12, 25, 32),   -- MEP (complex systems in high rise)
+(3, 5, 4, 6, 4, 8, 5, 10);       -- External
+-- Total: 108-139%
 
+-- Condominium Medium Rise (projectDetailId: 4) - Similar to Apartment Medium
+INSERT INTO workItemDetails VALUES
+(4, 1, 18, 22, 6, 12, 15, 20),
+(4, 2, 33, 38, 10, 18, 33, 39),   -- Slightly higher quality
+(4, 3, 23, 27, 6, 12, 28, 34),    -- Better finishes
+(4, 4, 13, 17, 5, 10, 23, 29),    -- Better MEP
+(4, 5, 4, 6, 3, 6, 5, 10);
+-- Total: 104-132%
 
+-- Condominium High Rise (projectDetailId: 5)
+INSERT INTO workItemDetails VALUES
+(5, 1, 18, 22, 8, 15, 15, 20),
+(5, 2, 33, 38, 12, 22, 36, 43),   -- Premium structure
+(5, 3, 23, 27, 8, 15, 30, 37),    -- Luxury finishes
+(5, 4, 13, 17, 6, 12, 27, 34),    -- Advanced MEP
+(5, 5, 4, 6, 4, 8, 5, 10);
+-- Total: 113-144%
 
+-- Villa / House Low Rise (projectDetailId: 6)
+INSERT INTO workItemDetails VALUES
+(6, 1, 18, 22, 4, 8, 15, 20),
+(6, 2, 33, 38, 6, 12, 35, 42),     -- Houses have higher structure %
+(6, 3, 23, 27, 4, 8, 30, 38),      -- Custom finishes
+(6, 4, 13, 17, 3, 6, 15, 20),      -- Simpler MEP
+(6, 5, 4, 6, 2, 4, 10, 15);        -- More external work
+-- Total: 105-135%
 
+-- Townhouse Low Rise (projectDetailId: 7)
+INSERT INTO workItemDetails VALUES
+(7, 1, 18, 22, 4, 8, 14, 19),
+(7, 2, 33, 38, 6, 12, 33, 40),
+(7, 3, 23, 27, 4, 8, 28, 35),
+(7, 4, 13, 17, 3, 6, 18, 24),
+(7, 5, 4, 6, 2, 4, 8, 12);
+-- Total: 101-130%
 
+-- Townhouse Medium Rise (projectDetailId: 8)
+INSERT INTO workItemDetails VALUES
+(8, 1, 18, 22, 5, 10, 14, 19),
+(8, 2, 33, 38, 8, 14, 34, 41),
+(8, 3, 23, 27, 5, 10, 29, 36),
+(8, 4, 13, 17, 4, 8, 20, 26),
+(8, 5, 4, 6, 3, 6, 8, 12);
+-- Total: 105-134%
 
 
 
