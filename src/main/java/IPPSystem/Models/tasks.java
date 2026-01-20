@@ -3,8 +3,10 @@ package IPPSystem.Models;
 import java.sql.Date;
 
 public class tasks extends workItems{
+    private int assignTaskId;
     private int taskId;
     private String taskName;
+
 
     public tasks(){}
 
@@ -16,8 +18,9 @@ public class tasks extends workItems{
     }
 
     //for the assign tasks (view)
-    public tasks(int assignProjectId, int workItemId, int taskId, String taskName, Date startDate, Date endDate, double projectDuration) {
+    public tasks(int assignTaskId,int assignProjectId, int workItemId, int taskId, String taskName, Date startDate, Date endDate, double projectDuration) {
         super(assignProjectId, workItemId, startDate, endDate, projectDuration);
+        this.assignTaskId = assignTaskId;
         this.taskId = taskId;
         this.taskName = taskName;
     }
@@ -26,6 +29,38 @@ public class tasks extends workItems{
     public tasks(String projectInstanceName, String workItemName, String taskName, double projectDuration) {
         super(projectInstanceName, workItemName, projectDuration);
         this.taskName = taskName;
+    }
+
+    public tasks(int assignProjectId, int workItemId, int taskId, Date startDate, Date endDate, double projectDuration) {
+        super(assignProjectId, workItemId, startDate, endDate, projectDuration);
+        this.taskId = taskId;
+    }
+
+    public tasks( int assignTaskId, String taskName, String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
+        super(projectStatus,assignStatus, startDate, endDate, projectDuration);
+        this.assignTaskId = assignTaskId;
+        this.taskName = taskName;
+    }
+
+    public tasks(int assignTaskId, int assignWorkItemId, int taskId, String taskName, Date startDate, Date endDate, double projectDuration) {
+        super(assignWorkItemId, startDate, endDate, projectDuration);
+        this.assignTaskId = assignTaskId;
+        this.taskId = taskId;
+        this.taskName = taskName;
+    }
+
+    public tasks(int assignTaskId, String taskName,String projectStatus, String assignStatus, double projectDuration, Date startDate, Date endDate ) {
+        super(projectStatus, assignStatus, startDate, endDate, projectDuration);
+        this.assignTaskId = assignTaskId;
+        this.taskName = taskName;
+    }
+
+    public int getAssignTaskId() {
+        return assignTaskId;
+    }
+
+    public void setAssignTaskId(int assignTaskId) {
+        this.assignTaskId = assignTaskId;
     }
 
     public int getTaskId() {

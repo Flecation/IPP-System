@@ -1,5 +1,7 @@
 package IPPSystem.DAO;
 
+import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
 
 import java.sql.*;
@@ -20,90 +22,33 @@ public class projectDatabase {
     public static ArrayList<projects> getAllProjects(){
         ArrayList<projects> ls = new ArrayList<>();
         try {
-            CallableStatement cstmt = con.prepareCall("");
+            CallableStatement cstmt = con.prepareCall("{CALL getAllProjects()}");
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()){
                 ls.add(new projects(
+                        rs.getInt("assignProjectId"),
                         rs.getString("projectInstanceName"),
-                        rs.getString("typeName"),
+                        rs.getInt("projectTypeId"),
+                        rs.getString("projectTypeName"),
+                        rs.getInt("buildingId"),
                         rs.getString("buildingName"),
+                        rs.getInt("levelId"),
                         rs.getString("levelName"),
+                        rs.getInt("userId"),
                         rs.getString("userName"),
                         rs.getDouble("projectArea"),
                         rs.getDouble("projectHeight"),
                         rs.getDouble("totalStories"),
                         rs.getDouble("totalUnits"),
-                        rs.getDouble("projectDuration"),
                         rs.getDouble("projectCost"),
                         rs.getDouble("projectLaborQty"),
                         rs.getDouble("projectOverHeadCost"),
-                        rs.getDate("startDate"),
-                        rs.getDate("endDate"),
-                        rs.getString("projectLocation"),
-                        rs.getString("projectStatus")
-                ));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return ls;
-    }
-
-    //to assign the project
-    public static int assignProjects(projects assign){
-        try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,assign.getProjectTypeId());
-            cstmt.setString(2,assign.getProjectInstanceName());
-            cstmt.setString(3,assign.getProjectLevelName());
-            cstmt.setString(4,assign.getProjectBuildingName());
-            cstmt.setDouble(5,assign.getProjectArea());
-            cstmt.setDouble(6,assign.getProjectHeight());
-            cstmt.setDouble(7,assign.getTotalStories());
-            cstmt.setDouble(8,assign.getTotalUnits());
-            cstmt.setString(9,assign.getUserName());
-            cstmt.setString(10,assign.getProjectLocation());
-            cstmt.setDate(11,assign.getStartDate());
-            cstmt.setDouble(12,assign.getProjectDuration());
-            cstmt.setString(13,assign.getProjectStatus());
-            ResultSet rs = cstmt.executeQuery();
-
-            return rs.getInt(1);
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    //for the projects from the supervisor
-    public static ArrayList<projects> getAllProjectsBySupervisor(int supervisorId){
-        ArrayList<projects> ls = new ArrayList<>();
-
-        try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setInt(1,supervisorId);
-            ResultSet rs = cstmt.executeQuery();
-            while (rs.next()){
-                ls.add(new projects(
-                        rs.getString("projectInstanceName"),
-                        rs.getString("typeName"),
-                        rs.getString("buildingName"),
-                        rs.getString("levelName"),
-                        rs.getString("userName"),
-                        rs.getDouble("projectArea"),
-                        rs.getDouble("projectHeight"),
-                        rs.getDouble("totalStories"),
-                        rs.getDouble("totalUnits"),
                         rs.getDouble("projectDuration"),
-                        rs.getDouble("projectCost"),
-                        rs.getDouble("projectLaborQty"),
-                        rs.getDouble("projectOverHeadCost"),
                         rs.getDate("startDate"),
                         rs.getDate("endDate"),
                         rs.getString("projectLocation"),
-                        rs.getString("projectStatus")
+                        rs.getString("projectStatus"),
+                        rs.getString("assignStatus")
                 ));
             }
         } catch (SQLException e) {
@@ -113,30 +58,89 @@ public class projectDatabase {
     }
 
     //for the projects details
-    public static projects getProjectDetails(String projectTypeName){
-        projects projects = new projects();
+    public static ArrayList<projects> getProjectDetails(int projectTypeId){
+        ArrayList<projects> projects = new ArrayList<>();
         try {
-            CallableStatement cstmt = con.prepareCall("");
-            cstmt.setString(1,projectTypeName);
+            CallableStatement cstmt = con.prepareCall("{CALL getProjectDetails(?)}");
+            cstmt.setInt(1,projectTypeId);
             ResultSet rs = cstmt.executeQuery();
-            if(rs.next()){
-                projects = new projects(
-                        rs.getInt("projectTypeId"),
-                        rs.getString("projectTypeName"),
-                        rs.getInt("projectLevelId"),
-                        rs.getString("projectLevelName"),
-                        rs.getInt("projectBuildingId"),
-                        rs.getString("projectBuildingName"),
-                        rs.getDouble("minOverHeadCost"),
-                        rs.getDouble("maxOverHeadCost")
-
-                );
+            while (rs.next()){
+                projects.add(
+                    new projects(
+                            rs.getInt("projectTypeId"),
+                            rs.getString("projectTypeName"),
+                            rs.getInt("projectLevelId"),
+                            rs.getString("projectLevelName"),
+                            rs.getInt("projectBuildingId"),
+                            rs.getString("projectBuildingName"),
+                            rs.getDouble("minOverHeadCost"),
+                            rs.getDouble("maxOverHeadCost")
+                    ));
             }
+            return projects;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return projects;
+
+    }
+
+    //to assign the project
+    public static boolean assignProjects(projects assign, projectStatus projectStatus, assignStatus assignStatus){
+        try {
+            CallableStatement cstmt = con.prepareCall("{CALL assignProjects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.setInt(1,assign.getProjectTypeId());
+            cstmt.setString(2,assign.getProjectInstanceName());
+            cstmt.setInt(3,assign.getProjectBuildingId());
+            cstmt.setInt(4,assign.getProjectLevelId());
+            cstmt.setDouble(5,assign.getProjectArea());
+            cstmt.setDouble(6,assign.getProjectHeight());
+            cstmt.setDouble(7,assign.getTotalStories());
+            cstmt.setDouble(8,assign.getTotalUnits());
+            cstmt.setInt(9,assign.getUserId());
+            cstmt.setString(10,assign.getProjectLocation());
+            cstmt.setDouble(11,assign.getProjectOverHeadCost());
+            cstmt.setString(12, projectStatus.toString());
+            cstmt.setString(13,assignStatus.toString());
+            cstmt.setDouble(14,assign.getProjectCost());
+            cstmt.setDouble(15,assign.getProjectLaborQty());
+            cstmt.setDouble(16,assign.getProjectDuration());
+            cstmt.setDate(17,assign.getStartDate());
+            cstmt.setDate(18,assign.getEndDate());
+            return cstmt.execute();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static boolean updateAssignProject(projects assign,assignStatus assignStatus){
+        try(CallableStatement cs = con.prepareCall("")){
+            cs.setInt(1,assign.getAssignProjectId());
+            cs.setString(2,assignStatus.toString());
+            cs.setDouble(3,assign.getProjectCost());
+            cs.setDouble(4,assign.getProjectLaborQty());
+            cs.setDouble(5,assign.getProjectDuration());
+            cs.setDate(6,assign.getStartDate());
+            cs.setDate(7,assign.getEndDate());
+            return cs.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
+    public static boolean deleteAssignProject(int assignProjectId){
+        String sql = "UPDATE assignProjects " +
+                "SET projectStatus = 5" +
+                "WHERE assignProjectId = ?;";
+        try {
+            PreparedStatement pstmt = con.prepareCall(sql);
+            pstmt.setInt(1,assignProjectId);
+            return  pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
