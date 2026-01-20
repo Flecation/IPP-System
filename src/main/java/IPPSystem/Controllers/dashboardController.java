@@ -86,7 +86,7 @@ public class dashboardController {
     private LineChart<?, ?> lcProjectValueAnalysis;
 
     @FXML
-    private Label location;
+    private Label lblLocation;
 
     @FXML
     private ProgressBar pbActualDuration;
