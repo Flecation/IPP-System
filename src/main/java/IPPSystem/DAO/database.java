@@ -65,7 +65,7 @@ public class database {
 
     public static ArrayList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){return taskDatabase.getAllTasksByAssignWorkItem(assignWorkItemId);}
 
-    public static ArrayList<tasks> getAllTasksForAutoGeneration(int projectTypeId,int workItemId){return taskDatabase.getAllTasksDetailsByWorkItem(projectTypeId,workItemId);}
+    public static ArrayList<tasks> getAllTasksForAutoGeneration(int projectTypeId,int workItemId,int buildingId,int levelId){return taskDatabase.getAllTasksDetailsByWorkItem(projectTypeId,workItemId,buildingId,levelId);}
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
