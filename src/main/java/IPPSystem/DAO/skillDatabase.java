@@ -2,13 +2,10 @@ package IPPSystem.DAO;
 
 import IPPSystem.Models.skills;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
-public class skillDatabase {
+public class skillDatabase  {
 
     private static Connection con;
     static {
@@ -38,4 +35,28 @@ public class skillDatabase {
         }
 
     }
+
+    public static ArrayList<skills> getSkillByWorkItem(int projectTypeId, int workItemId){
+        ArrayList<skills> skill = new ArrayList<>();
+        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?);")){
+            cs.setInt(1,projectTypeId);
+            cs.setInt(2,workItemId);
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()){
+                skill.add(new skills(
+                        rs.getInt("skillId"),
+                        rs.getString("skillName"),
+                        rs.getDouble("minRequireLabors"),
+                        rs.getDouble("maxRequireLabors"),
+                        rs.getDouble("minDailyWage"),
+                        rs.getDouble("maxDailyWage")
+                ));
+            }
+            return skill;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

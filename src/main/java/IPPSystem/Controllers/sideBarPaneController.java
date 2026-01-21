@@ -7,7 +7,9 @@ import IPPSystem.Utils.utils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,8 +21,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 public class sideBarPaneController  extends navigationPaneController{
@@ -276,7 +280,9 @@ public class sideBarPaneController  extends navigationPaneController{
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
-        dashboardViewBtn.setOnMouseClicked(e -> System.out.println());
+        dashboardViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml",loadPane);
+        });
         dashboardIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // Project navigation
