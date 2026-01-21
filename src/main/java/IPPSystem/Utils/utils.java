@@ -126,4 +126,5 @@ public class utils {
 
         public static void openFxml(String fxml, StackPane loadPane){switchPage.openFxml(fxml,loadPane);}
 
+
 }

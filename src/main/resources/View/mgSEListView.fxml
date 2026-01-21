@@ -75,21 +75,6 @@
                      <children>
                         <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" maxWidth="1100.0" minWidth="600.0" prefHeight="342.0" prefWidth="600.0" spacing="20.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="ALWAYS" />
                         <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css">
-                           <children>
-                              <Button fx:id="paginationPrevBtn" mnemonicParsing="false" onAction="#clickonprev" prefWidth="60.0" stylesheets="@../CSS/pagination.css" text="Prev" textFill="#10ddd05c">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="paginationBtn1" layoutX="153.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon1" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="1" textFill="WHITE" />
-                              <Button fx:id="paginationBtn2" layoutX="185.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon2" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="2" textFill="#0ba380" />
-                              <Button fx:id="paginationBtn3" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon3" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="3" textFill="#0ba380" />
-                              <Button fx:id="paginationNextBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Button>
-                           </children>
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
