@@ -28,6 +28,8 @@ public class projects {
     private double minLaborQty;
     private double maxLaborQty;
     private Date startDate,endDate;
+    private String assignStatus;
+    private boolean isCancel;
 
     public projects() {
     }
@@ -37,12 +39,30 @@ public class projects {
         this.assignProjectId = assignProjectId;
     }
 
-    public projects(int assignProjectId, Date startDate, Date endDate,double projectDuration) {
+    public projects(String projectStatus, String assignStatus, double projectCost, double projectLaborQty, double projectDuration, Date startDate, Date endDate) {
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+        this.projectCost = projectCost;
+        this.projectLaborQty = projectLaborQty;
+        this.projectDuration = projectDuration;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public projects(String assignStatus, double projectLaborQty, boolean isCancel) {
+        this.assignStatus = assignStatus;
+        this.projectLaborQty = projectLaborQty;
+        this.isCancel = isCancel;
+    }
+
+    public projects(int assignProjectId, Date startDate, Date endDate, double projectDuration) {
         this.assignProjectId = assignProjectId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.projectDuration = projectDuration;
     }
+
+
 
     public projects(int projectTypeId, double minDuration, double maxDuration, double minCost, double maxCost, double minLaborQty, double maxLaborQty) {
         this.projectTypeId = projectTypeId;
@@ -60,6 +80,7 @@ public class projects {
         this.maxDuration = maxDuration;
     }
 
+//    == * update the assign project * ===
     public projects(int assignProjectId, double projectDuration, double projectCost, double projectLaborQty, Date startDate, Date endDate) {
         this.assignProjectId = assignProjectId;
         this.projectDuration = projectDuration;
@@ -78,12 +99,73 @@ public class projects {
         this.endDate = endDate;
     }
 
+    //=== * for assign the new project * ===
+    public projects(int projectTypeId, String projectInstanceName, int projectBuildingId, int projectLevelId, double projectArea, double projectHeight, double totalStories, double totalUnits, int userId, String projectLocation, double projectOverHeadCost, double projectCost, double projectLaborQty, double projectDuration, Date startDate, Date endDate) {
+        this.projectTypeId = projectTypeId;
+        this.projectInstanceName = projectInstanceName;
+        this.projectBuildingId = projectBuildingId;
+        this.projectLevelId = projectLevelId;
+        this.projectArea = projectArea;
+        this.projectHeight = projectHeight;
+        this.totalStories = totalStories;
+        this.totalUnits = totalUnits;
+        this.userId = userId;
+        this.projectLocation = projectLocation;
+        this.projectOverHeadCost = projectOverHeadCost;
+        this.projectCost = projectCost;
+        this.projectLaborQty = projectLaborQty;
+        this.projectDuration = projectDuration;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public projects(String projectInstanceName, double projectDuration) {
         this.projectInstanceName = projectInstanceName;
         this.projectDuration = projectDuration;
     }
 
-    //for the project details
+    public projects(Date startDate, Date endDate, double projectDuration) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.projectDuration = projectDuration;
+    }
+
+    public projects(String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.projectDuration = projectDuration;
+    }
+
+//    ==== to select all projects ===
+    public projects(int assignProjectId, String projectInstanceName, int projectTypeId, String projectTypeName, int projectLevelId, String projectLevelName, int projectBuildingId, String projectBuildingName, int userId, String userName, double projectArea, double projectHeight, double totalStories, double totalUnits, double projectCost, double projectLaborQty, double projectOverHeadCost, double projectDuration, Date startDate, Date endDate, String projectLocation, String projectStatus, String assignStatus) {
+        this.assignProjectId = assignProjectId;
+        this.projectInstanceName = projectInstanceName;
+        this.projectTypeId = projectTypeId;
+        this.projectTypeName = projectTypeName;
+        this.projectLevelId = projectLevelId;
+        this.projectLevelName = projectLevelName;
+        this.projectBuildingId = projectBuildingId;
+        this.projectBuildingName = projectBuildingName;
+        this.userId = userId;
+        this.userName = userName;
+        this.projectArea = projectArea;
+        this.projectHeight = projectHeight;
+        this.totalStories = totalStories;
+        this.totalUnits = totalUnits;
+        this.projectCost = projectCost;
+        this.projectLaborQty = projectLaborQty;
+        this.projectOverHeadCost = projectOverHeadCost;
+        this.projectDuration = projectDuration;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.projectLocation = projectLocation;
+        this.projectStatus = projectStatus;
+        this.assignStatus = assignStatus;
+    }
+
+    //== * to select the project details * ==
     public projects(int projectTypeId, String projectTypeName, int projectLevelId, String projectLevelName, int projectBuildingId, String projectBuildingName, double minOverHeadCost, double maxOverHeadCost) {
         this.projectTypeId = projectTypeId;
         this.projectTypeName = projectTypeName;
@@ -137,6 +219,27 @@ public class projects {
         this.endDate = endDate;
         this.projectLocation = projectLocation;
         this.projectStatus = projectStatus;
+    }
+
+    public projects(int projectTypeId, String projectTypeName) {
+        this.projectTypeId = projectTypeId;
+        this.projectTypeName = projectTypeName;
+    }
+
+    public boolean isCancel() {
+        return isCancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        isCancel = cancel;
+    }
+
+    public String getAssignStatus() {
+        return assignStatus;
+    }
+
+    public void setAssignStatus(String assignStatus) {
+        this.assignStatus = assignStatus;
     }
 
     public double getMaxLaborQty() {

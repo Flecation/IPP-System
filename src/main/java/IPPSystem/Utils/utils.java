@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -122,5 +123,7 @@ public class utils {
         public static void switchNewScene(Button clickButton, String fxmlName){
             switchPage.switchScene(clickButton,fxmlName);
         }
+
+        public static void openFxml(String fxml, StackPane loadPane){switchPage.openFxml(fxml,loadPane);}
 
 }
