@@ -293,14 +293,7 @@ public class sideBarPaneController  extends navigationPaneController{
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
-            try {
-                Parent root = FXMLLoader.load(
-                        getClass().getResource("/view/mgSEListView.fxml")
-                );
-                loadPane.getChildren().add(root);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+           utils.openFxml("mgSEListView.fxml",loadPane);
         });
         userIconBtn.setOnMouseClicked(e -> System.out.println());
 

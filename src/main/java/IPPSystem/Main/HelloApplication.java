@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
         );
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/View/navigationPane.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 900, 535);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
         stage.setTitle("Hello!");
         stage.setScene(scene);
 

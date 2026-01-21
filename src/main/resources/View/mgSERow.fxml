@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
@@ -13,14 +14,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1100.0" minHeight="-Infinity" minWidth="620.0" prefHeight="70.0" prefWidth="1100.0" spacing="5.0" style="-fx-background-color: #ffffff;" styleClass="managerAccSupervisorCtn" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSERowController">
+<HBox fx:id="ASiteEngineerCtn" alignment="CENTER" maxHeight="-Infinity" maxWidth="1200.0" minHeight="-Infinity" minWidth="400.0" prefHeight="70.0" prefWidth="400.0" spacing="5.0" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSERowController">
    <children>
-      <HBox alignment="TOP_CENTER" minWidth="45.0" prefHeight="50.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+      <HBox alignment="CENTER" minWidth="45.0" prefHeight="50.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets />
          </HBox.margin>
          <children>
-            <ImageView fx:id="mgSEImg" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
+            <ImageView fx:id="mgSEImg" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -30,9 +31,9 @@
             </ImageView>
          </children>
       </HBox>
-      <VBox alignment="CENTER_LEFT" maxWidth="144.0" minWidth="144.0" prefHeight="53.0" prefWidth="144.0" spacing="5.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
+      <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minWidth="110.0" prefHeight="53.0" prefWidth="144.0" spacing="5.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="mgSENameTxt" minWidth="120.0" prefHeight="21.0" prefWidth="187.0" styleClass="managerAccSupervisorName" stylesheets="@../CSS/managerSupervisorList.css" text="Hsu Myat Moe">
+            <Label fx:id="mgSENameTxt" minWidth="100.0" prefHeight="21.0" prefWidth="187.0" styleClass="managerAccSupervisorName" stylesheets="@../CSS/managerSupervisorList.css" text="Hsu Myat Moe" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin></Label>
@@ -42,42 +43,42 @@
             <Insets left="10.0" />
          </HBox.margin>
       </VBox>
-      <VBox alignment="CENTER" maxWidth="140.0" minWidth="140.0" prefHeight="200.0" prefWidth="200.0">
+      <VBox alignment="CENTER" maxWidth="140.0" minWidth="80.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="mgSEProjectTypeTxt" alignment="TOP_CENTER" maxWidth="100.0" minWidth="80.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css" text="Small house">
+            <Label fx:id="mgSEProjectTypeTxt" alignment="TOP_CENTER" maxWidth="100.0" minWidth="80.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css" text="Small house" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin></Label>
          </children>
       </VBox>
-      <HBox alignment="CENTER" maxWidth="90.0" minWidth="80.0" prefHeight="100.0" prefWidth="80.0" spacing="5.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css">
+      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minWidth="50.0" prefHeight="100.0" prefWidth="80.0" spacing="5.0" styleClass="managerAccSpProjectType" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="ALWAYS">
          <children>
             <Circle fill="DODGERBLUE" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
             <Label fx:id="mgSEActive" text="Active" />
          </children>
       </HBox>
-      <HBox alignment="CENTER" maxWidth="200.0" minWidth="200.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="100.0" prefHeight="50.0" prefWidth="79.0" spacing="5.0" HBox.hgrow="ALWAYS">
          <children>
-            <StackPane alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="111.0" styleClass="managerAccSpProgressCtn" stylesheets="@../CSS/managerSupervisorList.css">
+            <StackPane alignment="CENTER_LEFT" minWidth="10.0" prefHeight="50.0" prefWidth="68.0" styleClass="managerAccSpProgressCtn" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="ALWAYS">
                <children>
-                  <ProgressBar prefWidth="200.0" progress="0.0" styleClass="managerAccSpProgressCtn" stylesheets="@../CSS/viewAllSiteEngineerList.css" />
+                  <ProgressBar fx:id="currentProjectPrograssBar" minWidth="10.0" prefWidth="55.0" progress="0.0" styleClass="managerAccSpProgressCtn" stylesheets="@../CSS/viewAllSiteEngineerList.css" />
                </children>
             </StackPane>
-            <Label alignment="TOP_CENTER" styleClass="managerAccSpProgressPercentTxt" stylesheets="@../CSS/viewAllSiteEngineerList.css" text="30%">
+            <Label fx:id="currentProjectPrograssPercent" alignment="TOP_CENTER" prefHeight="15.0" prefWidth="70.0" styleClass="managerAccSpProgressPercentTxt" stylesheets="@../CSS/viewAllSiteEngineerList.css" text="30%" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="5.0" />
                </font>
             </Label>
          </children>
       </HBox>
-      <HBox alignment="CENTER_RIGHT" minWidth="179.0" prefHeight="53.0" prefWidth="179.0" spacing="15.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="SOMETIMES">
+      <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minWidth="179.0" prefHeight="50.0" prefWidth="10.0" spacing="5.0" stylesheets="@../CSS/managerSupervisorList.css" HBox.hgrow="ALWAYS">
          <children>
-            <Button fx:id="mgSEViewBtn" mnemonicParsing="false" onAction="#clickMgSEViewBtn" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View">
+            <Button fx:id="mgSEViewBtn" mnemonicParsing="false" onAction="#clickMgSEViewBtn" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="managerAccSpBtn" />
                   <String fx:value="managerAccSpBtnView" />
                </styleClass></Button>
-            <Button fx:id="mgSEDeleteBtn" mnemonicParsing="false" onAction="#clickMgSEDeleteBtn" stylesheets="@../CSS/managerSupervisorList.css" text="Delete">
+            <Button fx:id="mgSEDeleteBtn" mnemonicParsing="false" onAction="#clickMgSEDeleteBtn" stylesheets="@../CSS/managerSupervisorList.css" text="Remove" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -91,4 +92,7 @@
    <padding>
       <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
    </padding>
+   <cursor>
+      <Cursor fx:constant="OPEN_HAND" />
+   </cursor>
 </HBox>

@@ -9,25 +9,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="900.0" prefHeight="470.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEListViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="600.0" prefHeight="470.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEListViewController">
    <children>
-      <HBox prefHeight="60.0" prefWidth="670.0">
+      <HBox prefHeight="136.0" prefWidth="900.0">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+            <HBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="600.0" prefHeight="145.0" prefWidth="875.0" HBox.hgrow="SOMETIMES">
                <children>
                   <Label cache="true" maxHeight="30.0" maxWidth="266.0" minHeight="24.0" minWidth="176.0" prefHeight="30.0" prefWidth="266.0" stylesheets="@../CSS/createButton.css" text="View All Site Engineers " textOverrun="CLIP" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets bottom="10.0" left="20.0" right="10.0" top="15.0" />
                      </HBox.margin>
                      <font>
-                        <Font size="16.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
-                  <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="73.0" prefWidth="625.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                  <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="130.0" prefWidth="597.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Button fx:id="managerSpCreateBtn" contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
                            <HBox.margin>
-                              <Insets top="15.0" />
+                              <Insets />
                            </HBox.margin>
                            <opaqueInsets>
                               <Insets />
@@ -35,12 +35,12 @@
                         </Button>
                         <ComboBox fx:id="managerSpProjectTypeCombo" prefHeight="26.0" prefWidth="135.0" promptText="Project type">
                            <HBox.margin>
-                              <Insets top="16.0" />
+                              <Insets />
                            </HBox.margin>
                         </ComboBox>
                         <ComboBox fx:id="managerSpStatusCombo" prefHeight="26.0" prefWidth="86.0" promptText="Status">
                            <HBox.margin>
-                              <Insets top="16.0" />
+                              <Insets />
                            </HBox.margin>
                         </ComboBox>
                      </children>
@@ -52,6 +52,9 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
             </HBox>
          </children>
          <VBox.margin>
@@ -63,29 +66,25 @@
       </HBox>
       <HBox prefHeight="10.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
-            <StackPane minHeight="373.0" minWidth="620.0" prefHeight="373.0" prefWidth="620.0" style="-fx-background-color: #dedede; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="SOMETIMES">
+            <StackPane minHeight="294.0" minWidth="620.0" prefHeight="294.0" prefWidth="850.0" style="-fx-background-color: none; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
                <children>
-                  <VBox alignment="BOTTOM_CENTER" maxWidth="1100.0" minWidth="620.0" prefHeight="368.0" prefWidth="620.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
+                  <VBox alignment="BOTTOM_CENTER" maxWidth="1100.0" minWidth="620.0" prefHeight="366.0" prefWidth="850.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
                      <children>
-                        <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" maxWidth="1100.0" minWidth="620.0" prefHeight="342.0" prefWidth="620.0" style="-fx-border-radius: 20; -fx-background-radius: 20;" VBox.vgrow="SOMETIMES">
-                           <padding>
-                              <Insets bottom="10.0" left="30.0" right="30.0" top="30.0" />
-                           </padding>
-                        </VBox>
-                        <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@Style.css">
+                        <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" maxWidth="1100.0" minWidth="600.0" prefHeight="342.0" prefWidth="600.0" spacing="20.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="ALWAYS" />
+                        <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css">
                            <children>
-                              <Button fx:id="paginationPrevBtn" mnemonicParsing="false" onAction="#clickonprev" prefWidth="60.0" styleClass="paginationPrevBtn" stylesheets="@../CSS/pagination.css" text="Prev" textFill="#10ddd05c">
+                              <Button fx:id="paginationPrevBtn" mnemonicParsing="false" onAction="#clickonprev" prefWidth="60.0" stylesheets="@../CSS/pagination.css" text="Prev" textFill="#10ddd05c">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="paginationBtn1" layoutX="153.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon1" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn1" stylesheets="@../CSS/pagination.css" text="1" textFill="WHITE" />
-                              <Button fx:id="paginationBtn2" layoutX="185.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon2" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn2" stylesheets="@../CSS/pagination.css" text="2" textFill="#0ba380" />
-                              <Button fx:id="paginationBtn3" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon3" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn3" stylesheets="@../CSS/pagination.css" text="3" textFill="#0ba380" />
-                              <Button fx:id="paginationNextBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" styleClass="paginationNextBtn" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
+                              <Button fx:id="paginationBtn1" layoutX="153.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon1" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="1" textFill="WHITE" />
+                              <Button fx:id="paginationBtn2" layoutX="185.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon2" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="2" textFill="#0ba380" />
+                              <Button fx:id="paginationBtn3" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon3" prefHeight="31.0" prefWidth="42.0" stylesheets="@../CSS/pagination.css" text="3" textFill="#0ba380" />
+                              <Button fx:id="paginationNextBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
