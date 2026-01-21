@@ -82,7 +82,7 @@ public class userDatabase {
         ArrayList<users> info = new ArrayList<>();
         try {
 
-            PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ?");
+            PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ? ORDER BY isActive DESC, userEndDate DESC ");
             pstmt.setString(1,role);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
@@ -167,8 +167,8 @@ public class userDatabase {
         try {
             PreparedStatement pstmt = con.prepareCall("UPDATE users " +
                     "SET isActive = FALSE, " +
-                    " userEndDate = ?" +
-                    "WHERE userId = ?;");
+                    " userEndDate = ? " +
+                    "WHERE userId = ? ;");
             pstmt.setDate(1, dateFormatter.today());
             pstmt.setInt(2,id);
             return  pstmt.execute();

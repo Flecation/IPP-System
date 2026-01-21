@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="database changes and data">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="Merge branch 'main' of https://github.com/Flecation/IPP-System&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,8 +36,8 @@
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {}
-}</component>
+        &quot;lastFilter&quot;: {}
+        }</component>
   <component name="GitHubPullRequestState">{
   &quot;prStates&quot;: [
     {
@@ -62,13 +60,6 @@
         &quot;number&quot;: 14
       },
       &quot;lastSeen&quot;: 1768465724031
-    },
-    {
-      &quot;id&quot;: {
-        &quot;id&quot;: &quot;PR_kwDOQmomhM690Re5&quot;,
-        &quot;number&quot;: 24
-      },
-      &quot;lastSeen&quot;: 1768685356907
     }
   ]
 }</component>
@@ -117,7 +108,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -144,6 +135,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -481,39 +479,7 @@
       <option name="project" value="LOCAL" />
       <updated>1768465960966</updated>
     </task>
-    <task id="LOCAL-00042" summary="creating the database">
-      <option name="closed" value="true" />
-      <created>1768685290010</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1768685290010</updated>
-    </task>
-    <task id="LOCAL-00043" summary="creating the database">
-      <option name="closed" value="true" />
-      <created>1768721313800</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1768721313800</updated>
-    </task>
-    <task id="LOCAL-00044" summary="creating the database">
-      <option name="closed" value="true" />
-      <created>1768894156046</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1768894156046</updated>
-    </task>
-    <task id="LOCAL-00045" summary="database changes and data">
-      <option name="closed" value="true" />
-      <created>1768977857108</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1768977857108</updated>
-    </task>
-    <option name="localTasksCounter" value="46" />
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -533,9 +499,7 @@
     <MESSAGE value="css changes" />
     <MESSAGE value="login Changes" />
     <MESSAGE value="navigationPane" />
-    <MESSAGE value="creating the database" />
-    <MESSAGE value="database changes and data" />
-    <option name="LAST_COMMIT_MESSAGE" value="database changes and data" />
+    <option name="LAST_COMMIT_MESSAGE" value="navigationPane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
