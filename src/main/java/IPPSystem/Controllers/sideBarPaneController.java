@@ -287,7 +287,7 @@ public class sideBarPaneController  extends navigationPaneController{
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
-                  utils.openFxml("viewProject.fxml",loadPane);
+                  utils.openFxml("viewProjects.fxml",loadPane);
         });
 
 
