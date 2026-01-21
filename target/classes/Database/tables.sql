@@ -201,14 +201,21 @@ create table assignWorkItemSkills (
 );
 
 CREATE TABLE assignWorkItemSkillDetails(
-    assignWorkItemSkillDetailId int primary key auto_increment,
-    assignWorkItemSKillId int,
-    assignStatus int,
-    laborQty double,
-    dailyWagePerLabor double,
-    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
-    FOREIGN KEY (assignWorkItemSkillId) REFERENCES assignWorkItemSKills(assignWorkItemSkillId) ON UPDATE CASCADE ON DELETE CASCADE
+    assignWorkItemSkillDetailId INT PRIMARY KEY AUTO_INCREMENT,
+    assignWorkItemSkillId INT,
+    assignStatusId INT,
+    laborQty DOUBLE,
+    dailyWagePerLabor DOUBLE,
+    FOREIGN KEY (assignStatusId)
+        REFERENCES assignStatus(assignStatusId)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (assignWorkItemSkillId)
+        REFERENCES assignWorkItemSkills(assignWorkItemSkillId)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
+
 
 create table assignWorkers (
 	assignWorkerId int primary key auto_increment,
@@ -224,6 +231,7 @@ CREATE TABLE dailyReports (
     supervisorId INT,
     weather VARCHAR(100),
     generalRemark TEXT,
+    issue LONGTEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (assignProjectId, reportDate),
 

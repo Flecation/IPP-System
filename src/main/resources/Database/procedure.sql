@@ -142,7 +142,9 @@ DELIMITER $$
 
 CREATE PROCEDURE getAllTasksDetailsByWorkItem(
     IN p_projectTypeId INT,
-    IN p_workItemId INT
+    IN p_workItemId INT,
+    IN p_projectBuildingId INT,  -- New parameter
+    IN p_projectLevelId INT      -- New parameter
 )
 BEGIN
     SELECT DISTINCT
@@ -160,7 +162,9 @@ BEGIN
     INNER JOIN tasks t
         ON t.projectTaskId = td.projectTaskId
     WHERE pd.projectTypeId = p_projectTypeId
-      AND wid.projectWorkItemId = p_workItemId;
+      AND wid.projectWorkItemId = p_workItemId
+      AND pd.projectBuildingId = p_projectBuildingId  -- Added
+      AND pd.projectLevelId = p_projectLevelId;       -- Added
 END$$
 
 DELIMITER ;

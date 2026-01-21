@@ -1,0 +1,30 @@
+Index: target/classes/View/hello-view.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<?import javafx.geometry.Insets?>\n<?import javafx.scene.control.Label?>\n<?import javafx.scene.layout.VBox?>\n\n<?import javafx.scene.control.Button?>\n<VBox alignment=\"CENTER\" spacing=\"20.0\" xmlns:fx=\"http://javafx.com/fxml\"\n      fx:controller=\"IPPSystem.Controllers.HelloController\">\n    <padding>\n        <Insets bottom=\"20.0\" left=\"20.0\" right=\"20.0\" top=\"20.0\"/>\n    </padding>\n\n    <Label fx:id=\"welcomeText\"/>\n    <Button text=\"Hello!\" onAction=\"#onHelloButtonClick\"/>\n</VBox>\n
+===================================================================
+diff --git a/target/classes/View/hello-view.fxml b/target/classes/View/hello-view.fxml
+--- a/target/classes/View/hello-view.fxml	(revision 5f560179419b45e00d44ccb241f8815b10fe67e0)
++++ b/target/classes/View/hello-view.fxml	(date 1767603926654)
+@@ -1,16 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+ <?import javafx.geometry.Insets?>
++<?import javafx.scene.control.Button?>
+ <?import javafx.scene.control.Label?>
+ <?import javafx.scene.layout.VBox?>
+ 
+-<?import javafx.scene.control.Button?>
+-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+-      fx:controller="IPPSystem.Controllers.HelloController">
++<VBox alignment="CENTER" prefHeight="152.0" prefWidth="213.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="IPPSystem.Controllers.HelloController">
+     <padding>
+-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
++        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+     </padding>
+ 
+-    <Label fx:id="welcomeText"/>
+-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
++    <Label fx:id="welcomeText" />
++    <Button onAction="#onHelloButtonClick" text="Hello!" />
+ </VBox>
