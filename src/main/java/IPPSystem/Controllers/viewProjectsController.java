@@ -1,6 +1,5 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.DAO.projectDatabase;
 import IPPSystem.Models.projects;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class viewPMController {
+public class viewProjectsController {
 
     @FXML
     private Button activeBtn;
@@ -96,7 +95,7 @@ public class viewPMController {
 
 //            a new row every 2 cards
             if(count % 2 == 0){
-                row = new HBox(15);//15 px spacing between cards
+                row = new HBox(30);//30 px spacing between cards
                 projectContainer.getChildren().add(row);
             }
 
