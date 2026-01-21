@@ -948,6 +948,7 @@ UPDATE taskDetails SET
 WHERE workItemDetailId = 11 AND projectTaskId = 5;
 -- NEW TOTAL: 18-22%
 
+
 -- ... (Add all the workItemRequireSkills INSERT statements from your original file here)
 -- You'll need to copy the entire workItemRequireSkills section from your original file
 -- starting from "INSERT INTO workItemRequireSkills" to the end
