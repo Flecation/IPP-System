@@ -5,6 +5,7 @@ import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,7 +25,6 @@ public class database {
 
     public static boolean createUser(users users){return userDatabase.addUser(users);}
 
-//    public static users getUserByProjectId(int projectId){return }
 
 //    For the labors functions
 
@@ -65,7 +65,7 @@ public class database {
 
     public static ArrayList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){return taskDatabase.getAllTasksByAssignWorkItem(assignWorkItemId);}
 
-    public static ArrayList<tasks> getAllTasksForAutoGeneration(int projectTypeId,int workItemId){return taskDatabase.getAllTasksDetailsByWorkItem(projectTypeId,workItemId);}
+    public static ArrayList<tasks> getAllTasksForAutoGeneration(int projectTypeId,int workItemId,int buildingId,int levelId){return taskDatabase.getAllTasksDetailsByWorkItem(projectTypeId,workItemId,buildingId,levelId);}
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
@@ -89,7 +89,13 @@ public class database {
 
     public static boolean deleteAssignProject(int assignProjectId){return projectDatabase.deleteAssignProject(assignProjectId);}
 
+    public static boolean setAssignProject(projects assignProject,projectStatus projectStatus,assignStatus assignStatus){return projectDatabase.assignProjects(assignProject,projectStatus,assignStatus);}
 
+    public static boolean updateAssignProject(projects updateAssignProject,assignStatus status){return projectDatabase.updateAssignProject(updateAssignProject,status);}
+
+    public static ArrayList<projects> getAllProjectDetails(int projectTypeId){return projectDatabase.getProjectDetails(projectTypeId);}
+
+    public static ArrayList<projects> getAllProjects(){return projectDatabase.getAllProjects();}
 
 //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}

@@ -19,9 +19,9 @@ CREATE TABLE users (
     isActive boolean default true
 );
 
-create table skills (
-	skillId int primary key auto_increment,
-    skillName varchar(255)
+CREATE TABLE skills (
+    skillId INT PRIMARY KEY AUTO_INCREMENT,
+    skillName VARCHAR(255)
 );
 
 create table projectTypes (
@@ -122,7 +122,7 @@ create table assignProjects (
     projectHeight double default 0, -- only for religious
     totalStories double, -- for all floors
     totalUnits double, -- for all units/ rooms ,in the backend the unit per floor will calculate
-    managerId int,
+    supervisorId int,
     projectLocation varchar(255),
     projectOverHeadCost double,
     projectStatus int,
@@ -201,14 +201,21 @@ create table assignWorkItemSkills (
 );
 
 CREATE TABLE assignWorkItemSkillDetails(
-    assignWorkItemSkillDetailId int primary key auto_increment,
-    assignWorkItemSKillId int,
-    assignStatus int,
-    laborQty double,
-    dailyWagePerLabor double,
-    FOREIGN KEY (assignStatusId) REFERENCES assignStatus(assignStatusId) ON UPDATE CASCADE ON DELETE CASCADE
-    FOREIGN KEY (assignWorkItemSkillId) REFERENCES assignWorkItemSKills(assignWorkItemSkillId) ON UPDATE CASCADE ON DELETE CASCADE
+    assignWorkItemSkillDetailId INT PRIMARY KEY AUTO_INCREMENT,
+    assignWorkItemSkillId INT,
+    assignStatusId INT,
+    laborQty DOUBLE,
+    dailyWagePerLabor DOUBLE,
+    FOREIGN KEY (assignStatusId)
+        REFERENCES assignStatus(assignStatusId)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (assignWorkItemSkillId)
+        REFERENCES assignWorkItemSkills(assignWorkItemSkillId)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
+
 
 create table assignWorkers (
 	assignWorkerId int primary key auto_increment,
@@ -224,6 +231,7 @@ CREATE TABLE dailyReports (
     supervisorId INT,
     weather VARCHAR(100),
     generalRemark TEXT,
+    issue LONGTEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (assignProjectId, reportDate),
 
@@ -367,7 +375,7 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_manager
-FOREIGN KEY (managerId)
+FOREIGN KEY (supervisorId)
 REFERENCES users(userId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
