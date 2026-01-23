@@ -1,6 +1,9 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -124,6 +127,57 @@ public class utils {
             switchPage.switchScene(clickButton,fxmlName);
         }
 
-        public static void openFxml(String fxml, StackPane loadPane){switchPage.openFxml(fxml,loadPane);}
+        public static void openFxml(String fxml, StackPane loadPane){
+        try {
+            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxml));
+            Parent newContent = loader.load();
+
+            // Special handling for viewProjects.fxml to pass loadPane to controller
+            if ("viewProjects.fxml".equals(fxml)) {
+                IPPSystem.Controllers.viewProjectsController controller = loader.getController();
+                if (controller != null) {
+                    controller.setLoadPane(loadPane);
+                }
+            }
+
+            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
+            StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
+
+            if (newContent instanceof Region region) {
+                region.prefWidthProperty().bind(loadPane.widthProperty());
+                region.prefHeightProperty().bind(loadPane.heightProperty());
+                region.setMaxWidth(Double.MAX_VALUE);
+                region.setMaxHeight(Double.MAX_VALUE);
+            }
+
+            if (loadPane.getChildren().isEmpty()) {
+                loadPane.getChildren().setAll(newContent);
+                return;
+            }
+
+            Parent oldContent = (Parent) loadPane.getChildren().get(0);
+            newContent.setOpacity(0);
+
+            loadPane.getChildren().setAll(oldContent, newContent);
+
+            Timeline fadeOut = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
+                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
+            );
+
+            fadeOut.setOnFinished(e -> {
+                Timeline fadeIn = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
+                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
+                );
+                fadeIn.play();
+            });
+
+            fadeOut.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -287,9 +287,7 @@ public class sideBarPaneController  extends navigationPaneController{
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
-                    Parent root = switchPage.openFxml("/View/viewProjects.fxml");
-
-                    loadPane.getChildren().add(root);
+                    utils.openFxml("viewProjects.fxml",loadPane);
                 });
 
 
