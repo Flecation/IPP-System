@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="delete">
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/CSS/projectCard.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/CSS/viewProjects.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/projectDetails.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/projectCard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/projectCard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/viewProjects.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/viewProjects.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/procedure.sql" afterDir="false" />
-    </list>
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="Merge branch 'main' of https://github.com/Flecation/IPP-System&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +13,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="FxmlFile" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -48,8 +36,8 @@
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {}
-}</component>
+        &quot;lastFilter&quot;: {}
+        }</component>
   <component name="GitHubPullRequestState">{
   &quot;prStates&quot;: [
     {
@@ -58,6 +46,20 @@
         &quot;number&quot;: 11
       },
       &quot;lastSeen&quot;: 1765895659102
+    },
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQmomhM69UKM7&quot;,
+        &quot;number&quot;: 18
+      },
+      &quot;lastSeen&quot;: 1768465606126
+    },
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQmomhM65ibKG&quot;,
+        &quot;number&quot;: 14
+      },
+      &quot;lastSeen&quot;: 1768465724031
     }
   ]
 }</component>
@@ -65,6 +67,16 @@
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,
     &quot;accountId&quot;: &quot;545db981-124c-4d88-a8fd-f9a2827bf7db&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;Flecation&quot;,
+    &quot;repository&quot;: &quot;IPP-System&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -74,34 +86,40 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
+        &quot;associatedIndex&quot;: 4
+        }</component>
   <component name="ProjectId" id="36kQspTCW0pUyCmBpXvLIuYomtw" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.Launcher.executor": "Run",
-    "Application.start.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHELLCHECK.PATH": "C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe",
-    "git-widget-placeholder": "Win-Lae-Shwe-Yee",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/group1",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Application.start.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/fonts&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IPP-System\src\main\resources\fonts" />
       <recent name="D:\group1" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -109,9 +127,9 @@
       <recent name="D:\group1\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="start" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
-      <option name="MAIN_CLASS_NAME" value="IPPSystem.Main.Launcher" />
+  <component name="RunManager" selected="Application.start">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="IPPSystem.Main.HelloApplication" />
       <module name="group1" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -124,9 +142,6 @@
         <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
       </set>
     </attachedChunks>
-  </component>
-  <component name="SvnConfiguration">
-    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -266,92 +281,376 @@
     </task>
     <task id="LOCAL-00017" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768462802035</created>
+      <created>1766661429565</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1768462802035</updated>
+      <updated>1766661429565</updated>
     </task>
-    <task id="LOCAL-00018" summary="creating the view and list projects">
+    <task id="LOCAL-00018" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768915275745</created>
+      <created>1766665492218</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1768915275745</updated>
+      <updated>1766665492218</updated>
     </task>
-    <task id="LOCAL-00019" summary="creating the view and list projects">
+    <task id="LOCAL-00019" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768915724608</created>
+      <created>1766730300798</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1768915724608</updated>
+      <updated>1766730300798</updated>
     </task>
-    <task id="LOCAL-00020" summary="creating the view and list projects">
+    <task id="LOCAL-00020" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768916234504</created>
+      <created>1766730600062</created>
       <option name="number" value="00020" />
       <option name="presentableId" value="LOCAL-00020" />
       <option name="project" value="LOCAL" />
-      <updated>1768916234504</updated>
+      <updated>1766730600062</updated>
     </task>
-    <task id="LOCAL-00021" summary="creating the view and list projects">
+    <task id="LOCAL-00021" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768916301115</created>
+      <created>1766737916386</created>
       <option name="number" value="00021" />
       <option name="presentableId" value="LOCAL-00021" />
       <option name="project" value="LOCAL" />
-      <updated>1768916301115</updated>
+      <updated>1766737916386</updated>
     </task>
-    <task id="LOCAL-00022" summary="creating the view and list projects">
+    <task id="LOCAL-00022" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768916351882</created>
+      <created>1766771261835</created>
       <option name="number" value="00022" />
       <option name="presentableId" value="LOCAL-00022" />
       <option name="project" value="LOCAL" />
-      <updated>1768916351883</updated>
+      <updated>1766771261835</updated>
     </task>
-    <task id="LOCAL-00023" summary="delete">
+    <task id="LOCAL-00023" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768979741376</created>
+      <created>1766865928393</created>
       <option name="number" value="00023" />
       <option name="presentableId" value="LOCAL-00023" />
       <option name="project" value="LOCAL" />
-      <updated>1768979741376</updated>
+      <updated>1766865928393</updated>
     </task>
-    <task id="LOCAL-00024" summary="delete">
+    <task id="LOCAL-00024" summary="creation of the basic frame">
       <option name="closed" value="true" />
-      <created>1768979937105</created>
+      <created>1766905327849</created>
       <option name="number" value="00024" />
       <option name="presentableId" value="LOCAL-00024" />
       <option name="project" value="LOCAL" />
-      <updated>1768979937105</updated>
+      <updated>1766905327849</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1766932841740</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1766932841740</updated>
+    </task>
+    <task id="LOCAL-00026" summary="creation of the basic frame">
+      <option name="closed" value="true" />
+      <created>1767016289873</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1767016289873</updated>
+    </task>
+    <task id="LOCAL-00027" summary="css changes">
+      <option name="closed" value="true" />
+      <created>1767111788087</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1767111788087</updated>
+    </task>
+    <task id="LOCAL-00028" summary="css changes">
+      <option name="closed" value="true" />
+      <created>1767172778337</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1767172778337</updated>
+    </task>
+    <task id="LOCAL-00029" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767277883074</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1767277883074</updated>
+    </task>
+    <task id="LOCAL-00030" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767378996461</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1767378996461</updated>
+    </task>
+    <task id="LOCAL-00031" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767379308868</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1767379308868</updated>
+    </task>
+    <task id="LOCAL-00032" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767379516684</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1767379516684</updated>
+    </task>
+    <task id="LOCAL-00033" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767444822964</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1767444822964</updated>
+    </task>
+    <task id="LOCAL-00034" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767467902250</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1767467902250</updated>
+    </task>
+    <task id="LOCAL-00035" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767547141389</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1767547141389</updated>
+    </task>
+    <task id="LOCAL-00036" summary="login Changes">
+      <option name="closed" value="true" />
+      <created>1767548952429</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1767548952429</updated>
+    </task>
+    <task id="LOCAL-00037" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1767987016799</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1767987016799</updated>
+    </task>
+    <task id="LOCAL-00038" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1768149489380</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1768149489380</updated>
+    </task>
+    <task id="LOCAL-00039" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1768465069356</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1768465069356</updated>
+    </task>
+    <task id="LOCAL-00040" summary="navigationPane">
+      <option name="closed" value="true" />
+      <created>1768465567728</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1768465567728</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Merge branch 'main' of https://github.com/Flecation/IPP-System&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1768465960966</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1768465960966</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="creation of the basic frame" />
-    <MESSAGE value="creating the view and list projects" />
-    <MESSAGE value="delete" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete" />
+    <MESSAGE value="css changes" />
+    <MESSAGE value="login Changes" />
+    <MESSAGE value="navigationPane" />
+    <option name="LAST_COMMIT_MESSAGE" value="navigationPane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/projectgroup1/Utils/titleBar.java</url>
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/projectgroup1/Utils/titleBar.java</url>
           <line>50</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>19</line>
+          <properties class="IPPSystem.DAO.projectDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>19</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>58</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>87</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>104</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>121</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
+          <line>139</line>
+          <properties class="IPPSystem.DAO.workItemDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>52</line>
+          <properties class="IPPSystem.DAO.projectDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>80</line>
+          <properties class="IPPSystem.DAO.projectDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>22</line>
+          <properties class="IPPSystem.DAO.taskDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>61</line>
+          <properties class="IPPSystem.DAO.taskDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>88</line>
+          <properties class="IPPSystem.DAO.taskDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/taskDatabase.java</url>
+          <line>106</line>
+          <properties class="IPPSystem.DAO.taskDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
+          <line>115</line>
+          <properties class="IPPSystem.DAO.projectDatabase">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NoSuchMethodError" package="java.lang" />
+          <option name="timeStamp" value="23" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

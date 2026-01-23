@@ -287,8 +287,8 @@ public class sideBarPaneController  extends navigationPaneController{
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
-                    utils.openFxml("viewProjects.fxml",loadPane);
-                });
+                  utils.openFxml("viewProjects.fxml",loadPane);
+        });
 
 
 
@@ -299,7 +299,9 @@ public class sideBarPaneController  extends navigationPaneController{
         projectIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // User navigation
-        userViewBtn.setOnMouseClicked(e -> System.out.println());
+        userViewBtn.setOnMouseClicked(e -> {
+           utils.openFxml("mgSEListView.fxml",loadPane);
+        });
         userIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // Report navigation

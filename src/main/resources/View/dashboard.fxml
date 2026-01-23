@@ -27,7 +27,7 @@
 
 <StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.dashboardController">
     <children>
-        <BorderPane maxHeight="750.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;">
+        <BorderPane fx:id="oneProjectView" maxHeight="750.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;">
             <center>
                 <VBox maxHeight="1300.0" maxWidth="1120.0" minHeight="800.0" minWidth="1120.0" spacing="10.0" style="-fx-background-color: #D3D3D3; -fx-background-radius: 8; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
                     <children>
@@ -173,7 +173,7 @@
                                                         <Font name="Arial" size="14.0" />
                                                     </font>
                                                 </Label>
-                                                <Label maxHeight="19.0" minHeight="19.0" prefWidth="56.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Delay" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="lblProgressStatus" maxHeight="19.0" minHeight="19.0" prefWidth="56.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Delay" HBox.hgrow="ALWAYS">
                                                     <HBox.margin>
                                                         <Insets bottom="5.0" left="5.0" />
                                                     </HBox.margin>
@@ -191,7 +191,7 @@
                                         </HBox>
                                         <VBox prefHeight="72.0" prefWidth="330.0" VBox.vgrow="ALWAYS">
                                             <children>
-                                                <Label prefHeight="23.0" prefWidth="238.0" style="-fx-text-fill: white;" text="Foundation Slab Casting Delayed" VBox.vgrow="ALWAYS">
+                                                <Label fx:id="lblDelayStatus" prefHeight="23.0" prefWidth="238.0" style="-fx-text-fill: white;" text="Foundation Slab Casting Delayed" VBox.vgrow="ALWAYS">
                                                     <font>
                                                         <Font name="Arial" size="14.0" />
                                                     </font>
@@ -344,7 +344,7 @@
                                                 </ProgressBar>
                                                 <HBox prefHeight="58.0" prefWidth="266.0">
                                                     <children>
-                                                        <Label prefHeight="22.0" prefWidth="202.0" style="-fx-text-fill: RED;" text="Hanover Date: 2024-Jan-01" textFill="#c71111" HBox.hgrow="ALWAYS">
+                                                        <Label fx:id="lblHanoverDate" prefHeight="22.0" prefWidth="202.0" style="-fx-text-fill: RED;" text="Hanover Date: 2024-Jan-01" textFill="#c71111" HBox.hgrow="ALWAYS">
                                                             <font>
                                                                 <Font name="Times New Roman Bold" size="16.0" />
                                                             </font>
@@ -387,13 +387,16 @@
                                                         <Insets top="20.0" />
                                                     </StackPane.margin>
                                                 </Label>
-
-                                                <Circle fx:id="circleCPI" fill="#1f93ff00" radius="75.0" stroke="#f0eded" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stock-dash-array: 50;" StackPane.alignment="CENTER">
-                                                    <StackPane.margin>
-                                                        <Insets />
-                                                    </StackPane.margin>
-                                                </Circle>
-                                                <Circle fill="#1f93ff00" radius="75.0" stroke="#000000bc" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;" StackPane.alignment="CENTER" />
+                                    <Circle fill="DODGERBLUE" radius="75.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;">
+                                       <StackPane.margin>
+                                          <Insets top="10.0" />
+                                       </StackPane.margin>
+                                    </Circle>
+                                    <Circle fill="#1f93ff00" radius="75.0" stroke="#000000c2" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;">
+                                       <StackPane.margin>
+                                          <Insets top="10.0" />
+                                       </StackPane.margin>
+                                    </Circle>
                                             </children>
                                             <VBox.margin>
                                                 <Insets />
@@ -490,8 +493,16 @@
                                                         <Insets top="20.0" />
                                                     </StackPane.margin>
                                                 </Label>
-                                                <Circle fx:id="circleSPI" fill="#1f93ff00" radius="75.0" stroke="#ffffffec" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stock-dash-array: 50;" StackPane.alignment="CENTER" />
-                                                <Circle fill="#1f93ff00" radius="75.0" stroke="#000000c2" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;" StackPane.alignment="CENTER" />
+                                    <Circle fill="DODGERBLUE" radius="75.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;">
+                                       <StackPane.margin>
+                                          <Insets top="10.0" />
+                                       </StackPane.margin>
+                                    </Circle>
+                                    <Circle fill="#1f93ff00" radius="75.0" stroke="#000000c2" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;">
+                                       <StackPane.margin>
+                                          <Insets top="10.0" />
+                                       </StackPane.margin>
+                                    </Circle>
                                             </children>
                                         </StackPane>
                                         <HBox alignment="CENTER">
@@ -579,7 +590,7 @@
                                                                 <Insets left="10.0" />
                                                             </padding>
                                                         </Label>
-                                                        <ScrollPane hbarPolicy="NEVER" maxWidth="300.0" minWidth="300.0" prefHeight="200.0" style="-fx-background-color: #696D7D; -fx-background-radius: 8; -fx-border-radius: 8;" VBox.vgrow="ALWAYS">
+                                                        <ScrollPane fx:id="scrollpaneKeyIssue" hbarPolicy="NEVER" maxWidth="300.0" minWidth="300.0" prefHeight="200.0" style="-fx-background-color: #696D7D; -fx-background-radius: 8; -fx-border-radius: 8;" VBox.vgrow="ALWAYS">
                                                             <content>
                                                                 <VBox minWidth="285.0" prefHeight="82.0" prefWidth="282.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;" />
                                                             </content>
@@ -641,7 +652,7 @@
                                                                 </Label>
                                                             </children>
                                                         </VBox>
-                                                        <ScrollPane hbarPolicy="NEVER" maxHeight="120.0" maxWidth="300.0" minHeight="120.0" minWidth="300.0" style="-fx-background-color: #696D7D; -fx-background-radius: 8; -fx-border-radius: 8;" vbarPolicy="ALWAYS">
+                                                        <ScrollPane fx:id="lblLaborBreakdown" hbarPolicy="NEVER" maxHeight="120.0" maxWidth="300.0" minHeight="120.0" minWidth="300.0" style="-fx-background-color: #696D7D; -fx-background-radius: 8; -fx-border-radius: 8;" vbarPolicy="ALWAYS">
                                                             <content>
                                                                 <VBox minWidth="285.0" prefHeight="0.0" prefWidth="300.0" style="-fx-background-color: #696D7D; -fx-background-radius: 8; -fx-border-radius: 8;" />
                                                             </content>
@@ -719,7 +730,7 @@
                 </VBox>
             </center>
         </BorderPane>
-        <BorderPane maxHeight="1200.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0">
+        <BorderPane fx:id="allProjectView" maxHeight="1200.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" visible="false">
             <center>
                 <VBox maxHeight="849.0" maxWidth="1120.0" minHeight="800.0" minWidth="1120.0" spacing="10.0" style="-fx-background-color: #d3d3d3;" BorderPane.alignment="CENTER">
                     <children>
@@ -741,18 +752,16 @@
                                                         <Insets left="20.0" />
                                                     </VBox.margin>
                                                 </HBox>
-                                                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="347.0">
+                                                <HBox alignment="CENTER_LEFT" prefHeight="81.0" prefWidth="426.0">
                                                     <children>
-                                                        <Label fx:id="projectName" text="Office Tower" textFill="WHITE" />
+                                                        <Label fx:id="projectName" textFill="WHITE" />
+                                          <ComboBox fx:id="comboOverview" prefHeight="26.0" prefWidth="126.0" promptText="Office Tower" />
                                                     </children>
                                                     <VBox.margin>
                                                         <Insets left="20.0" />
                                                     </VBox.margin>
                                                 </HBox>
                                                 <HBox prefHeight="26.0" prefWidth="347.0">
-                                                    <children>
-                                                        <Label fx:id="lblLocation" text="Location: Yangon,Myanmar" textFill="WHITE" />
-                                                    </children>
                                                     <VBox.margin>
                                                         <Insets left="20.0" />
                                                     </VBox.margin>
@@ -782,7 +791,7 @@
                                                                 <Insets top="25.0" />
                                                             </HBox.margin>
                                                         </Label>
-                                                        <ComboBox fx:id="year" prefHeight="33.0" prefWidth="98.0">
+                                                        <ComboBox fx:id="comboYear" prefHeight="33.0" prefWidth="98.0">
                                                             <HBox.margin>
                                                                 <Insets bottom="10.0" top="20.0" />
                                                             </HBox.margin>
@@ -805,7 +814,7 @@
                                                                 <Font name="System Bold" size="17.0" />
                                                             </font>
                                                         </Label>
-                                                        <ComboBox fx:id="status" prefHeight="33.0" prefWidth="96.0">
+                                                        <ComboBox fx:id="comboStatus" prefHeight="33.0" prefWidth="96.0">
                                                             <HBox.margin>
                                                                 <Insets bottom="10.0" left="30.0" top="25.0" />
                                                             </HBox.margin>
@@ -853,7 +862,7 @@
                                                                         </HBox>
                                                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                                             <children>
-                                                                                <Label fx:id="totalProj" text="20">
+                                                                                <Label fx:id="lblTotalProject" text="20">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="24.0" />
                                                                                     </font>
@@ -883,7 +892,7 @@
                                                                 </HBox>
                                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                                     <children>
-                                                                        <Label alignment="CENTER" text="80%">
+                                                                        <Label fx:id="lblTotalRevenue" alignment="CENTER" text="80%">
                                                                             <font>
                                                                                 <Font name="System Bold" size="24.0" />
                                                                             </font>
@@ -911,7 +920,7 @@
                                                                 </HBox>
                                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                                     <children>
-                                                                        <Label text="70%">
+                                                                        <Label fx:id="lblTotalExpense" text="70%">
                                                                             <font>
                                                                                 <Font name="System Bold" size="24.0" />
                                                                             </font>
@@ -939,9 +948,9 @@
                                                                 </HBox>
                                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                                     <children>
-                                                                        <Label text="100+">
+                                                                        <Label fx:id="lblTotalWorker" text="100+">
                                                                             <font>
-                                                                                <Font size="24.0" />
+                                                                                <Font name="System Bold" size="24.0" />
                                                                             </font>
                                                                         </Label>
                                                                     </children>
@@ -975,7 +984,7 @@
                                                                         </Label>
                                                                     </children>
                                                                 </HBox>
-                                                                <LineChart prefHeight="177.0" prefWidth="345.0" VBox.vgrow="ALWAYS">
+                                                                <LineChart fx:id="linechartSiteProgress" prefHeight="177.0" prefWidth="345.0" VBox.vgrow="ALWAYS">
                                                                     <xAxis>
                                                                         <CategoryAxis side="BOTTOM" />
                                                                     </xAxis>
@@ -1007,7 +1016,7 @@
                                                                 </HBox>
                                                                 <HBox alignment="CENTER" prefHeight="274.0" prefWidth="444.0">
                                                                     <children>
-                                                                        <PieChart fx:id="pieProj" />
+                                                                        <PieChart fx:id="pieOngoingProj" />
                                                                     </children>
                                                                 </HBox>
                                                                 <HBox alignment="CENTER" prefHeight="41.0" prefWidth="219.0">
@@ -1057,7 +1066,7 @@
                                                                     <children>
                                                                         <HBox alignment="CENTER" prefHeight="34.0" prefWidth="108.0" style="-fx-background-color: #007bff;">
                                                                             <children>
-                                                                                <Label text="6 in progress">
+                                                                                <Label fx:id="lblProgress" text="6 in progress">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="14.0" />
                                                                                     </font>
@@ -1069,7 +1078,7 @@
                                                                         </HBox>
                                                                         <HBox alignment="CENTER" prefHeight="34.0" prefWidth="97.0" style="-fx-background-color: #36c91c;">
                                                                             <children>
-                                                                                <Label text="4 Completed">
+                                                                                <Label fx:id="lblCompleted" text="4 Completed">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="14.0" />
                                                                                     </font>
@@ -1081,7 +1090,7 @@
                                                                         </HBox>
                                                                         <HBox alignment="CENTER" prefHeight="34.0" prefWidth="107.0" style="-fx-background-color: red;">
                                                                             <children>
-                                                                                <Label text="2 Pending">
+                                                                                <Label fx:id="lblPending" text="2 Pending">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="14.0" />
                                                                                     </font>
@@ -1121,11 +1130,7 @@
                                                 </Label>
                                             </children>
                                         </HBox>
-                                        <HBox prefHeight="298.0" prefWidth="338.0">
-                                            <children>
-                                                <PieChart fx:id="pieCost" labelsVisible="false" legendVisible="false" maxHeight="300.0" minHeight="300.0" prefWidth="489.0" stylesheets="@../../../../../../../../../LattLattNanda/FXML/src/Manager_Dashboard/piechart.css" />
-                                            </children>
-                                        </HBox>
+                                          <PieChart fx:id="pieCostBreakdown" labelsVisible="false" legendVisible="false" maxHeight="300.0" minHeight="300.0" prefWidth="489.0" />
                                     </children>
                                     <HBox.margin>
                                         <Insets />
@@ -1165,8 +1170,8 @@
                                                         <Insets left="10.0" />
                                                     </padding>
                                                     <children>
-                                                        <Circle fx:id="circleRevenue" fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 20;" />
-                                                        <Circle fill="DODGERBLUE" radius="80.0" rotate="-80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 20; -fx-stroke-dash-array: 360;" />
+                                                        <Circle fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" />
+                                                        <Circle fx:id="circleRevenue" fill="DODGERBLUE" radius="80.0" rotate="-80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
                                                     </children>
                                                 </StackPane>
                                                 <HBox alignment="CENTER" prefHeight="72.0" prefWidth="355.0">
@@ -1176,11 +1181,16 @@
                                                                 <Insets top="10.0" />
                                                             </HBox.margin>
                                                         </Circle>
-                                                        <Label fx:id="revenueDisplay" alignment="CENTER" text="Revenue :  210,000,00MMK">
+                                                        <Label fx:id="revenueDisplay" text="Revenue :">
                                                             <HBox.margin>
                                                                 <Insets left="10.0" top="10.0" />
                                                             </HBox.margin>
                                                         </Label>
+                                          <Label fx:id="lblRevenue" text="170000000MMK">
+                                             <HBox.margin>
+                                                <Insets top="10.0" />
+                                             </HBox.margin>
+                                          </Label>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -1198,8 +1208,8 @@
                                                         <Insets left="10.0" />
                                                     </padding>
                                                     <children>
-                                                        <Circle fx:id="circleCost" fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 20;" />
-                                                        <Circle fill="DODGERBLUE" radius="80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 20; -fx-stroke-dash-array: 360;" />
+                                                        <Circle fx:id="circleCost" fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" />
+                                                        <Circle fx:id="circleCost" fill="DODGERBLUE" radius="80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
                                                     </children>
                                                 </StackPane>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -1209,11 +1219,16 @@
                                                                 <Insets top="10.0" />
                                                             </HBox.margin>
                                                         </Circle>
-                                                        <Label fx:id="costDisplay" alignment="CENTER" text="Cost :  170,000,00MMK">
+                                                        <Label fx:id="costDisplay" alignment="CENTER" text="Cost :">
                                                             <HBox.margin>
                                                                 <Insets left="10.0" top="10.0" />
                                                             </HBox.margin>
                                                         </Label>
+                                          <Label fx:id="lblCost" text="17000000MMK">
+                                             <HBox.margin>
+                                                <Insets top="10.0" />
+                                             </HBox.margin>
+                                          </Label>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -1231,7 +1246,7 @@
                                             <children>
                                                 <HBox prefHeight="398.0" prefWidth="1019.0">
                                                     <children>
-                                                        <AreaChart fx:id="chartProfit" maxHeight="230.0" minHeight="230.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
+                                                        <AreaChart fx:id="aerachartProfit" maxHeight="230.0" minHeight="230.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>
