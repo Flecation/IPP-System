@@ -201,4 +201,11 @@ public class linkButton {
         }
         return null;
     }
+
+    public void setActiveTabTitle(String newTitle) {
+        if (activeTab == null) {
+            return;
+        }
+        activeTab.setText(newTitle);
+    }
 }

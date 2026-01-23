@@ -1,6 +1,7 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
+import IPPSystem.Models.projects;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -10,10 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 //This is collected place for all utils
 public class utils {
@@ -128,57 +132,12 @@ public class utils {
         }
 
         public static void openFxml(String fxml, StackPane loadPane){
-        try {
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxml));
-            Parent newContent = loader.load();
-
-            // Special handling for viewProjects.fxml to pass loadPane to controller
-            if ("viewProjects.fxml".equals(fxml)) {
-                IPPSystem.Controllers.viewProjectsController controller = loader.getController();
-                if (controller != null) {
-                    controller.setLoadPane(loadPane);
-                }
-            }
-
-            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
-            StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
-
-            if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
-            }
-
-            if (loadPane.getChildren().isEmpty()) {
-                loadPane.getChildren().setAll(newContent);
-                return;
-            }
-
-            Parent oldContent = (Parent) loadPane.getChildren().get(0);
-            newContent.setOpacity(0);
-
-            loadPane.getChildren().setAll(oldContent, newContent);
-
-            Timeline fadeOut = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
-                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
-            );
-
-            fadeOut.setOnFinished(e -> {
-                Timeline fadeIn = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
-                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
-                );
-                fadeIn.play();
-            });
-
-            fadeOut.play();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            switchPage.openFxml(fxml,loadPane);
         }
-    }
 
+        public static void showProjectCards(ArrayList<projects> projects, VBox containerPane){
+            showProjectCard pc = new showProjectCard();
+            pc.loadProjects(projects,containerPane);
+        }
 
 }

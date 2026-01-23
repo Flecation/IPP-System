@@ -1,5 +1,7 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.DAO.database;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.session;
@@ -13,6 +15,7 @@ import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class navigationPaneController{
@@ -32,6 +35,8 @@ public class navigationPaneController{
 
     protected linkButton linkButton = new linkButton();
 
+    protected ArrayList<projects> allProjects = new ArrayList<>();
+
 
     @FXML
     private void initialize(){
@@ -44,9 +49,15 @@ public class navigationPaneController{
         pageAddBtn.setOnAction(e->{
             linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard");
         });
+
+        allProjects.addAll(database.getAllProjects());
     }
 
     public void getCurrentBtn(){
-        System.out.println(linkButton.getActiveTab().getText());
+//        System.out.println(linkButton.getActiveTab().getText());
+    }
+
+    public void setActiveTabTitle(String title) {
+        linkButton.setActiveTabTitle(title);
     }
 }

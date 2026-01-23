@@ -23,18 +23,14 @@ public class projectCardController {
     @FXML
     private Label projectType;
     @FXML
-    private Label suprName;
+    private Label supervisorName;
 
     private projects project;
     private viewProjectsController parentController;
 
     @FXML
     public void initialize() {
-        detailsBtn.setOnAction(e -> {
-            if (parentController != null && project != null) {
-                parentController.openProjectDetails(project);
-            }
-        });
+
     }
 
     public void setParentController(viewProjectsController controller) {
@@ -46,7 +42,7 @@ public class projectCardController {
 
         projectLocation.setText(p.getProjectLocation());
         duration.setText(p.getProjectDuration() + " Years");
-        suprName.setText(p.getUserName());
+        supervisorName.setText(p.getUserName());
         projectStatus.setText(p.getProjectStatus());
         projectType.setText(p.getProjectTypeName());
         projectName.setText(p.getProjectInstanceName());

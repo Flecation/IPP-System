@@ -1,6 +1,7 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.role;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.themeToggle;
@@ -23,6 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class sideBarPaneController extends navigationPaneController{
 
@@ -302,6 +304,7 @@ public class sideBarPaneController extends navigationPaneController{
     protected static users loginUser = user;
 
 // This is the StackPane containing all three VBox elements
+    protected ArrayList<projects> getProjects = allProjects;
 
     @FXML
     public void initialize() {
@@ -360,68 +363,63 @@ public class sideBarPaneController extends navigationPaneController{
 
     private void setFirstPage(){
         utils.openFxml("viewProjects.fxml",loadPane);
-
     }
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
             utils.openFxml("dashboard.fxml", loadPane);
-
+            this.setActiveTabTitle("Dashboard");
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("dashboard.fxml", loadPane);
-
+            this.setActiveTabTitle("Dashboard");
         });
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
+            this.setActiveTabTitle("Projects");
             getCurrentBtn();
         });
         projectIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
-
+            this.setActiveTabTitle("Projects");
         });
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
             System.out.println();
-
+            this.setActiveTabTitle("Users");
         });
         userIconBtn.setOnMouseClicked(e -> {
             System.out.println();
-
+            this.setActiveTabTitle("Users");
         });
 
         // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
             System.out.println();
-
+            this.setActiveTabTitle("Reports");
         });
         reportIconBtn.setOnMouseClicked(e -> {
             System.out.println();
-
+            this.setActiveTabTitle("Reports");
         });
     }
 
     private void setupSidebarToggleHandlers() {
-        // Toggle between full sidebar and icon-only sidebar
         showIconSideBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
         showSideBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
     }
 
     private void setupSettingsHandlers() {
-        // Show settings bar
         settingViewBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
-
         settingIconBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
 
-        // Back from settings
         backBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
         iconBackBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
 
-        // Min/max inside settings
         showIconSettingBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
         showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
     }

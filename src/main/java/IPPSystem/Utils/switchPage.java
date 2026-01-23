@@ -106,10 +106,18 @@ public class switchPage extends utils {
 
     // Simple FXML opener utility
     public static void openFxml(String fxmlFile, StackPane loadPane) {
+        if (loadPane == null) {
+            return;
+        }
         try {
-            Parent newContent = FXMLLoader.load(
-                    HelloApplication.class.getResource("/View/" + fxmlFile)
-            );
+            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
+            Parent newContent = loader.load();
+
+            // Special handling for viewProjects.fxml to pass loadPane to controller
+            if ("viewProjects.fxml".equals(fxmlFile)) {
+                loader.getController();
+
+            }
 
             StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
             StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
@@ -126,25 +134,22 @@ public class switchPage extends utils {
                 return;
             }
 
-            Parent oldContent = (Parent) loadPane.getChildren().get(0);
+            Node oldContent = loadPane.getChildren().get(0);
             newContent.setOpacity(0);
 
             loadPane.getChildren().setAll(oldContent, newContent);
 
-            Timeline fadeOut = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
-                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
-            );
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(160), oldContent);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
 
-            fadeOut.setOnFinished(e -> {
-                Timeline fadeIn = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
-                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
-                );
-                fadeIn.play();
-            });
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), newContent);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
 
-            fadeOut.play();
+            ParallelTransition transition = new ParallelTransition(fadeOut, fadeIn);
+            transition.setOnFinished(e -> loadPane.getChildren().setAll(newContent));
+            transition.play();
 
         } catch (IOException e) {
             e.printStackTrace();
