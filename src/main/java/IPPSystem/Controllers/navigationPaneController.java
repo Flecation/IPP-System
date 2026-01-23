@@ -5,12 +5,15 @@ import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+
+import java.util.Map;
 
 public class navigationPaneController{
     @FXML
@@ -25,9 +28,11 @@ public class navigationPaneController{
     @FXML
     VBox root;
 
-    protected static users loginUser = session.getInstance().getUser();
+    protected static users user = session.getInstance().getUser();
 
-    private final linkButton linkButton = new linkButton();
+    protected linkButton linkButton = new linkButton();
+
+
     @FXML
     private void initialize(){
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
@@ -36,6 +41,12 @@ public class navigationPaneController{
         FontIcon pageAddIcon  = new FontIcon(FontAwesomeSolid.PLUS);
         pageAddIcon.getStyleClass().add("pageAddIcon");
         pageAddBtn.setGraphic(pageAddIcon);
-        pageAddBtn.setOnAction(e->linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard"));
+        pageAddBtn.setOnAction(e->{
+            linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard");
+        });
+    }
+
+    public void getCurrentBtn(){
+        System.out.println(linkButton.getActiveTab().getText());
     }
 }

@@ -1,36 +1,39 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.role;
-import IPPSystem.Utils.switchPage;
+import IPPSystem.Models.users;
+import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.themeToggle;
 import IPPSystem.Utils.utils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
-
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-public class sideBarPaneController  extends navigationPaneController{
+public class sideBarPaneController extends navigationPaneController{
+
+    @FXML
+    private BorderPane addNewPane,basePane;
 
     @FXML
     private HBox backBtn;
+
+    @FXML
+    private Region bottomRegion;
 
     @FXML
     private HBox changePasswordBtn;
@@ -40,6 +43,54 @@ public class sideBarPaneController  extends navigationPaneController{
 
     @FXML
     private Button confirmBtn;
+
+    @FXML
+    private Button createAccCancelBtn;
+
+    @FXML
+    private Button createAccCreateBtn;
+
+    @FXML
+    private DatePicker createAccDob;
+
+    @FXML
+    private Label createAccEmailLbl;
+
+    @FXML
+    private TextField createAccEmailTxt;
+
+    @FXML
+    private Label createAccFNameLbl;
+
+    @FXML
+    private TextField createAccFNameTxt;
+
+    @FXML
+    private ImageView createAccImage;
+
+    @FXML
+    private Label createAccLNameLbl;
+
+    @FXML
+    private TextField createAccLNameTxt;
+
+    @FXML
+    private HBox createAccPane;
+
+    @FXML
+    private Label createAccPhoneLbl;
+
+    @FXML
+    private TextField createAccPhoneTxt;
+
+    @FXML
+    private Label createAccPwLbl;
+
+    @FXML
+    private TextField createAccPwTxt;
+
+    @FXML
+    private Button createAccUploadImgBtn;
 
     @FXML
     private Label darkIcon;
@@ -70,6 +121,9 @@ public class sideBarPaneController  extends navigationPaneController{
 
     @FXML
     private ImageView imageIconBtn;
+
+    @FXML
+    private Region leftRegion;
 
     @FXML
     private StackPane light;
@@ -124,6 +178,9 @@ public class sideBarPaneController  extends navigationPaneController{
 
     @FXML
     private Button revertBtn;
+
+    @FXML
+    private Region rightRegion;
 
     @FXML
     private Label roleViewText;
@@ -195,6 +252,9 @@ public class sideBarPaneController  extends navigationPaneController{
     private Label toggleSymbolText;
 
     @FXML
+    private Region topRegion;
+
+    @FXML
     private Label userDobLbl;
 
     @FXML
@@ -231,14 +291,32 @@ public class sideBarPaneController  extends navigationPaneController{
     private ImageView userViewImage;
 
     @FXML
-    private Label userViewLbl;
+    private Label userViewLbl,addNewTitle;
 
+    @FXML
+    private Button addNewExitBtn;
 
+    @FXML
+    private VBox createLaborPane,createProjectPane,createReportPane;
+
+    protected static users loginUser = user;
 
 // This is the StackPane containing all three VBox elements
 
     @FXML
     public void initialize() {
+        utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
+        utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
+
+
+        utils.setFloatTextFieldStyle(createAccPhoneLbl,createAccPhoneTxt);
+        utils.setFloatTextFieldStyle(createAccEmailLbl,createAccEmailTxt);
+        utils.setFloatTextFieldStyle(createAccLNameLbl,createAccLNameTxt);
+        utils.setFloatTextFieldStyle(createAccFNameLbl,createAccFNameTxt);
+
+
+        addNewPane.setVisible(false);
+        basePane.setVisible(true);
 
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
@@ -276,35 +354,55 @@ public class sideBarPaneController  extends navigationPaneController{
         utils.setToolTip(settingIconBtn,"setting");
         utils.setToolTip(darkIcon,"dark mode");
         utils.setToolTip(lightIcon,"light mode");
+
+        setFirstPage();
+    }
+
+    private void setFirstPage(){
+        utils.openFxml("viewProjects.fxml",loadPane);
+
     }
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml",loadPane);
+            utils.openFxml("dashboard.fxml", loadPane);
+
         });
-        dashboardIconBtn.setOnMouseClicked(e -> System.out.println());
+        dashboardIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml", loadPane);
+
+        });
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
-                  utils.openFxml("viewProjects.fxml",loadPane);
+            utils.openFxml("viewProjects.fxml", loadPane);
+            getCurrentBtn();
+        });
+        projectIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("viewProjects.fxml", loadPane);
+
         });
 
-
-
-//        dashboardViewBtn.setOnMouseClicked( MouseEvent e -> {
-//            Parent root = switchPage .openFxmL( ExmiFile: "/View/Login. fxml");
-//            LoadPane.getChildren () .add (root) :|
-//]);
-        projectIconBtn.setOnMouseClicked(e -> System.out.println());
-
         // User navigation
-        userViewBtn.setOnMouseClicked(e -> System.out.println());
-        userIconBtn.setOnMouseClicked(e -> System.out.println());
+        userViewBtn.setOnMouseClicked(e -> {
+            System.out.println();
+
+        });
+        userIconBtn.setOnMouseClicked(e -> {
+            System.out.println();
+
+        });
 
         // Report navigation
-        reportViewBtn.setOnMouseClicked(e -> System.out.println());
-        reportIconBtn.setOnMouseClicked(e -> System.out.println());
+        reportViewBtn.setOnMouseClicked(e -> {
+            System.out.println();
+
+        });
+        reportIconBtn.setOnMouseClicked(e -> {
+            System.out.println();
+
+        });
     }
 
     private void setupSidebarToggleHandlers() {
@@ -438,6 +536,36 @@ public class sideBarPaneController  extends navigationPaneController{
         ParallelTransition run = new ParallelTransition(moving1,moving);
         run.play();
     }
+
+
+//    creating the add new pane action
+    public void addNew(String text){
+        if(text.equalsIgnoreCase("project")){
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(true);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(false);
+
+        }else if(text.equalsIgnoreCase("user")){
+            createAccPane.setVisible(true);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(false);
+        }else if(text.equalsIgnoreCase("labor")){
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(true);
+        }else if(text.equalsIgnoreCase("report")){
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(true);
+            createLaborPane.setVisible(false);
+        }else{
+            return;
+        }
+    }
+
 
 
 }

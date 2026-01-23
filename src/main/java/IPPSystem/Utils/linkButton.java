@@ -23,6 +23,20 @@ public class linkButton {
     private Button activeTab;
     private HBox activeBox;
 
+    private Button pageBtn,closeBtn;
+
+    public Button getActiveTab() {
+        return activeTab;
+    }
+
+    public Button getPageBtn(){
+        return pageBtn;
+    }
+
+    public Map<Button,Parent> getLinkMap(){
+        return linkMap;
+    }
+
     /**
      * Create a new tab with FXML content
      */
@@ -45,8 +59,8 @@ public class linkButton {
         loadPane.getChildren().add(content);
 
         // ---------- Tab buttons ----------
-        Button pageBtn = new Button(title);
-        Button closeBtn = new Button();
+        pageBtn = new Button(title);
+        closeBtn = new Button();
         FontIcon closeIcon = new FontIcon(FontAwesomeSolid.TIMES);
         closeIcon.getStyleClass().add("closeIcon");
         closeBtn.setGraphic(closeIcon);
@@ -173,5 +187,18 @@ public class linkButton {
                 closeBtn.setManaged(isActive);
             }
         }
+    }
+
+    public void changeTabTitle(String newTitle,Button tabButton){
+            getTabButton(tabButton).setText(newTitle);
+    }
+
+    public Button getTabButton(Button tabButton) {
+        for (Button btn : linkMap.keySet()) {
+            if (btn == tabButton) {
+                return btn;
+            }
+        }
+        return null;
     }
 }
