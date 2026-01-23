@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -31,6 +32,12 @@ public class viewProjectsController {
     @FXML
     private VBox projectContainer;
 
+    private StackPane loadPane;
+
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
     @FXML
     public void initialize(){
         allBtn.setOnAction(e -> loadProjects(getDummyProjects()));
@@ -46,7 +53,7 @@ public class viewProjectsController {
     private ArrayList<projects> getDummyProjects(){
         ArrayList<projects> list = new ArrayList<>();
 
-        list.add(new projects("Project A", "Office", "Building 1", "Level 2", "John Doe", 1200, 15, 5, 50, 24, 500000, 100, 20000, java.sql.Date.valueOf("2025-01-01"), java.sql.Date.valueOf("2026-01-01"), "Yangon", "Active"));
+        list.add(new projects("Project A", "Office", "Building 1", "Level 2", "Win Lae Shwe Yee", 1200, 15, 5, 50, 24, 500000, 100, 20000, java.sql.Date.valueOf("2025-01-01"), java.sql.Date.valueOf("2026-01-01"), "Yangon", "Active"));
         list.add(new projects("Project B", "Residential", "Building 2", "Level 5", "Jane Smith", 800, 10, 4, 30, 18, 300000, 60, 15000, java.sql.Date.valueOf("2024-06-01"), java.sql.Date.valueOf("2025-06-01"), "Mandalay", "Completed"));
         list.add(new projects("Project C", "Commercial", "Building 3", "Level 3", "Alice", 1500, 20, 6, 70, 36, 700000, 120, 30000, java.sql.Date.valueOf("2025-03-01"), java.sql.Date.valueOf("2026-03-01"), "Yangon", "Planning"));
         list.add(new projects("Project D", "Office", "Building 4", "Level 1", "Bob", 900, 12, 4, 40, 20, 350000, 70, 18000, java.sql.Date.valueOf("2024-08-01"), java.sql.Date.valueOf("2025-08-01"), "Mandalay", "Active"));
@@ -94,8 +101,8 @@ public class viewProjectsController {
         for(projects p : projectsList){
 
 //            a new row every 2 cards
-            if(count % 2 == 0){
-                row = new HBox(30);//30 px spacing between cards
+            if(count % 3 == 0){
+                row = new HBox(15);//25 px spacing between cards
                 projectContainer.getChildren().add(row);
             }
 
@@ -111,6 +118,8 @@ public class viewProjectsController {
 
                 projectCardController controller = loader.getController();
                 controller.setData(p);
+                controller.setParentController(this);
+
 
                 row.getChildren().add(card);
 
@@ -120,8 +129,32 @@ public class viewProjectsController {
 
            count++;
         }
+
+
     }
 
+    public void openProjectDetails(projects project){
+        try{
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/View/projectDetails.fxml")
+            );
+            //    load fxml
+            Parent detailView = loader.load();
+
+            //  get the controller of the loaded FXML
+            projectDetailsController controller = loader.getController();
+
+            //pass the project data to the controller
+            controller.setProjectData(project);
+
+            //clear the current content and show the details page
+            loadPane.getChildren().clear();
+            loadPane.getChildren().add(detailView);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
