@@ -64,11 +64,11 @@ public class utils {
         }
 
         public static void setFloatTextFieldStyle(Label textLabel , TextField textField){
-            textFieldStyle.floatTextFieldStyle(textLabel,textField);
+            new textFieldStyle().floatTextFieldStyle(textLabel,textField);
         }
 
         public static void setFloatPasswordFieldStyle(Label pwLabel, TextField showPwTxt , PasswordField hidePwTxt){
-            textFieldStyle.floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
+            new textFieldStyle().floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
         }
 
         public static void setFocusAnimation(Region underline,String from, String to){
