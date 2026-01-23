@@ -48,13 +48,15 @@ public class taskDatabase {
     }
 
     //get all task details by project of work item
-    public static ArrayList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId){
+    public static ArrayList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId,int buildingId, int levelId){
         ArrayList<tasks> ls =  new ArrayList<>();
 
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL getAllTasksDetailsByWorkItem(?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL getAllTasksDetailsByWorkItem(?,?,?,?)}");
             cstmt.setInt(1,projectTypeId);
             cstmt.setInt(2,workItemId);
+            cstmt.setInt(3,buildingId);
+            cstmt.setInt(4,levelId);
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()){
                 ls.add(new tasks(

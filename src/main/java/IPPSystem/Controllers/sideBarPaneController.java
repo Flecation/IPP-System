@@ -1,8 +1,6 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.role;
-import IPPSystem.Models.users;
-import IPPSystem.Utils.session;
 import IPPSystem.Utils.switchPage;
 import IPPSystem.Utils.themeToggle;
 import IPPSystem.Utils.utils;
@@ -288,11 +286,22 @@ public class sideBarPaneController  extends navigationPaneController{
         dashboardIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // Project navigation
-        projectViewBtn.setOnMouseClicked(e -> System.out.println());
+        projectViewBtn.setOnMouseClicked(e -> {
+                  utils.openFxml("viewProjects.fxml",loadPane);
+        });
+
+
+
+//        dashboardViewBtn.setOnMouseClicked( MouseEvent e -> {
+//            Parent root = switchPage .openFxmL( ExmiFile: "/View/Login. fxml");
+//            LoadPane.getChildren () .add (root) :|
+//]);
         projectIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // User navigation
-        userViewBtn.setOnMouseClicked(e -> System.out.println());
+        userViewBtn.setOnMouseClicked(e -> {
+           utils.openFxml("mgSEListView.fxml",loadPane);
+        });
         userIconBtn.setOnMouseClicked(e -> System.out.println());
 
         // Report navigation
@@ -431,4 +440,6 @@ public class sideBarPaneController  extends navigationPaneController{
         ParallelTransition run = new ParallelTransition(moving1,moving);
         run.play();
     }
+
+
 }
