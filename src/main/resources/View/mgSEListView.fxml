@@ -64,6 +64,15 @@
             <Insets right="25.0" />
          </padding>
       </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+         <children>
+            <Label text="Name" />
+            <Label text="Current Project" />
+            <Label text="Status" />
+            <Label text="Progress" />
+            <Label text="Action" />
+         </children>
+      </HBox>
       <HBox prefHeight="10.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
             <StackPane minHeight="294.0" minWidth="620.0" prefHeight="294.0" prefWidth="850.0" style="-fx-background-color: none; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="SOMETIMES">

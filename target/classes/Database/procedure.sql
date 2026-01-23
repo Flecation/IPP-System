@@ -1,7 +1,7 @@
 -- for the labor procedure
 DELIMITER $$
 
-CREATE PROCEDURE getAllLabors ()
+CREATE PROCEDURE getAllLabors()
 BEGIN
     SELECT
         l.laborId,
@@ -10,10 +10,14 @@ BEGIN
         l.laborPhone,
         l.laborStartDate,
         l.laborEndDate,
+        l.isActive,
+        s.skillId,
         s.skillName
     FROM labors l
-    LEFT JOIN assignWorkers aw ON l.laborId = aw.laborId
-    LEFT JOIN skills s ON aw.skillId = s.skillId;
+    LEFT JOIN skills s ON l.skillId = s.skillId
+    ORDER BY
+        l.isActive DESC,
+        l.laborName;
 END$$
 
 DELIMITER ;
@@ -45,15 +49,18 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE getBuildingNameByProjectId(IN p_assignProjectId INT)
+CREATE PROCEDURE getBuildingsByProjectType(
+    IN p_projectTypeId INT
+)
 BEGIN
-    SELECT
+    SELECT DISTINCT
         b.projectBuildingId,
         b.projectBuildingName
-    FROM assignProjects ap
+    FROM projectDetails pd
     INNER JOIN buildings b
-        ON b.projectBuildingId = ap.projectBuildingId
-    WHERE ap.assignProjectId = p_assignProjectId;
+        ON b.projectBuildingId = pd.projectBuildingId
+    WHERE pd.projectTypeId = p_projectTypeId
+    ORDER BY b.projectBuildingName;
 END$$
 
 DELIMITER ;
@@ -62,15 +69,17 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE getLevelByProjectId(IN p_assignProjectId INT)
+CREATE PROCEDURE getLevelByProjectId(
+    IN p_projectTypeId INT
+)
 BEGIN
     SELECT
         pl.projectLevelId,
         pl.projectLevelName
-    FROM assignProjects ap
+    FROM ProjectDetails pd
     INNER JOIN projectLevels pl
-        ON pl.projectLevelId = ap.projectLevelId
-    WHERE ap.assignProjectId = p_assignProjectId;
+        ON pl.projectLevelId = pd.projectLevelId
+    WHERE pd.projectTypeId = p_projectTypeId;
 END$$
 
 DELIMITER ;
@@ -471,26 +480,36 @@ CREATE PROCEDURE getAllSkillDetailsByAssignWorkItem(
 BEGIN
     SELECT
         awis.assignWorkItemSkillId,
+        s.skillId,
         s.skillName,
         ast.assignStatusName AS assignStatus,
         awisd.laborQty,
         awisd.dailyWagePerLabor,
-        awis.isCancel
-
+        awisd.assignWorkItemSkillDetailId,
+        awis.isCancel,
+        -- Calculate totals
+        ROUND(awisd.laborQty * awisd.dailyWagePerLabor, 2) AS totalDailyCost,
+        -- Status indicator
+        CASE
+            WHEN awis.isCancel = TRUE THEN 'Cancelled'
+            WHEN awisd.laborQty IS NULL OR awisd.dailyWagePerLabor IS NULL THEN 'Not Assigned'
+            ELSE 'Active'
+        END AS statusDescription
     FROM assignWorkItemSkills awis
     INNER JOIN skills s
         ON s.skillId = awis.skillId
     LEFT JOIN assignWorkItemSkillDetails awisd
         ON awisd.assignWorkItemSkillId = awis.assignWorkItemSkillId
     LEFT JOIN assignStatus ast
-        ON ast.assignStatusId = awisd.assignStatus
-
-    WHERE awis.assignWorkItemId = p_assignWorkItemId;
+        ON ast.assignStatusId = awisd.assignStatusId  -- Fixed column name: assignStatusId not assignStatus
+    WHERE awis.assignWorkItemId = p_assignWorkItemId
+    ORDER BY
+        CASE WHEN awis.isCancel = TRUE THEN 2 ELSE 1 END,  -- Active first, then cancelled
+        s.skillName;
 END$$
 
 DELIMITER ;
 
-DELIMITER $$
 
 DELIMITER $$
 

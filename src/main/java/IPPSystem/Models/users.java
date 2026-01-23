@@ -4,11 +4,19 @@ import java.util.Date;
 
 public class users {
     private String userName,userEmail,userPhone,userPassword,userRole,userPhoto;
-    private int userId;
+    private int userId,projectTypeId;
     private boolean isActive;
     private Date userDOB,userStartDate,userEndDate;
 
     public users(){}
+
+    public int getProjectTypeId() {
+        return projectTypeId;
+    }
+
+    public void setProjectTypeId(int projectTypeId) {
+        this.projectTypeId = projectTypeId;
+    }
 
     // to use when the users input
     public users(String userName, String userEmail, String userPhone, String userPassword, String userRole, Date userDOB, Date userStartDate,String userPhoto) {
@@ -136,5 +144,9 @@ public class users {
 
     public void setUserEndDate(Date userEndDate) {
         this.userEndDate = userEndDate;
+    }
+
+    public void setProjectTypeName(String typeName) {
+
     }
 }

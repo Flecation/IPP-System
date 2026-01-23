@@ -143,4 +143,33 @@ public class projectDatabase {
             throw new RuntimeException(e);
         }
     }
+
+
+    public static String currentAssignProject(int userId) {
+        try {
+            String sql = "SELECT projectInstanceName FROM assignProjects WHERE supervisorId = ? AND projectStatus = ?";
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, 2);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String projectTypeName = rs.getString("projectInstanceName");
+                rs.close();
+                pstmt.close();
+                return projectTypeName;
+            }
+
+            rs.close();
+            pstmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // return null if no project found
+    }
+
 }

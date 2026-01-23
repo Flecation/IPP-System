@@ -97,6 +97,9 @@ public class database {
 
     public static ArrayList<projects> getAllProjects(){return projectDatabase.getAllProjects();}
 
+    public  static  String currentAssignProject(int userId){return  projectDatabase.currentAssignProject(userId);}
+
+
 //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 

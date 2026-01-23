@@ -1,7 +1,9 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.role;
+import IPPSystem.DAO.database;
 import IPPSystem.DAO.userDatabase;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.PaginationHelper;
 import javafx.event.ActionEvent;
@@ -14,7 +16,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class mgSEListViewController {
 
@@ -22,7 +26,7 @@ public class mgSEListViewController {
     private Button managerSpCreateBtn;
 
     @FXML
-    private ComboBox<?> managerSpProjectTypeCombo;
+    private ComboBox<String> managerSpProjectTypeCombo;
 
     @FXML
     private ComboBox<String> managerSpStatusCombo;
@@ -57,6 +61,17 @@ public class mgSEListViewController {
 
         pagination.goToPage(1);
         pagination.buildButtons(paginationBox);
+
+
+        // Fetch project types
+        HashMap<Integer, String> projectTypes = database.getAllProjectTypes();
+        managerSpProjectTypeCombo.getItems().addAll(projectTypes.values());
+
+        // Fetch project statuses
+        managerSpStatusCombo.getItems().addAll("Active" , "Unactive");
+        managerSpProjectTypeCombo.setOnAction(e -> filterEngineers());
+        managerSpStatusCombo.setOnAction(e -> filterEngineers());
+
     }
 
 
@@ -95,6 +110,52 @@ public class mgSEListViewController {
         pagination.setData(allEngineers);
         pagination.goToPage(1);
         pagination.buildButtons(paginationBox);
+    }
+
+
+    @FXML
+    private void filterEngineers() {
+
+        String selectedTypeName = managerSpProjectTypeCombo.getValue();
+        String selectedStatus = managerSpStatusCombo.getValue();
+
+        Integer typeId;
+        Boolean isActive;
+
+        // Convert type name to ID using your projectTypes HashMap
+        HashMap<Integer, String> projectTypes = database.getAllProjectTypes();
+        typeId = projectTypes.entrySet().stream().filter(entry -> entry.getValue().equals(selectedTypeName)).findFirst().map(Map.Entry::getKey).orElse(null);
+
+        // Convert status string to boolean
+        if (selectedStatus != null) {
+            isActive = selectedStatus.equalsIgnoreCase("Active");
+        } else {
+            isActive = null;
+        }
+
+        // Filter the list
+        List<users> filteredList = allEngineers.stream()
+                .filter(u -> {
+                    boolean matchesType = true;
+                    boolean matchesStatus = true;
+
+                    // Filter by project type
+                    if (typeId != null) {
+                        matchesType = u.getProjectTypeId() == typeId; // you need a getter in users model
+                    }
+
+                    // Filter by active status
+                    if (isActive != null) {
+                        matchesStatus = u.isActive() == isActive; // or u.getUserStatus() == 1
+                    }
+
+                    return matchesType && matchesStatus;
+                })
+                .toList();
+
+        // Update pagination
+        pagination.setData(filteredList);
+        pagination.goToPage(1);
     }
 
 

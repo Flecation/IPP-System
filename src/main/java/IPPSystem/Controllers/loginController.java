@@ -53,11 +53,11 @@ public class loginController {
     public void initialize(){
 //        userDatabase.addUser(new users("manager","ant@gmail.com","099666",utils.hashPassword("123"), role.MANAGER.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
 //        userDatabase.addUser(new users("supervisor","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
-//        userDatabase.addUser(new users("Kyaw Kyaw","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
-//        userDatabase.addUser(new users("Mg Mg","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
-//        userDatabase.addUser(new users("Zaw Zaw","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
-//        userDatabase.addUser(new users("Hla Hla","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
-//        userDatabase.addUser(new users("Mya Mya","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+//        userDatabase.addUser(new users("Hsu Myat Moe","hmm@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+//        userDatabase.addUser(new users("Zin Waiyan Htet","zinwaiyanhtet@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+//        userDatabase.addUser(new users("Min Hein Ko","minheinko@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+//        userDatabase.addUser(new users("Ant Htoo Aung","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+//        userDatabase.addUser(new users("Win Lae Shwe Yee","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
 
         try {
             Connection con = databaseConnection.getConnection();

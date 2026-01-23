@@ -3,7 +3,7 @@ package IPPSystem.Models;
 import java.sql.Date;
 
 public class projects {
-    private int assignProjectId,projectTypeId, projectBuildingId, projectLevelId,userId;
+    private int assignProjectId,projectTypeId,projectStatusId, projectBuildingId, projectLevelId,userId;
     private String projectTypeName;
     private String projectInstanceName;
     private String projectBuildingName;
@@ -12,6 +12,9 @@ public class projects {
     private String projectStatus;
     private String userName;
     private double projectArea;
+
+
+
     private double totalStories;
     private double totalUnits;
     private double projectDuration;
@@ -338,11 +341,18 @@ public class projects {
     }
 
     public int getProjectTypeId() {
-        return projectTypeId;
+        return this.projectTypeId;
     }
 
     public void setProjectTypeId(int projectTypeId) {
         this.projectTypeId = projectTypeId;
+    }
+    public int getProjectStatusId() {
+        return projectStatusId;
+    }
+
+    public void setProjectStatusId(int projectStatusId) {
+        this.projectStatusId = projectStatusId;
     }
 
     public int getProjectBuildingId() {

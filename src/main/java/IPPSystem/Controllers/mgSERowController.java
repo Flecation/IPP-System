@@ -45,6 +45,8 @@ public class mgSERowController {
 
         mgSENameTxt.setText(engineer.getUserName());
         mgSERoleTxt.setText(engineer.getUserRole());
+        mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+
 
         String status = engineer.isActive() ? "Active" : "Inactive";
         mgSEActive.setText(status);

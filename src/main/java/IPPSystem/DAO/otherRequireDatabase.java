@@ -19,7 +19,7 @@ public class otherRequireDatabase {
         try(PreparedStatement ps = con.prepareCall(sql)){
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                type.put(rs.getInt("projectTypeId"),rs.getString("projectTypeName"));
+                type.put(rs.getInt("projectTypeId"),rs.getString("typeName"));
             }
             return type;
         } catch (SQLException e) {
@@ -99,7 +99,7 @@ public class otherRequireDatabase {
 
     public static HashMap<Integer,String> getProjectStatus(){
         HashMap<Integer,String> status = new HashMap<>();
-        try (PreparedStatement ps = con.prepareStatement("SELECT * FROM projectStaus")){
+        try (PreparedStatement ps = con.prepareStatement("SELECT * FROM projectStatus")){
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
