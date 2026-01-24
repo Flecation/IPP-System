@@ -2,9 +2,6 @@ package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -16,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 //This is collected place for all utils
@@ -128,16 +124,15 @@ public class utils {
         }
 
         public static void switchNewScene(Button clickButton, String fxmlName){
-            switchPage.switchScene(clickButton,fxmlName);
+            switchPage.getInstance(null).switchScene(clickButton,fxmlName);
         }
 
         public static void openFxml(String fxml, StackPane loadPane){
-            switchPage.openFxml(fxml,loadPane);
+            switchPage.getInstance(loadPane).openFxml(fxml);
         }
 
         public static void showProjectCards(ArrayList<projects> projects, VBox containerPane){
-            showProjectCard pc = new showProjectCard();
-            pc.loadProjects(projects,containerPane);
+            switchPage.getInstance(null).loadProjects(projects, containerPane);
         }
 
 }

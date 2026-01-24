@@ -33,7 +33,7 @@ public class navigationPaneController{
 
     protected static users user = session.getInstance().getUser();
 
-    protected linkButton linkButton = new linkButton();
+    protected linkButton linkButton = IPPSystem.Utils.linkButton.getInstance();
 
     protected ArrayList<projects> allProjects = new ArrayList<>();
 
@@ -42,22 +42,16 @@ public class navigationPaneController{
     private void initialize(){
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
-        linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard");
+        linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");
+
         FontIcon pageAddIcon  = new FontIcon(FontAwesomeSolid.PLUS);
         pageAddIcon.getStyleClass().add("pageAddIcon");
         pageAddBtn.setGraphic(pageAddIcon);
         pageAddBtn.setOnAction(e->{
-            linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Dashboard");
+            linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");
         });
 
         allProjects.addAll(database.getAllProjects());
     }
 
-    public void getCurrentBtn(){
-//        System.out.println(linkButton.getActiveTab().getText());
-    }
-
-    public void setActiveTabTitle(String title) {
-        linkButton.setActiveTabTitle(title);
-    }
 }

@@ -1,16 +1,16 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
-import IPPSystem.Models.projects;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class viewProjectsController extends sideBarPaneController{
+
+    @FXML
+    private VBox viewProjectPane;
 
     @FXML
     private Button activeBtn;
@@ -34,12 +34,12 @@ public class viewProjectsController extends sideBarPaneController{
     @FXML
     public void initialize(){
         getProjects = database.getAllProjects();
-        allBtn.setOnAction(e -> utils.showProjectCards(getProjects,projectContainer));
+        allBtn.setOnAction(e -> utils.showProjectCards(getProjects, projectContainer));
         completedBtn.setOnAction(e ->{});
         activeBtn.setOnAction(e -> {});
         planningBtn.setOnAction( e -> {});
 
-        utils.showProjectCards(getProjects,projectContainer);
+        utils.showProjectCards(getProjects, projectContainer);
 
     }
 

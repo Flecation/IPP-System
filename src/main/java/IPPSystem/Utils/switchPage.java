@@ -1,6 +1,9 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Controllers.projectCardController;
+import IPPSystem.Controllers.viewProjectsController;
 import IPPSystem.Main.HelloApplication;
+import IPPSystem.Models.projects;
 import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -9,30 +12,50 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Stack;
 
 public class switchPage extends utils {
 
+    private static switchPage instance;
+
+    protected StackPane loadPane;
+
+    private switchPage(){}
+
+    public static switchPage getInstance(StackPane pane){
+        if (instance == null){
+            instance = new switchPage();
+
+        }
+        if (pane != null) instance.loadPane = pane;
+        return instance;
+    }
+
     // Dashboard page switch animation
-    public static void setSwitchPane(
+    public void setSwitchPane(
             StackPane basePane,
-            Parent fromPane,
             String toPane,
             Button titleUrlButton,
-            Button clickedButton
+            String titleUrlName
     ) {
 
         // Loading spinner
         ProgressIndicator spinner = new ProgressIndicator();
         spinner.setMaxSize(14, 14);
-        titleUrlButton.setGraphic(spinner);
-        titleUrlButton.setText("Loading...");
+        if (titleUrlButton != null) {
+            titleUrlButton.setGraphic(spinner);
+            titleUrlButton.setText("Loading...");
+        }
 
         // Load next pane safely
         Parent nextPane;
@@ -43,8 +66,10 @@ public class switchPage extends utils {
             nextPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-            titleUrlButton.setGraphic(null);
-            titleUrlButton.setText("Error");
+            if (titleUrlButton != null) {
+                titleUrlButton.setGraphic(null);
+                titleUrlButton.setText("Error");
+            }
             return;
         }
 
@@ -58,7 +83,7 @@ public class switchPage extends utils {
 
         // Blur effect
         GaussianBlur blur = new GaussianBlur(0);
-        fromPane.setEffect(blur);
+        basePane.setEffect(blur);
 
         Timeline blurIn = new Timeline(
                 new KeyFrame(Duration.ZERO,
@@ -74,13 +99,14 @@ public class switchPage extends utils {
         blurIn.setOnFinished(event -> {
 
             // Update title button
-            titleUrlButton.setGraphic(null);
-            setToolTip(titleUrlButton, clickedButton.getText());
-            titleUrlButton.setText(clickedButton.getText());
+            if (titleUrlButton != null) {
+                titleUrlButton.setGraphic(null);
+                setToolTip(titleUrlButton, titleUrlName);
+                titleUrlButton.setText(titleUrlName);
+            }
 
             // Switch panes
-            basePane.getChildren().addAll(region, nextPane);
-            basePane.getChildren().remove(fromPane);
+            basePane.getChildren().setAll(region, nextPane);
 
             Timeline blurOut = new Timeline(
                     new KeyFrame(Duration.ZERO,
@@ -105,10 +131,8 @@ public class switchPage extends utils {
     }
 
     // Simple FXML opener utility
-    public static void openFxml(String fxmlFile, StackPane loadPane) {
-        if (loadPane == null) {
-            return;
-        }
+    public void openFxml(String fxmlFile) {
+
         try {
             FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
             Parent newContent = loader.load();
@@ -116,7 +140,6 @@ public class switchPage extends utils {
             // Special handling for viewProjects.fxml to pass loadPane to controller
             if ("viewProjects.fxml".equals(fxmlFile)) {
                 loader.getController();
-
             }
 
             StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
@@ -156,7 +179,7 @@ public class switchPage extends utils {
         }
     }
     //from the login controller to the dashboard with animation
-    public static void switchScene(Button button, String fxmlPath) {
+    public void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;
 
@@ -238,4 +261,38 @@ public class switchPage extends utils {
         pause.play();
     }
 
+    public void loadProjects(ArrayList<projects> projectsList, VBox projectContainer) {
+        projectContainer.getChildren().clear();
+        HBox row = null;
+        int count = 0;
+
+        for (projects p : projectsList) {
+            if (count % 3 == 0) {
+                row = new HBox(20);
+                projectContainer.getChildren().add(row);
+
+            }
+
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        utils.class.getResource("/View/projectCard.fxml")
+                );
+
+                Parent card = loader.load();
+
+                projectCardController controller = loader.getController();
+                controller.setData(p,loadPane);
+
+
+                if (row != null) {
+                    row.getChildren().add(card);
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            count++;
+        }
+    }
 }

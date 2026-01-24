@@ -137,7 +137,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="sideBar" maxWidth="170.0" minWidth="170.0" visible="false" StackPane.alignment="CENTER">
+                  <VBox fx:id="sideBar" maxWidth="170.0" minWidth="170.0" StackPane.alignment="CENTER">
                      <children>
                         <Label fx:id="showIconSideBtn" alignment="CENTER_RIGHT" maxHeight="20.0" maxWidth="170.0" minHeight="20.0" minWidth="170.0" text="◀">
                            <padding>

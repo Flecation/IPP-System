@@ -22,20 +22,17 @@ public class linkButton {
     private final Map<Button, Parent> linkMap = new HashMap<>();
     private Button activeTab;
     private HBox activeBox;
+    
+    private static linkButton instance;
 
-    private Button pageBtn,closeBtn;
+    private linkButton(){}
 
-    public Button getActiveTab() {
-        return activeTab;
+    public static linkButton getInstance(){
+        if (instance == null) instance = new linkButton();
+        return instance;
     }
 
-    public Button getPageBtn(){
-        return pageBtn;
-    }
 
-    public Map<Button,Parent> getLinkMap(){
-        return linkMap;
-    }
 
     /**
      * Create a new tab with FXML content
@@ -59,8 +56,8 @@ public class linkButton {
         loadPane.getChildren().add(content);
 
         // ---------- Tab buttons ----------
-        pageBtn = new Button(title);
-        closeBtn = new Button();
+        Button pageBtn = new Button(title);
+        Button closeBtn = new Button();
         FontIcon closeIcon = new FontIcon(FontAwesomeSolid.TIMES);
         closeIcon.getStyleClass().add("closeIcon");
         closeBtn.setGraphic(closeIcon);
@@ -189,23 +186,18 @@ public class linkButton {
         }
     }
 
-    public void changeTabTitle(String newTitle,Button tabButton){
-            getTabButton(tabButton).setText(newTitle);
-    }
 
-    public Button getTabButton(Button tabButton) {
+    public Button getTabButton() {
         for (Button btn : linkMap.keySet()) {
-            if (btn == tabButton) {
+            if (btn.getStyleClass().contains("active-tab")) {
                 return btn;
             }
         }
         return null;
     }
 
-    public void setActiveTabTitle(String newTitle) {
-        if (activeTab == null) {
-            return;
-        }
-        activeTab.setText(newTitle);
+    public void setTabButtonName(String text){
+        getTabButton().setText(text);
     }
+    
 }
