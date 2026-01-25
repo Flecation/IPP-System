@@ -1,19 +1,19 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import IPPSystem.Models.projects;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 //This is collected place for all utils
 public class utils {
@@ -64,11 +64,11 @@ public class utils {
         }
 
         public static void setFloatTextFieldStyle(Label textLabel , TextField textField){
-            textFieldStyle.floatTextFieldStyle(textLabel,textField);
+            new textFieldStyle().floatTextFieldStyle(textLabel,textField);
         }
 
         public static void setFloatPasswordFieldStyle(Label pwLabel, TextField showPwTxt , PasswordField hidePwTxt){
-            textFieldStyle.floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
+            new textFieldStyle().floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
         }
 
         public static void setFocusAnimation(Region underline,String from, String to){
@@ -124,61 +124,15 @@ public class utils {
         }
 
         public static void switchNewScene(Button clickButton, String fxmlName){
-            switchPage.switchScene(clickButton,fxmlName);
+            switchPage.getInstance(null).switchScene(clickButton,fxmlName);
         }
 
         public static void openFxml(String fxml, StackPane loadPane){
-        try {
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxml));
-            Parent newContent = loader.load();
-
-            // Special handling for viewProjects.fxml to pass loadPane to controller
-            if ("viewProjects.fxml".equals(fxml)) {
-                IPPSystem.Controllers.viewProjectsController controller = loader.getController();
-                if (controller != null) {
-                    controller.setLoadPane(loadPane);
-                }
-            }
-
-            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
-            StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
-
-            if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
-            }
-
-            if (loadPane.getChildren().isEmpty()) {
-                loadPane.getChildren().setAll(newContent);
-                return;
-            }
-
-            Parent oldContent = (Parent) loadPane.getChildren().get(0);
-            newContent.setOpacity(0);
-
-            loadPane.getChildren().setAll(oldContent, newContent);
-
-            Timeline fadeOut = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
-                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
-            );
-
-            fadeOut.setOnFinished(e -> {
-                Timeline fadeIn = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
-                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
-                );
-                fadeIn.play();
-            });
-
-            fadeOut.play();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            switchPage.getInstance(loadPane).openFxml(fxml);
         }
-    }
 
+        public static void showProjectCards(ArrayList<projects> projects, VBox containerPane){
+            switchPage.getInstance(null).loadProjects(projects, containerPane);
+        }
 
 }

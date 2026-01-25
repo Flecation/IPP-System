@@ -22,6 +22,17 @@ public class linkButton {
     private final Map<Button, Parent> linkMap = new HashMap<>();
     private Button activeTab;
     private HBox activeBox;
+    
+    private static linkButton instance;
+
+    private linkButton(){}
+
+    public static linkButton getInstance(){
+        if (instance == null) instance = new linkButton();
+        return instance;
+    }
+
+
 
     /**
      * Create a new tab with FXML content
@@ -174,4 +185,19 @@ public class linkButton {
             }
         }
     }
+
+
+    public Button getTabButton() {
+        for (Button btn : linkMap.keySet()) {
+            if (btn.getStyleClass().contains("active-tab")) {
+                return btn;
+            }
+        }
+        return null;
+    }
+
+    public void setTabButtonName(String text){
+        getTabButton().setText(text);
+    }
+    
 }
