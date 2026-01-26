@@ -1,16 +1,19 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
+import IPPSystem.Models.projects;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 //This is collected place for all utils
 public class utils {
@@ -61,11 +64,11 @@ public class utils {
         }
 
         public static void setFloatTextFieldStyle(Label textLabel , TextField textField){
-            textFieldStyle.floatTextFieldStyle(textLabel,textField);
+            new textFieldStyle().floatTextFieldStyle(textLabel,textField);
         }
 
         public static void setFloatPasswordFieldStyle(Label pwLabel, TextField showPwTxt , PasswordField hidePwTxt){
-            textFieldStyle.floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
+            new textFieldStyle().floatPasswordStyle(pwLabel,showPwTxt,hidePwTxt);
         }
 
         public static void setFocusAnimation(Region underline,String from, String to){
@@ -121,11 +124,16 @@ public class utils {
         }
 
         public static void switchNewScene(Button clickButton, String fxmlName){
-            switchPage.switchScene(clickButton,fxmlName);
+            switchPage.getInstance(null).switchScene(clickButton,fxmlName);
         }
 
-        public static void openFxml(String fxml, StackPane loadPane){switchPage.openFxml(fxml,loadPane);}
+        public static void openFxml(String fxml, StackPane loadPane){
+            switchPage.getInstance(loadPane).openFxml(fxml);
+        }
 
+        public static void showProjectCards(ArrayList<projects> projects, VBox containerPane){
+            switchPage.getInstance(null).loadProjects(projects, containerPane);
+        }
 
 
 
