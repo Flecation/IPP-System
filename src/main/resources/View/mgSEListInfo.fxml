@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="650.0" minWidth="1100.0" prefHeight="650.0" prefWidth="1100.0" style="-fx-background-color: #dededede;" styleClass="personalInfoBasePane" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEPersonalInfoController">
+    <children>
+        <HBox prefHeight="0.0" prefWidth="1100.0">
+            <children>
+                <HBox prefHeight="89.0" prefWidth="1075.0" HBox.hgrow="SOMETIMES">
+                    <children>
+                        <Label cache="true" maxHeight="63.0" maxWidth="416.0" minHeight="40.0" minWidth="176.0" prefHeight="40.0" prefWidth="303.0" styleClass="managerAccSpSub-Label" stylesheets="@../CSS/managerSupervisorList.css" text="Personal Information" textOverrun="CLIP" HBox.hgrow="SOMETIMES">
+                            <HBox.margin>
+                                <Insets bottom="10.0" left="20.0" right="10.0" top="15.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="65.0" prefWidth="662.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button fx:id="personalBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#clickPersonal" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Personal" textFill="WHITE">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <styleClass>
+                                        <String fx:value="personalInfoBtn" />
+                                        <String fx:value="personalInfoPersonalBtn" />
+                                    </styleClass>
+                                </Button>
+                                <Button fx:id="projectBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#clickProjects" prefHeight="26.0" prefWidth="90.0" stylesheets="@../CSS/managerSupervisorList.css" text="Projects" textFill="WHITE">
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                    <styleClass>
+                                        <String fx:value="personalInfoBtn" />
+                                        <String fx:value="personalInfoProjectBtn" />
+                                    </styleClass>
+                                </Button>
+                            </children>
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
+                        </HBox>
+                    </children>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+            <padding>
+                <Insets right="25.0" />
+            </padding>
+        </HBox>
+        <HBox prefHeight="100.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
+            <children>
+                <StackPane fx:id="personalInfoBodyPane" minHeight="410.0" minWidth="620.0" prefHeight="418.0" prefWidth="620.0" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+               <children>
+                  <VBox maxHeight="540.0" maxWidth="480.0" spacing="20.0">
+                     <children>
+                        <StackPane alignment="CENTER_LEFT">
+                           <children>
+                              <StackPane maxHeight="120.0" maxWidth="120.0" minHeight="120.0" minWidth="120.0" style="-fx-background-color: #F0F2F5; -fx-background-radius: 10;" />
+                              <HBox alignment="CENTER" spacing="30.0">
+                                 <children>
+                                    <StackPane>
+                                       <children>
+                                          <Circle fill="TRANSPARENT" radius="40.0" stroke="#e0e0e0" strokeWidth="8.0" />
+                                          <Arc fill="TRANSPARENT" length="270.0" radiusX="40.0" radiusY="40.0" startAngle="90.0" stroke="#74b9ff" strokeWidth="8.0" />
+                                          <VBox alignment="CENTER">
+                                             <children>
+                                                <Label text="80 %" textFill="#2d3436">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="WORKLOAD" textFill="#b2bec3">
+                                                   <font>
+                                                      <Font size="8.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="12.0" />
+                                       </HBox.margin>
+                                    </StackPane>
+                                    <StackPane>
+                                       <children>
+                                          <Circle fill="TRANSPARENT" radius="40.0" stroke="#e0e0e0" strokeWidth="8.0" />
+                                          <Arc fill="TRANSPARENT" length="270.0" radiusX="40.0" radiusY="40.0" startAngle="90.0" stroke="#55efc4" strokeWidth="8.0" />
+                                          <VBox alignment="CENTER">
+                                             <children>
+                                                <Label text="60 %" textFill="#2d3436">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="PERFORMANCE" textFill="#b2bec3">
+                                                   <font>
+                                                      <Font size="8.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="12.0" />
+                                       </HBox.margin>
+                                    </StackPane>
+                                 </children>
+                                 <StackPane.margin>
+                                    <Insets left="100.0" />
+                                 </StackPane.margin>
+                              </HBox>
+                           </children>
+                        </StackPane>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TextField promptText="Name" style="-fx-border-width: 0.5; -fx-border-color: #D1E3E2; -fx-background-radius: 6; -fx-border-radius: 6;" />
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="10.0" layoutY="150.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="336.0000366210937" minWidth="10.0" prefWidth="336.0000366210937" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="234.20001220703125" minWidth="10.0" prefWidth="143.19996337890632" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <TextField fx:id="email" prefHeight="35.0" promptText="Email" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 0.5;">
+                                 <GridPane.margin>
+                                    <Insets right="15.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <DatePicker fx:id="dob" GridPane.columnIndex="1" />
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="10.0" layoutY="200.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0000366210937" minWidth="10.0" prefWidth="284.0000366210937" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="234.20001220703125" minWidth="10.0" prefWidth="195.19996337890632" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <TextField fx:id="phone" prefHeight="35.0" promptText="Phone Number" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 0.5;">
+                                 <GridPane.margin>
+                                    <Insets right="15.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="projectType" prefHeight="35.0" promptText="Project Type" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 0.5;" GridPane.columnIndex="1" />
+                           </children>
+                        </GridPane>
+                        <TextArea fx:id="address" prefHeight="120.0" promptText="No 12, Than Kyaw Street, Thakayta, Yangon" style="-fx-background-color: white; -fx-border-color: #D1E3E2; -fx-border-radius: 8; -fx-background-radius: 8;" wrapText="true" VBox.vgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: white;" text="← Back" />
+                     </children>
+                  </VBox>
+               </children>
+                </StackPane>
+            </children>
+            <VBox.margin>
+                <Insets left="25.0" right="25.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

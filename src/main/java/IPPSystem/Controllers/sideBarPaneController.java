@@ -81,7 +81,7 @@ public class sideBarPaneController  extends navigationPaneController{
     private Label lightSymbolIcon;
 
     @FXML
-    private StackPane loadPane;
+    public StackPane loadPane;
 
     @FXML
     private HBox logoutBtn;
@@ -301,6 +301,7 @@ public class sideBarPaneController  extends navigationPaneController{
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
            utils.openFxml("mgSEListView.fxml",loadPane);
+
         });
         userIconBtn.setOnMouseClicked(e -> System.out.println());
 

@@ -15,10 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class mgSEListViewController {
 
@@ -26,7 +23,7 @@ public class mgSEListViewController {
     private Button managerSpCreateBtn;
 
     @FXML
-    private ComboBox<String> managerSpProjectTypeCombo;
+    private ComboBox<String> managerSortingCombo;
 
     @FXML
     private ComboBox<String> managerSpStatusCombo;
@@ -63,17 +60,43 @@ public class mgSEListViewController {
         pagination.buildButtons(paginationBox);
 
 
-        // Fetch project types
-        HashMap<Integer, String> projectTypes = database.getAllProjectTypes();
-        managerSpProjectTypeCombo.getItems().addAll(projectTypes.values());
+        managerSortingCombo.getItems().addAll("All","A-Z","Z-A");
+        managerSortingCombo.setValue("All");
 
-        // Fetch project statuses
+
         managerSpStatusCombo.getItems().addAll("Active" , "Unactive");
-        managerSpProjectTypeCombo.setOnAction(e -> filterEngineers());
+        managerSortingCombo.setOnAction(e -> applySortingAndPagination());
+
         managerSpStatusCombo.setOnAction(e -> filterEngineers());
 
     }
 
+
+    private void applySortingAndPagination() {
+
+        String sortType = managerSortingCombo.getValue();
+
+        List<users> sortedList = new ArrayList<>(allEngineers);
+
+        if ("A-Z".equals(sortType)) {
+            sortedList.sort(
+                    Comparator.comparing(
+                            users::getUserName,
+                            String.CASE_INSENSITIVE_ORDER
+                    )
+            );
+        } else if ("Z-A".equals(sortType)) {
+            sortedList.sort(
+                    Comparator.comparing(
+                            users::getUserName,
+                            String.CASE_INSENSITIVE_ORDER
+                    ).reversed()
+            );
+        }
+
+        pagination.setData(sortedList);
+        pagination.goToPage(1); // reset to first page
+    }
 
     private void renderPage(List<users> pageData) {
 
@@ -90,6 +113,9 @@ public class mgSEListViewController {
                 controller.setData(engineer);
                 controller.setOnDelete(this::refreshUI);
 
+                // 🔥 VIEW BUTTON HANDLER
+                controller.setOnView(this::openPersonalInfoPage);
+
                 managerSupervisorListPane.getChildren().add(row);
 
             } catch (Exception e) {
@@ -99,6 +125,8 @@ public class mgSEListViewController {
 
         pagination.buildButtons(paginationBox);
     }
+
+
 
 
     private void refreshUI() {
@@ -116,15 +144,10 @@ public class mgSEListViewController {
     @FXML
     private void filterEngineers() {
 
-        String selectedTypeName = managerSpProjectTypeCombo.getValue();
         String selectedStatus = managerSpStatusCombo.getValue();
 
-        Integer typeId;
         Boolean isActive;
 
-        // Convert type name to ID using your projectTypes HashMap
-        HashMap<Integer, String> projectTypes = database.getAllProjectTypes();
-        typeId = projectTypes.entrySet().stream().filter(entry -> entry.getValue().equals(selectedTypeName)).findFirst().map(Map.Entry::getKey).orElse(null);
 
         // Convert status string to boolean
         if (selectedStatus != null) {
@@ -139,17 +162,14 @@ public class mgSEListViewController {
                     boolean matchesType = true;
                     boolean matchesStatus = true;
 
-                    // Filter by project type
-                    if (typeId != null) {
-                        matchesType = u.getProjectTypeId() == typeId; // you need a getter in users model
-                    }
 
                     // Filter by active status
                     if (isActive != null) {
                         matchesStatus = u.isActive() == isActive; // or u.getUserStatus() == 1
                     }
 
-                    return matchesType && matchesStatus;
+//                    return matchesType && matchesStatus;
+                    return  matchesStatus;
                 })
                 .toList();
 
@@ -157,6 +177,29 @@ public class mgSEListViewController {
         pagination.setData(filteredList);
         pagination.goToPage(1);
     }
+
+
+
+
+    private void openPersonalInfoPage(users engineer) {
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/View/mgSEListInfo.fxml"));
+
+            Parent page = loader.load();
+
+            mgSEPersonalInfoController controller =
+                    loader.getController();
+
+            controller.setEngineer(engineer); // 🔥 pass selected engineer
+
+            managerSupervisorListPane.getChildren().setAll(page);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

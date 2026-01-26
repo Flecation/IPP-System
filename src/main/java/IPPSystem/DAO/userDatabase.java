@@ -78,52 +78,36 @@ public class userDatabase {
         return ls;
     }
 
-    public static ArrayList<users> getUserByRole(String role) {
-
+    public static ArrayList<users> getUserByRole(String role){
         ArrayList<users> info = new ArrayList<>();
-
-        String sql =
-                "SELECT u.*, ap.projectTypeId, pt.typeName " +
-                        "FROM users u " +
-                        "LEFT JOIN assignProjects ap ON u.userId = ap.supervisorId " +
-                        "LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
-                        "WHERE u.userRole = ? " +
-                        "ORDER BY u.isActive DESC, u.userEndDate DESC";
-
         try {
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, role);
 
+            PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ? ORDER BY isActive DESC, userEndDate DESC ");
+            pstmt.setString(1,role);
             ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-
-                users u = new users(
-                        rs.getInt("userId"),
-                        rs.getString("userName"),
-                        rs.getString("userEmail"),
-                        rs.getString("userPhone"),
-                        rs.getString("userRole"),
-                        rs.getDate("userDOB"),
-                        rs.getDate("userStartDate"),
-                        rs.getDate("userEndDate"),
-                        rs.getBoolean("isActive"),
-                        rs.getString("userPassword"),
-                        rs.getString("userPhoto")
-                );
-
-                u.setProjectTypeId(rs.getInt("projectTypeId"));
-                u.setProjectTypeName(rs.getString("typeName"));
-
-                info.add(u);
+            while (rs.next()){
+                userName = rs.getString("userName");
+                userRole = rs.getString("userRole");
+                userEmail = rs.getString("userEmail");
+                userPhone = rs.getString("userPhone");
+                userDOB = rs.getDate("userDOB");
+                userStartDate = rs.getDate("userStartDate");
+                userEndDate = rs.getDate("userEndDate");
+                isActive = rs.getBoolean("isActive");
+                userPassword = rs.getString("userPassword");
+                userId = rs.getInt("userId");
+                userPhoto = rs.getString("userPhoto");
+                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto));
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return info;
     }
+
+
+
+
 
 
 

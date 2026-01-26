@@ -33,7 +33,7 @@
                               <Insets />
                            </opaqueInsets>
                         </Button>
-                        <ComboBox fx:id="managerSpProjectTypeCombo" prefHeight="26.0" prefWidth="135.0" promptText="Project type">
+                        <ComboBox fx:id="managerSortingCombo" prefHeight="26.0" prefWidth="135.0" promptText="Sorting">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
