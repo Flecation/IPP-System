@@ -4,10 +4,11 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.skills;
 import IPPSystem.Models.workItems;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 
 public class workItemDatabase {
     private static Connection con;
@@ -21,8 +22,8 @@ public class workItemDatabase {
     }
 
     //for the assign work items(all)
-    public static ArrayList<workItems> getAllWorkItemByAssignProjectId(int assignProjectId){
-        ArrayList<workItems> workItems = new ArrayList<>();
+    public static ObservableList<workItems> getAllWorkItemByAssignProjectId(int assignProjectId){
+        ObservableList<workItems> workItems = FXCollections.observableArrayList();
 
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllWorkItemByAssignProjectId(?)}");
@@ -49,8 +50,8 @@ public class workItemDatabase {
     }
 
     //for the workItems detail (all)
-    public static ArrayList<workItems> getAllWorkItemDetails(int projectTypeId, int buildingId, int levelId){
-        ArrayList<workItems> workItems = new ArrayList<>();
+    public static ObservableList<workItems> getAllWorkItemDetails(int projectTypeId, int buildingId, int levelId){
+        ObservableList<workItems> workItems = FXCollections.observableArrayList();
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllWorkItemDetails(?,?,?)}");
             cstmt.setInt(1,projectTypeId);
@@ -128,8 +129,8 @@ public class workItemDatabase {
         }
     }
 
-    public static ArrayList<skills> getAllSkillDetailsByAssignWorkItem(int assignWorkItemId){
-        ArrayList<skills> skill = new ArrayList<>();
+    public static ObservableList<skills> getAllSkillDetailsByAssignWorkItem(int assignWorkItemId){
+        ObservableList<skills> skill = FXCollections.observableArrayList();
         try(CallableStatement cs = con.prepareCall("{CALL getAllSkillDetailsByAssignWorkItem(?)}")){
             cs.setInt(1,assignWorkItemId);
             ResultSet rs = cs.executeQuery();

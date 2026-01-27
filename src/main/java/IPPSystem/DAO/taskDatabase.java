@@ -4,9 +4,10 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.tasks;
 import IPPSystem.Utils.dateFormatter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class taskDatabase {
     private static Connection con;
@@ -20,8 +21,8 @@ public class taskDatabase {
     }
 
     //get all task by the assign project of work item
-    public static ArrayList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){
-        ArrayList<tasks> ls =  new ArrayList<>();
+    public static ObservableList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){
+        ObservableList<tasks> ls = FXCollections.observableArrayList();
 
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllTasksByAssignWorkItem(?)}");
@@ -48,8 +49,8 @@ public class taskDatabase {
     }
 
     //get all task details by project of work item
-    public static ArrayList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId,int buildingId, int levelId){
-        ArrayList<tasks> ls =  new ArrayList<>();
+    public static ObservableList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId,int buildingId, int levelId){
+        ObservableList<tasks> ls =  FXCollections.observableArrayList();
 
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllTasksDetailsByWorkItem(?,?,?,?)}");

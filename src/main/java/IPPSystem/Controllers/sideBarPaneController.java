@@ -3,13 +3,16 @@ package IPPSystem.Controllers;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
+import IPPSystem.Utils.storage;
 import IPPSystem.Utils.themeToggle;
 import IPPSystem.Utils.utils;
+import com.almasb.fxgl.ui.InGamePanel;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 
 import javafx.fxml.FXML;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -26,6 +29,7 @@ import javafx.util.Duration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class sideBarPaneController extends navigationPaneController{
 
@@ -302,11 +306,10 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private VBox createLaborPane,createProjectPane,createReportPane;
 
+    private users loginUser = user;
 
-    protected static users loginUser = user;
+    protected storage data = storage.getInstance();
 
-// This is the StackPane containing all three VBox elements
-    protected ArrayList<projects> getProjects = allProjects;
 
     @FXML
     public void initialize() {
@@ -359,6 +362,8 @@ public class sideBarPaneController extends navigationPaneController{
     utils.setToolTip(settingIconBtn,"setting");
     utils.setToolTip(darkIcon,"dark mode");
     utils.setToolTip(lightIcon,"light mode");
+
+    reloadBtn.setOnMouseClicked(e->data.reload());
 
     setFirstPage();
 }

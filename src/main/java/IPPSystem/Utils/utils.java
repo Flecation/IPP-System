@@ -2,6 +2,8 @@ package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.workItems;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -13,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Stack;
 
 //This is collected place for all utils
 public class utils {
@@ -131,8 +133,11 @@ public class utils {
             switchPage.getInstance(loadPane).openFxml(fxml);
         }
 
-        public static void showProjectCards(ArrayList<projects> projects, VBox containerPane){
+        public static void showProjectCards(ObservableList<projects> projects, VBox containerPane){
             switchPage.getInstance(null).loadProjects(projects, containerPane);
         }
 
+        public static void openWorkItemDetails(workItems items, StackPane a){
+            switchPage.getInstance(null).openWorkItemDetails(items);
+        }
 }

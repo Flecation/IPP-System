@@ -1,13 +1,17 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.DAO.database;
+import IPPSystem.Constants.role;
+import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import IPPSystem.Utils.utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 
-public class viewProjectsController extends sideBarPaneController{
+public class viewProjectsController extends sideBarPaneController {
 
     @FXML
     private VBox viewProjectPane;
@@ -30,19 +34,101 @@ public class viewProjectsController extends sideBarPaneController{
     @FXML
     private VBox projectContainer;
 
-
     @FXML
-    public void initialize(){
-        getProjects = database.getAllProjects();
-        allBtn.setOnAction(e -> utils.showProjectCards(getProjects, projectContainer));
-        completedBtn.setOnAction(e ->{});
-        activeBtn.setOnAction(e -> {});
-        planningBtn.setOnAction( e -> {});
+    private ComboBox<String> choiceUsersBox, choiceProjectTypesBox;
 
-        utils.showProjectCards(getProjects, projectContainer);
-
+    private enum StatusFilter {
+        ALL, ACTIVE, COMPLETED, PLANNING
     }
 
+    private StatusFilter statusFilter = StatusFilter.ALL;
 
+    @FXML
+    public void initialize() {
+        setAllDataInChoiceBox();
 
+        allBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ALL;
+            applyFilters();
+        });
+
+        activeBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ACTIVE;
+            applyFilters();
+        });
+
+        completedBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.COMPLETED;
+            applyFilters();
+        });
+
+        planningBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.PLANNING;
+            applyFilters();
+        });
+
+        choiceUsersBox.setOnAction(e -> applyFilters());
+        choiceProjectTypesBox.setOnAction(e -> applyFilters());
+
+        applyFilters();
+    }
+
+    private void applyFilters() {
+        ObservableList<projects> source = data.getAllProjects();
+        ObservableList<projects> filtered = FXCollections.observableArrayList();
+
+        String selectedUser = choiceUsersBox.getSelectionModel().getSelectedItem();
+        String selectedType = choiceProjectTypesBox.getSelectionModel().getSelectedItem();
+
+        for (projects p : source) {
+            if (p == null) continue;
+
+            if (statusFilter != StatusFilter.ALL) {
+                String status = safeLower(p.getProjectStatus());
+                if (statusFilter == StatusFilter.ACTIVE && !status.equals("active")) continue;
+                if (statusFilter == StatusFilter.COMPLETED && !status.equals("completed")) continue;
+                if (statusFilter == StatusFilter.PLANNING && !status.equals("planning")) continue;
+            }
+
+            if (selectedType != null && !selectedType.equals("All")) {
+                String typeName = p.getProjectTypeName();
+                if (typeName == null || !typeName.equalsIgnoreCase(selectedType)) continue;
+            }
+
+            if (selectedUser != null && !selectedUser.equals("All")) {
+                String supervisor = p.getUserName();
+                if (supervisor == null || !supervisor.equalsIgnoreCase(selectedUser)) continue;
+            }
+
+            filtered.add(p);
+        }
+
+        utils.showProjectCards(filtered, projectContainer);
+    }
+
+    private String safeLower(String s) {
+        return s == null ? "" : s.trim().toLowerCase();
+    }
+
+    private void setAllDataInChoiceBox() {
+        choiceUsersBox.getItems().clear();
+        choiceProjectTypesBox.getItems().clear();
+
+        choiceUsersBox.getItems().add("All");
+        choiceProjectTypesBox.getItems().add("All");
+
+        for (String type : data.getProjectTypes().values()) {
+            if (type != null) choiceProjectTypesBox.getItems().add(type);
+        }
+
+        for (users u : data.getAllUsers()) {
+            if (u != null && u.getUserRole() != null
+                    && u.getUserRole().equals(role.SUPERVISOR.toString())) {
+                choiceUsersBox.getItems().add(u.getUserName());
+            }
+        }
+
+        choiceProjectTypesBox.getSelectionModel().selectFirst();
+        choiceUsersBox.getSelectionModel().selectFirst();
+    }
 }
