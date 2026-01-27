@@ -391,7 +391,7 @@ private void setupNavigationHandlers() {
 
     // User navigation
     userViewBtn.setOnMouseClicked(e -> {
-        System.out.println();
+        utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
 
     });
     userIconBtn.setOnMouseClicked(e -> {

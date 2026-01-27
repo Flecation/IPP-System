@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="540.0" maxWidth="480.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="540.0" maxWidth="480.0" spacing="8.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane alignment="CENTER_LEFT">
          <children>
@@ -83,6 +83,9 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
+         <children>
+            <TextField />
+         </children>
       </GridPane>
       <GridPane layoutX="10.0" layoutY="150.0">
          <columnConstraints>
@@ -93,7 +96,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TextField prefHeight="35.0" promptText="Email" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 2;">
+            <TextField promptText="Email" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 2;">
                <GridPane.margin>
                   <Insets right="15.0" />
                </GridPane.margin>

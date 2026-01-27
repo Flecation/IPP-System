@@ -1,12 +1,10 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.role;
-import IPPSystem.DAO.database;
 import IPPSystem.DAO.userDatabase;
-import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.PaginationHelper;
-import javafx.event.ActionEvent;
+import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -113,7 +111,6 @@ public class mgSEListViewController {
                 controller.setData(engineer);
                 controller.setOnDelete(this::refreshUI);
 
-                // 🔥 VIEW BUTTON HANDLER
                 controller.setOnView(this::openPersonalInfoPage);
 
                 managerSupervisorListPane.getChildren().add(row);
@@ -181,23 +178,8 @@ public class mgSEListViewController {
 
 
 
-    private void openPersonalInfoPage(users engineer) {
-        try {
-            FXMLLoader loader =
-                    new FXMLLoader(getClass().getResource("/View/mgSEListInfo.fxml"));
-
-            Parent page = loader.load();
-
-            mgSEPersonalInfoController controller =
-                    loader.getController();
-
-            controller.setEngineer(engineer); // 🔥 pass selected engineer
-
-            managerSupervisorListPane.getChildren().setAll(page);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void openPersonalInfoPage(users engineer ) {
+        utils.viewUserInfo(engineer);
     }
 
 

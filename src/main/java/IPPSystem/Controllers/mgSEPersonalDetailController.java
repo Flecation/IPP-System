@@ -10,7 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
-public class mgSEPersonalInfoController {
+public class mgSEPersonalDetailController {
 
     @FXML
     private TextArea address;
@@ -38,6 +38,7 @@ public class mgSEPersonalInfoController {
 
 
         public void setEngineer(users engineer) {
+
             email.setText(engineer.getUserEmail());
             phone.setText(engineer.getUserPhone());
 //            address.setText(engineer.getUserAddress());

@@ -5,100 +5,98 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="600.0" prefHeight="470.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEListViewController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="675.0" prefWidth="1220.0" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEListViewController">
    <children>
-      <HBox prefHeight="136.0" prefWidth="900.0">
+      <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
          <children>
-            <HBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="600.0" prefHeight="145.0" prefWidth="875.0" HBox.hgrow="SOMETIMES">
-               <children>
-                  <Label cache="true" maxHeight="30.0" maxWidth="266.0" minHeight="24.0" minWidth="176.0" prefHeight="30.0" prefWidth="266.0" stylesheets="@../CSS/createButton.css" text="View All Site Engineers " textOverrun="CLIP" HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="20.0" right="10.0" top="15.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="130.0" prefWidth="597.0" spacing="10.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Button fx:id="managerSpCreateBtn" contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </Button>
-                        <ComboBox fx:id="managerSortingCombo" prefHeight="26.0" prefWidth="135.0" promptText="Sorting">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </ComboBox>
-                        <ComboBox fx:id="managerSpStatusCombo" prefHeight="26.0" prefWidth="86.0" promptText="Status">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </ComboBox>
-                     </children>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </HBox>
-               </children>
+            <Label cache="true" maxHeight="30.0" maxWidth="266.0" minHeight="24.0" minWidth="176.0" prefHeight="30.0" prefWidth="195.0" stylesheets="@../CSS/createButton.css" text="View All Site Engineers " textOverrun="CLIP" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
-               <padding>
-                  <Insets left="30.0" />
-               </padding>
-            </HBox>
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Region prefHeight="27.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="managerSpCreateBtn" contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Button>
+            <ComboBox fx:id="managerSortingCombo" prefHeight="26.0" prefWidth="100.0" promptText="Sorting">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="managerSpStatusCombo" prefHeight="26.0" prefWidth="86.0" promptText="Status">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ComboBox>
          </children>
          <VBox.margin>
-            <Insets />
+            <Insets top="12.0" />
          </VBox.margin>
          <padding>
-            <Insets right="25.0" />
+            <Insets bottom="10.0" top="10.0" />
          </padding>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+      <StackPane alignment="TOP_CENTER" minHeight="294.0" minWidth="620.0" prefHeight="294.0" prefWidth="850.0" style="-fx-background-color: #eeeeee; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
          <children>
-            <Label text="Name" />
-            <Label text="Current Project" />
-            <Label text="Status" />
-            <Label text="Progress" />
-            <Label text="Action" />
-         </children>
-      </HBox>
-      <HBox prefHeight="10.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
-         <children>
-            <StackPane minHeight="294.0" minWidth="620.0" prefHeight="294.0" prefWidth="850.0" style="-fx-background-color: none; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="SOMETIMES">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
+            <VBox alignment="BOTTOM_CENTER" minWidth="620.0" prefHeight="516.0" prefWidth="1180.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
                <children>
-                  <VBox alignment="BOTTOM_CENTER" maxWidth="1100.0" minWidth="620.0" prefHeight="366.0" prefWidth="850.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
+                  <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" style="-fx-background-color: none;" styleClass="subTitle" VBox.vgrow="NEVER">
                      <children>
-                        <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" maxWidth="1100.0" minWidth="600.0" prefHeight="342.0" prefWidth="600.0" spacing="20.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="ALWAYS" />
-                        <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css">
-                           <VBox.margin>
-                              <Insets bottom="10.0" />
-                           </VBox.margin>
-                        </HBox>
+                        <Label maxWidth="150.0" minWidth="50.0" text="Name" wrapText="true" />
+                        <Region prefHeight="20.0" prefWidth="103.0" HBox.hgrow="ALWAYS" />
+                        <Label maxWidth="150.0" minWidth="50.0" text="Current Project" />
+                        <Region prefHeight="20.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                        <Label maxWidth="150.0" minWidth="100.0" text="Status" />
+                        <Region prefHeight="20.0" prefWidth="162.0" HBox.hgrow="ALWAYS" />
+                        <Label maxWidth="150.0" minWidth="50.0" text="Progress" />
+                        <Region prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                        <Label maxWidth="150.0" minWidth="50.0" text="Action" />
                      </children>
+                     <padding>
+                        <Insets bottom="20.0" left="44.0" right="44.0" top="20.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="12.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" prefHeight="407.0" prefWidth="1180.0" spacing="16.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="SOMETIMES">
+                     <VBox.margin>
+                        <Insets top="8.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+                     </padding>
                   </VBox>
+                  <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-            </StackPane>
+               <StackPane.margin>
+                  <Insets top="8.0" />
+               </StackPane.margin>
+            </VBox>
          </children>
          <VBox.margin>
-            <Insets left="25.0" right="25.0" />
+            <Insets top="8.0" />
          </VBox.margin>
-      </HBox>
+      </StackPane>
    </children>
    <padding>
-      <Insets bottom="30.0" />
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
 </VBox>
