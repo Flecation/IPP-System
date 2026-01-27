@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class loginController {
+public class  loginController {
 
     @FXML
     Button exitBtn,minimizeBtn,restoreBtn,loginBtn,forgetBtn;

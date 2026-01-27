@@ -3,9 +3,11 @@ package IPPSystem.DAO;
 import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class projectDatabase {
     private static Connection con;
@@ -19,8 +21,8 @@ public class projectDatabase {
     }
 
     //for the all assign projects that we have(all)
-    public static ArrayList<projects> getAllProjects(){
-        ArrayList<projects> ls = new ArrayList<>();
+    public static ObservableList<projects> getAllProjects(){
+        ObservableList<projects> ls = FXCollections.observableArrayList();
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllProjects()}");
             ResultSet rs = cstmt.executeQuery();
@@ -58,8 +60,8 @@ public class projectDatabase {
     }
 
     //for the projects details
-    public static ArrayList<projects> getProjectDetails(int projectTypeId){
-        ArrayList<projects> projects = new ArrayList<>();
+    public static ObservableList<projects> getProjectDetails(int projectTypeId){
+        ObservableList<projects> projects = FXCollections.observableArrayList();
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getProjectDetails(?)}");
             cstmt.setInt(1,projectTypeId);

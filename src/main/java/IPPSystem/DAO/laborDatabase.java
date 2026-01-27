@@ -3,9 +3,10 @@ package IPPSystem.DAO;
 import IPPSystem.Models.labors;
 import IPPSystem.Utils.dateFormatter;
 import com.mysql.cj.protocol.Resultset;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class laborDatabase {
     private static Connection con;
@@ -18,8 +19,8 @@ public class laborDatabase {
         }
     }
 
-    public static ArrayList<labors> getAllLabors(){
-        ArrayList<labors> labors = new ArrayList<>();
+    public static ObservableList<labors> getAllLabors(){
+        ObservableList<labors> labors = FXCollections.observableArrayList();
         try{
             CallableStatement cs = con.prepareCall("{CALL getAllLabors()}");
             ResultSet rs = cs.executeQuery();
@@ -72,8 +73,8 @@ public class laborDatabase {
         }
     }
 
-    public static ArrayList<labors> getAllLaborsWithinProject(int assignProjectId){
-        ArrayList<labors> labors = new ArrayList<>();
+    public static ObservableList<labors> getAllLaborsWithinProject(int assignProjectId){
+        ObservableList<labors> labors = FXCollections.observableArrayList();
         try{
             CallableStatement cs = con.prepareCall("{CALL getAllLaborsByProjectId(?);}");
             cs.setInt(1,assignProjectId);
@@ -97,8 +98,8 @@ public class laborDatabase {
         }
     }
 
-    public static ArrayList<labors> getAllLaborsBySkill(int skillId){
-        ArrayList<labors> labor = new ArrayList<>();
+    public static ObservableList<labors> getAllLaborsBySkill(int skillId){
+        ObservableList<labors> labor = FXCollections.observableArrayList();
         String sql = "SELECT *" +
                 "FROM labors l WHERE l.skillId = ?";
         try(PreparedStatement ps = con.prepareCall(sql)){
