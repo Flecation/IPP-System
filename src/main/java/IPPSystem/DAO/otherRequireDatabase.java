@@ -19,7 +19,7 @@ public class otherRequireDatabase {
         try(PreparedStatement ps = con.prepareCall(sql)){
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                type.put(rs.getInt("projectTypeId"),rs.getString("projectTypeName"));
+                type.put(rs.getInt("projectTypeId"),rs.getString("typeName"));
             }
             return type;
         } catch (SQLException e) {

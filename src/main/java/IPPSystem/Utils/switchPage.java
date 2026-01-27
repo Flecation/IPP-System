@@ -2,9 +2,12 @@ package IPPSystem.Utils;
 
 import IPPSystem.Controllers.projectCardController;
 import IPPSystem.Controllers.viewProjectsController;
+import IPPSystem.Controllers.workItemDetailsController;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.workItems;
 import javafx.animation.*;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,7 +24,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class switchPage extends utils {
@@ -261,7 +263,7 @@ public class switchPage extends utils {
         pause.play();
     }
 
-    public void loadProjects(ArrayList<projects> projectsList, VBox projectContainer) {
+    public void loadProjects(ObservableList<projects> projectsList, VBox projectContainer) {
         projectContainer.getChildren().clear();
         HBox row = null;
         int count = 0;
@@ -293,6 +295,19 @@ public class switchPage extends utils {
             }
 
             count++;
+        }
+    }
+
+    public void openWorkItemDetails(workItems item){
+        if (item == null || loadPane == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/workItemDetails.fxml"));
+            Parent root = loader.load();
+            workItemDetailsController controller = loader.getController();
+            controller.setWorkItem(item /*, tasks list if you want later */);
+            loadPane.getChildren().setAll(root);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

@@ -16,6 +16,7 @@ import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class navigationPaneController{
@@ -31,11 +32,12 @@ public class navigationPaneController{
     @FXML
     VBox root;
 
+
+
     protected static users user = session.getInstance().getUser();
 
     protected linkButton linkButton = IPPSystem.Utils.linkButton.getInstance();
 
-    protected ArrayList<projects> allProjects = new ArrayList<>();
 
 
     @FXML
@@ -48,10 +50,12 @@ public class navigationPaneController{
         pageAddIcon.getStyleClass().add("pageAddIcon");
         pageAddBtn.setGraphic(pageAddIcon);
         pageAddBtn.setOnAction(e->{
-            linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");
+            linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View   ");
         });
 
-        allProjects.addAll(database.getAllProjects());
+//        data.getProjectTypes.putAll(database.getAllProjectTypes());
+//        data.getALlProjects.addAll(database.getAllProjects());
+//        data.getALlUsers.addAll(database.getAllUsers());
     }
 
 }
