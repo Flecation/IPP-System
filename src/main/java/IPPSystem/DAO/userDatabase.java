@@ -4,9 +4,10 @@ import IPPSystem.Models.users;
 import IPPSystem.Utils.dateFormatter;
 import IPPSystem.Utils.passwordCrafting;
 import IPPSystem.Utils.utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class userDatabase {
@@ -52,8 +53,8 @@ public class userDatabase {
         return info;
     }
 
-    public static ArrayList<users> getAllUser(){
-        ArrayList<users> ls = new ArrayList<users>();
+    public static ObservableList<users> getAllUser(){
+        ObservableList<users> ls = FXCollections.observableArrayList();
         try {
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users");
             ResultSet rs = pstmt.executeQuery();
@@ -78,8 +79,8 @@ public class userDatabase {
         return ls;
     }
 
-    public static ArrayList<users> getUserByRole(String role){
-        ArrayList<users> info = new ArrayList<>();
+    public static ObservableList<users> getUserByRole(String role){
+        ObservableList<users> info = FXCollections.observableArrayList();
         try {
 
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ? ORDER BY isActive DESC, userEndDate DESC ");
