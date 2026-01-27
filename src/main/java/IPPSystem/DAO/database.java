@@ -5,7 +5,6 @@ import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +27,7 @@ public class database {
 
 //    For the labors functions
 
-    public static ArrayList<labors> getAllLabors(){return laborDatabase.getAllLabors();}
+    public static ArrayList<labors> getAllLabors(){return laborDatabase.getAllLaborsDirect();}
 
     public static ArrayList<labors> getAllLaborsByProjectId(int assignProjectId){return laborDatabase.getAllLaborsWithinProject(assignProjectId);}
 
@@ -38,15 +37,15 @@ public class database {
 
     public static ArrayList<labors> getAllLaborsBySkillId(int skillId){return laborDatabase.getAllLaborsBySkill(skillId);}
 
-//    For the project types
+    //    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 
-//    For the project building
+    //    For the project building
     public static HashMap<Integer,String> getAllBuildings(){return otherRequireDatabase.getAllBuilding();}
 
     public static HashMap<Integer,String> getAllBuildingByProjectTypeId(int projectTypeId){return otherRequireDatabase.getBuildingNameByProjectId(projectTypeId);}
 
-//    For the project levels
+    //    For the project levels
     public static HashMap<Integer,String> getAllLevels(){return otherRequireDatabase.getAllLevel();}
 
     public static HashMap<Integer,String> getAllLevelByProjectTypeId(int projectTypeId){return otherRequireDatabase.getLevelByProjectId(projectTypeId);}
@@ -97,10 +96,21 @@ public class database {
 
     public static ArrayList<projects> getAllProjects(){return projectDatabase.getAllProjects();}
 
-//    For the Status Require functions
+    //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
+    //    FIXED: For Daily Reports functions
+    public static int saveDailyReport(DailyReportModel dailyReport) {
+        return DailyReportDAO.saveReport(dailyReport);
+    }
 
+    public static boolean saveDailyReportLabor(DailyReportLaborModel laborReport) {
+        return DailyReportDAO.saveLaborReport(laborReport);
+    }
+
+    public static boolean saveDailyReportTask(DailyReportTaskModel taskReport) {
+        return DailyReportDAO.saveTaskReport(taskReport);
+    }
 }

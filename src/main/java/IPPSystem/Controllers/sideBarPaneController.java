@@ -400,7 +400,9 @@ private void setupNavigationHandlers() {
 
     // Report navigation
     reportViewBtn.setOnMouseClicked(e -> {
-        System.out.println();
+//        System.out.println();
+        utils.openFxml("SupervisorReport.fxml", loadPane);
+        linkButton.setTabButtonName("Report");
 
     });
     reportIconBtn.setOnMouseClicked(e -> {
