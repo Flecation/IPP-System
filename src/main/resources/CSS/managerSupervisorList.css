@@ -12,6 +12,10 @@
 .createBtn{
     -fx-background-color:#558C8A;
     -fx-text-fill:#ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius: 5;
+    -fx-padding: 6 30;
+    -fx-pref-width: 120;
 }
 
 .createBtn:hover{
@@ -59,7 +63,7 @@
 
 .managerAccSpProjectType{
      -fx-text-fill: #000000;
-     -fx-font-size: 10;
+     -fx-font-size: 12;
      -fx-opacity: 0.8;
 }
 
@@ -92,8 +96,9 @@
 .managerAccSpBtnView{
     -fx-pref-width:100;
     -fx-background-color: #11C04C;
-    -fx-opacity:0.5;
-    -fx-text-fill: #dedede;
+    -fx-opacity:0.8;
+    -fx-text-fill: #f4f4f4f4;
+
     -fx-background-radius: 5;
     -fx-padding:5 10 5 10;
 
@@ -101,7 +106,6 @@
 }
 
 .managerAccSpBtnView:hover{
-    -fx-opacity:0.8;
     -fx-text-fill: #ffffff;
 
 
@@ -109,8 +113,11 @@
 .managerAccSpBtnDel{
     -fx-pref-width:100;
     -fx-background-color: #C01111;
-    -fx-opacity:0.5;
     -fx-text-fill: #dedede;
+
+    -fx-opacity:0.8;
+
+
     -fx-background-radius: 5;
     -fx-padding:5 10 5 10;
 }
@@ -118,7 +125,7 @@
 
 .managerAccSpBtnDel:hover{
     -fx-background-color: #C01111;
-    -fx-opacity:0.8;
+    -fx-text-fill: #dedede;
     -fx-text-fill: #EFBF04;
 
 
@@ -177,4 +184,13 @@
    -fx-background-color:#558C8A;
    -fx-padding: 3 10 3 10;
 }
+
+
+.subTitle{
+    -fx-font-size: 16;
+}
+
+
+
+
 

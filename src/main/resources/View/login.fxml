@@ -8,7 +8,9 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.CubicCurve?>
@@ -43,55 +45,171 @@
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" maxHeight="500.0" maxWidth="450.0" minHeight="500.0" minWidth="400.0" styleClass="rightPane">
-                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Sign in your Account" translateY="-20.0" />
-                        <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
-                           <children>
-                              <TextField fx:id="userNameTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" />
-                              <Label fx:id="userNameLbl" styleClass="info-text" text="UserName" StackPane.alignment="CENTER_LEFT">
-                                 <StackPane.margin>
-                                    <Insets left="60.0" />
-                                 </StackPane.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </StackPane>
-                        <StackPane maxHeight="80.0" minHeight="80.0">
-                           <children>
-                              <TextField fx:id="showPasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
-                              <PasswordField fx:id="hidePasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
-                              <Label fx:id="passwordLbl" styleClass="info-text" text="Password" StackPane.alignment="CENTER_LEFT">
-                                 <StackPane.margin>
-                                    <Insets left="60.0" />
-                                 </StackPane.margin>
-                              </Label>
-                              <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="10.0" StackPane.alignment="BOTTOM_LEFT">
-                                 <StackPane.margin>
-                                    <Insets left="50.0" />
-                                 </StackPane.margin>
-                              </CheckBox>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="30.0" />
-                           </VBox.margin>
-                        </StackPane>
-                        <Button fx:id="loginBtn" maxHeight="36.0" maxWidth="250.0" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Login" translateY="5.0" />
-                        <Button fx:id="forgetBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="forget password" translateY="10.0">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </Button>
-                     </children>
+                  <StackPane>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
-                     <padding>
-                        <Insets left="60.0" top="10.0" />
-                     </padding>
-                  </VBox>
+                     <children>
+                        <VBox fx:id="loginBox" alignment="CENTER" maxHeight="500.0" maxWidth="450.0" minHeight="500.0" minWidth="400.0" spacing="5.0" styleClass="rightPane" visible="false">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Login Account " translateY="-20.0" />
+                              <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <TextField fx:id="userEmailTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
+                                    <Label fx:id="userEmailLbl" styleClass="info-text" text="User Email" StackPane.alignment="CENTER_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="60.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                    <Label fx:id="emailWrongLbl" minWidth="250.0" text="Label" StackPane.alignment="BOTTOM_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="50.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </StackPane>
+                              <StackPane maxHeight="80.0" minHeight="80.0">
+                                 <children>
+                                    <TextField fx:id="showPasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
+                                    <PasswordField fx:id="hidePasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
+                                    <Label fx:id="passwordLbl" styleClass="info-text" text="Password" StackPane.alignment="CENTER_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="60.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                    <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="18.0" StackPane.alignment="BOTTOM_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="50.0" />
+                                       </StackPane.margin>
+                                    </CheckBox>
+                                    <Label fx:id="pwWrongLbl" minWidth="250.0" text="Label" StackPane.alignment="BOTTOM_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="50.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="30.0" />
+                                 </VBox.margin>
+                              </StackPane>
+                              <Button fx:id="loginBtn" maxHeight="36.0" maxWidth="250.0" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Login" translateY="5.0" />
+                              <Button fx:id="forgetBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="forget password" translateY="10.0">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="60.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="otpBox" alignment="CENTER" maxHeight="500.0" maxWidth="400.0" minHeight="500.0" minWidth="400.0" spacing="5.0" styleClass="rightPane" StackPane.alignment="CENTER">
+                           <padding>
+                              <Insets left="50.0" right="10.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Label styleClass="header-text" text="OTP Verification" />
+                              <Label styleClass="info-text" text="One Time Password(OTP) has been sent">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="otpEmail" styleClass="info-text" text="via Email to :" />
+                              <Label fx:id="otpEmailName" styleClass="info-text" text="Label" wrapText="true">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Enter the OTP below to verify it">
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox alignment="CENTER" minHeight="70.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <TextField fx:id="otp1" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                    <TextField fx:id="otp2" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                    <TextField fx:id="otp3" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                    <TextField fx:id="otp4" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                    <TextField fx:id="otp5" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                    <TextField fx:id="otp6" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                 </children>
+                              </HBox>
+                              <Button fx:id="verifyOtpBtn" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Verify OTP">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="forgetPwBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="rightPane" visible="false">
+                           <padding>
+                              <Insets left="50.0" right="10.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Label contentDisplay="CENTER" minWidth="300.0" prefHeight="27.0" prefWidth="271.0" styleClass="info-text" text="Forget Password" />
+                              <Label minWidth="300.0" text="Send a code to your email to reset your password" />
+                              <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <TextField fx:id="forgetPwEmailTxt" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" StackPane.alignment="CENTER_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="10.0" />
+                                       </StackPane.margin>
+                                    </TextField>
+                                    <Label fx:id="forgetPwEmailLbl" styleClass="info-text" text="User Email" StackPane.alignment="CENTER_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="30.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                 </children>
+                              </StackPane>
+                              <Button fx:id="sentResetCodeBtn" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Sent reset Code">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <HBox fx:id="backToLoginRow" alignment="CENTER" spacing="10.0">
+                                 <children>
+                                    <Label text="Back to" />
+                                    <Label fx:id="backToLogin" text="Log in" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="changeNewPwBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="rightPane" visible="false">
+                           <padding>
+                              <Insets left="50.0" right="10.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Label styleClass="loginTitle" text="Change Password" />
+                              <StackPane maxHeight="80.0" minHeight="80.0">
+                                 <children>
+                                    <TextField fx:id="showChangePwTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
+                                    <PasswordField fx:id="hideChangePwTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
+                                    <Label fx:id="showChangePwLbl" styleClass="info-text" text="New Password" StackPane.alignment="CENTER_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="60.0" />
+                                       </StackPane.margin>
+                                    </Label>
+                                    <CheckBox fx:id="showChangePwChoiceBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="15.0" StackPane.alignment="BOTTOM_LEFT">
+                                       <StackPane.margin>
+                                          <Insets left="50.0" />
+                                       </StackPane.margin>
+                                    </CheckBox>
+                                 </children>
+                              </StackPane>
+                              <Button fx:id="changePwBtn" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Change Password">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
                </children>
             </HBox>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="68.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="shape" translateX="181.0" translateY="-216.0" width="265.0" />
@@ -104,6 +222,23 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="loginLogoName" text="IPP System" translateX="140.0" translateY="-223.0" />
             <CubicCurve controlX1="-302.2233581542969" controlX2="-221.40127563476562" controlY1="-740.5310668945312" controlY2="-566.2247924804688" endX="-29.261638641357422" endY="-464.45709228515625" fill="DODGERBLUE" rotate="3.0" startX="-70.67208862304688" startY="-752.32275390625" stroke="TRANSPARENT" styleClass="rightShape" translateX="5.0" translateY="-41.0" />
             <CubicCurve controlX1="156.20126342773438" controlX2="232.82574462890625" controlY1="-430.53466796875" controlY2="-325.23699951171875" endX="-263.1312255859375" endY="-372.13055419921875" fill="DODGERBLUE" startX="-5.176055908203125" startY="-543.0866088867188" stroke="TRANSPARENT" styleClass="shape" translateX="-31.0" translateY="164.0" />
+            <BorderPane id="openWithEmail" fx:id="openwithEmail" visible="false" StackPane.alignment="CENTER">
+               <center>
+                  <Label fx:id="openEmailAction" minHeight="50.0" minWidth="200.0" styleClass="header-text" text="Open Via Email Code" BorderPane.alignment="CENTER" />
+               </center>
+               <top>
+                  <Region maxHeight="200.0" minHeight="196.0" opacity="0.48" prefHeight="196.0" prefWidth="900.0" BorderPane.alignment="CENTER" />
+               </top>
+               <left>
+                  <Region minWidth="300.0" opacity="0.48" prefHeight="117.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
+               </left>
+               <bottom>
+                  <Region maxHeight="250.0" minHeight="250.0" opacity="0.48" BorderPane.alignment="CENTER" />
+               </bottom>
+               <right>
+                  <Region maxWidth="300.0" minWidth="300.0" opacity="0.48" BorderPane.alignment="CENTER" />
+               </right>
+            </BorderPane>
          </children>
       </StackPane>
    </children>

@@ -6,11 +6,15 @@ import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.HBox;
+
+import java.util.function.Consumer;
 
 public class mgSERowController {
 
@@ -40,11 +44,24 @@ public class mgSERowController {
 
     private  users engineer;
 
+
+
+    // notify parent when view is clicked
+    private Consumer<users> onView;
+
+    public void setOnView(Consumer<users> onView) {
+        this.onView = onView;
+    }
+
+
+
     public void setData(users engineer) {
         this.engineer = engineer;
 
         mgSENameTxt.setText(engineer.getUserName());
         mgSERoleTxt.setText(engineer.getUserRole());
+        mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+
 
         String status = engineer.isActive() ? "Active" : "Inactive";
         mgSEActive.setText(status);
@@ -83,7 +100,7 @@ public class mgSERowController {
 
 
         if (!updated) {
-            engineer.setActive(false); // memory update
+            engineer.setActive(false);
             if (onDelete != null) {
                 onDelete.run();
             }
@@ -92,11 +109,14 @@ public class mgSERowController {
     }
 
 
-
     @FXML
     void clickMgSEViewBtn(ActionEvent event) {
-
+        if (onView != null) {
+            onView.accept(engineer);
+        }
     }
+
+
 
 
 

@@ -4,7 +4,7 @@ import IPPSystem.Constants.role;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.PaginationHelper;
-import javafx.event.ActionEvent;
+import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +13,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class mgSEListViewController {
 
@@ -22,7 +21,7 @@ public class mgSEListViewController {
     private Button managerSpCreateBtn;
 
     @FXML
-    private ComboBox<?> managerSpProjectTypeCombo;
+    private ComboBox<String> managerSortingCombo;
 
     @FXML
     private ComboBox<String> managerSpStatusCombo;
@@ -57,8 +56,45 @@ public class mgSEListViewController {
 
         pagination.goToPage(1);
         pagination.buildButtons(paginationBox);
+
+
+        managerSortingCombo.getItems().addAll("All","A-Z","Z-A");
+        managerSortingCombo.setValue("All");
+
+
+        managerSpStatusCombo.getItems().addAll("Active" , "Unactive");
+        managerSortingCombo.setOnAction(e -> applySortingAndPagination());
+
+        managerSpStatusCombo.setOnAction(e -> filterEngineers());
+
     }
 
+
+    private void applySortingAndPagination() {
+
+        String sortType = managerSortingCombo.getValue();
+
+        List<users> sortedList = new ArrayList<>(allEngineers);
+
+        if ("A-Z".equals(sortType)) {
+            sortedList.sort(
+                    Comparator.comparing(
+                            users::getUserName,
+                            String.CASE_INSENSITIVE_ORDER
+                    )
+            );
+        } else if ("Z-A".equals(sortType)) {
+            sortedList.sort(
+                    Comparator.comparing(
+                            users::getUserName,
+                            String.CASE_INSENSITIVE_ORDER
+                    ).reversed()
+            );
+        }
+
+        pagination.setData(sortedList);
+        pagination.goToPage(1); // reset to first page
+    }
 
     private void renderPage(List<users> pageData) {
 
@@ -75,6 +111,8 @@ public class mgSEListViewController {
                 controller.setData(engineer);
                 controller.setOnDelete(this::refreshUI);
 
+                controller.setOnView(this::openPersonalInfoPage);
+
                 managerSupervisorListPane.getChildren().add(row);
 
             } catch (Exception e) {
@@ -84,6 +122,8 @@ public class mgSEListViewController {
 
         pagination.buildButtons(paginationBox);
     }
+
+
 
 
     private void refreshUI() {
@@ -96,6 +136,52 @@ public class mgSEListViewController {
         pagination.goToPage(1);
         pagination.buildButtons(paginationBox);
     }
+
+
+    @FXML
+    private void filterEngineers() {
+
+        String selectedStatus = managerSpStatusCombo.getValue();
+
+        Boolean isActive;
+
+
+        // Convert status string to boolean
+        if (selectedStatus != null) {
+            isActive = selectedStatus.equalsIgnoreCase("Active");
+        } else {
+            isActive = null;
+        }
+
+        // Filter the list
+        List<users> filteredList = allEngineers.stream()
+                .filter(u -> {
+                    boolean matchesType = true;
+                    boolean matchesStatus = true;
+
+
+                    // Filter by active status
+                    if (isActive != null) {
+                        matchesStatus = u.isActive() == isActive; // or u.getUserStatus() == 1
+                    }
+
+//                    return matchesType && matchesStatus;
+                    return  matchesStatus;
+                })
+                .toList();
+
+        // Update pagination
+        pagination.setData(filteredList);
+        pagination.goToPage(1);
+    }
+
+
+
+
+    private void openPersonalInfoPage(users engineer ) {
+        utils.viewUserInfo(engineer);
+    }
+
 
 
 

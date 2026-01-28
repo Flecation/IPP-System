@@ -2,13 +2,10 @@ package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
 import IPPSystem.Utils.dateFormatter;
-import IPPSystem.Utils.passwordCrafting;
-import IPPSystem.Utils.utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.List;
 
 public class userDatabase {
 
@@ -106,18 +103,18 @@ public class userDatabase {
         return info;
     }
 
-    public static users login(String userName, String userPassword){
+    public static users login(String userEmail){
         users users = new users();
 
         try {
-            PreparedStatement cstmt = con.prepareStatement("SELECT * FROM users WHERE userName = ?");
-            cstmt.setString(1,userName);
+            PreparedStatement cstmt = con.prepareStatement("SELECT * FROM users WHERE userEmail = ?");
+            cstmt.setString(1, userEmail);
             ResultSet rs = cstmt.executeQuery();
 
             if(rs.next()){
                 users = new users(
                         rs.getInt("userId"),
-                        rs.getString("userName"),
+                        rs.getString("userEmail"),
                         rs.getString("userEmail"),
                         rs.getString("userPhone"),
                         rs.getString("userRole"),
@@ -131,9 +128,7 @@ public class userDatabase {
             }else {
                 return null;
             }
-            if (!users.isActive()) return null;
-            if(utils.checkPassword(userPassword,users.getUserPassword())) return users;
-            else return null;
+            return users;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -177,6 +172,19 @@ public class userDatabase {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static boolean updatePasswordByEmail(String email, String hashedPassword) {
+        try {
+            PreparedStatement pstmt = con.prepareStatement(
+                    "UPDATE users SET userPassword = ? WHERE userEmail = ?"
+            );
+            pstmt.setString(1, hashedPassword);
+            pstmt.setString(2, email);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

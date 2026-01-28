@@ -26,6 +26,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,6 +128,9 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private Label imageEditBtn;
+
+    @FXML
+    private Circle imageCircle;
 
     @FXML
     private ImageView imageIconBtn;
@@ -304,6 +310,9 @@ public class sideBarPaneController extends navigationPaneController{
     private Button addNewExitBtn;
 
     @FXML
+    private Label dashboardIcon,projectIcon,userIcon,reportIcon,settingIcon;
+
+    @FXML
     private VBox createLaborPane,createProjectPane,createReportPane;
 
     private users loginUser = user;
@@ -315,6 +324,28 @@ public class sideBarPaneController extends navigationPaneController{
     public void initialize() {
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
+        FontIcon dashBoard = new FontIcon(FontAwesomeSolid.DESKTOP);
+        FontIcon project = new FontIcon(FontAwesomeSolid.FOLDER);
+        FontIcon user = new FontIcon(FontAwesomeSolid.USER);
+        FontIcon report = new FontIcon(FontAwesomeSolid.CLIPBOARD);
+        FontIcon setting = new FontIcon(FontAwesomeSolid.SLIDERS_H);
+        FontIcon search = new FontIcon(FontAwesomeSolid.SEARCH);
+        FontIcon cancelS = new FontIcon(FontAwesomeSolid.TIMES);
+        FontIcon reload = new FontIcon(FontAwesomeSolid.ARROW_CIRCLE_RIGHT);
+        FontIcon alert = new FontIcon(FontAwesomeSolid.BELL);
+//        FontIcon back = new FontIcon(FontAwesomeSolid.)
+        dashboardIcon.setGraphic(dashBoard);
+        projectIcon.setGraphic(project);
+        userIcon.setGraphic(user);
+        reportIcon.setGraphic(report);
+        settingIcon.setGraphic(setting);
+
+
+        dashBoard.getStyleClass().add("icon-style");
+        project.getStyleClass().add("icon-style");
+        user.getStyleClass().add("icon-style");
+        report.getStyleClass().add("icon-style");
+        setting.getStyleClass().add("icon-style");
 
 
         utils.setFloatTextFieldStyle(createAccPhoneLbl,createAccPhoneTxt);
@@ -396,7 +427,7 @@ private void setupNavigationHandlers() {
 
     // User navigation
     userViewBtn.setOnMouseClicked(e -> {
-        System.out.println();
+        utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
 
     });
     userIconBtn.setOnMouseClicked(e -> {

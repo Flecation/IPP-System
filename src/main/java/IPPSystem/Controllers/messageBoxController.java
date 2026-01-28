@@ -28,17 +28,19 @@ public class messageBoxController {
     Button confirmMessageCancelBtn,confirmMessageConfirmBtn;
 
     private Parent parent;
+    private Runnable onCleanup;
 
     public messageBoxController(){}
 
-    public void confirmMessage(Parent root,String title,String message,notificationType type){
+    public void confirmMessage(Parent root,String title,String message,notificationType type, Runnable onCleanup){
         parent = root;
+        this.onCleanup = onCleanup;
 
         FontIcon icon = switch (type) {
             case WARNING -> new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
             case SUCCESS -> new FontIcon(FontAwesomeSolid.CHECK);
             case WRONG   -> new FontIcon(FontAwesomeSolid.TIMES);
-            default      -> new FontIcon(FontAwesomeSolid.DESKTOP);
+            default      -> new FontIcon(FontAwesomeSolid.LAPTOP);
         };
         icon.setIconSize(20);
         confirmMessageIcon.setGraphic(icon);
@@ -50,16 +52,25 @@ public class messageBoxController {
         confirmMessageBox.setVisible(true);
 
         if (confirmMessageCancelBtn != null) {
-            confirmMessageCancelBtn.setOnAction(e -> confirmMessageBox.setVisible(false));
+            confirmMessageCancelBtn.setOnAction(e -> {
+                confirmMessageBox.setVisible(false);
+                closeOverlay(confirmMessageBox);
+                if (this.onCleanup != null) this.onCleanup.run();
+            });
         }
         if (confirmMessageConfirmBtn != null) {
-            confirmMessageConfirmBtn.setOnAction(e -> confirmMessageBox.setVisible(false));
+            confirmMessageConfirmBtn.setOnAction(e -> {
+                confirmMessageBox.setVisible(false);
+                closeOverlay(confirmMessageBox);
+                if (this.onCleanup != null) this.onCleanup.run();
+            });
         }
     }
 
-    public void toastMessage(Parent root, String title, String message, notificationType type) {
+    public void toastMessage(Parent root, String title, String message, notificationType type, Runnable onCleanup) {
         // Create the icon using Ikonli
         parent = root;
+        this.onCleanup = onCleanup;
 
         FontIcon icon = switch (type) {
             case WARNING -> new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
@@ -83,7 +94,6 @@ public class messageBoxController {
         box.applyCss();
         box.layout();
 
-        // ensure overlay is interactive and on top while showing
         Parent overlay = box.getParent();
         if (overlay != null) {
             overlay.setVisible(true);
@@ -91,20 +101,21 @@ public class messageBoxController {
             overlay.toFront();
         }
 
-        double hiddenY = box.getTranslateY() + 20;
+        // Use fixed offset instead of dynamic translate
+        double hiddenY = -120.0;
 
         box.setVisible(true);
-        box.setTranslateY(-hiddenY);
+        box.setTranslateY(hiddenY);
 
-        TranslateTransition down = new TranslateTransition(Duration.millis(300), box);
-        down.setFromY(-hiddenY);
+        TranslateTransition down = new TranslateTransition(Duration.millis(600), box);
+        down.setFromY(hiddenY);
         down.setToY(0);
 
-        PauseTransition stay = new PauseTransition(Duration.seconds(0.5));
+        PauseTransition stay = new PauseTransition(Duration.millis(500)); // give user more time
 
-        TranslateTransition up = new TranslateTransition(Duration.millis(300), box);
+        TranslateTransition up = new TranslateTransition(Duration.millis(600), box);
         up.setFromY(0);
-        up.setToY(-hiddenY);
+        up.setToY(hiddenY);
 
         down.play();
         down.setOnFinished(e -> stay.play());
@@ -112,16 +123,17 @@ public class messageBoxController {
         up.setOnFinished(e -> {
             box.setVisible(false);
             closeOverlay(box);
+            if (onCleanup != null) onCleanup.run();
         });
     }
 
     private void closeOverlay(Parent child) {
         Parent overlay = child.getParent();
-        if (overlay != null) {
+        if (overlay != null && overlay.getId() != null && overlay.getId().equals("messageBoxRoot")) {
             overlay.setVisible(false);
             overlay.setMouseTransparent(true);
-            if (overlay.getParent() instanceof Pane pane) {
-                pane.getChildren().remove(overlay);
+            if (overlay.getParent() instanceof Pane parentPane) {
+                parentPane.getChildren().remove(overlay);
             }
         }
     }

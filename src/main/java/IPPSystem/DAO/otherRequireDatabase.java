@@ -99,7 +99,7 @@ public class otherRequireDatabase {
 
     public static HashMap<Integer,String> getProjectStatus(){
         HashMap<Integer,String> status = new HashMap<>();
-        try (PreparedStatement ps = con.prepareStatement("SELECT * FROM projectStaus")){
+        try (PreparedStatement ps = con.prepareStatement("SELECT * FROM projectStatus")){
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
