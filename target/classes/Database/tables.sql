@@ -250,6 +250,7 @@ CREATE TABLE dailyReportTasks (
     progressDescription TEXT,
     workHours DOUBLE,
     completedQty DOUBLE,
+    dailyCost DOUBLE,
     isCompleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (dailyReportId)
         REFERENCES dailyReports(dailyReportId)

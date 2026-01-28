@@ -17,7 +17,7 @@ public class database {
 
     public static ObservableList<users> getAllSupervisors(){return userDatabase.getUserByRole(role.SUPERVISOR.toString());}
 
-    public static users loginUser(String userName , String password){return userDatabase.login(userName,password);}
+    public static users loginUser(String userName){return userDatabase.login(userName);}
 
     public static users getUserById(int userId){return userDatabase.getUserByUserId(userId);}
 

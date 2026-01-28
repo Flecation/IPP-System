@@ -31,13 +31,13 @@
     -fx-font-size: 15px;
 }
 
-#loginBtn{
+#loginBtn,#sentResetCodeBtn,#changePwBtn,#verifyOtpBtn{
     -fx-background-color:  #3b82f6;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-text-fill: -primary-text-color;
 }
-#forgetBtn {
+#forgetBtn,#backToLogin {
       -fx-underline: true;
       -fx-font-size: 10px;
       -fx-text-fill: -muted-text-color;
@@ -53,3 +53,21 @@
 .rightShape {
     -fx-fill: -primary-bg-color;
 }
+
+/* For other added functions */
+
+/* For the attempt time out section */
+#openEmailAction{
+    -fx-text-fill: -danger-color;
+    -fx-cursor: hand;
+    -fx-underline: true;
+}
+#openWithEmail {
+    -fx-background-color: rgba(0,0,0,0.48);
+}
+
+/* For the wrong message label */
+#emailWrongLbl, #pwWrongLbl{
+    -fx-text-fill: -danger-color;
+}
+

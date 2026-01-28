@@ -5,6 +5,7 @@ public enum notificationType {
     WARNING("warning"),
     WRONG("wrong"),
     SUCCESS("success"),
+    ERROR("error"),
     INFO("info");
 
     private final String displayTitle;
