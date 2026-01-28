@@ -2,6 +2,7 @@ package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -185,5 +186,9 @@ public class utils {
 
     public static void openWorkItemDetails(workItems items, StackPane a){
         switchPage.getInstance(a).openWorkItemDetails(items);
+    }
+
+    public static void viewUserInfo(users user){
+        switchPage.getInstance(null).viewUsersInfo(user);
     }
 }
