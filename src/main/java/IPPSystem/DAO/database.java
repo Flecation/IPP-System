@@ -107,15 +107,4 @@ public class database {
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
     //    FIXED: For Daily Reports functions
-    public static int saveDailyReport(DailyReportModel dailyReport) {
-        return DailyReportDAO.saveReport(dailyReport);
-    }
-
-    public static boolean saveDailyReportLabor(DailyReportLaborModel laborReport) {
-        return DailyReportDAO.saveLaborReport(laborReport);
-    }
-
-    public static boolean saveDailyReportTask(DailyReportTaskModel taskReport) {
-        return DailyReportDAO.saveTaskReport(taskReport);
-    }
 }
