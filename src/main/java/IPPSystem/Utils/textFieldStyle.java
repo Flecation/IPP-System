@@ -19,6 +19,7 @@ public class textFieldStyle extends utils {
         this.textLabel = txtLabel;
         this.textField = txtField;
 
+
         textField.setOnMouseEntered(e -> {floatUp("text");});
         textField.setOnMouseExited(e -> {floatDown("text");});
 
@@ -38,13 +39,13 @@ public class textFieldStyle extends utils {
                 floatUp("text");
             }
         });
+        if (!textField.getText().isEmpty()){floatUp("text");}
     }
 
     public void floatPasswordStyle(Label pwLabel, TextField showPasswordField, PasswordField hidePasswordField) {
         this.passwordLabel = pwLabel;
         this.showPw = showPasswordField;
         this.hidePw = hidePasswordField;
-
         showPw.setOnMouseEntered(e -> {floatUp("pw");});
         hidePw.setOnMouseEntered(e -> {floatUp("pw");});
         passwordLabel.setOnMouseEntered(e -> {floatUp("pw");});
