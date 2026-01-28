@@ -1,9 +1,11 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Controllers.mgSEPersonalDetailController;
 import IPPSystem.Controllers.projectCardController;
 import IPPSystem.Controllers.viewProjectsController;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -295,4 +297,26 @@ public class switchPage extends utils {
             count++;
         }
     }
+
+
+    public void viewUsersInfo(users user){
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/View/mgSEPersonalDetail.fxml"));
+
+            Parent page = loader.load();
+
+            mgSEPersonalDetailController controller =
+                    loader.getController();
+
+            controller.setEngineer(user);
+
+            loadPane.getChildren().setAll(page);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

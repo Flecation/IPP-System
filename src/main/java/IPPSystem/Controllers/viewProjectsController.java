@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+
 public class viewProjectsController extends sideBarPaneController {
 
     @FXML
@@ -103,7 +105,7 @@ public class viewProjectsController extends sideBarPaneController {
             filtered.add(p);
         }
 
-        utils.showProjectCards(filtered, projectContainer);
+        utils.showProjectCards((ArrayList<projects>) filtered, projectContainer);
     }
 
     private String safeLower(String s) {

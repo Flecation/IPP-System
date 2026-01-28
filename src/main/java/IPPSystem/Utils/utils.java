@@ -2,6 +2,8 @@ package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
+import IPPSystem.Models.workItems;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -135,4 +137,9 @@ public class utils {
             switchPage.getInstance(null).loadProjects(projects, containerPane);
         }
 
+        public static void viewUserInfo(users user){
+            switchPage.getInstance(null).viewUsersInfo(user);
+        }
+
 }
+
