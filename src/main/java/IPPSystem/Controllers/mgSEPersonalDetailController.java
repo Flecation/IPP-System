@@ -4,15 +4,19 @@ import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.utils;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class mgSEPersonalDetailController {
@@ -41,8 +45,6 @@ public class mgSEPersonalDetailController {
     @FXML
     private Label engineerName2;
 
-    @FXML
-    private Label engineerName3;
 
     @FXML
     private Label performancePercent;
@@ -54,10 +56,10 @@ public class mgSEPersonalDetailController {
     private HBox projectPane;
 
     @FXML
-    private Label status1;
+    private VBox otherEngineersPane;
 
     @FXML
-    private Label status2;
+    private Label status1;
 
     @FXML
     private Label workloadPercent;
@@ -80,8 +82,7 @@ public class mgSEPersonalDetailController {
 
         engineerName1.setText(engineer.getUserName());
         engineerName2.setText(engineer.getUserName());
-        engineerName3.setText(engineer.getUserName());
-        role.setText("Site Engineer");
+        role.setText("Engineer");
         Phone.setText(engineer.getUserPhone());
         Email.setText(engineer.getUserEmail());
         Address.setText(engineer.getUserAddress());
@@ -89,9 +90,10 @@ public class mgSEPersonalDetailController {
 
         String statusText = engineer.isActive() ? "Active" : "Inactive";
         status1.setText(statusText);
-        status2.setText(statusText);
+
 
         loadProjectCards();
+        loadOtherEngineers();
     }
 
     public void loadProjectCards() {
@@ -120,6 +122,37 @@ public class mgSEPersonalDetailController {
             }
         }
     }
+
+
+
+    public void loadOtherEngineers() {
+
+        otherEngineersPane.getChildren().clear();
+
+        ObservableList<users> users = (ObservableList<users>) database.getAllSupervisors();
+
+        System.out.println("Loading project cards...");
+
+        for (users user : users) {
+            try {
+                FXMLLoader loader =
+                        new FXMLLoader(getClass().getResource("/View/otherEngineers.fxml"));
+
+                Parent card = loader.load();
+
+                otherEngineersController controller = loader.getController();
+                controller.setOtherEngineer(user);
+
+                otherEngineersPane.getChildren().add(card);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 

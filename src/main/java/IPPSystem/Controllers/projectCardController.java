@@ -45,7 +45,11 @@ public class projectCardController {
         this.loadPane = pane;
         projectLocation.setText(p.getProjectLocation());
         duration.setText(p.getProjectDuration() + " Months");
+
         supervisorName.setText(p.getUserName());
+        System.out.println(p.getUserName());
+
+
         projectStatus.setText(p.getProjectStatus());
         projectType.setText(p.getProjectTypeName());
         projectName.setText(p.getProjectInstanceName());

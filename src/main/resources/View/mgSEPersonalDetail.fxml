@@ -23,7 +23,7 @@
                             </font>
                         </Label>
                   <Region prefHeight="100.0" prefWidth="578.0" HBox.hgrow="ALWAYS" />
-                  <Label text="Engineer List" HBox.hgrow="ALWAYS">
+                  <Label text="Others" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -31,7 +31,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Region minWidth="50.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                  <Region minWidth="50.0" prefHeight="48.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
                   <Circle fx:id="EngineerListToggle" fill="#7fb8b6" radius="24.0" stroke="WHITE" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
@@ -132,34 +132,12 @@
                      </StackPane.margin>
                      <children>
                         <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
-                           <content>
-                              <HBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="340.0" style="-fx-background-color: #dededede; -fx-border-radius: 10; -fx-background-radius: 10;">
-                                 <children>
-                                    <Circle fill="#7fb8b6" radius="32.0" stroke="WHITE" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
-                                    <Region prefHeight="70.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <VBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="178.0" spacing="8.0" HBox.hgrow="ALWAYS">
-                                       <children>
-                                          <Label fx:id="engineerName3" text="Hsu Myat Moe">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="status2" text="Active">
-                                             <font>
-                                                <Font size="10.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                                 </padding>
-                              </HBox>
-                           </content>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </padding>
+                           <content>
+                              <VBox fx:id="otherEngineersPane" prefHeight="243.0" prefWidth="298.0" spacing="8.0" />
+                           </content>
                         </ScrollPane>
                      </children>
                   </VBox>
@@ -199,7 +177,7 @@
                            </children>
                         </VBox>
                         <Region prefHeight="80.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="200.0" prefHeight="80.0" prefWidth="201.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="CENTER_LEFT" minHeight="80.0" prefHeight="80.0" prefWidth="621.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Email Address" wrapText="true">
                                  <font>
@@ -235,6 +213,9 @@
                            </children>
                         </VBox>
                      </children>
+                     <VBox.margin>
+                        <Insets top="16.0" />
+                     </VBox.margin>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
@@ -256,7 +237,7 @@
                            </children>
                         </VBox>
                         <Region prefHeight="43.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" prefHeight="80.0" prefWidth="307.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="CENTER_LEFT" minHeight="80.0" prefHeight="80.0" prefWidth="307.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Address" wrapText="true">
                                  <font>

@@ -3,6 +3,7 @@ package IPPSystem.DAO;
 import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -183,12 +184,12 @@ public class projectDatabase {
 
         List<projects> list = new ArrayList<>();
 
-        String sql = "SELECT ap.*, pt.typeName AS projectTypeName " +
+        String sql = "SELECT ap.*, ps.projectStatusName AS projectStatusName, pt.typeName AS projectTypeName " +
                 "FROM assignProjects ap " +
+                "LEFT JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId " +
                 "LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
                 "WHERE ap.supervisorId = ?";
 
-//        String sql = "SELECT * FROM assignProjects WHERE supervisoerId = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -198,8 +199,6 @@ public class projectDatabase {
             while (rs.next()) {
 
                 projects p = new projects();
-                System.out.println("Project found: " + rs.getString("projectInstanceName"));
-
                 p.setAssignProjectId(rs.getInt("assignProjectId"));
                 p.setProjectInstanceName(rs.getString("projectInstanceName"));
                 p.setProjectTypeName(rs.getString("projectTypeName"));
@@ -209,7 +208,7 @@ public class projectDatabase {
                 p.setTotalStories(rs.getDouble("totalStories"));
                 p.setTotalUnits(rs.getDouble("totalUnits"));
                 p.setProjectOverHeadCost(rs.getDouble("projectOverHeadCost"));
-                p.setProjectStatus(rs.getString("projectStatus"));
+                p.setProjectStatus(rs.getString("projectStatusName"));
 
                 list.add(p);
             }

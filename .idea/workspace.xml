@@ -5,20 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="c">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/projectCardByOne.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/otherEngineersController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/View/otherEngineers.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/projectCardByOne.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/projectCardByOne.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
