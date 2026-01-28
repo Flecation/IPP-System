@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 
 public class database {
 
@@ -98,6 +99,8 @@ public class database {
     public static ObservableList<projects> getAllProjects(){return projectDatabase.getAllProjects();}
 
     public  static  String currentAssignProject(int userId){return  projectDatabase.currentAssignProject(userId);}
+
+    public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId);}
 
 
 //    For the Status Require functions

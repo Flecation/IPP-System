@@ -19,7 +19,7 @@
                   <Insets />
                </HBox.margin>
                <font>
-                  <Font size="20.0" />
+                  <Font size="25.0" />
                </font>
             </Label>
             <Region prefHeight="27.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />

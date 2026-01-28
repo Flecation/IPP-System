@@ -4,26 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="Merge branch 'main' of https://github.com/Flecation/IPP-System&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="c">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/View/projectCardByOne.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEListInfo.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSERow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSERow.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/dotenv.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/dotenv.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Main/HelloApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Main/HelloApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Main/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Main/Launcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +48,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {}
@@ -499,7 +493,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768465960966</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="c">
+      <option name="closed" value="true" />
+      <created>1769567204797</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1769567204797</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -519,7 +521,8 @@
     <MESSAGE value="css changes" />
     <MESSAGE value="login Changes" />
     <MESSAGE value="navigationPane" />
-    <option name="LAST_COMMIT_MESSAGE" value="navigationPane" />
+    <MESSAGE value="c" />
+    <option name="LAST_COMMIT_MESSAGE" value="c" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

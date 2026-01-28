@@ -105,7 +105,7 @@ public class viewProjectsController extends sideBarPaneController {
             filtered.add(p);
         }
 
-        utils.showProjectCards((ArrayList<projects>) filtered, projectContainer);
+        utils.showProjectCards((ObservableList<projects>) filtered, projectContainer);
     }
 
     private String safeLower(String s) {

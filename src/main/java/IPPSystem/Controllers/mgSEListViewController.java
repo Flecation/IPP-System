@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.util.*;
@@ -37,6 +38,13 @@ public class mgSEListViewController {
 
     @FXML
     private Button paginationPrevBtn;
+
+    private StackPane loadPane;
+
+
+    public void setLoadPane(StackPane pane){
+        this.loadPane = pane;
+    }
 
     public List<users> allEngineers = new ArrayList<>();
 
@@ -178,9 +186,34 @@ public class mgSEListViewController {
 
 
 
-    private void openPersonalInfoPage(users engineer ) {
-        utils.viewUserInfo(engineer);
+//    private void openPersonalInfoPage(users engineer ) {
+//        utils.viewUserInfo(engineer);
+//
+//    }
+
+    private void openPersonalInfoPage(users engineer) {
+        utils.viewUserInfo(engineer, loadPane);
     }
+
+
+
+
+//    private void openPersonalInfoPage(users engineer) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/IPPSystem/Views/mgSEPersonalDetail.fxml"));
+//            Parent page = loader.load();
+//
+//            mgSEPersonalDetailController controller = loader.getController();
+//            controller.setEngineer(engineer);     // send engineer
+//            controller.setLoadPane(loadPane);     // send main pane ⭐
+//
+//            loadPane.getChildren().clear();
+//            loadPane.getChildren().add(page);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 

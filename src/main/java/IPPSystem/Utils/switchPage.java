@@ -325,6 +325,7 @@ public class switchPage extends utils {
                     loader.getController();
 
             controller.setEngineer(user);
+            controller.setLoadPane(loadPane);
 
             loadPane.getChildren().setAll(page);
 

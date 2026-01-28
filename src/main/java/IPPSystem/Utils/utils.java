@@ -1,6 +1,7 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Constants.notificationType;
+import IPPSystem.Controllers.mgSEPersonalDetailController;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
@@ -188,7 +189,29 @@ public class utils {
         switchPage.getInstance(a).openWorkItemDetails(items);
     }
 
-    public static void viewUserInfo(users user){
-        switchPage.getInstance(null).viewUsersInfo(user);
+//    public static void viewUserInfo(users user){
+//        switchPage.getInstance(null).viewUsersInfo(user);
+//    }
+
+    public static void viewUserInfo(users user, StackPane loadPane){
+        switchPage.getInstance(loadPane).viewUsersInfo(user);
     }
+
+
+//    public static void viewUserInfo(users engineer, StackPane loadPane) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/IPPSystem/Views/mgSEPersonalDetail.fxml"));
+//            Parent page = loader.load();
+//
+//            mgSEPersonalDetailController controller = loader.getController();
+//            controller.setEngineer(engineer);
+//            controller.setLoadPane(loadPane);
+//
+//            loadPane.getChildren().setAll(page);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }

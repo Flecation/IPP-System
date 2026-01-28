@@ -11,7 +11,7 @@ public class userDatabase {
 
     private static Connection con;
 
-        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto;
+        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto,userAddress;
         private static int userId;
         private static boolean isActive;
         private static java.util.Date userDOB,userStartDate,userEndDate;
@@ -42,7 +42,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
+                userAddress = rs.getString("userAddress");
+
+                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -67,7 +69,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
+                userAddress = rs.getString("userAddress");
+
+                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
                 ls.add(users);
             }
         } catch (Exception e) {
@@ -95,7 +99,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto));
+                userAddress = rs.getString("userAddress");
+
+                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -115,7 +121,6 @@ public class userDatabase {
                 users = new users(
                         rs.getInt("userId"),
                         rs.getString("userEmail"),
-                        rs.getString("userEmail"),
                         rs.getString("userPhone"),
                         rs.getString("userRole"),
                         rs.getDate("userDOB"),
@@ -123,8 +128,10 @@ public class userDatabase {
                         rs.getDate("userEndDate"),
                         rs.getBoolean("isActive"),
                         rs.getString("userPassword"),
-                        rs.getString("userPhoto")
-                );
+                        rs.getString("userPhoto"),
+                        rs.getString("userAddress")
+
+                        );
             }else {
                 return null;
             }

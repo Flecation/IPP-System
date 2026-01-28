@@ -1,63 +1,126 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
-import javafx.event.ActionEvent;
+import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+
+import java.util.List;
 
 public class mgSEPersonalDetailController {
 
     @FXML
-    private TextArea address;
+    private Label role;
 
     @FXML
-    private DatePicker dob;
+    private Label Address;
 
     @FXML
-    private TextField email;
+    private Label Email;
 
     @FXML
-    private Button personalBtn;
+    private Circle EngineerListToggle;
 
     @FXML
-    private StackPane personalInfoBodyPane;
+    private Label Phone;
 
     @FXML
-    private TextField phone;
+    private Label dob;
 
     @FXML
-    private Button projectBtn;
+    private Label engineerName1;
 
     @FXML
-    private TextField projectType;
+    private Label engineerName2;
+
+    @FXML
+    private Label engineerName3;
+
+    @FXML
+    private Label performancePercent;
+
+    @FXML
+    private ProgressBar performanceProgress;
+
+    @FXML
+    private HBox projectPane;
+
+    @FXML
+    private Label status1;
+
+    @FXML
+    private Label status2;
+
+    @FXML
+    private Label workloadPercent;
+
+    @FXML
+    private ProgressBar workloadProgress;
+
+    private  users engineer;
+    private StackPane loadPane;
 
 
-        public void setEngineer(users engineer) {
+    public void setLoadPane(StackPane pane){
+        this.loadPane = pane;
+    }
 
-            email.setText(engineer.getUserEmail());
-            phone.setText(engineer.getUserPhone());
-//            address.setText(engineer.getUserAddress());
 
-            projectType.setText(
-                    database.currentAssignProject(engineer.getUserId())
-            );
+
+    public void setEngineer(users engineer) {
+        this.engineer = engineer;
+
+        engineerName1.setText(engineer.getUserName());
+        engineerName2.setText(engineer.getUserName());
+        engineerName3.setText(engineer.getUserName());
+        role.setText("Site Engineer");
+        Phone.setText(engineer.getUserPhone());
+        Email.setText(engineer.getUserEmail());
+        Address.setText(engineer.getUserAddress());
+        dob.setText(engineer.getUserDOB().toString());
+
+        String statusText = engineer.isActive() ? "Active" : "Inactive";
+        status1.setText(statusText);
+        status2.setText(statusText);
+
+        loadProjectCards();
+    }
+
+    public void loadProjectCards() {
+
+        projectPane.getChildren().clear();
+
+        List<projects> projects = database.getProjectsByEngineer(engineer.getUserId());
+        System.out.println("Loading project cards...");
+
+        for (projects project : projects) {
+            try {
+                FXMLLoader loader =
+                        new FXMLLoader(getClass().getResource("/View/projectCardByOne.fxml"));
+
+                Parent card = loader.load();
+
+                projectCardController controller = loader.getController();
+                controller.setData(project, loadPane);
+
+                projectPane.getChildren().add(card);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
-
-    @FXML
-    void clickPersonal(ActionEvent event) {
-
     }
 
-    @FXML
-    void clickProjects(ActionEvent event) {
 
-    }
 
 }

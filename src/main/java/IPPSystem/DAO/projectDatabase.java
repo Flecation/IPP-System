@@ -8,6 +8,8 @@ import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class projectDatabase {
     private static Connection con;
@@ -173,5 +175,51 @@ public class projectDatabase {
 
         return null; // return null if no project found
     }
+
+
+    public static List<projects> getProjectsByEngineer(int engineerId) {
+
+        System.out.println("Engineer ID: " + engineerId);
+
+        List<projects> list = new ArrayList<>();
+
+        String sql = "SELECT ap.*, pt.typeName AS projectTypeName " +
+                "FROM assignProjects ap " +
+                "LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
+                "WHERE ap.supervisorId = ?";
+
+//        String sql = "SELECT * FROM assignProjects WHERE supervisoerId = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, engineerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                projects p = new projects();
+                System.out.println("Project found: " + rs.getString("projectInstanceName"));
+
+                p.setAssignProjectId(rs.getInt("assignProjectId"));
+                p.setProjectInstanceName(rs.getString("projectInstanceName"));
+                p.setProjectTypeName(rs.getString("projectTypeName"));
+                p.setProjectLocation(rs.getString("projectLocation"));
+                p.setProjectArea(rs.getDouble("projectArea"));
+                p.setProjectHeight(rs.getDouble("projectHeight"));
+                p.setTotalStories(rs.getDouble("totalStories"));
+                p.setTotalUnits(rs.getDouble("totalUnits"));
+                p.setProjectOverHeadCost(rs.getDouble("projectOverHeadCost"));
+                p.setProjectStatus(rs.getString("projectStatus"));
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
 }
