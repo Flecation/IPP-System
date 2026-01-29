@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" minWidth="-Infinity" pannable="true" vvalue="1.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEPersonalDetailController">
+<ScrollPane fitToWidth="true" minWidth="-Infinity" pannable="true" prefHeight="1224.0" prefWidth="1222.0" vvalue="1.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEPersonalDetailController">
    <content>
       <VBox minWidth="675.0" prefHeight="1000.0" prefWidth="1220.0" style="-fx-background-color: #ffffff;">
          <children>
@@ -44,7 +44,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="100.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <Label minWidth="150.0" text="Workload" wrapText="true" HBox.hgrow="ALWAYS">
                                        <font>
@@ -59,7 +59,7 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <ProgressBar fx:id="workloadProgress" prefHeight="100.0" prefWidth="400.0" progress="0.65" VBox.vgrow="ALWAYS" />
+                              <ProgressBar fx:id="workloadProgress" prefHeight="60.0" prefWidth="400.0" progress="0.65" VBox.vgrow="ALWAYS" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -68,7 +68,7 @@
                         <Region prefHeight="100.0" prefWidth="50.0" HBox.hgrow="ALWAYS" />
                         <VBox alignment="CENTER" prefHeight="100.0" prefWidth="400.0" spacing="10.0">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="400.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="400.0">
                                  <children>
                                     <Label minWidth="150.0" text="Performance" wrapText="true" HBox.hgrow="ALWAYS">
                                        <font>
@@ -83,7 +83,7 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <ProgressBar fx:id="performanceProgress" prefHeight="100.0" prefWidth="400.0" progress="0.65" style="-fx-background-color: #7fb8b6;" VBox.vgrow="ALWAYS" />
+                              <ProgressBar fx:id="performanceProgress" prefHeight="60.0" prefWidth="400.0" progress="0.65" style="-fx-background-color: #7fb8b6;" VBox.vgrow="ALWAYS" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -126,17 +126,17 @@
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>
                   </HBox>
-                  <VBox alignment="CENTER_RIGHT" maxHeight="290.0" maxWidth="340.0" minWidth="300.0" prefHeight="290.0" prefWidth="340.0" style="-fx-background-color: #f4f4f4f4; -fx-background-radius: 10; -fx-border-radius: 10;" StackPane.alignment="TOP_RIGHT">
+                  <VBox alignment="CENTER_RIGHT" maxHeight="290.0" maxWidth="340.0" minWidth="350.0" prefHeight="290.0" prefWidth="340.0" style="-fx-background-color: #f4f4f4f4; -fx-background-radius: 10; -fx-border-radius: 10;" StackPane.alignment="TOP_RIGHT">
                      <StackPane.margin>
                         <Insets top="28.0" />
                      </StackPane.margin>
                      <children>
-                        <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" style="-fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </padding>
                            <content>
-                              <VBox fx:id="otherEngineersPane" prefHeight="243.0" prefWidth="298.0" spacing="8.0" />
+                              <VBox fx:id="otherEngineersPane" fillWidth="false" prefHeight="243.0" spacing="8.0" />
                            </content>
                         </ScrollPane>
                      </children>
@@ -159,7 +159,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
-                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="400.0" prefHeight="80.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="400.0" prefHeight="80.0" prefWidth="414.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label lineSpacing="24.0" text="Name">
                                  <font>
@@ -176,8 +176,8 @@
                               </Label>
                            </children>
                         </VBox>
-                        <Region prefHeight="80.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER_LEFT" minHeight="80.0" prefHeight="80.0" prefWidth="621.0" HBox.hgrow="ALWAYS">
+                        <Region minWidth="40.0" prefHeight="80.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Email Address" wrapText="true">
                                  <font>
@@ -236,8 +236,8 @@
                               </Label>
                            </children>
                         </VBox>
-                        <Region prefHeight="43.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER_LEFT" minHeight="80.0" prefHeight="80.0" prefWidth="307.0" HBox.hgrow="ALWAYS">
+                        <Region prefHeight="80.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" prefHeight="80.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Address" wrapText="true">
                                  <font>
@@ -512,6 +512,14 @@
                   <Insets top="40.0" />
                </VBox.margin>
             </VBox>
+            <HBox alignment="CENTER" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: pink;" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="32.0" />
+               </VBox.margin>
+               <children>
+                  <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css" />
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -109,4 +109,15 @@ public class database {
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
 
+    //    For project detail
+    
+    // Current Project Workload
+    public static double getWorkload(int userId) {
+        return calculationDatabase.getWorkload(userId);
+    }
+
+        // Historical Performance
+    public static double getPerformance(int userId) {
+        return calculationDatabase.getHistoryPerformance(userId);
+    }
 }
