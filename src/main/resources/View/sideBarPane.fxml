@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<StackPane styleClass="root" stylesheets="@../CSS/sideBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.sideBarPaneController">
+<StackPane styleClass="root" stylesheets="@../../../../../Downloads/CSS/sideBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.sideBarPaneController">
    <children>
       <BorderPane fx:id="basePane" minHeight="200.0" minWidth="400.0" StackPane.alignment="CENTER">
          <top>
@@ -28,8 +29,8 @@
                         <Insets />
                      </HBox.margin>
                      <children>
-                        <Label fx:id="newTabBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
-                        <Label fx:id="reloadBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
+                        <Label fx:id="newTabBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" text="↗" HBox.hgrow="NEVER" />
+                        <Label fx:id="reloadBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" text="⟳" HBox.hgrow="NEVER" />
                      </children>
                   </HBox>
                   <HBox fx:id="directoryViewBox" alignment="CENTER" maxHeight="45.0" minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS">
@@ -45,8 +46,8 @@
                         <HBox fx:id="searchViewBox" alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="0.0" minWidth="0.0">
                            <children>
                               <TextField fx:id="searchTextField" maxHeight="35.0" maxWidth="200.0" minHeight="35.0" minWidth="200.0" />
-                              <Label fx:id="searchClearBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
-                              <Label fx:id="searchBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
+                              <Label fx:id="searchClearBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" text="×" HBox.hgrow="NEVER" />
+                              <Label fx:id="searchBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" text="🔍" HBox.hgrow="NEVER" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -60,7 +61,7 @@
                         <Circle fx:id="toggleCircle" fill="DODGERBLUE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" translateX="-10.0" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
-                  <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER">
+                  <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" text="🕭" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets top="2.0" />
                      </HBox.margin>
@@ -138,17 +139,21 @@
                   </VBox>
                   <VBox fx:id="sideBar" maxWidth="170.0" minWidth="170.0" StackPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="showIconSideBtn" alignment="CENTER_RIGHT" maxHeight="30.0" maxWidth="170.0" minHeight="30.0" minWidth="170.0" text="◀">
+                        <Label fx:id="showIconSideBtn" alignment="CENTER_RIGHT" maxHeight="20.0" maxWidth="170.0" minHeight="20.0" minWidth="170.0" text="◀">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <HBox fx:id="userInfoCard" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" spacing="5.0">
+                        <HBox fx:id="userInfoCard" maxHeight="100.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" spacing="5.0">
                            <children>
-                              <Circle fx:id="imageCircle" fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" HBox.hgrow="ALWAYS">
+                              <ImageView fx:id="userViewImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                                 <image>
+                                    <Image url="@../../../../../Downloads/Photos/projectFirstLogo.jpg" />
+                                 </image>
                                  <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin></Circle>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
                               <VBox alignment="CENTER_LEFT" spacing="1.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label fx:id="roleViewText" text="Manager" wrapText="true" VBox.vgrow="ALWAYS" />
@@ -161,34 +166,34 @@
                            </VBox.margin>
                         </HBox>
                         <Region maxHeight="50.0" VBox.vgrow="ALWAYS" />
-                        <HBox fx:id="dashboardViewBtn" alignment="CENTER" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" spacing="5.0" VBox.vgrow="NEVER">
+                        <HBox fx:id="dashboardViewBtn" alignment="CENTER" maxHeight="50.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" spacing="5.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label fx:id="dashboardIcon" styleClass="icons" wrapText="true" />
+                              <Label styleClass="icons" text="🏠" wrapText="true" />
                               <Label minWidth="80.0" text="DashBoard" wrapText="true" />
                            </children>
                         </HBox>
-                        <HBox fx:id="projectViewBtn" alignment="CENTER" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
+                        <HBox fx:id="projectViewBtn" alignment="CENTER" maxHeight="50.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label fx:id="projectIcon" styleClass="icons" wrapText="true" />
+                              <Label styleClass="icons" text="📁" wrapText="true" />
                               <Label minWidth="80.0" text="Project" wrapText="true" />
                            </children>
                         </HBox>
-                        <HBox fx:id="userViewBtn" alignment="CENTER" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
+                        <HBox fx:id="userViewBtn" alignment="CENTER" maxHeight="50.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label fx:id="userIcon" styleClass="icons" wrapText="true" />
+                              <Label styleClass="icons" text="👨‍💻" wrapText="true" />
                               <Label fx:id="userViewLbl" minWidth="80.0" text="Supervisors" wrapText="true" />
                            </children>
                         </HBox>
-                        <HBox fx:id="reportViewBtn" alignment="CENTER" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
+                        <HBox fx:id="reportViewBtn" alignment="CENTER" maxHeight="50.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label fx:id="reportIcon" styleClass="icons" wrapText="true" />
+                              <Label fx:id="ReportBtn" styleClass="icons" text="📋" wrapText="true" />
                               <Label minWidth="80.0" text="Report" wrapText="true" />
                            </children>
                         </HBox>
                         <Region VBox.vgrow="ALWAYS" />
-                        <HBox fx:id="settingViewBtn" alignment="CENTER" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                        <HBox fx:id="settingViewBtn" alignment="CENTER" maxHeight="50.0" maxWidth="170.0" minHeight="50.0" minWidth="170.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <Label fx:id="settingIcon" styleClass="icons" wrapText="true" />
+                              <Label styleClass="icons" text="⚒" wrapText="true" />
                               <Label minWidth="80.0" text="Setting" wrapText="true" />
                            </children>
                            <VBox.margin>

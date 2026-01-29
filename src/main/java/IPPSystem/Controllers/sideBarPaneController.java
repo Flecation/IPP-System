@@ -26,9 +26,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +38,10 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private HBox backBtn;
+
+    @FXML
+    private Label ReportBtn;
+
 
     @FXML
     private Region bottomRegion;
@@ -128,9 +129,6 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private Label imageEditBtn;
-
-    @FXML
-    private Circle imageCircle;
 
     @FXML
     private ImageView imageIconBtn;
@@ -310,9 +308,6 @@ public class sideBarPaneController extends navigationPaneController{
     private Button addNewExitBtn;
 
     @FXML
-    private Label dashboardIcon,projectIcon,userIcon,reportIcon,settingIcon;
-
-    @FXML
     private VBox createLaborPane,createProjectPane,createReportPane;
 
     private users loginUser = user;
@@ -324,28 +319,6 @@ public class sideBarPaneController extends navigationPaneController{
     public void initialize() {
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
-        FontIcon dashBoard = new FontIcon(FontAwesomeSolid.DESKTOP);
-        FontIcon project = new FontIcon(FontAwesomeSolid.FOLDER);
-        FontIcon user = new FontIcon(FontAwesomeSolid.USER);
-        FontIcon report = new FontIcon(FontAwesomeSolid.CLIPBOARD);
-        FontIcon setting = new FontIcon(FontAwesomeSolid.SLIDERS_H);
-        FontIcon search = new FontIcon(FontAwesomeSolid.SEARCH);
-        FontIcon cancelS = new FontIcon(FontAwesomeSolid.TIMES);
-        FontIcon reload = new FontIcon(FontAwesomeSolid.ARROW_CIRCLE_RIGHT);
-        FontIcon alert = new FontIcon(FontAwesomeSolid.BELL);
-//        FontIcon back = new FontIcon(FontAwesomeSolid.)
-        dashboardIcon.setGraphic(dashBoard);
-        projectIcon.setGraphic(project);
-        userIcon.setGraphic(user);
-        reportIcon.setGraphic(report);
-        settingIcon.setGraphic(setting);
-
-
-        dashBoard.getStyleClass().add("icon-style");
-        project.getStyleClass().add("icon-style");
-        user.getStyleClass().add("icon-style");
-        report.getStyleClass().add("icon-style");
-        setting.getStyleClass().add("icon-style");
 
 
         utils.setFloatTextFieldStyle(createAccPhoneLbl,createAccPhoneTxt);
@@ -376,225 +349,225 @@ public class sideBarPaneController extends navigationPaneController{
         toggleCircle.setOnMouseClicked(event ->translateCircle(toggleCircle,settingToggleCircle) );
 
 
-    populateUserInfo();
+        populateUserInfo();
 
-    // Set up the icons of the names
-    utils.setToolTip(projectIconBtn,"Project View");
-    utils.setToolTip(dashboardIconBtn,"DashBoard View");
-    if (loginUser != null) {
-        String userBtn = loginUser.getUserRole().equals(role.MANAGER.toString()) ? "Supervisor View" : "Labor View";
-        utils.setToolTip(userIconBtn, userBtn);
+        // Set up the icons of the names
+        utils.setToolTip(projectIconBtn,"Project View");
+        utils.setToolTip(dashboardIconBtn,"DashBoard View");
+        if (loginUser != null) {
+            String userBtn = loginUser.getUserRole().equals(role.MANAGER.toString()) ? "Supervisor View" : "Labor View";
+            utils.setToolTip(userIconBtn, userBtn);
+        }
+        utils.setToolTip(reportIconBtn,"Report View");
+        utils.setToolTip(profileViewIconBtn,"user Profile");
+        utils.setToolTip(logoutIconBtn,"Logout");
+        utils.setToolTip(iconBackBtn,"Back");
+        utils.setToolTip(changePasswordIconBtn,"Change Password");
+        utils.setToolTip(settingIconBtn,"setting");
+        utils.setToolTip(darkIcon,"dark mode");
+        utils.setToolTip(lightIcon,"light mode");
+
+        reloadBtn.setOnMouseClicked(e->data.reload());
+
+        setFirstPage();
     }
-    utils.setToolTip(reportIconBtn,"Report View");
-    utils.setToolTip(profileViewIconBtn,"user Profile");
-    utils.setToolTip(logoutIconBtn,"Logout");
-    utils.setToolTip(iconBackBtn,"Back");
-    utils.setToolTip(changePasswordIconBtn,"Change Password");
-    utils.setToolTip(settingIconBtn,"setting");
-    utils.setToolTip(darkIcon,"dark mode");
-    utils.setToolTip(lightIcon,"light mode");
 
-    reloadBtn.setOnMouseClicked(e->data.reload());
-
-    setFirstPage();
-}
-
-private void setFirstPage(){
-    utils.openFxml("viewProjects.fxml", loadPane);
-
-}
-
-private void setupNavigationHandlers() {
-    // Dashboard navigation
-    dashboardViewBtn.setOnMouseClicked(e -> {
-        utils.openFxml("dashboard.fxml", loadPane);
-        linkButton.setTabButtonName("Dashboard");
-    });
-    dashboardIconBtn.setOnMouseClicked(e -> {
-        utils.openFxml("dashboard.fxml", loadPane);
-//        linkButton.setTabButtonName();
-    });
-
-    // Project navigation
-    projectViewBtn.setOnMouseClicked(e -> {
+    private void setFirstPage(){
         utils.openFxml("viewProjects.fxml", loadPane);
-        linkButton.setTabButtonName("Projects");
-    });
-    projectIconBtn.setOnMouseClicked(e -> {
-        utils.openFxml("viewProjects.fxml", loadPane);
+
+    }
+
+    private void setupNavigationHandlers() {
+        // Dashboard navigation
+        dashboardViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml", loadPane);
+            linkButton.setTabButtonName("Dashboard");
+        });
+        dashboardIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml", loadPane);
 //        linkButton.setTabButtonName();
-    });
+        });
 
-    // User navigation
-    userViewBtn.setOnMouseClicked(e -> {
-        utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
+        // Project navigation
+        projectViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("viewProjects.fxml", loadPane);
+            linkButton.setTabButtonName("Projects");
+        });
+        projectIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("viewProjects.fxml", loadPane);
+//        linkButton.setTabButtonName();
+        });
 
-    });
-    userIconBtn.setOnMouseClicked(e -> {
-        System.out.println();
-    });
+        // User navigation
+        userViewBtn.setOnMouseClicked(e -> {
+            System.out.println();
 
-    // Report navigation
-    reportViewBtn.setOnMouseClicked(e -> {
-//        System.out.println();
-        utils.openFxml("SupervisorReport.fxml", loadPane);
-        linkButton.setTabButtonName("Report");
+        });
+        userIconBtn.setOnMouseClicked(e -> {
+            System.out.println();
+        });
 
-    });
-    reportIconBtn.setOnMouseClicked(e -> {
-        System.out.println();
+        // Report navigation
+        reportViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("SupervisorReport.fxml", loadPane);
+            linkButton.setTabButtonName("Report");
 
-    });
-}
+        });
+        reportIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("SupervisorReport.fxml", loadPane);
+            linkButton.setTabButtonName("Report");
 
-private void setupSidebarToggleHandlers() {
-    showIconSideBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
-    showSideBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
-}
-
-private void setupSettingsHandlers() {
-    settingViewBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
-    settingIconBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
-
-    backBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
-    iconBackBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
-
-    showIconSettingBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
-    showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
-}
-
-private void setupProfileHandlers() {
-    if (profileViewBtn != null) {
-        profileViewBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
-    }
-    if (profileViewIconBtn != null) {
-        profileViewIconBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
-    }
-
-    if (revertBtn != null) {
-        revertBtn.setOnMouseClicked(e -> {
-            populateUserInfo();
-            showSidebar(sideBar, 200);
         });
     }
 
-    if (confirmBtn != null) {
-        confirmBtn.setOnMouseClicked(e -> {
-            applyProfileEdits();
-            showSidebar(sideBar, 200);
-        });
-    }
-}
-
-private void showSidebar(VBox target, double width) {
-    setBoxVisible(sideBar, target == sideBar);
-    setBoxVisible(iconSideBar, target == iconSideBar);
-    setBoxVisible(settingBar, target == settingBar);
-    setBoxVisible(iconSettingBar, target == iconSettingBar);
-    setBoxVisible(profileBox, target == profileBox);
-
-    sideBarStackPane.setMinWidth(width);
-    sideBarStackPane.setPrefWidth(width);
-    sideBarStackPane.setMaxWidth(width);
-}
-
-private static void setBoxVisible(VBox box, boolean visible) {
-    if (box == null) {
-        return;
-    }
-    box.setVisible(visible);
-    box.setManaged(visible);
-}
-
-private void populateUserInfo() {
-    if (loginUser == null) {
-        return;
+    private void setupSidebarToggleHandlers() {
+        showIconSideBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
+        showSideBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
     }
 
-    if (nameViewText != null) {
-        nameViewText.setText(loginUser.getUserName());
+    private void setupSettingsHandlers() {
+        settingViewBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
+        settingIconBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
+
+        backBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
+        iconBackBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
+
+        showIconSettingBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
+        showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
     }
 
-    if (roleViewText != null) {
-        roleViewText.setText(loginUser.getUserRole());
+    private void setupProfileHandlers() {
+        if (profileViewBtn != null) {
+            profileViewBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
+        }
+        if (profileViewIconBtn != null) {
+            profileViewIconBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
+        }
+
+        if (revertBtn != null) {
+            revertBtn.setOnMouseClicked(e -> {
+                populateUserInfo();
+                showSidebar(sideBar, 200);
+            });
+        }
+
+        if (confirmBtn != null) {
+            confirmBtn.setOnMouseClicked(e -> {
+                applyProfileEdits();
+                showSidebar(sideBar, 200);
+            });
+        }
     }
 
-    if (userNameLbl != null) {
-        userNameLbl.setText(loginUser.getUserName());
+    private void showSidebar(VBox target, double width) {
+        setBoxVisible(sideBar, target == sideBar);
+        setBoxVisible(iconSideBar, target == iconSideBar);
+        setBoxVisible(settingBar, target == settingBar);
+        setBoxVisible(iconSettingBar, target == iconSettingBar);
+        setBoxVisible(profileBox, target == profileBox);
+
+        sideBarStackPane.setMinWidth(width);
+        sideBarStackPane.setPrefWidth(width);
+        sideBarStackPane.setMaxWidth(width);
     }
 
-    if (userRoleLbl != null) {
-        userRoleLbl.setText(loginUser.getUserRole());
+    private static void setBoxVisible(VBox box, boolean visible) {
+        if (box == null) {
+            return;
+        }
+        box.setVisible(visible);
+        box.setManaged(visible);
     }
 
-    if (userDobLbl != null && loginUser.getUserDOB() != null) {
-        userDobLbl.setText(new SimpleDateFormat("dd-MM-yyyy").format(loginUser.getUserDOB()));
+    private void populateUserInfo() {
+        if (loginUser == null) {
+            return;
+        }
+
+        if (nameViewText != null) {
+            nameViewText.setText(loginUser.getUserName());
+        }
+
+        if (roleViewText != null) {
+            roleViewText.setText(loginUser.getUserRole());
+        }
+
+        if (userNameLbl != null) {
+            userNameLbl.setText(loginUser.getUserName());
+        }
+
+        if (userRoleLbl != null) {
+            userRoleLbl.setText(loginUser.getUserRole());
+        }
+
+        if (userDobLbl != null && loginUser.getUserDOB() != null) {
+            userDobLbl.setText(new SimpleDateFormat("dd-MM-yyyy").format(loginUser.getUserDOB()));
+        }
+
+        if (userEmailTxtField != null) {
+            userEmailTxtField.setText(loginUser.getUserEmail() == null ? "" : loginUser.getUserEmail());
+        }
+
+        if (userPhoneTxtField != null) {
+            userPhoneTxtField.setText(loginUser.getUserPhone() == null ? "" : loginUser.getUserPhone());
+        }
     }
 
-    if (userEmailTxtField != null) {
-        userEmailTxtField.setText(loginUser.getUserEmail() == null ? "" : loginUser.getUserEmail());
+    private void applyProfileEdits() {
+        if (loginUser == null) {
+            return;
+        }
+
+        if (userEmailTxtField != null) {
+            loginUser.setUserEmail(userEmailTxtField.getText());
+        }
+        if (userPhoneTxtField != null) {
+            loginUser.setUserPhone(userPhoneTxtField.getText());
+        }
+
+        populateUserInfo();
     }
 
-    if (userPhoneTxtField != null) {
-        userPhoneTxtField.setText(loginUser.getUserPhone() == null ? "" : loginUser.getUserPhone());
-    }
-}
-
-private void applyProfileEdits() {
-    if (loginUser == null) {
-        return;
-    }
-
-    if (userEmailTxtField != null) {
-        loginUser.setUserEmail(userEmailTxtField.getText());
-    }
-    if (userPhoneTxtField != null) {
-        loginUser.setUserPhone(userPhoneTxtField.getText());
+    private void translateCircle(Circle circle, Circle circle1) {
+        TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
+        TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
+        if (themeToggle.isDarkMode()) {
+            moving.setToX(-10);
+            moving1.setToX(-10);
+        } else {
+            moving.setToX(10);
+            moving1.setToX(10);
+        }
+        moving.setOnFinished(event -> utils.changeTheme());
+        ParallelTransition run = new ParallelTransition(moving1, moving);
+        run.play();
     }
 
-    populateUserInfo();
-}
+    public void addNew(String text) {
+        if (text.equalsIgnoreCase("project")) {
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(true);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(false);
 
-private void translateCircle(Circle circle, Circle circle1) {
-    TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
-    TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
-    if (themeToggle.isDarkMode()) {
-        moving.setToX(-10);
-        moving1.setToX(-10);
-    } else {
-        moving.setToX(10);
-        moving1.setToX(10);
+        } else if (text.equalsIgnoreCase("user")) {
+            createAccPane.setVisible(true);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(false);
+        } else if (text.equalsIgnoreCase("labor")) {
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(false);
+            createLaborPane.setVisible(true);
+        } else if (text.equalsIgnoreCase("report")) {
+            createAccPane.setVisible(false);
+            createProjectPane.setVisible(false);
+            createReportPane.setVisible(true);
+            createLaborPane.setVisible(false);
+        } else {
+            return;
+        }
     }
-    moving.setOnFinished(event -> utils.changeTheme());
-    ParallelTransition run = new ParallelTransition(moving1, moving);
-    run.play();
-}
-
-public void addNew(String text) {
-    if (text.equalsIgnoreCase("project")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(true);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(false);
-
-    } else if (text.equalsIgnoreCase("user")) {
-        createAccPane.setVisible(true);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(false);
-    } else if (text.equalsIgnoreCase("labor")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(true);
-    } else if (text.equalsIgnoreCase("report")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(true);
-        createLaborPane.setVisible(false);
-    } else {
-        return;
-    }
-}
 
 }

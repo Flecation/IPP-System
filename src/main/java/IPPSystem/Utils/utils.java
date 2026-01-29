@@ -55,9 +55,9 @@ public class utils {
 
         showPasswordCheckBox.setOnAction(event -> {
             if(showPasswordCheckBox.isSelected()){
-               showPasswordField.setText(hidePasswordField.getText());
-               hidePasswordField.setVisible(false);
-               showPasswordField.setVisible(true);
+                showPasswordField.setText(hidePasswordField.getText());
+                hidePasswordField.setVisible(false);
+                showPasswordField.setVisible(true);
 
             }else{
                 hidePasswordField.setText(showPasswordField.getText());
