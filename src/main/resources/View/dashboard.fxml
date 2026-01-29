@@ -25,7 +25,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.dashboardController">
+<StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.dashboardController">
     <children>
         <BorderPane fx:id="oneProjectView" maxHeight="750.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;">
             <center>
@@ -730,7 +730,7 @@
                 </VBox>
             </center>
         </BorderPane>
-        <BorderPane fx:id="allProjectView" maxHeight="1200.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" visible="false">
+        <BorderPane fx:id="allProjectView" maxHeight="1200.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0">
             <center>
                 <VBox maxHeight="849.0" maxWidth="1120.0" minHeight="800.0" minWidth="1120.0" spacing="10.0" style="-fx-background-color: #d3d3d3;" BorderPane.alignment="CENTER">
                     <children>
@@ -1170,8 +1170,8 @@
                                                         <Insets left="10.0" />
                                                     </padding>
                                                     <children>
-                                                        <Circle fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" />
-                                                        <Circle fx:id="circleRevenue" fill="DODGERBLUE" radius="80.0" rotate="-80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
+                                                        <Circle fx:id="circleRevenue" fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" />
+                                                        <Circle fx:id="circleRevenueProgress" fill="DODGERBLUE" radius="80.0" rotate="-80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
                                                     </children>
                                                 </StackPane>
                                                 <HBox alignment="CENTER" prefHeight="72.0" prefWidth="355.0">
@@ -1209,7 +1209,7 @@
                                                     </padding>
                                                     <children>
                                                         <Circle fx:id="circleCost" fill="DODGERBLUE" radius="79.0" stroke="#c3c3c3" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" />
-                                                        <Circle fx:id="circleCost" fill="DODGERBLUE" radius="80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
+                                                        <Circle fx:id="circleCostProgress" fill="DODGERBLUE" radius="80.0" stroke="#3460ff" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15; -fx-stroke-dash-array: 360;" />
                                                     </children>
                                                 </StackPane>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
