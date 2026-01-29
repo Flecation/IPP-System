@@ -76,6 +76,7 @@ public class mgSEPersonalDetailController {
     private users engineer;
     private StackPane loadPane;
 
+
     // 1. Define the PaginationHelper
     private PaginationHelper<projects> projectPagination;
 
@@ -119,35 +120,47 @@ public class mgSEPersonalDetailController {
         performancePercent.setText((int)(performance * 100) + "%");
 
 
-        List<projects> allProjects = database.getProjectsByEngineer(engineer.getUserId());
-        projectPagination = new PaginationHelper<>(5);
-        projectPagination.setOnPageChanged(this::renderProjectPage);
-        projectPagination.setData(allProjects);
-        projectPagination.goToPage(1);
-        projectPagination.buildButtons(paginationBox);
+        List<projects> allEngineerProjects = database.getProjectsByEngineer(engineer.getUserId());
+
+        // IMPORTANT: Clear the UI immediately if there are no projects
+        if (allEngineerProjects == null || allEngineerProjects.isEmpty()) {
+            projectPane.getChildren().clear();
+            paginationBox.getChildren().clear(); // Hide pagination if no data
+
+            // Optional: Add a "No Projects" message
+            projectPane.getChildren().add(new javafx.scene.control.Label("No projects assigned."));
+
+            // Update pagination helper with empty list to reset internal state
+            projectPagination.setData(new java.util.ArrayList<>());
+        } else {
+            // Normal pagination flow
+            projectPagination.setData(allEngineerProjects);
+            projectPagination.goToPage(1);
+        }
 
         loadOtherEngineers();
     }
 
     private void renderProjectPage(List<projects> pageData) {
+        // This is the first thing that should happen to prevent "ghost" projects
         projectPane.getChildren().clear();
 
-        for (projects project : pageData) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectCardByOne.fxml"));
-                Parent card = loader.load();
-
-                projectCardController controller = loader.getController();
-                controller.setData(project, loadPane);
-
-                projectPane.getChildren().add(card);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (pageData != null && !pageData.isEmpty()) {
+            for (projects project : pageData) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectCardByOne.fxml"));
+                    Parent card = loader.load();
+                    projectCardController controller = loader.getController();
+                    controller.setData(project, loadPane);
+                    projectPane.getChildren().add(card);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         projectPagination.buildButtons(paginationBox);
-        }
+    }
 
 
 
