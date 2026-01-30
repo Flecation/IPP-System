@@ -420,7 +420,9 @@ public class sideBarPaneController extends navigationPaneController{
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
+            utils.openFxml("mgSEListView.fxml",loadPane);
+//            utils.openFxml("laborView.fxml",loadPane);
+
         });
         userIconBtn.setOnMouseClicked(e -> {
             System.out.println();
