@@ -5,6 +5,7 @@ import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 import java.util.Date;
@@ -218,4 +221,11 @@ public class utils {
     }
 
     public static String dateFormat(Date date){return dateFormatter.formatDate(date);}
+
+    public static FontIcon iconSet(FontAwesomeSolid glyph){
+        FontIcon icon = new FontIcon(glyph);
+        icon.setIconSize(18);
+        icon.getStyleClass().add("icon-Style");
+        return icon;
+    }
 }
