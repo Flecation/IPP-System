@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
@@ -164,7 +165,7 @@
               <HBox alignment="CENTER_LEFT" maxHeight="320.0" spacing="100.0">
                   <StackPane maxWidth="500.0" minWidth="500.0">
                       <children>
-                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;" visible="false">
+                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;">
                               <children>
                                   <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" text="Project Info">
                            <VBox.margin>
@@ -251,34 +252,22 @@
                           </VBox>
                           <VBox fx:id="editProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                               <children>
-                                    <Label text="Project Info">
-                                        <font>
-                                            <Font size="17.0" />
-                                        </font>
-                                        <VBox.margin>
-                                            <Insets />
-                                        </VBox.margin>
-                                    </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <children>
+                                          <Label text="Project Info">
+                                              <font>
+                                                  <Font size="17.0" />
+                                              </font>
+                                          </Label>
+                              <Label fx:id="levelLbl" text="Label" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
                         <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" spacing="10.0">
                            <children>
-                              <StackPane HBox.hgrow="ALWAYS">
-                                 <children>
-                                                  <TextField fx:id="editLevelTxt" maxHeight="40.0" minHeight="40.0" style="-fx-background-color: transparent;">
-                                                      <font>
-                                                          <Font size="14.0" />
-                                                      </font>
-                                                  </TextField>
-                                                  <Label fx:id="editLevelLbl" text="level" textFill="GREY" StackPane.alignment="CENTER_LEFT">
-                                                      <font>
-                                                          <Font size="14.0" />
-                                                      </font>
-                                       <StackPane.margin>
-                                          <Insets left="20.0" />
-                                       </StackPane.margin>
-                                                  </Label>
-                                 </children>
-                              </StackPane>
                               <StackPane HBox.hgrow="ALWAYS">
                                  <children>
                                                   <TextField fx:id="editContractTxt" maxHeight="40.0" minHeight="40.0" style="-fx-background-color: transparent;" StackPane.alignment="CENTER">
@@ -293,6 +282,25 @@
                                     </Label>
                                  </children>
                               </StackPane>
+                              <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" spacing="10.0">
+                                 <children>
+                                    <StackPane HBox.hgrow="ALWAYS">
+                                       <children>
+                                                        <TextField fx:id="editDurationTxt" maxHeight="40.0" minHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Label fx:id="editDurationLbl" text="Duration" textFill="GREY" StackPane.alignment="CENTER_LEFT">
+                                             <StackPane.margin>
+                                                <Insets left="20.0" />
+                                             </StackPane.margin>
+                                          </Label>
+                                       </children>
+                                    </StackPane>
+                                    <ComboBox fx:id="durationComboBox" maxHeight="40.0" minHeight="30.0" prefWidth="140.0" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" spacing="10.0">
@@ -311,38 +319,20 @@
                               </StackPane>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" spacing="10.0">
+                        <StackPane>
                            <children>
-                              <StackPane HBox.hgrow="ALWAYS">
-                                 <children>
-                                                  <TextField fx:id="editAddressTxt" maxHeight="40.0" minHeight="40.0" style="-fx-background-color: transparent;">
-                                                      <font>
-                                                          <Font size="14.0" />
-                                                      </font>
-                                                  </TextField>
-                                                  <Label fx:id="editAddressLbl" text="Address" textFill="GREY" StackPane.alignment="CENTER_LEFT">
-                                       <StackPane.margin>
-                                          <Insets left="20.0" />
-                                       </StackPane.margin>
-                                    </Label>
-                                 </children>
-                              </StackPane>
-                              <StackPane HBox.hgrow="ALWAYS">
-                                 <children>
-                                                  <TextField fx:id="editDurationTxt" maxHeight="40.0" minHeight="40.0" style="-fx-background-color: transparent;">
-                                                      <font>
-                                                          <Font size="14.0" />
-                                                      </font>
-                                                  </TextField>
-                                                  <Label fx:id="editDurationLbl" text="Duration" textFill="GREY" StackPane.alignment="CENTER_LEFT">
-                                       <StackPane.margin>
-                                          <Insets left="20.0" />
-                                       </StackPane.margin>
-                                    </Label>
-                                 </children>
-                              </StackPane>
+                                            <TextField fx:id="editAddressTxt" maxHeight="40.0" minHeight="40.0" style="-fx-background-color: transparent;">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </TextField>
+                                            <Label fx:id="editAddressLbl" text="Address" textFill="GREY" StackPane.alignment="CENTER_LEFT">
+                                 <StackPane.margin>
+                                    <Insets left="20.0" />
+                                 </StackPane.margin>
+                              </Label>
                            </children>
-                        </HBox>
+                        </StackPane>
                         <HBox alignment="CENTER_RIGHT" maxHeight="50.0" minHeight="50.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Button fx:id="editConfirmBtn" maxHeight="25.0" maxWidth="80.0" minWidth="80.0" mnemonicParsing="false" text="Confirm" />
@@ -363,7 +353,7 @@
                    <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0">
                        <StackPane>
                   <Circle fill="#1f93ff00" radius="75.0" stroke="BLACK" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
-                           <Circle fx:id="spiProgressCircle" fill="transparent" radius="75.0" smooth="false" stroke="#4176f2" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
+                           <Circle fx:id="spiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" smooth="false" stroke="#4176f2" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                             <Label fx:id="spiLbl" text="0.78" StackPane.alignment="CENTER">
                                 <font>
                                     <Font name="Al Bayan Bold" size="29.0" />
@@ -383,12 +373,12 @@
                        </StackPane>
                <HBox alignment="CENTER_LEFT">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="Status    ">
+                              <Label maxWidth="65.0" minWidth="65.0" text="Status    " wrapText="true" HBox.hgrow="ALWAYS">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
-                     <Label fx:id="spiStatusLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="spiStatusLbl" alignment="CENTER" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
                   <padding>
                      <Insets left="35.0" />
@@ -411,12 +401,12 @@
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
                <HBox alignment="CENTER_LEFT">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="EV ">
+                              <Label maxWidth="65.0" minWidth="65.0" text="SV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
-                     <Label fx:id="spiEvLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="svLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
                   </children>
                   <padding>
                      <Insets left="35.0" />
@@ -426,7 +416,7 @@
                    <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0">
                        <StackPane>
                   <Circle fill="#1f93ff00" radius="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
-                           <Circle fx:id="cpiProgressCircle" fill="transparent" radius="75.0" stroke="GREEN" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
+                           <Circle fx:id="cpiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" stroke="GREEN" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                             <Label fx:id="cpiLbl" text="0.6" StackPane.alignment="CENTER">
                                 <font>
                                     <Font name="Al Bayan Bold" size="29.0" />
@@ -474,12 +464,12 @@
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
                <HBox>
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="EV">
+                              <Label maxWidth="65.0" minWidth="65.0" text="CV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
-                     <Label fx:id="cpiEvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="cvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
                   <padding>
                      <Insets left="35.0" />

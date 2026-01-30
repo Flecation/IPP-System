@@ -17,6 +17,7 @@ public class storage {
     private final HashMap<Integer,String> projectTypes = new HashMap<>();
     private final ObservableList<labors> allLabors = FXCollections.observableArrayList();
     private final  ObservableList<skills> allSkills = FXCollections.observableArrayList();
+    private final ObservableList<projects> allProjectsById = FXCollections.observableArrayList();
 //    private final
     private storage(){
         allUsers.setAll(database.getAllUsers());
@@ -30,11 +31,11 @@ public class storage {
     }
 
     public void reload(){
-        allUsers.removeAll();
-        allProjects.removeAll();
+        allUsers.clear();
+        allProjects.clear();
         projectTypes.clear();
-        allLabors.removeAll();
-        allSkills.removeAll();
+        allLabors.clear();
+        allSkills.clear();
         allUsers.setAll(database.getAllUsers());
         allProjects.setAll(database.getAllProjects());
         projectTypes.putAll(database.getAllProjectTypes());
@@ -42,6 +43,15 @@ public class storage {
         allSkills.setAll(database.getAllSkill());
     }
 
+    public ObservableList<projects> getProjectsByUserId(int id){
+        allProjectsById.clear();
+        for (projects p : getAllProjects()){
+            if (p.getUserId()== id){
+                allProjectsById.add(p);
+            }
+        }
+        return allProjectsById;
+    }
     public ObservableList<users> getAllUsers() {
         return allUsers;
     }

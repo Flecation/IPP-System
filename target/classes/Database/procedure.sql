@@ -875,3 +875,79 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+DELIMITER $$
+
+CREATE PROCEDURE calculateCpiSpi (
+    IN p_assignProjectId INT
+)
+BEGIN
+    DECLARE PV DOUBLE DEFAULT 0;
+    DECLARE EV DOUBLE DEFAULT 0;
+    DECLARE AC DOUBLE DEFAULT 0;
+    DECLARE CPI DOUBLE;
+    DECLARE SPI DOUBLE;
+
+    DECLARE CPI_STATUS VARCHAR(50);
+    DECLARE SPI_STATUS VARCHAR(50);
+
+    -- Planned Value
+    SELECT IFNULL(SUM(projectCost), 0)
+    INTO PV
+    FROM assignProjectDetails apd
+    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+    WHERE apd.assignProjectId = p_assignProjectId
+      AND s.assignStatusName IN ('autoAssign', 'customAssign');
+
+    -- Earned Value
+    SELECT IFNULL(SUM(projectCost), 0)
+    INTO EV
+    FROM assignProjectDetails apd
+    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+    WHERE apd.assignProjectId = p_assignProjectId
+      AND s.assignStatusName = 'actualResult';
+
+    -- Actual Cost
+    SELECT
+        IFNULL(SUM(drt.dailyCost), 0) +
+        IFNULL(SUM(drl.dailyWage), 0)
+    INTO AC
+    FROM dailyReports dr
+    LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+    LEFT JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
+    WHERE dr.assignProjectId = p_assignProjectId;
+
+    -- Calculate CPI & SPI
+    SET CPI = IF(AC = 0, NULL, EV / AC);
+    SET SPI = IF(PV = 0, NULL, EV / PV);
+
+    -- CPI Status
+    SET CPI_STATUS = CASE
+        WHEN CPI IS NULL THEN 'No Data'
+        WHEN CPI > 1.05 THEN 'Under Budget'
+        WHEN CPI >= 0.95 THEN 'On Budget'
+        ELSE 'Over Budget'
+    END;
+
+    -- SPI Status
+    SET SPI_STATUS = CASE
+        WHEN SPI IS NULL THEN 'No Data'
+        WHEN SPI > 1.05 THEN 'Ahead of Schedule'
+        WHEN SPI >= 0.95 THEN 'On Schedule'
+        ELSE 'Behind Schedule'
+    END;
+
+    -- Return everything
+    SELECT
+        PV,
+        EV,
+        AC,
+        CPI,
+        CPI_STATUS,
+        SPI,
+        SPI_STATUS;
+END$$
+
+DELIMITER ;
