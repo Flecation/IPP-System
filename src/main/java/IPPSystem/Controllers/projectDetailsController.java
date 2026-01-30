@@ -1,8 +1,11 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.enumDuration;
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.workItems;
+import IPPSystem.Utils.calculationHelper;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,8 +17,9 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 
-public class projectDetailsController {
+public class projectDetailsController extends viewProjectsController{
 
     @FXML private Label completedDay;
     @FXML private Label completedTask;
@@ -39,7 +43,7 @@ public class projectDetailsController {
     @FXML private Label editDurationLbl;
     @FXML private TextField editDurationTxt;
     @FXML private DatePicker editEndDate;
-    @FXML private Label editLevelLbl;
+    @FXML private Label levelLbl;
     @FXML private TextField editLevelTxt;
     @FXML private VBox editProjectInfo;
     @FXML private Button editRevertBtn;
@@ -82,10 +86,18 @@ public class projectDetailsController {
 
     @FXML private VBox viewOnlyProjectInfo;
 
+    @FXML private ComboBox<String> durationComboBox;
+
     private projects project;
 
+    private calculationHelper calculate = calculationHelper.getInstance();
+
     @FXML
-    private void initialize() {
+    public void initialize() {
+
+        utils.setFloatTextFieldStyle(editAddressLbl,editAddressTxt);
+        utils.setFloatTextFieldStyle(editDurationLbl,editDurationTxt);
+        utils.setFloatTextFieldStyle(editContactLbl,editContractTxt);
         if (editConfirmBtn != null) {
             editConfirmBtn.setOnAction(e -> onConfirmEdits());
         }
@@ -118,20 +130,34 @@ public class projectDetailsController {
         this.project = project;
         if (project == null) return;
 
+        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+            editProjectInfo.setVisible(false);
+            viewOnlyProjectInfo.setVisible(true);
+        }else{
+            editProjectInfo.setVisible(true);
+            viewOnlyProjectInfo.setVisible(false);
+        }
+
+        calculate.calculate(project);
+
+//        For the duration path
+        utils.durationShowHelper(project,durationComboBox,editDurationTxt);
+
+
         // Header
         safeSet(projectName, project.getProjectInstanceName());
         safeSet(projectStatus, project.getProjectStatus());
         safeSet(projectGeneral,
-                project.getProjectTypeName() + " - " + project.getProjectLocation());
+                project.getProjectTypeName() + " - " + project.getProjectBuildingName());
 
         // View-only info
         safeSet(projectViewLevel, project.getProjectLevelName());
         safeSet(projectViewAddress, project.getProjectLocation());
-        safeSet(projectViewDuration, formatDuration(project.getProjectDuration()));
+//        safeSet(projectViewDuration,);
         safeSet(projectViewContract, formatMoney(project.getProjectCost()));
 
-        safeSet(projectViewStartDate, formatDate(project.getStartDate()));
-        safeSet(projectViewEndDate, formatDate(project.getEndDate()));
+        safeSet(projectViewStartDate,utils.dateFormat(project.getStartDate()));
+        safeSet(projectViewEndDate, utils.dateFormat(project.getEndDate()));
 
         // Progress (days)
         ProgressInfo days = computeDaysProgress(project.getStartDate(), project.getEndDate());
@@ -185,35 +211,7 @@ public class projectDetailsController {
         LocalDate start = editStartDate != null ? editStartDate.getValue() : null;
         LocalDate end = editEndDate != null ? editEndDate.getValue() : null;
 
-        if (newAddress != null) {
-            project.setProjectLocation(newAddress);
-            safeSet(projectViewAddress, newAddress);
-            safeSet(projectGeneral, project.getProjectTypeName() + " - " + newAddress);
-        }
 
-        if (newLevel != null) {
-            project.setProjectLevelName(newLevel);
-            safeSet(projectViewLevel, newLevel);
-        }
-
-        if (newContract != null) {
-            project.setProjectCost(newContract);
-            safeSet(projectViewContract, formatMoney(newContract));
-        }
-
-        if (newDuration != null) {
-            project.setProjectDuration(newDuration);
-            safeSet(projectViewDuration, formatDuration(newDuration));
-        }
-
-        if (start != null) {
-            project.setStartDate(Date.valueOf(start));
-            safeSet(projectViewStartDate, start.toString());
-        }
-        if (end != null) {
-            project.setEndDate(Date.valueOf(end));
-            safeSet(projectViewEndDate, end.toString());
-        }
 
         // Recompute progress after date edits
         ProgressInfo days = computeDaysProgress(project.getStartDate(), project.getEndDate());
@@ -266,14 +264,7 @@ public class projectDetailsController {
         }
     }
 
-    private String formatDate(Date d) {
-        return d == null ? "-" : d.toString();
-    }
 
-    private String formatDuration(double months) {
-        if (months <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(months) + " Months";
-    }
 
     private String formatMoney(double value) {
         if (value <= 0) return "-";

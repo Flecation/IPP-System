@@ -1,10 +1,11 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Constants.enumDuration;
 import IPPSystem.Constants.notificationType;
-import IPPSystem.Controllers.mgSEPersonalDetailController;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -17,13 +18,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 
 //This is collected place for all utils
 public class utils {
 
     private static Parent currentAlertRoot = null;
+
+    private static durationHelper helper = new durationHelper();
 
     //setting the tile bar of the exit,mini,restore buttons called from the tileBar class
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn) {
@@ -189,29 +196,36 @@ public class utils {
         switchPage.getInstance(a).openWorkItemDetails(items);
     }
 
-//    public static void viewUserInfo(users user){
-//        switchPage.getInstance(null).viewUsersInfo(user);
-//    }
-
-    public static void viewUserInfo(users user, StackPane loadPane){
-        switchPage.getInstance(loadPane).viewUsersInfo(user);
+    public static void viewUserInfo(users user){
+        switchPage.getInstance(null).viewUsersInfo(user);
     }
 
+    public static Double durationFormat(Double duration, enumDuration durationStatus){return helper.durationAssign(duration,durationStatus);}
 
-//    public static void viewUserInfo(users engineer, StackPane loadPane) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/IPPSystem/Views/mgSEPersonalDetail.fxml"));
-//            Parent page = loader.load();
-//
-//            mgSEPersonalDetailController controller = loader.getController();
-//            controller.setEngineer(engineer);
-//            controller.setLoadPane(loadPane);
-//
-//            loadPane.getChildren().setAll(page);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public static HashMap<enumDuration,Double> getDuration(Double duration){return helper.showDuration(duration);}
 
+    public static String generateProjectId(int projectId){
+        String result = "pj-";
+        if (projectId >99){
+            result += projectId;
+        }else if(projectId >9){
+            result += "0"+projectId;
+        }else {
+            result += "00"+projectId;
+        }
+        return result;
+    }
+
+    public static void durationShowHelper(projects project,ComboBox<String> durationBox,TextField durationTxt){
+        helper.durationAssignHelper(project,durationBox,durationTxt);
+    }
+
+    public static String dateFormat(Date date){return dateFormatter.formatDate(date);}
+
+    public static FontIcon iconSet(FontAwesomeSolid glyph){
+        FontIcon icon = new FontIcon(glyph);
+        icon.setIconSize(18);
+        icon.getStyleClass().add("icon-Style");
+        return icon;
+    }
 }
