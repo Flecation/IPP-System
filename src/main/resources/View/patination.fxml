@@ -13,7 +13,7 @@
       <Button fx:id="paginationBtn1" layoutX="153.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon1" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn1" stylesheets="@../CSS/pagination.css" text="1" textFill="WHITE" />
       <Button fx:id="paginationBtn2" layoutX="185.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon2" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn2" stylesheets="@../CSS/pagination.css" text="2" textFill="#0ba380" />
       <Button fx:id="paginationBtn3" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickon3" prefHeight="31.0" prefWidth="42.0" styleClass="paginationBtn3" stylesheets="@../CSS/pagination.css" text="3" textFill="#0ba380" />
-      <Button fx:id="paginationNextBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" styleClass="paginationNextBtn" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
+      <Button fx:id="paginationPrevBtn" layoutX="250.0" layoutY="20.0" mnemonicParsing="false" onAction="#clickonnext" prefWidth="60.0" styleClass="paginationNextBtn" stylesheets="@../CSS/pagination.css" text="Next" textFill="#0ba380">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

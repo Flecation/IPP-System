@@ -5,7 +5,6 @@ import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -196,7 +195,7 @@ public class utils {
         switchPage.getInstance(a).openWorkItemDetails(items);
     }
 
-    public static void viewUserInfo(users user){
+    public static void viewUserInfo(users user, StackPane loadPane){
         switchPage.getInstance(null).viewUsersInfo(user);
     }
 
