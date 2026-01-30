@@ -1,5 +1,6 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Constants.enumDuration;
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -18,11 +19,15 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 
 //This is collected place for all utils
 public class utils {
 
     private static Parent currentAlertRoot = null;
+
+    private static durationHelper helper = new durationHelper();
 
     //setting the tile bar of the exit,mini,restore buttons called from the tileBar class
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn) {
@@ -191,4 +196,26 @@ public class utils {
     public static void viewUserInfo(users user){
         switchPage.getInstance(null).viewUsersInfo(user);
     }
+
+    public static Double durationFormat(Double duration, enumDuration durationStatus){return helper.durationAssign(duration,durationStatus);}
+
+    public static HashMap<enumDuration,Double> getDuration(Double duration){return helper.showDuration(duration);}
+
+    public static String generateProjectId(int projectId){
+        String result = "pj-";
+        if (projectId >99){
+            result += projectId;
+        }else if(projectId >9){
+            result += "0"+projectId;
+        }else {
+            result += "00"+projectId;
+        }
+        return result;
+    }
+
+    public static void durationShowHelper(projects project,ComboBox<String> durationBox,TextField durationTxt){
+        helper.durationAssignHelper(project,durationBox,durationTxt);
+    }
+
+    public static String dateFormat(Date date){return dateFormatter.formatDate(date);}
 }

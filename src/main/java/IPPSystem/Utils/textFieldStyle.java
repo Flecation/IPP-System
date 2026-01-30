@@ -26,8 +26,13 @@ public class textFieldStyle extends utils {
         textLabel.setOnMouseEntered(e -> {floatUp("text");});
         textLabel.setOnMouseExited(e -> {floatDown("text");});
 
-        textField.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (newV) {
+        if (!textField.getText().isEmpty()) {
+            floatUp("text");
+        }
+
+
+        textField.focusedProperty().addListener((obs, oldV, focused) -> {
+            if (focused || !textField.getText().isEmpty()) {
                 floatUp("text");
             } else {
                 floatDown("text");
@@ -35,11 +40,13 @@ public class textFieldStyle extends utils {
         });
 
         textField.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty() && textLabel != null) {
+            if (!newText.isEmpty()) {
                 floatUp("text");
+            } else if (!textField.isFocused()) {
+                floatDown("text");
             }
         });
-        if (!textField.getText().isEmpty()){floatUp("text");}
+
     }
 
     public void floatPasswordStyle(Label pwLabel, TextField showPasswordField, PasswordField hidePasswordField) {
@@ -54,8 +61,16 @@ public class textFieldStyle extends utils {
         hidePw.setOnMouseExited(e -> {floatDown("pw");});
         passwordLabel.setOnMouseExited(e -> {floatDown("pw");});
 
-        showPw.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (newV) {
+        showPw.focusedProperty().addListener((obs, oldV, focused) -> {
+            if (focused || passwordHasText()) {
+                floatUp("pw");
+            } else {
+                floatDown("pw");
+            }
+        });
+
+        hidePw.focusedProperty().addListener((obs, oldV, focused) -> {
+            if (focused || passwordHasText()) {
                 floatUp("pw");
             } else {
                 floatDown("pw");
@@ -63,25 +78,27 @@ public class textFieldStyle extends utils {
         });
 
         showPw.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
-                floatUp("text");
-            }
-        });
-
-        hidePw.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (newV) {
+            if (!newText.isEmpty()) {
                 floatUp("pw");
-            } else {
+            } else if (!showPw.isFocused() && !hidePw.isFocused()) {
                 floatDown("pw");
             }
         });
 
         hidePw.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
-                floatUp("text");
+            if (!newText.isEmpty()) {
+                floatUp("pw");
+            } else if (!showPw.isFocused() && !hidePw.isFocused()) {
+                floatDown("pw");
             }
         });
+
     }
+
+    private boolean passwordHasText() {
+        return !showPw.getText().isEmpty() || !hidePw.getText().isEmpty();
+    }
+
 
     private void floatUp(String choice) {
         Label floatLbl;

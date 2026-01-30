@@ -12,6 +12,7 @@ CREATE TABLE users (
     userPhone varchar(255),
     userEmail varchar(255),
     userDOB date,
+    userAddress longtext,
     userPassword varchar(255) not null,
     userPhoto varchar(255),
     userStartDate Date ,
@@ -232,7 +233,6 @@ CREATE TABLE dailyReports (
     weather VARCHAR(100),
     generalRemark TEXT,
     issue LONGTEXT,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (assignProjectId, reportDate),
 
     FOREIGN KEY (assignProjectId)

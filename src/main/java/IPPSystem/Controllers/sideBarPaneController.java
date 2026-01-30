@@ -12,6 +12,7 @@ import javafx.animation.TranslateTransition;
 
 import javafx.fxml.FXML;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -333,12 +334,29 @@ public class sideBarPaneController extends navigationPaneController{
         FontIcon cancelS = new FontIcon(FontAwesomeSolid.TIMES);
         FontIcon reload = new FontIcon(FontAwesomeSolid.ARROW_CIRCLE_RIGHT);
         FontIcon alert = new FontIcon(FontAwesomeSolid.BELL);
+        FontIcon back = new FontIcon(FontAwesomeSolid.CARET_LEFT);
+        FontIcon to = new FontIcon(FontAwesomeSolid.CARET_RIGHT);
 //        FontIcon back = new FontIcon(FontAwesomeSolid.)
         dashboardIcon.setGraphic(dashBoard);
         projectIcon.setGraphic(project);
         userIcon.setGraphic(user);
         reportIcon.setGraphic(report);
         settingIcon.setGraphic(setting);
+        reloadBtn.setGraphic(reload);
+        notificationBtn.setGraphic(alert);
+        searchClearBtn.setGraphic(cancelS);
+        searchBtn.setGraphic(search);
+        showIconSideBtn.setGraphic(back);
+
+        showSideBtn.setGraphic(to);
+//        dashboardIconBtn.setGraphic(dashBoard);
+//        projectIconBtn.setGraphic(project);
+//        userIconBtn.setGraphic(user);
+//        settingIconBtn.setGraphic(setting);
+//
+//        showSettingBtn.setGraphic(to);
+//        iconBackBtn.setGraphic(back);
+//        profileViewIconBtn.setGraphic(user);
 
 
         dashBoard.getStyleClass().add("icon-style");
@@ -494,6 +512,7 @@ private void showSidebar(VBox target, double width) {
     sideBarStackPane.setMinWidth(width);
     sideBarStackPane.setPrefWidth(width);
     sideBarStackPane.setMaxWidth(width);
+
 }
 
 private static void setBoxVisible(VBox box, boolean visible) {
