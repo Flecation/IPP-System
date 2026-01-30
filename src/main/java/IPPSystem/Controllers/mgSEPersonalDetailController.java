@@ -122,7 +122,6 @@ public class mgSEPersonalDetailController {
 
         List<projects> allEngineerProjects = database.getProjectsByEngineer(engineer.getUserId());
 
-        // IMPORTANT: Clear the UI immediately if there are no projects
         if (allEngineerProjects == null || allEngineerProjects.isEmpty()) {
             projectPane.getChildren().clear();
             paginationBox.getChildren().clear(); // Hide pagination if no data
@@ -163,33 +162,6 @@ public class mgSEPersonalDetailController {
     }
 
 
-
-//    public void loadProjectCards() {
-//
-//        projectPane.getChildren().clear();
-//
-//        List<projects> projects = database.getProjectsByEngineer(engineer.getUserId());
-////        System.out.println("Loading project cards...");
-//
-//        for (projects project : projects) {
-//            try {
-//                FXMLLoader loader =
-//                        new FXMLLoader(getClass().getResource("/View/projectCardByOne.fxml"));
-//
-//                Parent card = loader.load();
-//
-//                projectCardController controller = loader.getController();
-//                controller.setData(project, loadPane);
-//
-//                projectPane.getChildren().add(card);
-//
-//
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 
     public void loadOtherEngineers() {

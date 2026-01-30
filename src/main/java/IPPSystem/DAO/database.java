@@ -39,6 +39,22 @@ public class database {
 
     public static ObservableList<labors> getAllLaborsBySkillId(int skillId){return laborDatabase.getAllLaborsBySkill(skillId);}
 
+    public static int getTotalLabors() {return calculationDatabase.getTotalLaborsCount();}
+
+    public static int getNewHires() {return calculationDatabase.getNewHiresThisMonth();}
+
+    public static int getActiveLabors() {return calculationDatabase.getActiveLaborsCount();}
+
+    public static int getResignedLaborsCount(){return calculationDatabase.getResignedLaborsCount();}
+
+    public static String getAssignedProjectName(int laborId){return laborDatabase.getAssignedProjectName(laborId);}
+
+    public  static List<labors> getAllLaborsSortedByAssignment(){return laborDatabase.getAllLaborsSortedByAssignment();}
+
+    public static boolean resignLabor(int laborId){return  laborDatabase.resignLabor(laborId);}
+    public  static  List<String> getAllSkills(){return laborDatabase.getAllSkills();}
+    
+    
 //    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 

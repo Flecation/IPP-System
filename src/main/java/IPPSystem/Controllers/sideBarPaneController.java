@@ -427,7 +427,8 @@ private void setupNavigationHandlers() {
 
     // User navigation
     userViewBtn.setOnMouseClicked(e -> {
-        utils.openFxml("mgSEListView.fxml",loadPane);
+//        utils.openFxml("mgSEListView.fxml",loadPane);
+        utils.openFxml("laborView.fxml",loadPane);
 
     });
     userIconBtn.setOnMouseClicked(e -> {

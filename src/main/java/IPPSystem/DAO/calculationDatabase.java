@@ -60,4 +60,49 @@ public class calculationDatabase {
         }
         return 0.0;
     }
+
+
+
+    //::::: Labor Section
+
+    // 1. Total Labors Number
+    public static int getTotalLaborsCount() {
+        String sql = "SELECT COUNT(*) FROM labors";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // 2. New Hires this month
+    public static int getNewHiresThisMonth() {
+        // Query filters by current Year and current Month
+        String sql = "SELECT COUNT(*) FROM labors WHERE YEAR(laborStartDate) = YEAR(CURDATE()) " +
+                "AND MONTH(laborStartDate) = MONTH(CURDATE())";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // 3. Active Labor Number
+    public static int getActiveLaborsCount() {
+        String sql = "SELECT COUNT(*) FROM labors WHERE isActive = true";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // 4. Resigned Labor Number
+    public static int getResignedLaborsCount() {
+        // We look for isActive = false (or 0) to find resigned staff
+        String sql = "SELECT COUNT(*) FROM labors WHERE isActive = false";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
