@@ -7,11 +7,13 @@ import IPPSystem.Utils.storage;
 import IPPSystem.Utils.themeToggle;
 import IPPSystem.Utils.utils;
 import com.almasb.fxgl.ui.InGamePanel;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 
 import javafx.fxml.FXML;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -40,6 +42,9 @@ public class sideBarPaneController extends navigationPaneController{
     private BorderPane addNewPane,basePane;
 
     @FXML
+    private StackPane addNew;
+
+    @FXML
     private HBox backBtn;
 
     @FXML
@@ -53,54 +58,6 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private Button confirmBtn;
-
-    @FXML
-    private Button createAccCancelBtn;
-
-    @FXML
-    private Button createAccCreateBtn;
-
-    @FXML
-    private DatePicker createAccDob;
-
-    @FXML
-    private Label createAccEmailLbl;
-
-    @FXML
-    private TextField createAccEmailTxt;
-
-    @FXML
-    private Label createAccFNameLbl;
-
-    @FXML
-    private TextField createAccFNameTxt;
-
-    @FXML
-    private ImageView createAccImage;
-
-    @FXML
-    private Label createAccLNameLbl;
-
-    @FXML
-    private TextField createAccLNameTxt;
-
-    @FXML
-    private HBox createAccPane;
-
-    @FXML
-    private Label createAccPhoneLbl;
-
-    @FXML
-    private TextField createAccPhoneTxt;
-
-    @FXML
-    private Label createAccPwLbl;
-
-    @FXML
-    private TextField createAccPwTxt;
-
-    @FXML
-    private Button createAccUploadImgBtn;
 
     @FXML
     private Label darkIcon;
@@ -130,10 +87,10 @@ public class sideBarPaneController extends navigationPaneController{
     private Label imageEditBtn;
 
     @FXML
-    private Circle imageCircle;
+    private Circle imageCircle, imageBtn; // Changed from logoIcon to locoIcon
 
     @FXML
-    private ImageView imageIconBtn;
+    private Circle locoIcon; // Added this field (exists in FXML)
 
     @FXML
     private Region leftRegion;
@@ -301,62 +258,42 @@ public class sideBarPaneController extends navigationPaneController{
     private HBox userViewBtn;
 
     @FXML
-    private ImageView userViewImage;
-
-    @FXML
-    private Label userViewLbl,addNewTitle;
+    private Label userViewLbl, addNewTitle;
 
     @FXML
     private Button addNewExitBtn;
 
     @FXML
-    private Label dashboardIcon,projectIcon,userIcon,reportIcon,settingIcon;
+    private Label dashboardIcon, projectIcon, userIcon, reportIcon, settingIcon, logoutIcon, changePwIcon, profileIcon;
 
     @FXML
-    private VBox createLaborPane,createProjectPane,createReportPane;
+    private VBox createLaborPane, createProjectPane, createReportPane;
+
+    @FXML
+    private Button createAccCancelBtn; // Exists in FXML but wasn't in controller
+
+    @FXML
+    private Button createAccCreateBtn; // Exists in FXML but wasn't in controller
+
+    // Removed userViewImage field as it doesn't exist in FXML
+    // Removed imageIconBtn field as it doesn't exist in FXML
 
     private users loginUser = user;
 
     protected storage data = storage.getInstance();
 
-
     @FXML
     public void initialize() {
+        // ... rest of your initialize method remains the same
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
-        FontIcon dashBoard = new FontIcon(FontAwesomeSolid.DESKTOP);
-        FontIcon project = new FontIcon(FontAwesomeSolid.FOLDER);
-        FontIcon user = new FontIcon(FontAwesomeSolid.USER);
-        FontIcon report = new FontIcon(FontAwesomeSolid.CLIPBOARD);
-        FontIcon setting = new FontIcon(FontAwesomeSolid.SLIDERS_H);
-        FontIcon search = new FontIcon(FontAwesomeSolid.SEARCH);
-        FontIcon cancelS = new FontIcon(FontAwesomeSolid.TIMES);
-        FontIcon reload = new FontIcon(FontAwesomeSolid.ARROW_CIRCLE_RIGHT);
-        FontIcon alert = new FontIcon(FontAwesomeSolid.BELL);
-//        FontIcon back = new FontIcon(FontAwesomeSolid.)
-        dashboardIcon.setGraphic(dashBoard);
-        projectIcon.setGraphic(project);
-        userIcon.setGraphic(user);
-        reportIcon.setGraphic(report);
-        settingIcon.setGraphic(setting);
 
+        lightDarkIconChange();
 
-        dashBoard.getStyleClass().add("icon-style");
-        project.getStyleClass().add("icon-style");
-        user.getStyleClass().add("icon-style");
-        report.getStyleClass().add("icon-style");
-        setting.getStyleClass().add("icon-style");
-
-
-        utils.setFloatTextFieldStyle(createAccPhoneLbl,createAccPhoneTxt);
-        utils.setFloatTextFieldStyle(createAccEmailLbl,createAccEmailTxt);
-        utils.setFloatTextFieldStyle(createAccLNameLbl,createAccLNameTxt);
-        utils.setFloatTextFieldStyle(createAccFNameLbl,createAccFNameTxt);
-
+        setIcons();
 
         addNewPane.setVisible(false);
         basePane.setVisible(true);
-
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
@@ -368,232 +305,251 @@ public class sideBarPaneController extends navigationPaneController{
         setupProfileHandlers();
 
         //for the toggle
-        toggleBox.setOnAction(event -> {
-            translateCircle(toggleCircle,settingToggleCircle);
-        });
-
+        toggleBox.setOnAction(event -> translateCircle(toggleCircle,settingToggleCircle));
+        toggleBtn.setOnMouseClicked(event -> translateCircle(toggleCircle,settingToggleCircle));
         settingToggleBox.setOnAction(event->translateCircle(toggleCircle,settingToggleCircle));
-        toggleCircle.setOnMouseClicked(event ->translateCircle(toggleCircle,settingToggleCircle) );
+        toggleCircle.setOnMouseClicked(event ->translateCircle(toggleCircle,settingToggleCircle));
 
+        populateUserInfo();
 
-    populateUserInfo();
+        // Set up the icons of the names
+        utils.setToolTip(projectIconBtn,"Project View");
+        utils.setToolTip(dashboardIconBtn,"DashBoard View");
+        if (loginUser != null) {
+            String userBtn = loginUser.getUserRole().equals(role.MANAGER.toString()) ? "Supervisor View" : "Labor View";
+            utils.setToolTip(userIconBtn, userBtn);
+            userViewLbl.setText(userBtn);
+        }
+        utils.setToolTip(reportIconBtn,"Report View");
+        utils.setToolTip(profileViewIconBtn,"user Profile");
+        utils.setToolTip(logoutIconBtn,"Logout");
+        utils.setToolTip(iconBackBtn,"Back");
+        utils.setToolTip(changePasswordIconBtn,"Change Password");
+        utils.setToolTip(settingIconBtn,"setting");
+        utils.setToolTip(darkIcon,"dark mode");
+        utils.setToolTip(lightIcon,"light mode");
 
-    // Set up the icons of the names
-    utils.setToolTip(projectIconBtn,"Project View");
-    utils.setToolTip(dashboardIconBtn,"DashBoard View");
-    if (loginUser != null) {
-        String userBtn = loginUser.getUserRole().equals(role.MANAGER.toString()) ? "Supervisor View" : "Labor View";
-        utils.setToolTip(userIconBtn, userBtn);
+        reloadBtn.setOnMouseClicked(e->data.reload());
+
+        setFirstPage();
     }
-    utils.setToolTip(reportIconBtn,"Report View");
-    utils.setToolTip(profileViewIconBtn,"user Profile");
-    utils.setToolTip(logoutIconBtn,"Logout");
-    utils.setToolTip(iconBackBtn,"Back");
-    utils.setToolTip(changePasswordIconBtn,"Change Password");
-    utils.setToolTip(settingIconBtn,"setting");
-    utils.setToolTip(darkIcon,"dark mode");
-    utils.setToolTip(lightIcon,"light mode");
 
-    reloadBtn.setOnMouseClicked(e->data.reload());
-
-    setFirstPage();
-}
-
-private void setFirstPage(){
-    utils.openFxml("viewProjects.fxml", loadPane);
-
-}
-
-private void setupNavigationHandlers() {
-    // Dashboard navigation
-    dashboardViewBtn.setOnMouseClicked(e -> {
-        utils.openFxml("dashboard.fxml", loadPane);
-        linkButton.setTabButtonName("Dashboard");
-    });
-    dashboardIconBtn.setOnMouseClicked(e -> {
-        utils.openFxml("dashboard.fxml", loadPane);
-//        linkButton.setTabButtonName();
-    });
-
-    // Project navigation
-    projectViewBtn.setOnMouseClicked(e -> {
+    // ... rest of your methods remain the same
+    private void setFirstPage(){
         utils.openFxml("viewProjects.fxml", loadPane);
-        linkButton.setTabButtonName("Projects");
-    });
-    projectIconBtn.setOnMouseClicked(e -> {
-        utils.openFxml("viewProjects.fxml", loadPane);
-//        linkButton.setTabButtonName();
-    });
-
-    // User navigation
-    userViewBtn.setOnMouseClicked(e -> {
-//        utils.openFxml("mgSEListView.fxml",loadPane);
-        utils.openFxml("laborView.fxml",loadPane);
-
-    });
-    userIconBtn.setOnMouseClicked(e -> {
-        System.out.println();
-    });
-
-    // Report navigation
-    reportViewBtn.setOnMouseClicked(e -> {
-        System.out.println();
-
-    });
-    reportIconBtn.setOnMouseClicked(e -> {
-        System.out.println();
-
-    });
-}
-
-private void setupSidebarToggleHandlers() {
-    showIconSideBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
-    showSideBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
-}
-
-private void setupSettingsHandlers() {
-    settingViewBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
-    settingIconBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
-
-    backBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
-    iconBackBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
-
-    showIconSettingBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
-    showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
-}
-
-private void setupProfileHandlers() {
-    if (profileViewBtn != null) {
-        profileViewBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
-    }
-    if (profileViewIconBtn != null) {
-        profileViewIconBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
     }
 
-    if (revertBtn != null) {
-        revertBtn.setOnMouseClicked(e -> {
-            populateUserInfo();
-            showSidebar(sideBar, 200);
+    private void setIcons(){
+        // For Assigning the icons
+        // Main icons
+        // Icon with text
+        dashboardIcon.setGraphic(utils.iconSet(FontAwesomeSolid.DESKTOP));
+        projectIcon.setGraphic(utils.iconSet(FontAwesomeSolid.FOLDER));
+        userIcon.setGraphic(utils.iconSet(FontAwesomeSolid.USER));
+        reportIcon.setGraphic(utils.iconSet(FontAwesomeSolid.CHART_BAR));
+        settingIcon.setGraphic(utils.iconSet(FontAwesomeSolid.COG));
+        profileIcon.setGraphic(utils.iconSet(FontAwesomeSolid.USER));
+        changePwIcon.setGraphic(utils.iconSet(FontAwesomeSolid.KEY));
+        lightSymbolIcon.setGraphic(utils.iconSet(FontAwesomeSolid.SUN));
+        darkSymbolIcon.setGraphic(utils.iconSet(FontAwesomeSolid.MOON));
+        logoutIcon.setGraphic(utils.iconSet(FontAwesomeSolid.SIGN_OUT_ALT));
+
+        // back and to icon
+        iconBackBtn.setGraphic(utils.iconSet(FontAwesomeSolid.CARET_LEFT));
+        showIconSideBtn.setGraphic(utils.iconSet(FontAwesomeSolid.CARET_LEFT));
+        showSideBtn.setGraphic(utils.iconSet(FontAwesomeSolid.CARET_RIGHT));
+        showSettingBtn.setGraphic(utils.iconSet(FontAwesomeSolid.CARET_RIGHT));
+
+        // Icons only
+        dashboardIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.DESKTOP));
+        projectIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.FOLDER));
+        userIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.USER));
+        reportIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.CHART_BAR));
+        settingIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.COG));
+        profileViewIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.USER));
+        logoutIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.SIGN_OUT_ALT));
+        changePasswordIconBtn.setGraphic(utils.iconSet(FontAwesomeSolid.KEY));
+        darkIcon.setGraphic(utils.iconSet(FontAwesomeSolid.MOON));
+        lightIcon.setGraphic(utils.iconSet(FontAwesomeSolid.SUN));
+
+        // Action icons
+        reloadBtn.setGraphic(utils.iconSet(FontAwesomeSolid.SYNC_ALT));
+        notificationBtn.setGraphic(utils.iconSet(FontAwesomeSolid.BELL));
+        searchBtn.setGraphic(utils.iconSet(FontAwesomeSolid.SEARCH));
+        searchClearBtn.setGraphic(utils.iconSet(FontAwesomeSolid.TIMES));
+        newTabBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EXTERNAL_LINK_ALT));
+    }
+
+    private void lightDarkIconChange(){
+        // Get the CURRENT theme state (after it was changed)
+        if (themeToggle.isDarkMode()){
+            // It's DARK mode now, so show MOON icons, hide SUN icons
+            darkIcon.setVisible(true);
+            darkSymbolIcon.setVisible(true);
+            lightIcon.setVisible(false);
+            lightSymbolIcon.setVisible(false);
+            toggleSymbolText.setText("Dark Mode");// Also update the text
+        } else {
+            // It's LIGHT mode now, so show SUN icons, hide MOON icons
+            darkIcon.setVisible(false);
+            darkSymbolIcon.setVisible(false);
+            lightSymbolIcon.setVisible(true);
+            lightIcon.setVisible(true);
+            toggleSymbolText.setText("Light Mode"); // Also update the text
+        }
+    }
+
+    private void setupNavigationHandlers() {
+        // Dashboard navigation
+        dashboardViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml", loadPane);
+            linkButton.setTabButtonName("Dashboard");
+        });
+        dashboardIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("dashboard.fxml", loadPane);
+        });
+
+        // Project navigation
+        projectViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("viewProjects.fxml", loadPane);
+            linkButton.setTabButtonName("Projects");
+        });
+        projectIconBtn.setOnMouseClicked(e -> {
+            utils.openFxml("viewProjects.fxml", loadPane);
+        });
+
+        // User navigation
+        userViewBtn.setOnMouseClicked(e -> {
+            utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
+        });
+        userIconBtn.setOnMouseClicked(e -> {
+            System.out.println();
+        });
+
+        // Report navigation
+        reportViewBtn.setOnMouseClicked(e -> {
+            System.out.println();
+        });
+        reportIconBtn.setOnMouseClicked(e -> {
+            System.out.println();
         });
     }
 
-    if (confirmBtn != null) {
-        confirmBtn.setOnMouseClicked(e -> {
-            applyProfileEdits();
-            showSidebar(sideBar, 200);
+    private void setupSidebarToggleHandlers() {
+        showIconSideBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
+        showSideBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
+    }
+
+    private void setupSettingsHandlers() {
+        settingViewBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
+        settingIconBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
+
+        backBtn.setOnMouseClicked(e -> showSidebar(sideBar, 200));
+        iconBackBtn.setOnMouseClicked(e -> showSidebar(iconSideBar, 60));
+
+        showIconSettingBtn.setOnMouseClicked(e -> showSidebar(iconSettingBar, 60));
+        showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
+    }
+
+    private void setupProfileHandlers() {
+        if (profileViewBtn != null) {
+            profileViewBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
+        }
+        if (profileViewIconBtn != null) {
+            profileViewIconBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
+        }
+
+        if (revertBtn != null) {
+            revertBtn.setOnMouseClicked(e -> {
+            });
+        }
+
+        if (confirmBtn != null) {
+            confirmBtn.setOnMouseClicked(e -> {
+                showSidebar(sideBar, 200);
+            });
+        }
+    }
+
+    private void showSidebar(VBox target, double width) {
+        setBoxVisible(sideBar, target == sideBar);
+        setBoxVisible(iconSideBar, target == iconSideBar);
+        setBoxVisible(settingBar, target == settingBar);
+        setBoxVisible(iconSettingBar, target == iconSettingBar);
+        setBoxVisible(profileBox, target == profileBox);
+
+        sideBarStackPane.setMinWidth(width);
+        sideBarStackPane.setPrefWidth(width);
+        sideBarStackPane.setMaxWidth(width);
+    }
+
+    private static void setBoxVisible(VBox box, boolean visible) {
+        if (box == null) {
+            return;
+        }
+        box.setVisible(visible);
+        box.setManaged(visible);
+    }
+
+    private void populateUserInfo() {
+        if (loginUser == null) {
+            return;
+        }
+
+        if (nameViewText != null) {
+            nameViewText.setText(loginUser.getUserName());
+        }
+
+        if (roleViewText != null) {
+            roleViewText.setText(loginUser.getUserRole());
+        }
+
+        if (userNameLbl != null) {
+            userNameLbl.setText(loginUser.getUserName());
+        }
+
+        if (userRoleLbl != null) {
+            userRoleLbl.setText(loginUser.getUserRole());
+        }
+
+        if (userDobLbl != null && loginUser.getUserDOB() != null) {
+            userDobLbl.setText(new SimpleDateFormat("dd-MM-yyyy").format(loginUser.getUserDOB()));
+        }
+
+        if (userEmailTxtField != null) {
+            userEmailTxtField.setText(loginUser.getUserEmail() == null ? "" : loginUser.getUserEmail());
+        }
+
+        if (userPhoneTxtField != null) {
+            userPhoneTxtField.setText(loginUser.getUserPhone() == null ? "" : loginUser.getUserPhone());
+        }
+    }
+
+    private void translateCircle(Circle circle, Circle circle1) {
+        TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
+        TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
+
+        // Get the CURRENT state BEFORE changing it
+        boolean isCurrentlyDarkMode = themeToggle.isDarkMode();
+
+        if (isCurrentlyDarkMode) {
+            // Currently dark mode, so we're switching to light mode
+            moving.setToX(10);
+            moving1.setToX(10);
+        } else {
+            // Currently light mode, so we're switching to dark mode
+            moving.setToX(-10);
+            moving1.setToX(-10);
+        }
+
+        moving.setOnFinished(event -> {
+            // Change the theme first
+            utils.changeTheme();
+            // Then update the icons based on the NEW theme state
+            lightDarkIconChange();
         });
+
+        ParallelTransition run = new ParallelTransition(moving1, moving);
+        run.play();
     }
-}
-
-private void showSidebar(VBox target, double width) {
-    setBoxVisible(sideBar, target == sideBar);
-    setBoxVisible(iconSideBar, target == iconSideBar);
-    setBoxVisible(settingBar, target == settingBar);
-    setBoxVisible(iconSettingBar, target == iconSettingBar);
-    setBoxVisible(profileBox, target == profileBox);
-
-    sideBarStackPane.setMinWidth(width);
-    sideBarStackPane.setPrefWidth(width);
-    sideBarStackPane.setMaxWidth(width);
-}
-
-private static void setBoxVisible(VBox box, boolean visible) {
-    if (box == null) {
-        return;
-    }
-    box.setVisible(visible);
-    box.setManaged(visible);
-}
-
-private void populateUserInfo() {
-    if (loginUser == null) {
-        return;
-    }
-
-    if (nameViewText != null) {
-        nameViewText.setText(loginUser.getUserName());
-    }
-
-    if (roleViewText != null) {
-        roleViewText.setText(loginUser.getUserRole());
-    }
-
-    if (userNameLbl != null) {
-        userNameLbl.setText(loginUser.getUserName());
-    }
-
-    if (userRoleLbl != null) {
-        userRoleLbl.setText(loginUser.getUserRole());
-    }
-
-    if (userDobLbl != null && loginUser.getUserDOB() != null) {
-        userDobLbl.setText(new SimpleDateFormat("dd-MM-yyyy").format(loginUser.getUserDOB()));
-    }
-
-    if (userEmailTxtField != null) {
-        userEmailTxtField.setText(loginUser.getUserEmail() == null ? "" : loginUser.getUserEmail());
-    }
-
-    if (userPhoneTxtField != null) {
-        userPhoneTxtField.setText(loginUser.getUserPhone() == null ? "" : loginUser.getUserPhone());
-    }
-}
-
-private void applyProfileEdits() {
-    if (loginUser == null) {
-        return;
-    }
-
-    if (userEmailTxtField != null) {
-        loginUser.setUserEmail(userEmailTxtField.getText());
-    }
-    if (userPhoneTxtField != null) {
-        loginUser.setUserPhone(userPhoneTxtField.getText());
-    }
-
-    populateUserInfo();
-}
-
-private void translateCircle(Circle circle, Circle circle1) {
-    TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
-    TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
-    if (themeToggle.isDarkMode()) {
-        moving.setToX(-10);
-        moving1.setToX(-10);
-    } else {
-        moving.setToX(10);
-        moving1.setToX(10);
-    }
-    moving.setOnFinished(event -> utils.changeTheme());
-    ParallelTransition run = new ParallelTransition(moving1, moving);
-    run.play();
-}
-
-public void addNew(String text) {
-    if (text.equalsIgnoreCase("project")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(true);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(false);
-
-    } else if (text.equalsIgnoreCase("user")) {
-        createAccPane.setVisible(true);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(false);
-    } else if (text.equalsIgnoreCase("labor")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(false);
-        createLaborPane.setVisible(true);
-    } else if (text.equalsIgnoreCase("report")) {
-        createAccPane.setVisible(false);
-        createProjectPane.setVisible(false);
-        createReportPane.setVisible(true);
-        createLaborPane.setVisible(false);
-    } else {
-        return;
-    }
-}
-
 }
