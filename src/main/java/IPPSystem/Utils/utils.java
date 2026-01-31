@@ -5,7 +5,6 @@ import IPPSystem.Constants.notificationType;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +21,8 @@ import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -30,7 +31,7 @@ public class utils {
 
     private static Parent currentAlertRoot = null;
 
-    private static durationHelper helper = new durationHelper();
+    private static durationHelper durationHelper = new durationHelper();
 
     //setting the tile bar of the exit,mini,restore buttons called from the tileBar class
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn) {
@@ -200,12 +201,12 @@ public class utils {
         switchPage.getInstance(null).viewUsersInfo(user);
     }
 
-    public static Double durationFormat(Double duration, enumDuration durationStatus){return helper.durationAssign(duration,durationStatus);}
+    public static Double durationFormat(Double duration, enumDuration durationStatus){return durationHelper.durationAssign(duration,durationStatus);}
 
-    public static HashMap<enumDuration,Double> getDuration(Double duration){return helper.showDuration(duration);}
+    public static HashMap<enumDuration,Double> getDuration(Double duration){return durationHelper.showDuration(duration);}
 
     public static String generateProjectId(int projectId){
-        String result = "pj-";
+        String result = "PRJ-";
         if (projectId >99){
             result += projectId;
         }else if(projectId >9){
@@ -217,10 +218,55 @@ public class utils {
     }
 
     public static void durationShowHelper(projects project,ComboBox<String> durationBox,TextField durationTxt){
-        helper.durationAssignHelper(project,durationBox,durationTxt);
+        durationHelper.durationAssignHelper(project,durationBox,durationTxt);
+    }
+
+    public static String getOnlyOneDuration(Double duration,enumDuration durationType){
+        if (durationType.equals(enumDuration.MONTH)) return durationHelper.showMontDuration(duration);
+        else if (durationType.equals(enumDuration.DAY)) return durationHelper.showDayDuration(duration);
+        else return durationHelper.showYearDuration(duration);
     }
 
     public static String dateFormat(Date date){return dateFormatter.formatDate(date);}
+
+    public static LocalDate toLocalDate(java.sql.Date date){return  dateFormatter.getLocalDate(date);}
+
+    public static void safeSet(Label lbl, String value) {
+        if (lbl != null) lbl.setText(value == null ? "" : value);
+    }
+
+    public static String formatPercent(double progress01) {
+        int pct = (int) Math.round(clamp01(progress01) * 100.0);
+        return pct + "%";
+    }
+
+    private static double clamp01(double v) {
+        if (v < 0) return 0;
+        if (v > 1) return 1;
+        return v;
+    }
+
+    public static String readTrim(TextField tf) {
+        if (tf == null) return null;
+        String s = tf.getText();
+        if (s == null) return null;
+        s = s.trim();
+        return s.isEmpty() ? null : s;
+    }
+
+    public static Double tryParseDouble(String s) {
+        if (s == null) return null;
+        try {
+            return Double.parseDouble(s.replace(",", ""));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static String formatMoney(double value) {
+        if (value <= 0) return "-";
+        return new DecimalFormat("#,##0.##").format(value) + " MMK";
+    }
 
     public static FontIcon iconSet(FontAwesomeSolid glyph){
         FontIcon icon = new FontIcon(glyph);

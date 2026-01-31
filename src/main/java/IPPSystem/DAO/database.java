@@ -6,7 +6,6 @@ import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 import javafx.collections.ObservableList;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 
 public class database {
@@ -81,7 +80,7 @@ public class database {
 
     public static boolean deleteSkillFromWorkItem(int assignWorkItemId,int skillId){return workItemDatabase.deleteSkillFromWorkItem(assignWorkItemId,skillId);}
 
-    public static ObservableList<skills> getAllAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
+    public static ObservableList<skills> getAllSkillByAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
 
     public static boolean setSkillsToWorkItem(skills skill,assignStatus status){return workItemDatabase.addSkillToWorkItem(skill,status);}
 

@@ -32,10 +32,10 @@ public class projectDatabase {
                         rs.getString("projectInstanceName"),
                         rs.getInt("projectTypeId"),
                         rs.getString("projectTypeName"),
-                        rs.getInt("buildingId"),
-                        rs.getString("buildingName"),
                         rs.getInt("levelId"),
                         rs.getString("levelName"),
+                        rs.getInt("buildingId"),
+                        rs.getString("buildingName"),
                         rs.getInt("userId"),
                         rs.getString("userName"),
                         rs.getDouble("projectArea"),
@@ -108,7 +108,8 @@ public class projectDatabase {
             cstmt.setDouble(16,assign.getProjectDuration());
             cstmt.setDate(17,assign.getStartDate());
             cstmt.setDate(18,assign.getEndDate());
-            return cstmt.execute();
+            ResultSet rs = cstmt.executeQuery();
+            return rs.next() && rs.getBoolean(1);
 
 
         } catch (SQLException e) {
@@ -118,7 +119,7 @@ public class projectDatabase {
     }
 
     public static boolean updateAssignProject(projects assign,assignStatus assignStatus){
-        try(CallableStatement cs = con.prepareCall("")){
+        try(CallableStatement cs = con.prepareCall("{CALL updateAssignProject(?,?,?,?,?,?,?)}")){
             cs.setInt(1,assign.getAssignProjectId());
             cs.setString(2,assignStatus.toString());
             cs.setDouble(3,assign.getProjectCost());
@@ -126,7 +127,8 @@ public class projectDatabase {
             cs.setDouble(5,assign.getProjectDuration());
             cs.setDate(6,assign.getStartDate());
             cs.setDate(7,assign.getEndDate());
-            return cs.execute();
+            ResultSet rs = cs.executeQuery();
+            return rs.next() && rs.getBoolean(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -149,11 +151,11 @@ public class projectDatabase {
 
     public static String currentAssignProject(int userId) {
         try {
-            String sql = "SELECT projectInstanceName FROM assignProjects WHERE supervisorId = ? AND projectStatus = ?";
+            String sql = "SELECT projectInstanceName FROM assignProjects WHERE managerId = ? AND projectStatus = ?";
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, userId);
-            pstmt.setInt(2, 2);
+            pstmt.setInt(2, 2); // 2 = inProgressing;
 
             ResultSet rs = pstmt.executeQuery();
 

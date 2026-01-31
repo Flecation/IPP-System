@@ -111,7 +111,7 @@ public class workItemDetailsController {
         }
 
         if (viewSkillTable != null) {
-            viewSkillTable.setItems(database.getAllAssignWorkItemDetails(item.getAssignWorkItemId()));
+            viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
         }
 
         // Basic cost/EV placeholders (your model doesn't have actual vs planned cost yet)
