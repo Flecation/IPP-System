@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" prefWidth="1220.0" spacing="10.0" style="-fx-background-color: #c7d5f2; -fx-background-radius: 10;">
+         <children>
+            <Label fx:id="projectName" alignment="TOP_LEFT" text="Enterprise Project Dashboard" textFill="#041a5bf7">
+               <font>
+                  <Font name="Times New Roman Bold" size="25.0" />
+               </font>
+            </Label>
+            <Region prefWidth="423.0" HBox.hgrow="ALWAYS" />
+            <ComboBox fx:id="comboProjectList" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Project Overview" style="-fx-background-color: transparent; -fx-border-color: orange; -fx-border-radius: 10;" />
+            <ComboBox fx:id="comboProjectList1" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Year" style="-fx-background-color: transparent; -fx-border-color: orange; -fx-border-radius: 10;" />
+            <ComboBox fx:id="comboProjectList2" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Months" style="-fx-background-color: transparent; -fx-border-color: orange; -fx-border-radius: 10;" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1220.0" spacing="10.0">
+         <children>
+            <VBox maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label alignment="CENTER" text="Total Project">
+                           <font>
+                              <Font name="Times New Roman" size="15.0" />
+                           </font>
+                        </Label>
+                        <Region prefHeight="26.0" prefWidth="135.0" HBox.hgrow="ALWAYS" />
+                        <ImageView fitHeight="24.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+                  <Label fx:id="lblDayRemainPercent11" alignment="CENTER" text="30 projects" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label alignment="CENTER" text="Total Revenue">
+                           <font>
+                              <Font name="Times New Roman" size="15.0" />
+                           </font>
+                        </Label>
+                        <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
+                        <Label text="Label" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+                  <Label fx:id="lblDayRemainPercent111" alignment="CENTER" text="\$300,000 M" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label alignment="CENTER" text="Total Expense">
+                           <font>
+                              <Font name="Times New Roman" size="15.0" />
+                           </font>
+                        </Label>
+                        <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
+                        <Label text="Label" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+                  <Label fx:id="lblDayRemainPercent112" alignment="CENTER" text="\$500 M" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label alignment="CENTER" text="Total Worker">
+                           <font>
+                              <Font name="Times New Roman" size="15.0" />
+                           </font>
+                        </Label>
+                        <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
+                        <Label text="Label" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+                  <Label fx:id="lblDayRemainPercent113" alignment="CENTER" text="1221 workers" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0">
+         <children>
+            <VBox alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;">
+               <children>
+                  <Label text="Project Status Distribution">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+                  <HBox prefHeight="265.0" prefWidth="387.0">
+                     <children>
+                        <PieChart labelsVisible="false" maxWidth="250.0" />
+                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Circle fill="#1198d7" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Circle fill="#ff341f" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Circle fill="#f8ff1f" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;">
+               <children>
+                  <Label text="Schedule Performance Overview">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+                  <HBox prefHeight="265.0" prefWidth="387.0">
+                     <children>
+                        <PieChart labelsVisible="false" maxWidth="250.0" />
+                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#ee0909" strokeWidth="7.0" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#1a27dd" strokeWidth="7.0" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                 <children>
+                                    <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#dada0c" strokeWidth="7.0" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;">
+               <children>
+                  <Label text="Top 3 Cost-Intensive Project Types">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+                  <VBox prefHeight="58.0" prefWidth="395.0">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="23.0" prefWidth="395.0">
+                           <children>
+                              <Label text="Label" />
+                              <Region prefHeight="23.0" prefWidth="300.0" />
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                        <ProgressBar prefHeight="20.0" prefWidth="372.0" progress="0.51" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="58.0" prefWidth="395.0">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="23.0" prefWidth="395.0">
+                           <children>
+                              <Label text="Label" />
+                              <Region prefHeight="23.0" prefWidth="300.0" />
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                        <ProgressBar prefHeight="20.0" prefWidth="372.0" progress="0.51" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="58.0" prefWidth="395.0">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="23.0" prefWidth="395.0">
+                           <children>
+                              <Label text="Label" />
+                              <Region prefHeight="23.0" prefWidth="300.0" />
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                        <ProgressBar prefHeight="20.0" prefWidth="372.0" progress="0.51" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0">
+         <children>
+            <VBox maxHeight="513.0" maxWidth="664.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="664.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;">
+               <children>
+                  <Label style="-fx-background-radius: 8;" text="Monthly Project Cost Trend">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+                  <LineChart prefHeight="300.0" prefWidth="520.0">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+            <VBox maxHeight="513.0" maxWidth="670.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="670.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;">
+               <children>
+                  <Label style="-fx-background-radius: 8;" text="Active Project Trend">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+                  <LineChart prefHeight="300.0" prefWidth="520.0">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

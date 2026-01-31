@@ -980,145 +980,296 @@ END$$
 
 DELIMITER ;
 
- DELIMITER $$
+DELIMITER $$
 
- CREATE PROCEDURE assignFullProject(
-     IN p_projectTypeId INT,
-     IN p_projectInstanceName VARCHAR(255),
-     IN p_projectBuildingId INT,
-     IN p_projectLevelId INT,
-     IN p_projectArea DOUBLE,
-     IN p_projectHeight DOUBLE,
-     IN p_totalStories DOUBLE,
-     IN p_totalUnits DOUBLE,
-     IN p_supervisorId INT,
-     IN p_projectLocation VARCHAR(255),
-     IN p_projectOverHeadCost DOUBLE,
-     IN p_projectStatusName VARCHAR(255),
-     IN p_assignStatusName VARCHAR(255),
-     IN p_startDate DATE,
-     IN p_endDate DATE
- )
- BEGIN
-     DECLARE v_assignProjectId INT;
-     DECLARE v_projectStatusId INT;
-     DECLARE v_assignStatusId INT;
-     DECLARE v_assignProjectDetailId INT;
-     DECLARE v_workItemStatusId INT;
-     DECLARE v_taskStatusId INT;
+CREATE PROCEDURE assignFullProjectAuto(
+    IN p_projectTypeId INT,
+    IN p_projectInstanceName VARCHAR(255),
+    IN p_projectBuildingId INT,
+    IN p_projectLevelId INT,
+    IN p_projectArea DOUBLE,
+    IN p_projectHeight DOUBLE,
+    IN p_totalStories DOUBLE,
+    IN p_totalUnits DOUBLE,
+    IN p_supervisorId INT,
+    IN p_projectLocation VARCHAR(255),
 
-     -- 1. Get projectStatusId
-     SELECT projectStatusId INTO v_projectStatusId
-     FROM projectStatus
-     WHERE projectStatusName = p_projectStatusName
-     LIMIT 1;
+    IN p_constructorCost DOUBLE,
+    IN p_projectDurationDays DOUBLE,
+    IN p_projectStatusName VARCHAR(50),
+    IN p_projectStartDate DATE,
+    IN p_projectEndDate DATE
+)
+proc: BEGIN
 
-     IF v_projectStatusId IS NULL THEN
-         SELECT FALSE AS success;
-         LEAVE BEGIN;
-     END IF;
+    DECLARE v_assignProjectId INT;
+    DECLARE v_projectStatusId INT;
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignWorkItemId INT;
 
-     -- 2. Insert assignProjects
-     INSERT INTO assignProjects(
-         projectTypeId,
-         projectInstanceName,
-         projectBuildingId,
-         projectLevelId,
-         projectArea,
-         projectHeight,
-         totalStories,
-         totalUnits,
-         supervisorId,
-         projectLocation,
-         projectOverHeadCost,
-         projectStatus
-     ) VALUES (
-         p_projectTypeId,
-         p_projectInstanceName,
-         p_projectBuildingId,
-         p_projectLevelId,
-         p_projectArea,
-         p_projectHeight,
-         p_totalStories,
-         p_totalUnits,
-         p_supervisorId,
-         p_projectLocation,
-         p_projectOverHeadCost,
-         v_projectStatusId
-     );
+    DECLARE v_workItemCost DOUBLE;
+    DECLARE v_workItemDuration DOUBLE;
+    DECLARE v_workItemLabors DOUBLE;
+    DECLARE v_taskDuration DOUBLE;
+    DECLARE v_projectLaborQty DOUBLE;
 
-     SET v_assignProjectId = LAST_INSERT_ID();
+    DECLARE v_costPercent DOUBLE;
+    DECLARE v_durationPercent DOUBLE;
+    DECLARE v_taskDurationPercent DOUBLE;
 
-     -- 3. Get assignStatusId
-     SELECT assignStatusId INTO v_assignStatusId
-     FROM assignStatus
-     WHERE assignStatusName = p_assignStatusName
-     LIMIT 1;
+    DECLARE done INT DEFAULT 0;
 
-     IF v_assignStatusId IS NULL THEN
-         SELECT FALSE AS success;
-         LEAVE BEGIN;
-     END IF;
+    -- Cursor variables
+    DECLARE c_workItemDetailId INT;
+    DECLARE c_projectWorkItemId INT;
+    DECLARE c_minCostPercent DOUBLE;
+    DECLARE c_maxCostPercent DOUBLE;
+    DECLARE c_minDurationPercent DOUBLE;
+    DECLARE c_maxDurationPercent DOUBLE;
+    DECLARE c_minLabors DOUBLE;
+    DECLARE c_maxLabors DOUBLE;
 
-     -- 4. Insert assignProjectDetails from projectDetail
-     INSERT INTO assignProjectDetails(
-         assignProjectId,
-         assignStatusId,
-         projectCost,
-         projectLaborQty,
-         projectDuration,
-         startDate,
-         endDate
-     )
-     SELECT
-         v_assignProjectId,
-         v_assignStatusId,
-         projectCost,
-         projectLaborQty,
-         projectDuration,
-         p_startDate,
-         p_endDate
-     FROM projectDetail
-     WHERE projectTypeId = p_projectTypeId;
+    DECLARE c_taskDetailId INT;
+    DECLARE c_projectTaskId INT;
+    DECLARE c_minTaskDurationPercent DOUBLE;
+    DECLARE c_maxTaskDurationPercent DOUBLE;
 
-     SET v_assignProjectDetailId = LAST_INSERT_ID();
+    -- Inside task_loop
+    DECLARE v_quantityFormula VARCHAR(255);
+    DECLARE v_unitOfMeasure VARCHAR(50);
+    DECLARE v_quantity DOUBLE;
+    DECLARE v_sql TEXT;
 
-     -- 5. Get default workItemStatus (autoAssign)
-     SELECT assignStatusId INTO v_workItemStatusId
-     FROM assignStatus
-     WHERE assignStatusName = 'autoAssign'
-     LIMIT 1;
-     IF v_workItemStatusId IS NULL THEN SET v_workItemStatusId = 1; END IF;
+    -- WorkItem cursor
+    DECLARE cur_workitems CURSOR FOR
+        SELECT wid.workItemDetailId,
+               wid.projectWorkItemId,
+               wid.minCost,
+               wid.maxCost,
+               wid.minDuration,
+               wid.maxDuration,
+               wid.minLabors,
+               wid.maxLabors
+        FROM workItemDetails wid
+        JOIN projectDetails pd ON wid.projectDetailId = pd.projectDetailId
+        WHERE pd.projectTypeId = p_projectTypeId
+          AND (pd.projectLevelId = p_projectLevelId OR pd.projectLevelId IS NULL)
+          AND (pd.projectBuildingId = p_projectBuildingId OR pd.projectBuildingId IS NULL);
 
-     -- 6. Insert assignWorkItems based on projectDetail
-     INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus)
-     SELECT
-         v_assignProjectId,
-         pd.projectWorkItemId,
-         v_workItemStatusId
-     FROM projectDetail pd
-     WHERE pd.projectTypeId = p_projectTypeId;
+    -- Task cursor (depends on current workItem)
+    DECLARE cur_tasks CURSOR FOR
+        SELECT td.taskDetailId,
+               td.projectTaskId,
+               td.minDuration,
+               td.maxDuration
+        FROM taskDetails td
+        WHERE td.workItemDetailId = c_workItemDetailId;
 
-     -- 7. Get default taskStatus (autoAssign)
-     SELECT assignStatusId INTO v_taskStatusId
-     FROM assignStatus
-     WHERE assignStatusName = 'autoAssign'
-     LIMIT 1;
-     IF v_taskStatusId IS NULL THEN SET v_taskStatusId = 1; END IF;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-     -- 8. Insert assignTasks based on projectDetail
-     INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus, plannedQty, unitOfMeasure)
-     SELECT
-         aw.assignWorkItemId,
-         pd.projectTaskId,
-         v_taskStatusId,
-         IFNULL(pd.plannedQty, 1),
-         IFNULL(pd.unitOfMeasure, 'unit')
-     FROM assignWorkItems aw
-     JOIN projectDetail pd ON pd.projectWorkItemId = aw.projectWorkItemId
-     WHERE aw.assignProjectId = v_assignProjectId;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
 
-     SELECT TRUE AS success;
- END$$
+    START TRANSACTION;
 
- DELIMITER ;
+    -- 1. Status IDs
+    SELECT projectStatusId INTO v_projectStatusId
+    FROM projectStatus
+    WHERE projectStatusName = p_projectStatusName
+    LIMIT 1;
+
+    SELECT assignStatusId INTO v_assignStatusId
+    FROM assignStatus
+    WHERE assignStatusName = 'autoAssign'
+    LIMIT 1;
+
+    -- 2. Insert Project
+    INSERT INTO assignProjects (
+        projectTypeId,
+        projectInstanceName,
+        projectBuildingId,
+        projectLevelId,
+        projectArea,
+        projectHeight,
+        totalStories,
+        totalUnits,
+        supervisorId,
+        projectLocation,
+        projectOverHeadCost,
+        projectStatus
+    ) VALUES (
+        p_projectTypeId,
+        p_projectInstanceName,
+        p_projectBuildingId,
+        p_projectLevelId,
+        p_projectArea,
+        p_projectHeight,
+        p_totalStories,
+        p_totalUnits,
+        p_supervisorId,
+        p_projectLocation,
+        0,
+        v_projectStatusId
+    );
+
+    SET v_assignProjectId = LAST_INSERT_ID();
+
+    -- 3. Insert Project Planned Values
+    INSERT INTO assignProjectDetails (
+        assignProjectId,
+        assignStatusId,
+        projectCost,
+        projectLaborQty,
+        projectDuration
+    ) VALUES (
+        v_assignProjectId,
+        v_assignStatusId,
+        p_constructorCost,
+        NULL,
+        p_projectDurationMonths
+    );
+
+    -- 4. WorkItem Loop
+    OPEN cur_workitems;
+
+    workitem_loop: LOOP
+        FETCH cur_workitems INTO
+            c_workItemDetailId,
+            c_projectWorkItemId,
+            c_minCostPercent,
+            c_maxCostPercent,
+            c_minDurationPercent,
+            c_maxDurationPercent,
+            c_minLabors,
+            c_maxLabors;
+
+        IF done = 1 THEN
+            LEAVE workitem_loop;
+        END IF;
+
+        -- Derived percentages (midpoint)
+        SET v_costPercent = (c_minCostPercent + c_maxCostPercent) / 2;
+        SET v_durationPercent = (c_minDurationPercent + c_maxDurationPercent) / 2;
+
+        -- Final WorkItem values
+        SET v_workItemCost = p_constructorCost * (v_costPercent / 100);
+        SET v_workItemDuration = p_projectDurationMonths * (v_durationPercent / 100);
+        SET v_workItemLabors = (c_minLabors + c_maxLabors) / 2;
+
+        -- Insert WorkItem
+        INSERT INTO assignWorkItems (
+            assignProjectId,
+            projectWorkItemId,
+            workItemStatus
+        ) VALUES (
+            v_assignProjectId,
+            c_projectWorkItemId,
+            v_assignStatusId
+        );
+
+        SET v_assignWorkItemId = LAST_INSERT_ID();
+
+        -- Insert WorkItem Details
+        INSERT INTO assignWorkItemDetails (
+            assignWorkItemId,
+            assignStatusId,
+            workItemCost,
+            workItemLaborQty,
+            workItemDuration
+        ) VALUES (
+            v_assignWorkItemId,
+            v_assignStatusId,
+            v_workItemCost,
+            v_workItemLabors,
+            v_workItemDuration
+        );
+
+        -- 5. Task Loop
+        SET done = 0;
+        OPEN cur_tasks;
+
+        task_loop: LOOP
+            FETCH cur_tasks INTO
+                c_taskDetailId,
+                c_projectTaskId,
+                c_minTaskDurationPercent,
+                c_maxTaskDurationPercent;
+
+            IF done = 1 THEN
+                LEAVE task_loop;
+            END IF;
+
+            -- Task midpoint percentage
+            SET v_taskDurationPercent = (c_minTaskDurationPercent + c_maxTaskDurationPercent) / 2;
+
+            -- Final Task Duration
+            SET v_taskDuration = v_workItemDuration * (v_taskDurationPercent / 100);
+
+            -- 1️⃣ Get formula and unit
+            SELECT quantityFormula, unitOfMeasure
+            INTO v_quantityFormula, v_unitOfMeasure
+            FROM taskDetails
+            WHERE taskDetailId = c_taskDetailId;
+
+            -- 2️⃣ Replace placeholders with actual project values
+            SET v_sql = REPLACE(v_quantityFormula, 'area', p_projectArea);
+            SET v_sql = REPLACE(v_sql, 'totalStories', p_totalStories);
+            SET v_sql = REPLACE(v_sql, 'totalUnits', p_totalUnits);
+
+            -- 3️⃣ Prepare and execute dynamic SQL to calculate quantity
+            SET @dyn_sql = CONCAT('SELECT ', v_sql, ' INTO @quantity');
+            PREPARE stmt FROM @dyn_sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            SET v_quantity = @quantity;
+
+            INSERT INTO assignTasks (
+                assignWorkItemId,
+                projectTaskId,
+                taskStatus,
+                plannedQty,
+                unitOfMeasure
+            ) VALUES (
+                v_assignWorkItemId,
+                c_projectTaskId,
+                v_assignStatusId,
+                v_quantity,
+                v_unitOfMeasure
+            );
+
+            INSERT INTO assignTaskDetails (
+                assignTaskId,
+                assignStatusId,
+                taskDuration
+            ) VALUES (
+                LAST_INSERT_ID(),
+                v_assignStatusId,
+                v_taskDuration
+            );
+
+        END LOOP;
+
+        CLOSE cur_tasks;
+        SET done = 0;
+
+        -- 6. Skills
+        INSERT INTO assignWorkItemSkills (assignWorkItemId, skillId)
+        SELECT v_assignWorkItemId, wirs.skillId
+        FROM workItemRequireSkills wirs
+        WHERE wirs.workItemDetailId = c_workItemDetailId;
+
+    END LOOP;
+
+    CLOSE cur_workitems;
+
+    COMMIT;
+
+    SELECT TRUE AS success, v_assignProjectId AS assignProjectId;
+
+END$$
+
+DELIMITER ;
