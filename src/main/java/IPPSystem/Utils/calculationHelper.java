@@ -1,11 +1,14 @@
 package IPPSystem.Utils;
 
+import IPPSystem.DAO.database;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.workItems;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -20,9 +23,9 @@ public class calculationHelper {
     private static calculationHelper instance;
     private static Connection con;
 
-    // ===== EVM VALUES =====
     private Double pv, ev, ac, cpi, spi;
     private String cpiStatus, spiStatus;
+    private final ObservableList<workItems> assignWorkItemDetails = FXCollections.observableArrayList();
 
     private calculationHelper() {
         try {
@@ -33,14 +36,17 @@ public class calculationHelper {
     }
 
     public static calculationHelper getInstance() {
-        if (instance == null) instance = new calculationHelper();
+        if (instance == null) {
+            instance = new calculationHelper();
+        }
         return instance;
     }
 
-    // ==============================
-    // DB CALCULATION
-    // ==============================
+    /* =====================================================
+       CALCULATE FROM DATABASE
+       ===================================================== */
     public void calculate(projects project) {
+        assignWorkItemDetails.setAll(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
 
         String sql = "{CALL calculateCpiSpi(?)}";
 
@@ -62,27 +68,29 @@ public class calculationHelper {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("EVM calculation failed", e);
         }
     }
 
-    // ==============================
-    // UNIVERSAL CIRCLE SETUP
-    // ==============================
+    /* =====================================================
+       UI HELPERS
+       ===================================================== */
     public void setupCpiCircle(Circle circle) {
-        if (cpi == null) return;
-        setupCircle(circle, cpi, cpiStatus, "CPI");
+        if (cpi != null) {
+            setupCircle(circle, cpi, "CPI");
+        }
     }
 
     public void setupSpiCircle(Circle circle) {
-        if (spi == null) return;
-        setupCircle(circle, spi, spiStatus, "SPI");
+        if (spi != null) {
+            setupCircle(circle, spi, "SPI");
+        }
     }
 
-    // ==============================
-    // CORE CIRCLE LOGIC (REUSABLE)
-    // ==============================
-    private void setupCircle(Circle circle, double value, String status, String type) {
+    /* =====================================================
+       CIRCLE ANIMATION
+       ===================================================== */
+    private void setupCircle(Circle circle, double value, String type) {
 
         double radius = circle.getRadius();
         double circumference = 2 * Math.PI * radius;
@@ -90,11 +98,13 @@ public class calculationHelper {
 
         circle.setFill(null);
         circle.setRotate(-90);
+        circle.setStrokeWidth(6);
 
-        // Color
+        circle.getStrokeDashArray().clear();
+        circle.getStrokeDashArray().add(circumference);
+
         circle.setStroke(getColor(type, value));
 
-        // Animation
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(circle.strokeDashOffsetProperty(), circumference)
@@ -107,41 +117,30 @@ public class calculationHelper {
         timeline.play();
     }
 
-    // ==============================
-    // HELPERS
-    // ==============================
+    /* =====================================================
+       HELPERS
+       ===================================================== */
     private double normalize(double value) {
-        double min = 0.8;
-        double max = 1.2;
-        double progress = (value - min) / (max - min);
-        return Math.max(0, Math.min(1, progress));
+        if (value <= 0) return 0;
+        if (value >= 1) return 1;
+        return value;
     }
 
     private Color getColor(String type, double value) {
 
-        if ("CPI".equals(type)) {
-            if (value > 1.05) return Color.web("#2ecc71"); // green
-            if (value >= 0.95) return Color.web("#f1c40f"); // yellow
-            return Color.web("#e74c3c"); // red
-        }
-
-        if ("SPI".equals(type)) {
-            if (value > 1.05) return Color.web("#2ecc71");
-            if (value >= 0.95) return Color.web("#f1c40f");
-            return Color.web("#e74c3c");
-        }
-
-        return Color.GRAY;
+        if (value > 1.05) return Color.web("#2ecc71");
+        if (value >= 0.95) return Color.web("#f1c40f");
+        return Color.web("#e74c3c");
     }
 
-    // ==============================
-    // GETTERS
-    // ==============================
+    /* =====================================================
+       GETTERS
+       ===================================================== */
+    public Double getPv() { return pv; }
+    public Double getEv() { return ev; }
+    public Double getAc() { return ac; }
     public Double getCpi() { return cpi; }
     public Double getSpi() { return spi; }
     public String getCpiStatus() { return cpiStatus; }
     public String getSpiStatus() { return spiStatus; }
-    public Double getPv() { return pv; }
-    public Double getEv() { return ev; }
-    public Double getAc() { return ac; }
 }

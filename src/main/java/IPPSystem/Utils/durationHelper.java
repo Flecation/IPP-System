@@ -31,6 +31,18 @@ public class durationHelper {
         return result;
     }
 
+    public String showMontDuration(Double duration){
+        return duration+" Months";
+    }
+
+    public String showDayDuration(Double duration){
+        return duration*26+" Days";
+    }
+
+    public String showYearDuration(Double duration){
+        return duration/12 + " Years";
+    }
+
     public void durationAssignHelper(projects project, ComboBox<String> durationComboBox, TextField durationShowTxt){
         HashMap<enumDuration,Double> getDuration = showDuration(project.getProjectDuration());
         for (enumDuration s : getDuration.keySet()){

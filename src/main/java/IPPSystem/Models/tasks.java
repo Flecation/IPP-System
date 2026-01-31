@@ -6,6 +6,8 @@ public class tasks extends workItems{
     private int assignTaskId;
     private int taskId;
     private String taskName;
+    private double plannedQty;
+    private String unitOfMeasure;
 
 
     public tasks(){}
@@ -36,6 +38,13 @@ public class tasks extends workItems{
         this.taskId = taskId;
     }
 
+    public tasks(int assignProjectId, int workItemId, int taskId, Date startDate, Date endDate, double projectDuration, double plannedQty, String unitOfMeasure) {
+        super(assignProjectId, workItemId, startDate, endDate, projectDuration);
+        this.taskId = taskId;
+        this.plannedQty = plannedQty;
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
     public tasks( int assignTaskId, String taskName, String projectStatus,String assignStatus, Date startDate, Date endDate, double projectDuration) {
         super(projectStatus,assignStatus, startDate, endDate, projectDuration);
         this.assignTaskId = assignTaskId;
@@ -53,6 +62,14 @@ public class tasks extends workItems{
         super(projectStatus, assignStatus, startDate, endDate, projectDuration);
         this.assignTaskId = assignTaskId;
         this.taskName = taskName;
+    }
+
+    public tasks(int assignTaskId, String taskName, String projectStatus, String assignStatus, double projectDuration, Date startDate, Date endDate, double plannedQty, String unitOfMeasure) {
+        super(projectStatus, assignStatus, startDate, endDate, projectDuration);
+        this.assignTaskId = assignTaskId;
+        this.taskName = taskName;
+        this.plannedQty = plannedQty;
+        this.unitOfMeasure = unitOfMeasure;
     }
 
     public int getAssignTaskId() {
@@ -77,5 +94,21 @@ public class tasks extends workItems{
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public double getPlannedQty() {
+        return plannedQty;
+    }
+
+    public void setPlannedQty(double plannedQty) {
+        this.plannedQty = plannedQty;
+    }
+
+    public String getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(String unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
     }
 }

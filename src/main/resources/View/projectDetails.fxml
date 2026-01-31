@@ -24,39 +24,45 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="0.0" prefHeight="675.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.projectDetailsController">
     <content>
         <VBox alignment="CENTER" prefHeight="675.0" prefWidth="1200.0" style="-fx-background-color: #f5f7fa;">
-         <VBox alignment="CENTER_LEFT" spacing="10.0">
+         <HBox alignment="CENTER">
             <VBox.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
             <children>
-                   <HBox alignment="CENTER_LEFT" spacing="15">
-                       <Label fx:id="projectName" text="Central Office Tower" textFill="NAVY">
-                           <font>
-                               <Font name="System Bold" size="27.0" />
-                           </font>
-                           <HBox.margin>
-                               <Insets />
-                           </HBox.margin>
-                       </Label>
-                       <Label fx:id="projectStatus" style="-fx-background-color: #a1e889; -fx-background-radius: 10;" text="Active" textFill="NAVY">
-                           <font>
-                               <Font size="14.0" />
-                           </font>
-                           <padding>
-                               <Insets bottom="3.0" left="10.0" right="10.0" top="3.0" />
-                           </padding>
-                       </Label>
-                   </HBox>
-                   <Label fx:id="projectGeneral" text="PRJ-001, Delta Construction, Office Building" textFill="GREY">
-                       <font>
-                           <Font name="System Bold" size="15.0" />
-                       </font>
-                   </Label>
+               <VBox alignment="CENTER_LEFT">
+                  <children>
+                         <HBox alignment="CENTER_LEFT" spacing="15">
+                             <Label fx:id="projectName" text="Central Office Tower" textFill="NAVY">
+                                 <font>
+                                     <Font name="System Bold" size="27.0" />
+                                 </font>
+                                 <HBox.margin>
+                                     <Insets />
+                                 </HBox.margin>
+                             </Label>
+                             <Label fx:id="projectStatus" style="-fx-background-color: #a1e889; -fx-background-radius: 10;" text="Active" textFill="NAVY">
+                                 <font>
+                                     <Font size="14.0" />
+                                 </font>
+                                 <padding>
+                                     <Insets bottom="3.0" left="10.0" right="10.0" top="3.0" />
+                                 </padding>
+                             </Label>
+                         </HBox>
+                         <Label fx:id="projectGeneral" text="PRJ-001, Delta Construction, Office Building" textFill="GREY">
+                             <font>
+                                 <Font name="System Bold" size="15.0" />
+                             </font>
+                         </Label>
+                  </children>
+               </VBox>
+               <Region maxWidth="760.0" prefHeight="200.0" HBox.hgrow="ALWAYS" />
+               <Button fx:id="backToViewProjectBtn" mnemonicParsing="false" text="Back" />
             </children>
-         </VBox>
+         </HBox>
 
               <!-- Top Metrics Cards -->
-              <HBox alignment="CENTER_LEFT" maxHeight="150.0" minHeight="150.0" spacing="100.0">
+              <HBox alignment="CENTER" maxHeight="150.0" minHeight="150.0" spacing="100.0">
                    <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10.0" HBox.hgrow="NEVER">
                        <Label alignment="CENTER" text="Completed Days" textFill="GREY" wrapText="true">
                            <font>
@@ -91,30 +97,30 @@
                </padding>
                    </VBox>
                    <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10">
-                       <Label alignment="CENTER" text="Completed Tasks" textFill="GREY" wrapText="true">
+                       <Label alignment="CENTER" text="Completed Work Items" textFill="GREY" wrapText="true">
                            <font>
                                <Font size="21.0" />
                            </font>
                        </Label>
-                       <Label fx:id="taskCompleteLbl" alignment="CENTER" text="62.5%" wrapText="true">
+                       <Label fx:id="wiCompleteLbl" alignment="CENTER" text="62.5%" wrapText="true">
                            <font>
                                <Font name="Al Bayan Bold" size="29.0" />
                            </font>
                        </Label>
                        <HBox alignment="CENTER" maxWidth="250.0" minWidth="250.0">
-                           <Label fx:id="completedTask" minWidth="50.0" text="30 tasks" wrapText="true" HBox.hgrow="ALWAYS">
+                           <Label fx:id="completedWi" minWidth="50.0" text="30 tasks" wrapText="true" HBox.hgrow="ALWAYS">
                                <font>
                                    <Font size="10.0" />
                                </font>
                            </Label>
                   <Region HBox.hgrow="ALWAYS" />
-                           <Label fx:id="totalTask" alignment="CENTER_RIGHT" minWidth="50.0" text="80 tasks" wrapText="true" HBox.hgrow="ALWAYS">
+                           <Label fx:id="totalWi" alignment="CENTER_RIGHT" minWidth="50.0" text="80 tasks" wrapText="true" HBox.hgrow="ALWAYS">
                                <font>
                                    <Font size="10.0" />
                                </font>
                            </Label>
                        </HBox>
-                       <ProgressBar fx:id="taskCompleteProgress" maxHeight="20.0" maxWidth="250.0" minHeight="20.0" minWidth="250.0" progress="0.35" style="-fx-accent: #a4c3f5; -fx-background-color: white;">
+                       <ProgressBar fx:id="wiCompleteProgress" maxHeight="20.0" maxWidth="250.0" minHeight="20.0" minWidth="250.0" progress="0.35" style="-fx-accent: #a4c3f5; -fx-background-color: white;">
                            <effect>
                                <ColorAdjust brightness="-0.38" contrast="1.0" />
                            </effect>
@@ -162,10 +168,10 @@
               </HBox>
 
               <!-- Middle Section: Project Info + SPI/CPI -->
-              <HBox alignment="CENTER_LEFT" maxHeight="320.0" spacing="100.0">
+              <HBox alignment="CENTER" maxHeight="320.0" spacing="100.0">
                   <StackPane maxWidth="500.0" minWidth="500.0">
                       <children>
-                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;">
+                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;" visible="false">
                               <children>
                                   <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" text="Project Info">
                            <VBox.margin>
@@ -233,16 +239,12 @@
                                   </HBox>
                                   <VBox alignment="CENTER_LEFT" spacing="10.0">
                                       <children>
-                                          <Label style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Progress:" />
-                                          <HBox alignment="CENTER_LEFT" spacing="10">
-                                              <children>
-                                                  <ProgressBar fx:id="projectViewFinishProgress" maxHeight="20.0" maxWidth="300.0" minHeight="20.0" minWidth="300.0" progress="0.49" style="-fx-accent:#3b82f6;" />
-                                                  <Label fx:id="projectViewFinishLbl" style="-fx-font-weight:bold; -fx-font-size:13px;" text="49%" />
-                                              </children>
-                                 <VBox.margin>
-                                    <Insets left="40.0" />
-                                 </VBox.margin>
-                                          </HBox>
+                                          <Label style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Additional Requirement :" />
+                              <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="0.0" maxWidth="500.0">
+                                 <content>
+                                    <VBox fx:id="moreDataVbox" alignment="CENTER_LEFT" />
+                                 </content>
+                              </ScrollPane>
                                       </children>
                                       <VBox.margin>
                                           <Insets />
@@ -277,7 +279,7 @@
                                                   </TextField>
                                                   <Label fx:id="editContactLbl" text="Contract Value" textFill="GREY" StackPane.alignment="CENTER_LEFT">
                                        <StackPane.margin>
-                                          <Insets left="20.0" />
+                                          <Insets left="15.0" />
                                        </StackPane.margin>
                                     </Label>
                                  </children>
@@ -293,7 +295,7 @@
                                                         </TextField>
                                                         <Label fx:id="editDurationLbl" text="Duration" textFill="GREY" StackPane.alignment="CENTER_LEFT">
                                              <StackPane.margin>
-                                                <Insets left="20.0" />
+                                                <Insets left="15.0" />
                                              </StackPane.margin>
                                           </Label>
                                        </children>
@@ -328,10 +330,13 @@
                                             </TextField>
                                             <Label fx:id="editAddressLbl" text="Address" textFill="GREY" StackPane.alignment="CENTER_LEFT">
                                  <StackPane.margin>
-                                    <Insets left="20.0" />
+                                    <Insets left="15.0" />
                                  </StackPane.margin>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
                         </StackPane>
                         <HBox alignment="CENTER_RIGHT" maxHeight="50.0" minHeight="50.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
@@ -371,7 +376,7 @@
                      </StackPane.margin>
                             </Label>
                        </StackPane>
-               <HBox alignment="CENTER_LEFT">
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
                               <Label maxWidth="65.0" minWidth="65.0" text="Status    " wrapText="true" HBox.hgrow="ALWAYS">
                                   <font>
@@ -385,7 +390,7 @@
                   </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT">
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
                               <Label maxWidth="65.0" minWidth="65.0" text="PV ">
                                   <font>
@@ -399,14 +404,14 @@
                   </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT">
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="SV">
+                              <Label maxWidth="65.0" minWidth="65.0" text="EV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
-                     <Label fx:id="svLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="spiEvLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
                   </children>
                   <padding>
                      <Insets left="35.0" />
@@ -434,9 +439,9 @@
                      </StackPane.margin>
                             </Label>
                        </StackPane>
-               <HBox>
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="Status">
+                              <Label maxWidth="65.0" minWidth="65.0" text="Status" wrapText="true">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
@@ -448,7 +453,7 @@
                   </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox>
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
                               <Label maxWidth="65.0" minWidth="65.0" text="PV">
                                   <font>
@@ -462,14 +467,14 @@
                   </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox>
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="CV">
+                              <Label maxWidth="65.0" minWidth="65.0" text="EV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
-                     <Label fx:id="cvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="cpiEvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
                   <padding>
                      <Insets left="35.0" />
@@ -480,14 +485,18 @@
                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                   </VBox.margin>
               </HBox>
-                  <VBox alignment="CENTER_LEFT" spacing="20.0">
+                  <VBox alignment="CENTER" spacing="20.0">
                       <children>
-                          <Label text="📋 Project Categories" textFill="#2c3e50">
-                              <font>
-                                  <Font name="System Bold" size="20.0" />
-                              </font>
-                          </Label>
-                          <TableView fx:id="workItemTable" minHeight="300.0" prefHeight="0.0" VBox.vgrow="ALWAYS">
+               <HBox alignment="CENTER_LEFT" maxWidth="1180.0">
+                  <children>
+                                <Label text="📋 Project Categories" textFill="#2c3e50">
+                                    <font>
+                                        <Font name="System Bold" size="20.0" />
+                                    </font>
+                                </Label>
+                  </children>
+               </HBox>
+                          <TableView fx:id="workItemTable" maxWidth="1180.0" minHeight="300.0" prefHeight="0.0" VBox.vgrow="ALWAYS">
                               <columns>
                                   <TableColumn fx:id="workItemNameCol" prefWidth="250" text="Work Item">
                                       <cellValueFactory>

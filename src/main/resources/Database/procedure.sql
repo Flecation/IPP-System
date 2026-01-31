@@ -65,6 +65,24 @@ END$$
 
 DELIMITER ;
 
+ DELIMITER $$
+
+ CREATE PROCEDURE getBuildingNameByProjectId(
+     IN p_projectTypeId INT
+ )
+ BEGIN
+     SELECT DISTINCT
+         b.projectBuildingId,
+         b.projectBuildingName
+     FROM projectDetails pd
+     INNER JOIN buildings b
+         ON b.projectBuildingId = pd.projectBuildingId
+     WHERE pd.projectTypeId = p_projectTypeId
+     ORDER BY b.projectBuildingName;
+ END$$
+
+ DELIMITER ;
+
 -- for the level procedures
 
 DELIMITER $$
@@ -124,6 +142,8 @@ BEGIN
     SELECT
         at.assignTaskId,
         t.projectTaskName AS taskName,
+        at.plannedQty AS plannedQty,
+        at.unitOfMeasure AS unitOfMeasure,
         ps.projectStatusName AS taskStatus,
         ast.assignStatusName AS assignStatus,
         atd.taskDuration AS duration,
@@ -233,6 +253,8 @@ CREATE PROCEDURE assignTaskToWorkItem(
     IN p_duration DOUBLE,
     IN p_startDate DATE,
     IN p_endDate DATE,
+    IN p_plannedQty DOUBLE,
+    IN p_unitOfMeasure VARCHAR(50),
     IN p_projectStatusName VARCHAR(255),
     IN p_assignStatusName VARCHAR(255)
 )
@@ -283,8 +305,8 @@ BEGIN
     END IF;
 
     -- Insert task
-    INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus)
-    VALUES (v_assignWorkItemId, p_projectTaskId, v_taskStatusId);
+    INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus, plannedQty, unitOfMeasure)
+    VALUES (v_assignWorkItemId, p_projectTaskId, v_taskStatusId, p_plannedQty, p_unitOfMeasure);
     SET v_assignTaskId = LAST_INSERT_ID();
 
     -- Insert task details
@@ -876,7 +898,6 @@ END$$
 
 DELIMITER ;
 
-DELIMITER $$
 
 DELIMITER $$
 
@@ -890,64 +911,214 @@ BEGIN
     DECLARE CPI DOUBLE;
     DECLARE SPI DOUBLE;
 
-    DECLARE CPI_STATUS VARCHAR(50);
-    DECLARE SPI_STATUS VARCHAR(50);
+    -- Planned Value (PV): latest plan cost (autoAssign/customAssign/extraAssign)
+    SELECT IFNULL(
+        (
+            SELECT apd.projectCost
+            FROM assignProjectDetails apd
+            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+            WHERE apd.assignProjectId = p_assignProjectId
+              AND s.assignStatusName IN ('autoAssign', 'customAssign', 'extraAssign')
+            ORDER BY apd.assignProjectDetailId DESC
+            LIMIT 1
+        ),
+        0
+    )
+    INTO PV;
 
-    -- Planned Value
-    SELECT IFNULL(SUM(projectCost), 0)
-    INTO PV
-    FROM assignProjectDetails apd
-    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
-    WHERE apd.assignProjectId = p_assignProjectId
-      AND s.assignStatusName IN ('autoAssign', 'customAssign');
+    -- Earned Value (EV):
+    -- - If an 'actualResult' record exists, use that
+    -- - Otherwise (project still running), use actual cost from dailyReportTasks.dailyCost
+    SELECT IFNULL(
+        (
+            SELECT SUM(apd.projectCost)
+            FROM assignProjectDetails apd
+            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+            WHERE apd.assignProjectId = p_assignProjectId
+              AND s.assignStatusName = 'actualResult'
+        ),
+        (
+            SELECT IFNULL(SUM(drt.dailyCost), 0)
+            FROM dailyReports dr
+            LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+            WHERE dr.assignProjectId = p_assignProjectId
+        )
+    )
+    INTO EV;
 
-    -- Earned Value
-    SELECT IFNULL(SUM(projectCost), 0)
-    INTO EV
-    FROM assignProjectDetails apd
-    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
-    WHERE apd.assignProjectId = p_assignProjectId
-      AND s.assignStatusName = 'actualResult';
-
-    -- Actual Cost
+    -- Actual Cost (AC): from daily reports
     SELECT
-        IFNULL(SUM(drt.dailyCost), 0) +
-        IFNULL(SUM(drl.dailyWage), 0)
+        IFNULL(SUM(drt.dailyCost), 0)
     INTO AC
     FROM dailyReports dr
     LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
-    LEFT JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
+
     WHERE dr.assignProjectId = p_assignProjectId;
 
-    -- Calculate CPI & SPI
     SET CPI = IF(AC = 0, NULL, EV / AC);
     SET SPI = IF(PV = 0, NULL, EV / PV);
 
-    -- CPI Status
-    SET CPI_STATUS = CASE
-        WHEN CPI IS NULL THEN 'No Data'
-        WHEN CPI > 1.05 THEN 'Under Budget'
-        WHEN CPI >= 0.95 THEN 'On Budget'
-        ELSE 'Over Budget'
-    END;
-
-    -- SPI Status
-    SET SPI_STATUS = CASE
-        WHEN SPI IS NULL THEN 'No Data'
-        WHEN SPI > 1.05 THEN 'Ahead of Schedule'
-        WHEN SPI >= 0.95 THEN 'On Schedule'
-        ELSE 'Behind Schedule'
-    END;
-
-    -- Return everything
     SELECT
         PV,
         EV,
         AC,
         CPI,
-        CPI_STATUS,
+        CASE
+            WHEN CPI IS NULL THEN 'No Data'
+            WHEN CPI >= 1.05 THEN 'Under Budget'
+            WHEN CPI >= 0.95 THEN 'On Budget'
+            ELSE 'Over Budget'
+        END AS CPI_STATUS,
         SPI,
-        SPI_STATUS;
+        CASE
+            WHEN SPI IS NULL THEN 'No Data'
+            WHEN SPI >= 1.05 THEN 'Ahead of Schedule'
+            WHEN SPI >= 0.95 THEN 'On Schedule'
+            ELSE 'Behind Schedule'
+        END AS SPI_STATUS;
 END$$
 
 DELIMITER ;
+
+ DELIMITER $$
+
+ CREATE PROCEDURE assignFullProject(
+     IN p_projectTypeId INT,
+     IN p_projectInstanceName VARCHAR(255),
+     IN p_projectBuildingId INT,
+     IN p_projectLevelId INT,
+     IN p_projectArea DOUBLE,
+     IN p_projectHeight DOUBLE,
+     IN p_totalStories DOUBLE,
+     IN p_totalUnits DOUBLE,
+     IN p_supervisorId INT,
+     IN p_projectLocation VARCHAR(255),
+     IN p_projectOverHeadCost DOUBLE,
+     IN p_projectStatusName VARCHAR(255),
+     IN p_assignStatusName VARCHAR(255),
+     IN p_startDate DATE,
+     IN p_endDate DATE
+ )
+ BEGIN
+     DECLARE v_assignProjectId INT;
+     DECLARE v_projectStatusId INT;
+     DECLARE v_assignStatusId INT;
+     DECLARE v_assignProjectDetailId INT;
+     DECLARE v_workItemStatusId INT;
+     DECLARE v_taskStatusId INT;
+
+     -- 1. Get projectStatusId
+     SELECT projectStatusId INTO v_projectStatusId
+     FROM projectStatus
+     WHERE projectStatusName = p_projectStatusName
+     LIMIT 1;
+
+     IF v_projectStatusId IS NULL THEN
+         SELECT FALSE AS success;
+         LEAVE BEGIN;
+     END IF;
+
+     -- 2. Insert assignProjects
+     INSERT INTO assignProjects(
+         projectTypeId,
+         projectInstanceName,
+         projectBuildingId,
+         projectLevelId,
+         projectArea,
+         projectHeight,
+         totalStories,
+         totalUnits,
+         supervisorId,
+         projectLocation,
+         projectOverHeadCost,
+         projectStatus
+     ) VALUES (
+         p_projectTypeId,
+         p_projectInstanceName,
+         p_projectBuildingId,
+         p_projectLevelId,
+         p_projectArea,
+         p_projectHeight,
+         p_totalStories,
+         p_totalUnits,
+         p_supervisorId,
+         p_projectLocation,
+         p_projectOverHeadCost,
+         v_projectStatusId
+     );
+
+     SET v_assignProjectId = LAST_INSERT_ID();
+
+     -- 3. Get assignStatusId
+     SELECT assignStatusId INTO v_assignStatusId
+     FROM assignStatus
+     WHERE assignStatusName = p_assignStatusName
+     LIMIT 1;
+
+     IF v_assignStatusId IS NULL THEN
+         SELECT FALSE AS success;
+         LEAVE BEGIN;
+     END IF;
+
+     -- 4. Insert assignProjectDetails from projectDetail
+     INSERT INTO assignProjectDetails(
+         assignProjectId,
+         assignStatusId,
+         projectCost,
+         projectLaborQty,
+         projectDuration,
+         startDate,
+         endDate
+     )
+     SELECT
+         v_assignProjectId,
+         v_assignStatusId,
+         projectCost,
+         projectLaborQty,
+         projectDuration,
+         p_startDate,
+         p_endDate
+     FROM projectDetail
+     WHERE projectTypeId = p_projectTypeId;
+
+     SET v_assignProjectDetailId = LAST_INSERT_ID();
+
+     -- 5. Get default workItemStatus (autoAssign)
+     SELECT assignStatusId INTO v_workItemStatusId
+     FROM assignStatus
+     WHERE assignStatusName = 'autoAssign'
+     LIMIT 1;
+     IF v_workItemStatusId IS NULL THEN SET v_workItemStatusId = 1; END IF;
+
+     -- 6. Insert assignWorkItems based on projectDetail
+     INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus)
+     SELECT
+         v_assignProjectId,
+         pd.projectWorkItemId,
+         v_workItemStatusId
+     FROM projectDetail pd
+     WHERE pd.projectTypeId = p_projectTypeId;
+
+     -- 7. Get default taskStatus (autoAssign)
+     SELECT assignStatusId INTO v_taskStatusId
+     FROM assignStatus
+     WHERE assignStatusName = 'autoAssign'
+     LIMIT 1;
+     IF v_taskStatusId IS NULL THEN SET v_taskStatusId = 1; END IF;
+
+     -- 8. Insert assignTasks based on projectDetail
+     INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus, plannedQty, unitOfMeasure)
+     SELECT
+         aw.assignWorkItemId,
+         pd.projectTaskId,
+         v_taskStatusId,
+         IFNULL(pd.plannedQty, 1),
+         IFNULL(pd.unitOfMeasure, 'unit')
+     FROM assignWorkItems aw
+     JOIN projectDetail pd ON pd.projectWorkItemId = aw.projectWorkItemId
+     WHERE aw.assignProjectId = v_assignProjectId;
+
+     SELECT TRUE AS success;
+ END$$
+
+ DELIMITER ;

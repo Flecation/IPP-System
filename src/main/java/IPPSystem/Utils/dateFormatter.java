@@ -41,4 +41,9 @@ public class dateFormatter {
     public static LocalDateTime now() {
         return LocalDateTime.now();
     }
+
+    public static LocalDate getLocalDate(Date date){
+        if (date == null) return null ;
+        return date.toLocalDate();
+    }
 }
