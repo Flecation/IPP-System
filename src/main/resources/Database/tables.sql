@@ -63,10 +63,9 @@ create table labors (
      skillId int,
      laborStartDate Date,
      laborEndDate Date,
-     proficiencyLevelId int
+     proficiencyLevelId int,
      yearsExperience INT DEFAULT 1,
-     isActive boolean default true,
-
+     isActive boolean default true
 );
 
 -- for template tables (standard assign tables)
@@ -133,7 +132,7 @@ create table assignProjects (
     projectHeight double default 0, -- only for religious
     totalStories double, -- for all floors
     totalUnits double, -- for all units/ rooms ,in the backend the unit per floor will calculate
-    managerId int,
+    supervisorId int,
     projectLocation varchar(255),
     projectOverHeadCost double,
     projectStatus int,
@@ -387,7 +386,7 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_manager
-FOREIGN KEY (managerId)
+FOREIGN KEY (supervisorId)
 REFERENCES users(userId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;

@@ -89,7 +89,7 @@ public class projectDatabase {
     //to assign the project
     public static boolean assignProjects(projects assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL assignProjects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL assignFullProject(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cstmt.setInt(1,assign.getProjectTypeId());
             cstmt.setString(2,assign.getProjectInstanceName());
             cstmt.setInt(3,assign.getProjectBuildingId());
@@ -103,11 +103,8 @@ public class projectDatabase {
             cstmt.setDouble(11,assign.getProjectOverHeadCost());
             cstmt.setString(12, projectStatus.toString());
             cstmt.setString(13,assignStatus.toString());
-            cstmt.setDouble(14,assign.getProjectCost());
-            cstmt.setDouble(15,assign.getProjectLaborQty());
-            cstmt.setDouble(16,assign.getProjectDuration());
-            cstmt.setDate(17,assign.getStartDate());
-            cstmt.setDate(18,assign.getEndDate());
+            cstmt.setDate(14,assign.getStartDate());
+            cstmt.setDate(15,assign.getEndDate());
             ResultSet rs = cstmt.executeQuery();
             return rs.next() && rs.getBoolean(1);
 
