@@ -5,21 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="personal detail">
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborRowController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/laborRow.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/active.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/newhire.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/totallabor.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createSupervisorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/View/createSupervisorModal.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEListViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/calculationDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/calculationDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEListView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +71,13 @@
         &quot;number&quot;: 14
       },
       &quot;lastSeen&quot;: 1768465724031
+    },
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQmomhM7Ads2a&quot;,
+        &quot;number&quot;: 42
+      },
+      &quot;lastSeen&quot;: 1769801903988
     }
   ]
 }</component>
@@ -503,7 +506,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769567204797</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="personal detail">
+      <option name="closed" value="true" />
+      <created>1769801841968</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1769801841968</updated>
+    </task>
+    <task id="LOCAL-00044" summary="personal detail">
+      <option name="closed" value="true" />
+      <created>1769802050827</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1769802050827</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

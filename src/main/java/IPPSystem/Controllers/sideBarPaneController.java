@@ -420,10 +420,14 @@ public class sideBarPaneController extends navigationPaneController{
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("mgSEListView.fxml",loadPane);
-//            utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
 
-//            utils.openFxml("laborView.fxml",loadPane);
+           if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+           {
+               utils.openFxml("mgSEListView.fxml",loadPane);
+           }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+               utils.openFxml("laborView.fxml",loadPane);
+           }
+
 
         });
         userIconBtn.setOnMouseClicked(e -> {
@@ -487,7 +491,7 @@ public class sideBarPaneController extends navigationPaneController{
         sideBarStackPane.setMaxWidth(width);
     }
 
-    private static void setBoxVisible(VBox box, boolean visible) {
+    public static void setBoxVisible(VBox box, boolean visible) {
         if (box == null) {
             return;
         }

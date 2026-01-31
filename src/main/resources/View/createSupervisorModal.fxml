@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxWidth="500.0" minWidth="500.0" prefHeight="303.0" prefWidth="500.0" style="-fx-background-color: pink;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.createSupervisorController">
+   <children>
+      <Label prefHeight="17.0" prefWidth="248.0" text="Create Supervisor" />
+   </children>
+</VBox>
