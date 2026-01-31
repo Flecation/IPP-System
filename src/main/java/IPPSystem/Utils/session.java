@@ -1,5 +1,6 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Controllers.navigationPaneController;
 import IPPSystem.Models.users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,4 +31,16 @@ public class session {
         public void clear(){
             userLogin = null;
         }
+
+
+        private navigationPaneController navController;
+
+        public void setNavigationController(navigationPaneController nav) {
+            this.navController = nav;
+        }
+
+        public navigationPaneController getNavigationController() {
+            return navController;
+        }
+
 }

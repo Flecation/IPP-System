@@ -22,8 +22,8 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Region prefHeight="27.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="managerSpCreateBtn" contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
+            <Region prefHeight="30.0" prefWidth="638.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="addNewEngineerBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#addNewEngineer" styleClass="createBtn" text="+ Add" textFill="WHITE" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
