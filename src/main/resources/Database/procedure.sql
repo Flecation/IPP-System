@@ -979,7 +979,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
 DELIMITER $$
 
 CREATE PROCEDURE assignFullProjectAuto(
@@ -993,33 +992,36 @@ CREATE PROCEDURE assignFullProjectAuto(
     IN p_totalUnits DOUBLE,
     IN p_supervisorId INT,
     IN p_projectLocation VARCHAR(255),
-
     IN p_constructorCost DOUBLE,
-    IN p_projectDurationDays DOUBLE,
+    IN p_projectDurationDays DOUBLE,  -- Fixed: consistent naming
     IN p_projectStatusName VARCHAR(50),
     IN p_projectStartDate DATE,
     IN p_projectEndDate DATE
 )
 proc: BEGIN
 
+    -- Project IDs
     DECLARE v_assignProjectId INT;
     DECLARE v_projectStatusId INT;
     DECLARE v_assignStatusId INT;
     DECLARE v_assignWorkItemId INT;
-
+    
+    -- Work item values
     DECLARE v_workItemCost DOUBLE;
     DECLARE v_workItemDuration DOUBLE;
     DECLARE v_workItemLabors DOUBLE;
     DECLARE v_taskDuration DOUBLE;
-    DECLARE v_projectLaborQty DOUBLE;
-
+    
+    -- Percentages
     DECLARE v_costPercent DOUBLE;
     DECLARE v_durationPercent DOUBLE;
     DECLARE v_taskDurationPercent DOUBLE;
-
-    DECLARE done INT DEFAULT 0;
-
-    -- Cursor variables
+    
+    -- Totals
+    DECLARE v_totalLaborQty DOUBLE DEFAULT 0;
+    DECLARE v_totalWorkItemCost DOUBLE DEFAULT 0;
+    
+    -- Cursor variables for work items
     DECLARE c_workItemDetailId INT;
     DECLARE c_projectWorkItemId INT;
     DECLARE c_minCostPercent DOUBLE;
@@ -1028,65 +1030,108 @@ proc: BEGIN
     DECLARE c_maxDurationPercent DOUBLE;
     DECLARE c_minLabors DOUBLE;
     DECLARE c_maxLabors DOUBLE;
-
+    
+    -- Cursor variables for tasks
     DECLARE c_taskDetailId INT;
     DECLARE c_projectTaskId INT;
     DECLARE c_minTaskDurationPercent DOUBLE;
     DECLARE c_maxTaskDurationPercent DOUBLE;
-
-    -- Inside task_loop
+    
+    -- Skill variables
+    DECLARE v_skillId INT;
+    DECLARE v_assignWorkItemSkillId INT;
+    DECLARE v_minRequireLabors DOUBLE;
+    DECLARE v_maxRequireLabors DOUBLE;
+    DECLARE v_minDailyWage DOUBLE;
+    DECLARE v_maxDailyWage DOUBLE;
+    
+    -- Quantity calculation variables
     DECLARE v_quantityFormula VARCHAR(255);
     DECLARE v_unitOfMeasure VARCHAR(50);
     DECLARE v_quantity DOUBLE;
     DECLARE v_sql TEXT;
-
+    
+    -- Cursors
+    DECLARE done INT DEFAULT 0;
+    
     -- WorkItem cursor
     DECLARE cur_workitems CURSOR FOR
-        SELECT wid.workItemDetailId,
-               wid.projectWorkItemId,
-               wid.minCost,
-               wid.maxCost,
-               wid.minDuration,
-               wid.maxDuration,
-               wid.minLabors,
-               wid.maxLabors
+        SELECT 
+            wid.workItemDetailId,
+            wid.projectWorkItemId,
+            wid.minCost,
+            wid.maxCost,
+            wid.minDuration,
+            wid.maxDuration,
+            wid.minLabors,
+            wid.maxLabors
         FROM workItemDetails wid
         JOIN projectDetails pd ON wid.projectDetailId = pd.projectDetailId
         WHERE pd.projectTypeId = p_projectTypeId
-          AND (pd.projectLevelId = p_projectLevelId OR pd.projectLevelId IS NULL)
-          AND (pd.projectBuildingId = p_projectBuildingId OR pd.projectBuildingId IS NULL);
-
-    -- Task cursor (depends on current workItem)
+          AND pd.projectLevelId = p_projectLevelId
+          AND pd.projectBuildingId = p_projectBuildingId;
+    
+    -- Task cursor
     DECLARE cur_tasks CURSOR FOR
-        SELECT td.taskDetailId,
-               td.projectTaskId,
-               td.minDuration,
-               td.maxDuration
+        SELECT 
+            td.taskDetailId,
+            td.projectTaskId,
+            td.minDuration,
+            td.maxDuration
         FROM taskDetails td
         WHERE td.workItemDetailId = c_workItemDetailId;
-
+    
+    -- Skill cursor
+    DECLARE cur_skills CURSOR FOR
+        SELECT 
+            skillId,
+            minRequireLabors,
+            maxRequireLabors,
+            minDailyWage,
+            maxDailyWage
+        FROM workItemRequireSkills 
+        WHERE workItemDetailId = c_workItemDetailId;
+    
+    -- Handlers
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
+    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
         RESIGNAL;
     END;
 
-    START TRANSACTION;
+    -- VALIDATION: Check if project configuration exists
+    SELECT COUNT(*) INTO @config_exists
+    FROM projectDetails pd
+    WHERE pd.projectTypeId = p_projectTypeId
+      AND pd.projectLevelId = p_projectLevelId
+      AND pd.projectBuildingId = p_projectBuildingId;
+    
+    IF @config_exists = 0 THEN
+        SELECT FALSE AS success, 'No project configuration found for the given type, level, and building combination' AS message;
+        LEAVE proc;
+    END IF;
 
-    -- 1. Status IDs
+    -- Get status IDs with validation
     SELECT projectStatusId INTO v_projectStatusId
     FROM projectStatus
     WHERE projectStatusName = p_projectStatusName
     LIMIT 1;
+    
+    IF v_projectStatusId IS NULL THEN
+        SELECT FALSE AS success, CONCAT('Invalid project status: ', p_projectStatusName) AS message;
+        LEAVE proc;
+    END IF;
 
     SELECT assignStatusId INTO v_assignStatusId
     FROM assignStatus
     WHERE assignStatusName = 'autoAssign'
     LIMIT 1;
 
-    -- 2. Insert Project
+    START TRANSACTION;
+
+    -- 1. INSERT PROJECT
     INSERT INTO assignProjects (
         projectTypeId,
         projectInstanceName,
@@ -1111,28 +1156,14 @@ proc: BEGIN
         p_totalUnits,
         p_supervisorId,
         p_projectLocation,
-        0,
+        0,  -- Overhead cost - can be calculated separately
         v_projectStatusId
     );
 
     SET v_assignProjectId = LAST_INSERT_ID();
 
-    -- 3. Insert Project Planned Values
-    INSERT INTO assignProjectDetails (
-        assignProjectId,
-        assignStatusId,
-        projectCost,
-        projectLaborQty,
-        projectDuration
-    ) VALUES (
-        v_assignProjectId,
-        v_assignStatusId,
-        p_constructorCost,
-        NULL,
-        p_projectDurationMonths
-    );
-
-    -- 4. WorkItem Loop
+    -- 2. PROCESS WORK ITEMS
+    SET done = 0;
     OPEN cur_workitems;
 
     workitem_loop: LOOP
@@ -1150,16 +1181,20 @@ proc: BEGIN
             LEAVE workitem_loop;
         END IF;
 
-        -- Derived percentages (midpoint)
+        -- Calculate percentages (using midpoint)
         SET v_costPercent = (c_minCostPercent + c_maxCostPercent) / 2;
         SET v_durationPercent = (c_minDurationPercent + c_maxDurationPercent) / 2;
 
-        -- Final WorkItem values
+        -- Calculate work item values
         SET v_workItemCost = p_constructorCost * (v_costPercent / 100);
-        SET v_workItemDuration = p_projectDurationMonths * (v_durationPercent / 100);
+        SET v_workItemDuration = p_projectDurationDays * (v_durationPercent / 100);
         SET v_workItemLabors = (c_minLabors + c_maxLabors) / 2;
+        
+        -- Accumulate totals
+        SET v_totalWorkItemCost = v_totalWorkItemCost + v_workItemCost;
+        SET v_totalLaborQty = v_totalLaborQty + v_workItemLabors;
 
-        -- Insert WorkItem
+        -- 2A. INSERT WORK ITEM
         INSERT INTO assignWorkItems (
             assignProjectId,
             projectWorkItemId,
@@ -1167,27 +1202,31 @@ proc: BEGIN
         ) VALUES (
             v_assignProjectId,
             c_projectWorkItemId,
-            v_assignStatusId
+            v_projectStatusId  -- Correct: project status, not assign status
         );
 
         SET v_assignWorkItemId = LAST_INSERT_ID();
 
-        -- Insert WorkItem Details
+        -- 2B. INSERT WORK ITEM DETAILS
         INSERT INTO assignWorkItemDetails (
             assignWorkItemId,
             assignStatusId,
             workItemCost,
             workItemLaborQty,
-            workItemDuration
+            workItemDuration,
+            startDate,
+            endDate
         ) VALUES (
             v_assignWorkItemId,
             v_assignStatusId,
             v_workItemCost,
             v_workItemLabors,
-            v_workItemDuration
+            v_workItemDuration,
+            p_projectStartDate,
+            DATE_ADD(p_projectStartDate, INTERVAL v_workItemDuration DAY)
         );
 
-        -- 5. Task Loop
+        -- 2C. PROCESS TASKS FOR THIS WORK ITEM
         SET done = 0;
         OPEN cur_tasks;
 
@@ -1202,31 +1241,32 @@ proc: BEGIN
                 LEAVE task_loop;
             END IF;
 
-            -- Task midpoint percentage
+            -- Calculate task duration
             SET v_taskDurationPercent = (c_minTaskDurationPercent + c_maxTaskDurationPercent) / 2;
-
-            -- Final Task Duration
             SET v_taskDuration = v_workItemDuration * (v_taskDurationPercent / 100);
 
-            -- 1️⃣ Get formula and unit
+            -- GET QUANTITY FORMULA AND CALCULATE QUANTITY
             SELECT quantityFormula, unitOfMeasure
             INTO v_quantityFormula, v_unitOfMeasure
             FROM taskDetails
             WHERE taskDetailId = c_taskDetailId;
 
-            -- 2️⃣ Replace placeholders with actual project values
-            SET v_sql = REPLACE(v_quantityFormula, 'area', p_projectArea);
-            SET v_sql = REPLACE(v_sql, 'totalStories', p_totalStories);
-            SET v_sql = REPLACE(v_sql, 'totalUnits', p_totalUnits);
-
-            -- 3️⃣ Prepare and execute dynamic SQL to calculate quantity
-            SET @dyn_sql = CONCAT('SELECT ', v_sql, ' INTO @quantity');
+            -- Safely evaluate quantity formula
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'area', p_projectArea);
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalStories', p_totalStories);
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalUnits', p_totalUnits);
+            
+            -- Use user-defined variable to store result
+            SET @quantity = 0;
+            SET @dyn_sql = CONCAT('SELECT ', v_quantityFormula, ' INTO @quantity');
+            
             PREPARE stmt FROM @dyn_sql;
             EXECUTE stmt;
             DEALLOCATE PREPARE stmt;
-
+            
             SET v_quantity = @quantity;
 
+            -- INSERT TASK
             INSERT INTO assignTasks (
                 assignWorkItemId,
                 projectTaskId,
@@ -1236,39 +1276,114 @@ proc: BEGIN
             ) VALUES (
                 v_assignWorkItemId,
                 c_projectTaskId,
-                v_assignStatusId,
+                v_projectStatusId,  -- Correct: project status
                 v_quantity,
                 v_unitOfMeasure
             );
 
+            -- INSERT TASK DETAILS
             INSERT INTO assignTaskDetails (
                 assignTaskId,
                 assignStatusId,
-                taskDuration
+                taskDuration,
+                startDate,
+                endDate
             ) VALUES (
                 LAST_INSERT_ID(),
                 v_assignStatusId,
-                v_taskDuration
+                v_taskDuration,
+                p_projectStartDate,
+                DATE_ADD(p_projectStartDate, INTERVAL v_taskDuration DAY)
             );
 
-        END LOOP;
+        END LOOP task_loop;
 
         CLOSE cur_tasks;
         SET done = 0;
 
-        -- 6. Skills
-        INSERT INTO assignWorkItemSkills (assignWorkItemId, skillId)
-        SELECT v_assignWorkItemId, wirs.skillId
-        FROM workItemRequireSkills wirs
-        WHERE wirs.workItemDetailId = c_workItemDetailId;
+        -- 2D. PROCESS SKILL REQUIREMENTS FOR THIS WORK ITEM
+        SET done = 0;
+        OPEN cur_skills;
 
-    END LOOP;
+        skill_loop: LOOP
+            FETCH cur_skills INTO
+                v_skillId,
+                v_minRequireLabors,
+                v_maxRequireLabors,
+                v_minDailyWage,
+                v_maxDailyWage;
+
+            IF done = 1 THEN
+                LEAVE skill_loop;
+            END IF;
+
+            -- INSERT SKILL ASSIGNMENT
+            INSERT INTO assignWorkItemSkills (
+                assignWorkItemId,
+                skillId
+            ) VALUES (
+                v_assignWorkItemId,
+                v_skillId
+            );
+
+            SET v_assignWorkItemSkillId = LAST_INSERT_ID();
+
+            -- INSERT SKILL DETAILS
+            INSERT INTO assignWorkItemSkillDetails (
+                assignWorkItemSkillId,
+                assignStatusId,
+                laborQty,
+                dailyWagePerLabor
+            ) VALUES (
+                v_assignWorkItemSkillId,
+                v_assignStatusId,
+                (v_minRequireLabors + v_maxRequireLabors) / 2,
+                (v_minDailyWage + v_maxDailyWage) / 2
+            );
+
+        END LOOP skill_loop;
+
+        CLOSE cur_skills;
+        SET done = 0;
+
+    END LOOP workitem_loop;
 
     CLOSE cur_workitems;
 
+    -- 3. INSERT PROJECT DETAILS WITH CALCULATED TOTALS
+    INSERT INTO assignProjectDetails (
+        assignProjectId,
+        assignStatusId,
+        projectCost,
+        projectLaborQty,
+        projectDuration,
+        startDate,
+        endDate
+    ) VALUES (
+        v_assignProjectId,
+        v_assignStatusId,
+        p_constructorCost,
+        v_totalLaborQty,
+        p_projectDurationDays,
+        p_projectStartDate,
+        p_projectEndDate
+    );
+
+    -- 4. OPTIONAL: Calculate and update overhead cost if needed
+    -- This could be based on project type and level
+    UPDATE assignProjects 
+    SET projectOverHeadCost = p_constructorCost * 0.1  -- Example: 10% overhead
+    WHERE assignProjectId = v_assignProjectId;
+
     COMMIT;
 
-    SELECT TRUE AS success, v_assignProjectId AS assignProjectId;
+    -- RETURN SUCCESS
+    SELECT 
+        TRUE AS success,
+        v_assignProjectId AS assignProjectId,
+        'Project successfully assigned with auto-planning' AS message,
+        v_totalLaborQty AS totalLaborQuantity,
+        v_totalWorkItemCost AS totalWorkItemCost;
 
 END$$
 
