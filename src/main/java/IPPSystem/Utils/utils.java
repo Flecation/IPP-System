@@ -217,12 +217,12 @@ public class utils {
         return result;
     }
 
-    public static void durationShowHelper(projects project,ComboBox<String> durationBox,TextField durationTxt){
+    public static void durationShowHelper(projects project,ComboBox<enumDuration> durationBox,TextField durationTxt){
         durationHelper.durationAssignHelper(project,durationBox,durationTxt);
     }
 
     public static String getOnlyOneDuration(Double duration,enumDuration durationType){
-        if (durationType.equals(enumDuration.MONTH)) return durationHelper.showMontDuration(duration);
+        if (durationType.equals(enumDuration.MONTH)) return durationHelper.showMonthDuration(duration);
         else if (durationType.equals(enumDuration.DAY)) return durationHelper.showDayDuration(duration);
         else return durationHelper.showYearDuration(duration);
     }
