@@ -87,7 +87,7 @@ public class projectDetailsController extends viewProjectsController{
 
     @FXML private Button backToViewProjectBtn;
 
-    @FXML private ComboBox<String> durationComboBox;
+    @FXML private ComboBox<enumDuration> durationComboBox;
 
     @FXML private Label completedWi,totalWi;
 
@@ -164,14 +164,14 @@ public class projectDetailsController extends viewProjectsController{
         utils.safeSet(projectViewContract, utils.formatMoney(project.getProjectCost()));
         utils.safeSet(projectViewStartDate,utils.dateFormat(project.getStartDate()));
         utils.safeSet(projectViewEndDate, utils.dateFormat(project.getEndDate()));
-        utils.safeSet(projectViewDuration,utils.getOnlyOneDuration(project.getProjectDuration(),enumDuration.MONTH));
+        utils.safeSet(projectViewDuration,utils.getOnlyOneDuration(project.getProjectDuration(),enumDuration.DAY));
 
 
 //        Complete Day Box
 //        dayCompleteLbl
 //        completedDay
 //        dayCompleteProgress
-        utils.safeSet(totalDay,utils.getOnlyOneDuration(project.getProjectDuration(),enumDuration.MONTH));
+        utils.safeSet(totalDay,utils.getOnlyOneDuration(project.getProjectDuration(),enumDuration.DAY));
 
 
         // Progress (workItems)
