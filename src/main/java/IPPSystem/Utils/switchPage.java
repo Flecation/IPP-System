@@ -11,16 +11,14 @@ import IPPSystem.Models.workItems;
 import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -275,7 +273,7 @@ public class switchPage extends utils {
             if (count % 3 == 0) {
                 row = new HBox(20);
                 projectContainer.getChildren().add(row);
-
+                projectContainer.setAlignment(Pos.CENTER);
             }
 
             try {
@@ -287,16 +285,18 @@ public class switchPage extends utils {
 
                 projectCardController controller = loader.getController();
                 controller.setData(p,loadPane);
+//                HBox.setHgrow(card, Priority.SOMETIMES);
 
 
                 if (row != null) {
                     row.getChildren().add(card);
-
+//                    row.setSpacing(15);
+//                    row.setAlignment(Pos.CENTER);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+//            row.setAlignment(Pos.CENTER_RIGHT);
             count++;
         }
     }
@@ -325,6 +325,7 @@ public class switchPage extends utils {
                     loader.getController();
 
             controller.setEngineer(user);
+            controller.setLoadPane(loadPane);
 
             loadPane.getChildren().setAll(page);
 

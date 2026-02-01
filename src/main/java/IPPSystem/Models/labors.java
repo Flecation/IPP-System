@@ -7,6 +7,24 @@ public class labors extends skills{
     protected String laborName;
     protected String laborNRC,laborPhone;
     protected Date laborStartDate,laborEndDate;
+    protected boolean isActive;
+
+    private int skillId;
+    private String skillName;
+
+    public int getSkillId() { return skillId; }
+    public void setSkillId(int skillId) { this.skillId = skillId; }
+
+    public String getSkillName() { return skillName; }
+    public void setSkillName(String skillName) { this.skillName = skillName; }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public labors(){}
 
@@ -88,4 +106,6 @@ public class labors extends skills{
     public void setLaborName(String laborName) {
         this.laborName = laborName;
     }
+
+
 }

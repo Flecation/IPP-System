@@ -6,9 +6,8 @@ import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 
 public class database {
 
@@ -39,6 +38,22 @@ public class database {
 
     public static ObservableList<labors> getAllLaborsBySkillId(int skillId){return laborDatabase.getAllLaborsBySkill(skillId);}
 
+    public static int getTotalLabors() {return calculationDatabase.getTotalLaborsCount();}
+
+    public static int getNewHires() {return calculationDatabase.getNewHiresThisMonth();}
+
+    public static int getActiveLabors() {return calculationDatabase.getActiveLaborsCount();}
+
+    public static int getResignedLaborsCount(){return calculationDatabase.getResignedLaborsCount();}
+
+    public static String getAssignedProjectName(int laborId){return laborDatabase.getAssignedProjectName(laborId);}
+
+    public  static List<labors> getAllLaborsSortedByAssignment(){return laborDatabase.getAllLaborsSortedByAssignment();}
+
+    public static boolean resignLabor(int laborId){return  laborDatabase.resignLabor(laborId);}
+    public  static  List<String> getAllSkills(){return laborDatabase.getAllSkills();}
+    
+    
 //    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 
@@ -82,7 +97,7 @@ public class database {
 
     public static boolean deleteSkillFromWorkItem(int assignWorkItemId,int skillId){return workItemDatabase.deleteSkillFromWorkItem(assignWorkItemId,skillId);}
 
-    public static ObservableList<skills> getAllAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
+    public static ObservableList<skills> getAllSkillByAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
 
     public static boolean setSkillsToWorkItem(skills skill,assignStatus status){return workItemDatabase.addSkillToWorkItem(skill,status);}
 
@@ -100,11 +115,24 @@ public class database {
 
     public  static  String currentAssignProject(int userId){return  projectDatabase.currentAssignProject(userId);}
 
+    public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId     );}
+
 
 //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
-    //    FIXED: For Daily Reports functions
+
+    //    For project detail
+    
+    // Current Project Workload
+    public static double getWorkload(int userId) {
+        return calculationDatabase.getWorkload(userId);
+    }
+
+        // Historical Performance
+    public static double getPerformance(int userId) {
+        return calculationDatabase.getHistoryPerformance(userId);
+    }
 }

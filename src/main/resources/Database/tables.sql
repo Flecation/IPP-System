@@ -9,9 +9,10 @@ CREATE TABLE users (
 	userId int primary key auto_increment,
     userName varchar(255),
     userRole enum('manager','supervisor'),
-    userPhone varchar(255),
-    userEmail varchar(255),
+    userPhone varchar(255) unique,
+    userEmail varchar(255) unique,
     userDOB date,
+    userAddress longtext,
     userPassword varchar(255) not null,
     userPhoto varchar(255),
     userStartDate Date ,
@@ -49,6 +50,11 @@ create table buildings (
     projectBuildingName varchar(255)
 );
 
+create table proficiencyLevels(
+    proficiencyLevelId int primary key auto_increment,
+    proficiencyLevelName varchar(250)
+);
+
 create table labors (
 	laborId int primary key auto_increment,
      laborName varchar(255),
@@ -57,6 +63,8 @@ create table labors (
      skillId int,
      laborStartDate Date,
      laborEndDate Date,
+     proficiencyLevelId int,
+     yearsExperience INT DEFAULT 1,
      isActive boolean default true
 );
 
@@ -87,7 +95,9 @@ create table taskDetails (
     workItemDetailId int,
     projectTaskId int,
     minDuration double,
-    maxDuration double
+    maxDuration double,
+    quantityFormula VARCHAR(255),
+    unitOfMeasure VARCHAR(50)
 );
 
 create table workItemRequireSkills (
@@ -122,7 +132,7 @@ create table assignProjects (
     projectHeight double default 0, -- only for religious
     totalStories double, -- for all floors
     totalUnits double, -- for all units/ rooms ,in the backend the unit per floor will calculate
-    managerId int,
+    supervisorId int,
     projectLocation varchar(255),
     projectOverHeadCost double,
     projectStatus int,
@@ -175,6 +185,8 @@ create table assignTasks (
     projectTaskId int,
     isCancel boolean default false,
     taskStatus int,
+    plannedQty DOUBLE NOT NULL,
+    unitOfMeasure VARCHAR(50) NOT NULL,
     FOREIGN KEY (taskStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -232,7 +244,6 @@ CREATE TABLE dailyReports (
     weather VARCHAR(100),
     generalRemark TEXT,
     issue LONGTEXT,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (assignProjectId, reportDate),
 
     FOREIGN KEY (assignProjectId)
@@ -273,7 +284,6 @@ CREATE TABLE dailyReportLabors (
     FOREIGN KEY (laborId)
         REFERENCES labors(laborId) ON DELETE CASCADE
 );
-
 
 
 -- =====================
@@ -376,7 +386,7 @@ ON DELETE CASCADE;
 
 ALTER TABLE assignProjects
 ADD CONSTRAINT fk_ap_manager
-FOREIGN KEY (managerId)
+FOREIGN KEY (supervisorId)
 REFERENCES users(userId)
 ON UPDATE CASCADE
 ON DELETE CASCADE;

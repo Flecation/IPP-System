@@ -151,13 +151,14 @@ public class workItemDatabase {
     }
 
     public static boolean addSkillToWorkItem(skills assign, assignStatus assignStatus){
-        try (CallableStatement cs = con.prepareCall("")){
+        try (CallableStatement cs = con.prepareCall("{CALL addSkillToWorkItem(?,?,?,?,?)}")){
             cs.setInt(1,assign.getAssignWorkItemId());
             cs.setInt(2,assign.getSkillId());
             cs.setString(3,assignStatus.toString());
             cs.setDouble(4,assign.getProjectLaborQty());
             cs.setDouble(5,assign.getDailyWagePerLabor());
-            return cs.execute();
+            ResultSet rs = cs.executeQuery();
+            return rs.next() && rs.getBoolean("success");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

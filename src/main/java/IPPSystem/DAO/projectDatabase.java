@@ -3,11 +3,14 @@ package IPPSystem.DAO;
 import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class projectDatabase {
     private static Connection con;
@@ -32,10 +35,10 @@ public class projectDatabase {
                         rs.getString("projectInstanceName"),
                         rs.getInt("projectTypeId"),
                         rs.getString("projectTypeName"),
-                        rs.getInt("buildingId"),
-                        rs.getString("buildingName"),
                         rs.getInt("levelId"),
                         rs.getString("levelName"),
+                        rs.getInt("buildingId"),
+                        rs.getString("buildingName"),
                         rs.getInt("userId"),
                         rs.getString("userName"),
                         rs.getDouble("projectArea"),
@@ -89,7 +92,7 @@ public class projectDatabase {
     //to assign the project
     public static boolean assignProjects(projects assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL assignProjects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL assignFullProject(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cstmt.setInt(1,assign.getProjectTypeId());
             cstmt.setString(2,assign.getProjectInstanceName());
             cstmt.setInt(3,assign.getProjectBuildingId());
@@ -103,12 +106,10 @@ public class projectDatabase {
             cstmt.setDouble(11,assign.getProjectOverHeadCost());
             cstmt.setString(12, projectStatus.toString());
             cstmt.setString(13,assignStatus.toString());
-            cstmt.setDouble(14,assign.getProjectCost());
-            cstmt.setDouble(15,assign.getProjectLaborQty());
-            cstmt.setDouble(16,assign.getProjectDuration());
-            cstmt.setDate(17,assign.getStartDate());
-            cstmt.setDate(18,assign.getEndDate());
-            return cstmt.execute();
+            cstmt.setDate(14,assign.getStartDate());
+            cstmt.setDate(15,assign.getEndDate());
+            ResultSet rs = cstmt.executeQuery();
+            return rs.next() && rs.getBoolean(1);
 
 
         } catch (SQLException e) {
@@ -118,7 +119,7 @@ public class projectDatabase {
     }
 
     public static boolean updateAssignProject(projects assign,assignStatus assignStatus){
-        try(CallableStatement cs = con.prepareCall("")){
+        try(CallableStatement cs = con.prepareCall("{CALL updateAssignProject(?,?,?,?,?,?,?)}")){
             cs.setInt(1,assign.getAssignProjectId());
             cs.setString(2,assignStatus.toString());
             cs.setDouble(3,assign.getProjectCost());
@@ -126,7 +127,8 @@ public class projectDatabase {
             cs.setDouble(5,assign.getProjectDuration());
             cs.setDate(6,assign.getStartDate());
             cs.setDate(7,assign.getEndDate());
-            return cs.execute();
+            ResultSet rs = cs.executeQuery();
+            return rs.next() && rs.getBoolean(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -149,11 +151,11 @@ public class projectDatabase {
 
     public static String currentAssignProject(int userId) {
         try {
-            String sql = "SELECT projectInstanceName FROM assignProjects WHERE supervisorId = ? AND projectStatus = ?";
+            String sql = "SELECT projectInstanceName FROM assignProjects WHERE managerId = ? AND projectStatus = ?";
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, userId);
-            pstmt.setInt(2, 2);
+            pstmt.setInt(2, 2); // 2 = inProgressing;
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -173,5 +175,49 @@ public class projectDatabase {
 
         return null; // return null if no project found
     }
+
+
+    public static List<projects> getProjectsByEngineer(int engineerId) {
+
+        System.out.println("Engineer ID: " + engineerId);
+
+        List<projects> list = new ArrayList<>();
+
+        String sql = "SELECT ap.*, ps.projectStatusName AS projectStatusName, pt.typeName AS projectTypeName " +
+                "FROM assignProjects ap " +
+                "LEFT JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId " +
+                "LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
+                "WHERE ap.supervisorId = ?";
+
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, engineerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                projects p = new projects();
+                p.setAssignProjectId(rs.getInt("assignProjectId"));
+                p.setProjectInstanceName(rs.getString("projectInstanceName"));
+                p.setProjectTypeName(rs.getString("projectTypeName"));
+                p.setProjectLocation(rs.getString("projectLocation"));
+                p.setProjectArea(rs.getDouble("projectArea"));
+                p.setProjectHeight(rs.getDouble("projectHeight"));
+                p.setTotalStories(rs.getDouble("totalStories"));
+                p.setTotalUnits(rs.getDouble("totalUnits"));
+                p.setProjectOverHeadCost(rs.getDouble("projectOverHeadCost"));
+                p.setProjectStatus(rs.getString("projectStatusName"));
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
 }

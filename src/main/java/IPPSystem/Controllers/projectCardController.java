@@ -1,6 +1,9 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.enumDuration;
+import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
+import IPPSystem.Utils.utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class projectCardController {
 
@@ -43,8 +47,17 @@ public class projectCardController {
     public void setData(projects p,StackPane pane) {
         this.project = p;
         this.loadPane = pane;
+        if (p == null) {
+            return;
+        }
+
+        if (projectID != null) {
+            projectID.setText(utils.generateProjectId(p.getAssignProjectId()));
+        }
+        HashMap<enumDuration,Double > d = utils.getDuration(p.getProjectDuration());
+        String month = d.get(enumDuration.MONTH)+" Months";
         projectLocation.setText(p.getProjectLocation());
-        duration.setText(p.getProjectDuration() + " Months");
+        duration.setText(month);
         supervisorName.setText(p.getUserName());
         projectStatus.setText(p.getProjectStatus());
         projectType.setText(p.getProjectTypeName());
@@ -91,16 +104,12 @@ public class projectCardController {
                 "status-planning"
         );
 
-        switch (status.toLowerCase()) {
-            case "active":
-                projectStatus.getStyleClass().add("status-active");
-                break;
-            case "completed":
-                projectStatus.getStyleClass().add("status-completed");
-                break;
-            case "planning":
-                projectStatus.getStyleClass().add("status-planning");
-                break;
+        if (status.equals(IPPSystem.Constants.projectStatus.PLANNING.toString())){
+            projectStatus.getStyleClass().add("status-planning");
+        }else if(status.equals(IPPSystem.Constants.projectStatus.PROGRESSING.toString())){
+            projectStatus.getStyleClass().add("status-active");
+        }else if(status.equals(IPPSystem.Constants.projectStatus.FINISH.toString())){
+            projectStatus.getStyleClass().add("status-finished");
         }
     }
 }
