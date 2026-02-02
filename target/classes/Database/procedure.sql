@@ -351,8 +351,10 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS getAllWorkItemByAssignProjectId $$
 CREATE PROCEDURE getAllWorkItemByAssignProjectId(
     IN p_assignProjectId INT
 )
@@ -361,40 +363,51 @@ BEGIN
         awi.assignWorkItemId,
         wi.projectWorkItemName AS workItemName,
         ps.projectStatusName AS workItemStatus,
+
+        -- planned baseline status
         ast.assignStatusName AS assignStatus,
+
+        -- planned baseline values (latest planned)
         awid.workItemCost AS cost,
         awid.workItemLaborQty AS laborQty,
         awid.workItemDuration AS duration,
         awid.startDate AS startDate,
         awid.endDate AS endDate
+
     FROM assignWorkItems awi
     INNER JOIN workItems wi
         ON wi.projectWorkItemId = awi.projectWorkItemId
     INNER JOIN projectStatus ps
         ON ps.projectStatusId = awi.workItemStatus
+
     LEFT JOIN (
-        -- Get the latest details for each work item
-        SELECT
-            awid1.*
+        /* latest PLANNED details per work item */
+        SELECT awid1.*
         FROM assignWorkItemDetails awid1
-        INNER JOIN (
+        JOIN assignStatus s1 ON awid1.assignStatusId = s1.assignStatusId
+        JOIN (
             SELECT
-                assignWorkItemId,
-                MAX(assignWorkItemDetailId) as latestDetailId
-            FROM assignWorkItemDetails
-            GROUP BY assignWorkItemId
+                d.assignWorkItemId,
+                MAX(d.assignWorkItemDetailId) AS latestPlannedDetailId
+            FROM assignWorkItemDetails d
+            JOIN assignStatus s ON d.assignStatusId = s.assignStatusId
+            WHERE s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+            GROUP BY d.assignWorkItemId
         ) latest
-        ON awid1.assignWorkItemId = latest.assignWorkItemId
-        AND awid1.assignWorkItemDetailId = latest.latestDetailId
+          ON latest.assignWorkItemId = awid1.assignWorkItemId
+         AND latest.latestPlannedDetailId = awid1.assignWorkItemDetailId
     ) awid
-        ON awid.assignWorkItemId = awi.assignWorkItemId
+      ON awid.assignWorkItemId = awi.assignWorkItemId
+
     LEFT JOIN assignStatus ast
-        ON ast.assignStatusId = awid.assignStatusId
+      ON ast.assignStatusId = awid.assignStatusId
+
     WHERE awi.assignProjectId = p_assignProjectId
     ORDER BY awi.assignWorkItemId;
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -901,64 +914,132 @@ DELIMITER ;
 
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS calculateCpiSpi $$
 CREATE PROCEDURE calculateCpiSpi (
-    IN p_assignProjectId INT
+    IN p_assignProjectId INT,
+    IN p_asOfDate DATE
 )
 BEGIN
-    DECLARE PV DOUBLE DEFAULT 0;
-    DECLARE EV DOUBLE DEFAULT 0;
-    DECLARE AC DOUBLE DEFAULT 0;
+    DECLARE BAC DOUBLE DEFAULT 0;   -- total budget
+    DECLARE PV  DOUBLE DEFAULT 0;   -- planned value to date
+    DECLARE AC  DOUBLE DEFAULT 0;   -- actual cost to date
+    DECLARE EV  DOUBLE DEFAULT 0;   -- earned value to date
     DECLARE CPI DOUBLE;
     DECLARE SPI DOUBLE;
 
-    -- Planned Value (PV): latest plan cost (autoAssign/customAssign/extraAssign)
-    SELECT IFNULL(
-        (
-            SELECT apd.projectCost
-            FROM assignProjectDetails apd
-            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
-            WHERE apd.assignProjectId = p_assignProjectId
-              AND s.assignStatusName IN ('autoAssign', 'customAssign', 'extraAssign')
-            ORDER BY apd.assignProjectDetailId DESC
-            LIMIT 1
-        ),
-        0
-    )
-    INTO PV;
+    DECLARE v_start DATE;
+    DECLARE v_end   DATE;
+    DECLARE v_plan_ratio DOUBLE DEFAULT 0;
 
-    -- Earned Value (EV):
-    -- - If an 'actualResult' record exists, use that
-    -- - Otherwise (project still running), use actual cost from dailyReportTasks.dailyCost
-    SELECT IFNULL(
-        (
-            SELECT SUM(apd.projectCost)
-            FROM assignProjectDetails apd
-            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
-            WHERE apd.assignProjectId = p_assignProjectId
-              AND s.assignStatusName = 'actualResult'
-        ),
-        (
-            SELECT IFNULL(SUM(drt.dailyCost), 0)
-            FROM dailyReports dr
-            LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
-            WHERE dr.assignProjectId = p_assignProjectId
-        )
-    )
-    INTO EV;
+    IF p_asOfDate IS NULL THEN
+        SET p_asOfDate = CURDATE();
+    END IF;
 
-    -- Actual Cost (AC): from daily reports
+    /* =========================
+       BAC + Baseline Dates
+       ========================= */
     SELECT
-        IFNULL(SUM(drt.dailyCost), 0)
+        IFNULL(apd.projectCost, 0),
+        apd.startDate,
+        apd.endDate
+    INTO BAC, v_start, v_end
+    FROM assignProjectDetails apd
+    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+    WHERE apd.assignProjectId = p_assignProjectId
+      AND s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+    ORDER BY apd.assignProjectDetailId DESC
+    LIMIT 1;
+
+    /* =========================
+       PV (to date) using time ratio
+       PV = BAC * (elapsed_time / total_time)
+       ========================= */
+    IF v_start IS NULL OR v_end IS NULL OR v_end <= v_start THEN
+        SET v_plan_ratio = 0;   -- or NULL, but 0 is safer for dashboards
+    ELSE
+        SET v_plan_ratio =
+            LEAST(1,
+                GREATEST(0,
+                    DATEDIFF(p_asOfDate, v_start) / NULLIF(DATEDIFF(v_end, v_start), 0)
+                )
+            );
+    END IF;
+
+    SET PV = BAC * v_plan_ratio;
+
+    /* =========================
+       AC (to date): task cost + labor wage
+       ========================= */
+    SELECT
+        IFNULL(SUM(drt.dailyCost),0) + IFNULL(SUM(drl.dailyWage),0)
     INTO AC
     FROM dailyReports dr
     LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+    LEFT JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
+    WHERE dr.assignProjectId = p_assignProjectId
+      AND dr.reportDate <= p_asOfDate;
 
-    WHERE dr.assignProjectId = p_assignProjectId;
+    /* =========================
+       EV (to date): workItemCost * physical progress
+       progress = SUM(completedQty) / SUM(plannedQty)
+       ========================= */
+    SELECT
+        IFNULL(SUM(
+            lc.workItemCost *
+            LEAST(1,
+                IF(wp.plannedQty = 0, 0, wp.completedQty / wp.plannedQty)
+            )
+        ), 0)
+    INTO EV
+    FROM
+    (
+        /* Latest planned workItemCost per assignWorkItemId */
+        SELECT awid1.assignWorkItemId, awid1.workItemCost
+        FROM assignWorkItemDetails awid1
+        JOIN assignStatus s1 ON awid1.assignStatusId = s1.assignStatusId
+        WHERE s1.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+          AND awid1.assignWorkItemDetailId = (
+              SELECT MAX(awid2.assignWorkItemDetailId)
+              FROM assignWorkItemDetails awid2
+              JOIN assignStatus s2 ON awid2.assignStatusId = s2.assignStatusId
+              WHERE awid2.assignWorkItemId = awid1.assignWorkItemId
+                AND s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+          )
+    ) lc
+    JOIN
+    (
+        /* Progress per work item from tasks */
+        SELECT
+            at.assignWorkItemId,
+            SUM(at.plannedQty) AS plannedQty,
+            SUM(IFNULL(done.completedQty,0)) AS completedQty
+        FROM assignTasks at
+        LEFT JOIN
+        (
+            SELECT
+                drt.assignTaskId,
+                SUM(drt.completedQty) AS completedQty
+            FROM dailyReports dr
+            JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+            WHERE dr.assignProjectId = p_assignProjectId
+              AND dr.reportDate <= p_asOfDate
+            GROUP BY drt.assignTaskId
+        ) done ON done.assignTaskId = at.assignTaskId
+        WHERE at.isCancel = 0
+        GROUP BY at.assignWorkItemId
+    ) wp ON wp.assignWorkItemId = lc.assignWorkItemId;
 
+    /* =========================
+       CPI / SPI
+       ========================= */
     SET CPI = IF(AC = 0, NULL, EV / AC);
     SET SPI = IF(PV = 0, NULL, EV / PV);
 
+    /* =========================
+       Output
+       ========================= */
     SELECT
+        BAC,
         PV,
         EV,
         AC,
@@ -975,10 +1056,15 @@ BEGIN
             WHEN SPI >= 1.05 THEN 'Ahead of Schedule'
             WHEN SPI >= 0.95 THEN 'On Schedule'
             ELSE 'Behind Schedule'
-        END AS SPI_STATUS;
+        END AS SPI_STATUS,
+        v_start AS baselineStart,
+        v_end   AS baselineEnd,
+        p_asOfDate AS asOfDate;
+
 END$$
 
 DELIMITER ;
+
 DELIMITER $$
 
 CREATE PROCEDURE assignFullProjectAuto(
@@ -1385,6 +1471,511 @@ proc: BEGIN
         v_totalLaborQty AS totalLaborQuantity,
         v_totalWorkItemCost AS totalWorkItemCost;
 
+END$$
+
+DELIMITER ;
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS getProjectDashboard $$
+CREATE PROCEDURE getProjectDashboard(
+    IN p_assignProjectId INT,
+    IN p_asOfDate DATE
+)
+BEGIN
+    DECLARE BAC DOUBLE DEFAULT 0;
+    DECLARE PV  DOUBLE DEFAULT 0;
+    DECLARE EV  DOUBLE DEFAULT 0;
+    DECLARE AC  DOUBLE DEFAULT 0;
+    DECLARE CPI DOUBLE;
+    DECLARE SPI DOUBLE;
+
+    DECLARE v_start DATE;
+    DECLARE v_end   DATE;
+    DECLARE v_totalDays INT DEFAULT 0;
+    DECLARE v_elapsedDays INT DEFAULT 0;
+    DECLARE v_reportedDays INT DEFAULT 0;
+    DECLARE v_latestReportDate INT DEFAULT 0;
+
+    DECLARE v_totalWorkItems INT DEFAULT 0;
+    DECLARE v_completedWorkItems INT DEFAULT 0;
+    DECLARE v_progress DOUBLE DEFAULT 0;
+
+    IF p_asOfDate IS NULL THEN
+        SET p_asOfDate = CURDATE();
+    END IF;
+
+    /* Latest project baseline (BAC + dates) */
+    SELECT
+        IFNULL(apd.projectCost, 0),
+        apd.startDate,
+        apd.endDate
+    INTO BAC, v_start, v_end
+    FROM assignProjectDetails apd
+    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+    WHERE apd.assignProjectId = p_assignProjectId
+      AND s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+    ORDER BY apd.assignProjectDetailId DESC
+    LIMIT 1;
+
+    /* Days */
+    IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
+        SET v_totalDays = 0;
+        SET v_elapsedDays = 0;
+    ELSE
+        SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
+        SET v_elapsedDays =
+            LEAST(v_totalDays, GREATEST(0, DATEDIFF(p_asOfDate, v_start) + 1));
+    END IF;
+
+-- For the max report date
+    SELECT MAX(reportDate) into v_latestReportDate
+    FROM dailyReports
+    WHERE assignProjectId = p_assignProjectId;
+
+    /* PV to date = BAC * (elapsed/total) */
+    SET PV = IF(v_totalDays = 0, 0, BAC * (v_elapsedDays / v_totalDays));
+
+    /* Reported days */
+    SELECT COUNT(DISTINCT reportDate)
+    INTO v_reportedDays
+    FROM dailyReports
+    WHERE assignProjectId = p_assignProjectId
+      AND reportDate <= p_asOfDate;
+
+    /* Work item counts */
+    SELECT COUNT(*)
+    INTO v_totalWorkItems
+    FROM assignWorkItems
+    WHERE assignProjectId = p_assignProjectId;
+
+    SELECT IFNULL(SUM(CASE WHEN ps.projectStatusName = 'finished' THEN 1 ELSE 0 END),0)
+    INTO v_completedWorkItems
+    FROM assignWorkItems awi
+    LEFT JOIN projectStatus ps ON awi.workItemStatus = ps.projectStatusId
+    WHERE awi.assignProjectId = p_assignProjectId;
+
+    /* AC to date = tasks + labors (separate sums to avoid double count) */
+    SET AC =
+        (SELECT IFNULL(SUM(drt.dailyCost),0)
+         FROM dailyReports dr
+         JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+         WHERE dr.assignProjectId = p_assignProjectId
+           AND dr.reportDate <= p_asOfDate)
+      + (SELECT IFNULL(SUM(drl.dailyWage),0)
+         FROM dailyReports dr
+         JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
+         WHERE dr.assignProjectId = p_assignProjectId
+           AND dr.reportDate <= p_asOfDate);
+
+    /* EV = SUM(workItem BAC * workItem progress) */
+    SELECT
+        IFNULL(SUM(wiBac.workItemCost * wiProg.progressRatio), 0)
+    INTO EV
+    FROM
+    (
+        /* latest BAC per work item for this project */
+        SELECT awid1.assignWorkItemId, awid1.workItemCost
+        FROM assignWorkItemDetails awid1
+        JOIN assignStatus s1 ON awid1.assignStatusId = s1.assignStatusId
+        JOIN assignWorkItems awi ON awid1.assignWorkItemId = awi.assignWorkItemId
+        WHERE awi.assignProjectId = p_assignProjectId
+          AND s1.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+          AND awid1.assignWorkItemDetailId = (
+              SELECT MAX(awid2.assignWorkItemDetailId)
+              FROM assignWorkItemDetails awid2
+              JOIN assignStatus s2 ON awid2.assignStatusId = s2.assignStatusId
+              WHERE awid2.assignWorkItemId = awid1.assignWorkItemId
+                AND s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+          )
+    ) wiBac
+    JOIN
+    (
+        /* progress per work item from completedQty / plannedQty */
+        SELECT
+            at.assignWorkItemId,
+            LEAST(1,
+                IF(SUM(at.plannedQty)=0, 0, SUM(IFNULL(done.completedQty,0)) / SUM(at.plannedQty))
+            ) AS progressRatio
+        FROM assignTasks at
+        JOIN assignWorkItems awi ON at.assignWorkItemId = awi.assignWorkItemId
+        LEFT JOIN (
+            SELECT
+                drt.assignTaskId,
+                SUM(drt.completedQty) AS completedQty
+            FROM dailyReports dr
+            JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+            WHERE dr.assignProjectId = p_assignProjectId
+              AND dr.reportDate <= p_asOfDate
+            GROUP BY drt.assignTaskId
+        ) done ON done.assignTaskId = at.assignTaskId
+        WHERE awi.assignProjectId = p_assignProjectId
+          AND at.isCancel = 0
+        GROUP BY at.assignWorkItemId
+    ) wiProg ON wiProg.assignWorkItemId = wiBac.assignWorkItemId;
+
+    SET v_progress = IF(BAC = 0, 0, EV / BAC);
+
+    SET CPI = IF(AC = 0, NULL, EV / AC);
+    SET SPI = IF(PV = 0, NULL, EV / PV);
+
+    SELECT
+        BAC, PV, EV, AC, CPI, SPI,
+        v_progress AS progressRatio,
+        v_start AS baselineStart,
+        v_end AS baselineEnd,
+        v_latestReportDate AS elapsedDays,
+        v_totalDays AS totalDays,
+        v_reportedDays AS reportedDays,
+        v_completedWorkItems AS completedWorkItems,
+        v_totalWorkItems AS totalWorkItems,
+        p_asOfDate AS asOfDate;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS getWorkItemDashboard $$
+CREATE PROCEDURE getWorkItemDashboard(
+    IN p_assignWorkItemId INT,
+    IN p_asOfDate DATE
+)
+BEGIN
+    DECLARE BAC DOUBLE DEFAULT 0;
+    DECLARE PV  DOUBLE DEFAULT 0;
+    DECLARE EV  DOUBLE DEFAULT 0;
+    DECLARE AC  DOUBLE DEFAULT 0;
+    DECLARE CPI DOUBLE;
+    DECLARE SPI DOUBLE;
+
+    DECLARE v_start DATE;
+    DECLARE v_end   DATE;
+    DECLARE v_totalDays INT DEFAULT 0;
+    DECLARE v_elapsedDays INT DEFAULT 0;
+    DECLARE v_progress DOUBLE DEFAULT 0;
+
+    IF p_asOfDate IS NULL THEN
+        SET p_asOfDate = CURDATE();
+    END IF;
+
+    /* Latest baseline for this work item */
+    SELECT
+        IFNULL(awid.workItemCost,0),
+        awid.startDate,
+        awid.endDate
+    INTO BAC, v_start, v_end
+    FROM assignWorkItemDetails awid
+    JOIN assignStatus s ON awid.assignStatusId = s.assignStatusId
+    WHERE awid.assignWorkItemId = p_assignWorkItemId
+      AND s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+    ORDER BY awid.assignWorkItemDetailId DESC
+    LIMIT 1;
+
+    /* PV by time ratio */
+    IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
+        SET v_totalDays = 0;
+        SET v_elapsedDays = 0;
+    ELSE
+        SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
+        SET v_elapsedDays = LEAST(v_totalDays, GREATEST(0, DATEDIFF(p_asOfDate, v_start) + 1));
+    END IF;
+
+    SET PV = IF(v_totalDays = 0, 0, BAC * (v_elapsedDays / v_totalDays));
+
+    /* AC = tasks + labors for reports of this work item */
+    SET AC =
+        (SELECT IFNULL(SUM(drt.dailyCost),0)
+         FROM dailyReports dr
+         JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+         WHERE dr.assignWorkItemId = p_assignWorkItemId
+           AND dr.reportDate <= p_asOfDate)
+      + (SELECT IFNULL(SUM(drl.dailyWage),0)
+         FROM dailyReports dr
+         JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
+         WHERE dr.assignWorkItemId = p_assignWorkItemId
+           AND dr.reportDate <= p_asOfDate);
+
+    /* Progress from completedQty / plannedQty */
+    SELECT
+        LEAST(1,
+            IF(SUM(at.plannedQty)=0, 0, SUM(IFNULL(done.completedQty,0)) / SUM(at.plannedQty))
+        )
+    INTO v_progress
+    FROM assignTasks at
+    LEFT JOIN (
+        SELECT drt.assignTaskId, SUM(drt.completedQty) AS completedQty
+        FROM dailyReports dr
+        JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+        WHERE dr.reportDate <= p_asOfDate
+        GROUP BY drt.assignTaskId
+    ) done ON done.assignTaskId = at.assignTaskId
+    WHERE at.assignWorkItemId = p_assignWorkItemId
+      AND at.isCancel = 0;
+
+    SET EV = BAC * IFNULL(v_progress,0);
+
+    SET CPI = IF(AC = 0, NULL, EV / AC);
+    SET SPI = IF(PV = 0, NULL, EV / PV);
+
+    SELECT
+        BAC, PV, EV, AC, CPI, SPI,
+        IFNULL(v_progress,0) AS progressRatio,
+        v_start AS baselineStart,
+        v_end AS baselineEnd,
+        v_elapsedDays AS elapsedDays,
+        v_totalDays AS totalDays,
+        p_asOfDate AS asOfDate;
+END$$
+
+DELIMITER ;
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS getProjectWorkItemsDashboard $$
+CREATE PROCEDURE getProjectWorkItemsDashboard(
+    IN p_assignProjectId INT,
+    IN p_asOfDate DATE
+)
+BEGIN
+    IF p_asOfDate IS NULL THEN
+        SET p_asOfDate = CURDATE();
+    END IF;
+
+    SELECT
+        awi.assignWorkItemId,
+        wi.projectWorkItemName AS workItemName,
+        ps.projectStatusName AS workItemStatus,
+
+        base.workItemCost AS BAC,
+
+        /* PV */
+        IF(base.totalDays = 0, 0, base.workItemCost * (base.elapsedDays / base.totalDays)) AS PV,
+
+        /* EV */
+        base.workItemCost * IFNULL(prog.progressRatio,0) AS EV,
+
+        /* AC (safe) */
+        IFNULL(ac.AC,0) AS AC,
+
+        /* CPI */
+        IF(IFNULL(ac.AC,0)=0, NULL, (base.workItemCost * IFNULL(prog.progressRatio,0)) / ac.AC) AS CPI,
+
+        /* SPI */
+        IF(
+            IF(base.totalDays = 0, 0, base.workItemCost * (base.elapsedDays / base.totalDays)) = 0,
+            NULL,
+            (base.workItemCost * IFNULL(prog.progressRatio,0)) /
+            (IF(base.totalDays = 0, 0, base.workItemCost * (base.elapsedDays / base.totalDays)))
+        ) AS SPI,
+
+        IFNULL(prog.progressRatio,0) AS progressRatio
+
+    FROM assignWorkItems awi
+    LEFT JOIN workItems wi ON awi.projectWorkItemId = wi.projectWorkItemId
+    LEFT JOIN projectStatus ps ON awi.workItemStatus = ps.projectStatusId
+
+    /* latest baseline per work item + day ratio */
+    JOIN (
+        SELECT
+            x.assignWorkItemId,
+            x.workItemCost,
+            x.startDate,
+            x.endDate,
+            IF(x.startDate IS NULL OR x.endDate IS NULL OR x.endDate < x.startDate, 0, DATEDIFF(x.endDate, x.startDate)+1) AS totalDays,
+            IF(x.startDate IS NULL OR x.endDate IS NULL OR x.endDate < x.startDate, 0,
+                LEAST(DATEDIFF(x.endDate, x.startDate)+1, GREATEST(0, DATEDIFF(p_asOfDate, x.startDate)+1))
+            ) AS elapsedDays
+        FROM assignWorkItemDetails x
+        JOIN assignStatus s ON x.assignStatusId = s.assignStatusId
+        WHERE s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+          AND x.assignWorkItemDetailId IN (
+              SELECT MAX(awid2.assignWorkItemDetailId)
+              FROM assignWorkItemDetails awid2
+              JOIN assignStatus s2 ON awid2.assignStatusId = s2.assignStatusId
+              WHERE s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+              GROUP BY awid2.assignWorkItemId
+          )
+    ) base ON base.assignWorkItemId = awi.assignWorkItemId
+
+    /* progress per work item */
+    LEFT JOIN (
+        SELECT
+            at.assignWorkItemId,
+            LEAST(1,
+                IF(SUM(at.plannedQty)=0, 0, SUM(IFNULL(done.completedQty,0)) / SUM(at.plannedQty))
+            ) AS progressRatio
+        FROM assignTasks at
+        LEFT JOIN (
+            SELECT drt.assignTaskId, SUM(drt.completedQty) AS completedQty
+            FROM dailyReports dr
+            JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+            WHERE dr.assignProjectId = p_assignProjectId
+              AND dr.reportDate <= p_asOfDate
+            GROUP BY drt.assignTaskId
+        ) done ON done.assignTaskId = at.assignTaskId
+        WHERE at.isCancel = 0
+        GROUP BY at.assignWorkItemId
+    ) prog ON prog.assignWorkItemId = awi.assignWorkItemId
+
+    /* AC per work item (safe: sum tasks + sum labors per dailyReportId, then sum) */
+    LEFT JOIN (
+        SELECT
+            dr.assignWorkItemId,
+            SUM(IFNULL(t.sumTaskCost,0) + IFNULL(l.sumLaborCost,0)) AS AC
+        FROM dailyReports dr
+        LEFT JOIN (
+            SELECT dailyReportId, SUM(dailyCost) AS sumTaskCost
+            FROM dailyReportTasks
+            GROUP BY dailyReportId
+        ) t ON t.dailyReportId = dr.dailyReportId
+        LEFT JOIN (
+            SELECT dailyReportId, SUM(dailyWage) AS sumLaborCost
+            FROM dailyReportLabors
+            GROUP BY dailyReportId
+        ) l ON l.dailyReportId = dr.dailyReportId
+        WHERE dr.assignProjectId = p_assignProjectId
+          AND dr.reportDate <= p_asOfDate
+        GROUP BY dr.assignWorkItemId
+    ) ac ON ac.assignWorkItemId = awi.assignWorkItemId
+
+    WHERE awi.assignProjectId = p_assignProjectId
+    ORDER BY awi.assignWorkItemId;
+END$$
+
+DELIMITER ;
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS updateProjectBaseline $$
+CREATE PROCEDURE updateProjectBaseline(
+    IN p_assignProjectId INT,
+    IN p_projectCost DOUBLE,
+    IN p_startDate DATE,
+    IN p_endDate DATE,
+    IN p_duration DOUBLE
+)
+BEGIN
+    DECLARE v_assignStatusId INT;
+    DECLARE v_projectStatusName VARCHAR(50);
+
+    /* Find project status name */
+    SELECT ps.projectStatusName
+    INTO v_projectStatusName
+    FROM assignProjects ap
+    JOIN projectStatus ps ON ap.projectStatusId = ps.projectStatusId
+    WHERE ap.assignProjectId = p_assignProjectId
+    LIMIT 1;
+
+    IF v_projectStatusName IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+
+    /* Block edits if finished/cancelled */
+    IF v_projectStatusName IN ('finished','cancelled') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot edit finished/cancelled project';
+    END IF;
+
+    /* planned -> customAssign, otherwise -> extraAssign */
+    IF v_projectStatusName = 'planned' THEN
+        SELECT assignStatusId INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = 'customAssign'
+        LIMIT 1;
+    ELSE
+        SELECT assignStatusId INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = 'extraAssign'
+        LIMIT 1;
+    END IF;
+
+    IF v_assignStatusId IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'assignStatus mapping missing';
+    END IF;
+
+    INSERT INTO assignProjectDetails(
+        assignProjectId,
+        assignStatusId,
+        projectCost,
+        startDate,
+        endDate,
+        projectDuration
+    )
+    VALUES (
+        p_assignProjectId,
+        v_assignStatusId,
+        p_projectCost,
+        p_startDate,
+        p_endDate,
+        p_duration
+    );
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS updateWorkItemBaseline $$
+CREATE PROCEDURE updateWorkItemBaseline(
+    IN p_assignWorkItemId INT,
+    IN p_workItemCost DOUBLE,
+    IN p_laborQty DOUBLE,
+    IN p_duration DOUBLE,
+    IN p_startDate DATE,
+    IN p_endDate DATE
+)
+BEGIN
+    DECLARE v_assignStatusId INT;
+    DECLARE v_projectStatusName VARCHAR(50);
+
+    /* Find parent project status name */
+    SELECT ps.projectStatusName
+    INTO v_projectStatusName
+    FROM assignWorkItems awi
+    JOIN assignProjects ap ON awi.assignProjectId = ap.assignProjectId
+    JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId
+    WHERE awi.assignWorkItemId = p_assignWorkItemId
+    LIMIT 1;
+
+    IF v_projectStatusName IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Work item or project not found';
+    END IF;
+
+    IF v_projectStatusName IN ('finished','cancelled') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot edit work item of finished/cancelled project';
+    END IF;
+
+    IF v_projectStatusName = 'planned' THEN
+        SELECT assignStatusId INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = 'customAssign'
+        LIMIT 1;
+    ELSE
+        SELECT assignStatusId INTO v_assignStatusId
+        FROM assignStatus
+        WHERE assignStatusName = 'extraAssign'
+        LIMIT 1;
+    END IF;
+
+    IF v_assignStatusId IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'assignStatus mapping missing';
+    END IF;
+
+    INSERT INTO assignWorkItemDetails(
+        assignWorkItemId,
+        assignStatusId,
+        workItemCost,
+        workItemLaborQty,
+        workItemDuration,
+        startDate,
+        endDate
+    )
+    VALUES (
+        p_assignWorkItemId,
+        v_assignStatusId,
+        p_workItemCost,
+        p_laborQty,
+        p_duration,
+        p_startDate,
+        p_endDate
+    );
 END$$
 
 DELIMITER ;
