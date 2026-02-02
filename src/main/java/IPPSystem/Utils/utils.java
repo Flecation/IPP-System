@@ -92,54 +92,7 @@ public class utils {
         focusAnimation.animateUnderline(underline,From,To);
     }
 
-    public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> setAlertBox(root, title, message, type, onlyShow));
-            return;
-        }
 
-        try {
-            Pane targetPane = findOverlayTargetPane(root);
-            if (targetPane == null) {
-                return;
-            }
-
-            // If an old alert is still attached, remove it so the new one always shows
-            if (currentAlertRoot != null && currentAlertRoot.getParent() instanceof Pane oldPane) {
-                oldPane.getChildren().remove(currentAlertRoot);
-            }
-            currentAlertRoot = null;
-            targetPane.getChildren().removeIf(node -> "messageBoxRoot".equals(node.getId()));
-
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
-            Parent msgRoot = loader.load();
-            currentAlertRoot = msgRoot;
-            IPPSystem.Controllers.messageBoxController controller = loader.getController();
-
-            // Make it behave like an overlay (not normal VBox layout)
-            msgRoot.setId("messageBoxRoot");
-            msgRoot.setManaged(true);
-            msgRoot.setLayoutX(0);
-            msgRoot.setLayoutY(0);
-            if (msgRoot instanceof Region region) {
-                region.prefWidthProperty().bind(targetPane.widthProperty());
-                region.prefHeightProperty().bind(targetPane.heightProperty());
-                region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            }
-
-            targetPane.getChildren().add(msgRoot);
-            msgRoot.toFront();
-
-            Runnable cleanup = () -> currentAlertRoot = null;
-            if (onlyShow) {
-                controller.toastMessage(msgRoot, title, message, type, cleanup);
-            } else {
-                controller.confirmMessage(msgRoot, title, message, type, cleanup);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static Pane findOverlayTargetPane(Parent node) {
         if (node == null) {
@@ -193,11 +146,15 @@ public class utils {
         switchPage.getInstance(null).loadProjects(projects, containerPane);
     }
 
-    public static void openWorkItemDetails(workItems items, StackPane a){
-        switchPage.getInstance(a).openWorkItemDetails(items);
+    public static void openProjectDetails(projects project,StackPane a){
+        switchPage.getInstance(a).openProjectDetails(project);
     }
 
-    public static void viewUserInfo(users user){
+    public static void openWorkItemDetails(workItems items,projects project, StackPane a){
+        switchPage.getInstance(a).openWorkItemDetails(items,project);
+    }
+
+    public static void viewUserInfo(users user, StackPane loadPane){
         switchPage.getInstance(null).viewUsersInfo(user);
     }
 

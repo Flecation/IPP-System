@@ -7,6 +7,7 @@ import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.workItems;
 import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -53,16 +55,6 @@ public class projectDetailsController extends viewProjectsController {
     @FXML private ProgressBar projectProgress;
     @FXML private Label projectProgressLbl;
 
-    // ===== Project Info (edit) =====
-    @FXML private VBox editProjectInfo;
-    @FXML private TextField editContractTxt;
-    @FXML private TextField editDurationTxt;
-    @FXML private ComboBox<enumDuration> durationComboBox;
-    @FXML private DatePicker editStartDate;
-    @FXML private DatePicker editEndDate;
-    @FXML private TextField editAddressTxt;
-    @FXML private Button editConfirmBtn;
-    @FXML private Button editRevertBtn;
 
     // floating labels (your note)
     @FXML private Label editContactLbl;   // Contract Value label (typo in FXML: Contact)
@@ -92,25 +84,19 @@ public class projectDetailsController extends viewProjectsController {
     @FXML private TableColumn<workItems, java.sql.Date> workItemStartCol;
     @FXML private TableColumn<workItems, java.sql.Date> workItemEndCol;
 
+    @FXML private Button pDetailEditBtn;
+
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
     @FXML
     public void initialize() {
 
-        // Fill duration units if you use them
-        if (durationComboBox != null) {
-            durationComboBox.getItems().setAll(enumDuration.values());
-        }
-
-        // Floating label behavior (simple + reliable)
-        utils.setFloatTextFieldStyle( editContactLbl,editContractTxt);
-        utils.setFloatTextFieldStyle( editDurationLbl,editDurationTxt);
-        utils.setFloatTextFieldStyle( editAddressLbl,editAddressTxt);
-
-        if (editConfirmBtn != null) editConfirmBtn.setOnAction(e -> onConfirmEdits());
-        if (editRevertBtn != null) editRevertBtn.setOnAction(e -> loadProjectIntoEditFields(project));
-
+        pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
+        pDetailEditBtn.setOnAction(e->{
+            messageBoxService.toast("Not Allow To Edit",
+                    "If you want to edit buy Premium!!",
+                    notificationType.WARNING);});
         if (backToViewProjectBtn != null) {
             backToViewProjectBtn.setOnAction(e -> utils.openFxml("viewProjects.fxml", null));
         }
@@ -121,7 +107,7 @@ public class projectDetailsController extends viewProjectsController {
                 TableRow<workItems> row = new TableRow<>();
                 row.setOnMouseClicked(e -> {
                     if (e.getClickCount() == 2 && !row.isEmpty()) {
-                        utils.openWorkItemDetails(row.getItem(), null);
+                        utils.openWorkItemDetails(row.getItem(),project, null);
                     }
                 });
                 return row;
@@ -135,8 +121,11 @@ public class projectDetailsController extends viewProjectsController {
 
         // Toggle view/edit by role (your old logic)
         boolean isSupervisor = loginUser != null && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
-        if (editProjectInfo != null) editProjectInfo.setVisible(!isSupervisor);
-        if (viewOnlyProjectInfo != null) viewOnlyProjectInfo.setVisible(isSupervisor);
+        if(isSupervisor){
+            pDetailEditBtn.setVisible(false);
+        }else{
+            pDetailEditBtn.setVisible(true);
+        }
 
         // Header
         safeSet(projectName, project.getProjectInstanceName());
@@ -153,10 +142,7 @@ public class projectDetailsController extends viewProjectsController {
         safeSet(projectViewStartDate, utils.dateFormat(project.getStartDate()));
         safeSet(projectViewEndDate, utils.dateFormat(project.getEndDate()));
         safeSet(projectViewDuration, utils.getOnlyOneDuration(project.getProjectDuration(), enumDuration.DAY));
-        utils.durationShowHelper(project,durationComboBox,editDurationTxt);
 
-        // Edit fields
-        loadProjectIntoEditFields(project);
 
         // Work items table
         refreshWorkItems();
@@ -246,97 +232,6 @@ public class projectDetailsController extends viewProjectsController {
         if (Platform.isFxApplicationThread()) r.run();
         else Platform.runLater(r);
     }
-
-    private void loadProjectIntoEditFields(projects p) {
-        if (p == null) return;
-
-        if (editContractTxt != null) editContractTxt.setText(String.valueOf(p.getProjectCost()));
-        if (editDurationTxt != null) editDurationTxt.setText(String.valueOf(p.getProjectDuration()));
-
-        if (durationComboBox != null) durationComboBox.setValue(enumDuration.DAY);
-
-        if (editStartDate != null) editStartDate.setValue(utils.toLocalDate(p.getStartDate()));
-        if (editEndDate != null) editEndDate.setValue(utils.toLocalDate(p.getEndDate()));
-
-        if (editAddressTxt != null) editAddressTxt.setText(p.getProjectLocation() == null ? "" : p.getProjectLocation());
-
-        // keep your “Level” floating label area (you currently show it on the top row)
-        safeSet(levelLbl, p.getProjectLevelName());
-    }
-
-    private void onConfirmEdits() {
-        if (project == null) return;
-
-        // 1) Read inputs
-        Double cost = tryParseDouble(editContractTxt.getText());
-        Double duration = tryParseDouble(editDurationTxt.getText()); // duration in days
-        LocalDate start = (editStartDate == null) ? null : editStartDate.getValue();
-
-        // 2) Validate
-        if (cost == null || cost < 0) {
-            utils.setAlertBox(root, "Invalid Cost", "Please enter a valid cost (>= 0).",
-                    notificationType.WRONG, true);
-            return;
-        }
-
-        if (duration == null || duration <= 0) {
-            utils.setAlertBox(root, "Invalid Duration", "Please enter a valid duration (> 0 days).",
-                    notificationType.WRONG, true);
-            return;
-        }
-
-        if (start == null) {
-            utils.setAlertBox(root, "Invalid Start Date", "Please choose a start date.",
-                    notificationType.WRONG, true);
-            return;
-        }
-
-        // 3) Calculate end date from start + duration
-        // If duration is 1 day: end = start
-        long days = (long) Math.ceil(duration);
-        if (days < 1) days = 1;
-
-        LocalDate end = start.plusDays(days - 1);
-
-        // (Optional) Set end date in UI so user sees it
-        if (editEndDate != null) {
-            editEndDate.setValue(end);
-        }
-
-        // 4) Call procedure
-        try {
-            database.callUpdateProjectBaseline(
-                    project.getAssignProjectId(),
-                    cost,
-                    start,
-                    end,
-                    duration
-            );
-
-            // 5) Refresh UI
-            refreshWorkItems();
-            loadDashboardAsync(project.getAssignProjectId(), LocalDate.now());
-
-            // 6) Success message
-            utils.setAlertBox(root, "Success", "Project baseline updated successfully.",
-                    notificationType.SUCCESS, true);
-
-        } catch (RuntimeException ex) {
-            utils.setAlertBox(root, "Database Error",
-                    ex.getMessage(), notificationType.WRONG, true);
-        }
-    }
-
-    private Double tryParseDouble(String s) {
-        if (s == null) return null;
-        s = s.trim();
-        if (s.isEmpty()) return null;
-        s = s.replace(",", ""); // allow "1,000"
-        try { return Double.parseDouble(s); }
-        catch (NumberFormatException e) { return null; }
-    }
-
-
 
     // ------------------------------
     // UI helpers

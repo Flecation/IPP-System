@@ -239,6 +239,12 @@
                   <Region maxWidth="300.0" minWidth="300.0" opacity="0.48" BorderPane.alignment="CENTER" />
                </right>
             </BorderPane>
+            <VBox fx:id="alertPane"
+                  visible="true"
+                  managed="false"
+                  mouseTransparent="true"
+                  pickOnBounds="false"
+                  StackPane.alignment="CENTER" />
          </children>
       </StackPane>
    </children>

@@ -1,9 +1,6 @@
 package IPPSystem.Utils;
 
-import IPPSystem.Controllers.mgSEPersonalDetailController;
-import IPPSystem.Controllers.projectCardController;
-import IPPSystem.Controllers.viewProjectsController;
-import IPPSystem.Controllers.workItemDetailsController;
+import IPPSystem.Controllers.*;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -186,6 +183,7 @@ public class switchPage extends utils {
 
         String fxml = "/View/" + fxmlPath;
 
+
         String originalText = button.getText();
         Node originalGraphic = button.getGraphic();
 
@@ -301,17 +299,21 @@ public class switchPage extends utils {
         }
     }
 
-    public void openWorkItemDetails(workItems item){
+    public void openWorkItemDetails(workItems item,projects project){
         if (item == null || loadPane == null) return;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/workItemDetails.fxml"));
             Parent root = loader.load();
             workItemDetailsController controller = loader.getController();
-            controller.setWorkItem(item /*, tasks list if you want later */);
+            controller.setWorkItem(item,project /*, tasks list if you want later */);
             loadPane.getChildren().setAll(root);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void OpenLogout(){
+
     }
 
     public void viewUsersInfo(users user){
@@ -325,10 +327,33 @@ public class switchPage extends utils {
                     loader.getController();
 
             controller.setEngineer(user);
+            controller.setLoadPane(loadPane);
 
             loadPane.getChildren().setAll(page);
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openProjectDetails(projects project){
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectDetails.fxml"));
+            Parent newContent = loader.load();
+
+            projectDetailsController controller = loader.getController();
+            controller.setProjectData(project);
+
+            if (newContent instanceof Region region) {
+                region.prefWidthProperty().bind(loadPane.widthProperty());
+                region.prefHeightProperty().bind(loadPane.heightProperty());
+                region.setMaxWidth(Double.MAX_VALUE);
+                region.setMaxHeight(Double.MAX_VALUE);
+            }
+
+            loadPane.getChildren().setAll(newContent);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
