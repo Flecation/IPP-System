@@ -6,6 +6,8 @@ import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 import javafx.collections.ObservableList;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -84,6 +86,8 @@ public class database {
     public static ObservableList<tasks> getAllTasksForAutoGeneration(int projectTypeId,int workItemId,int buildingId,int levelId){return taskDatabase.getAllTasksDetailsByWorkItem(projectTypeId,workItemId,buildingId,levelId);}
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
+
+    public static void callUpdateProjectBaseline(int projectId, Double cost, LocalDate startDate, LocalDate endDate, Double duration){projectDatabase.callUpdateProjectBaseline(projectId,cost, Date.valueOf(startDate),Date.valueOf(endDate),duration);}
 
 //    For the WorkItems functions
 

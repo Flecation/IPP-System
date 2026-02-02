@@ -36,7 +36,7 @@ public class viewProjectsController extends sideBarPaneController {
     private VBox projectContainer;
 
     @FXML
-    private Label noProjectLbl;
+    private Label noProjectLbl,choiceUserLbl;
 
     @FXML
     private ComboBox<String> choiceUsersBox, choiceProjectTypesBox;
@@ -51,12 +51,17 @@ public class viewProjectsController extends sideBarPaneController {
 
     @FXML
     public void initialize() {
+
         if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
             choiceUsersBox.setDisable(true);
             choiceUsersBox.setVisible(false);
+            addBtn.setVisible(false);
+            choiceUserLbl.setVisible(false);
         }else {
             choiceUsersBox.setVisible(true);
             choiceUsersBox.setDisable(false);
+            choiceUserLbl.setVisible(true);
+            addBtn.setVisible(true);
         }
         setAllDataInChoiceBox();
 

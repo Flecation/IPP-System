@@ -332,6 +332,9 @@ public class sideBarPaneController extends navigationPaneController{
         reloadBtn.setOnMouseClicked(e->data.reload());
 
         setFirstPage();
+
+//        utils.switchNewScene(logoutIcon,"login.fxml");
+
     }
 
     // ... rest of your methods remain the same

@@ -1,146 +1,146 @@
 package IPPSystem.Utils;
 
-import IPPSystem.DAO.database;
 import IPPSystem.DAO.databaseConnection;
-import IPPSystem.Models.projects;
-import IPPSystem.Models.workItems;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 
-public class calculationHelper {
+public final class calculationHelper {
 
     private static calculationHelper instance;
-    private static Connection con;
 
-    private Double pv, ev, ac, cpi, spi;
-    private String cpiStatus, spiStatus;
-    private final ObservableList<workItems> assignWorkItemDetails = FXCollections.observableArrayList();
-
-    private calculationHelper() {
-        try {
-            con = databaseConnection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private calculationHelper() {}
 
     public static calculationHelper getInstance() {
-        if (instance == null) {
-            instance = new calculationHelper();
-        }
+        if (instance == null) instance = new calculationHelper();
         return instance;
     }
 
-    /* =====================================================
-       CALCULATE FROM DATABASE
-       ===================================================== */
-    public void calculate(projects project) {
-        assignWorkItemDetails.setAll(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
+    public record ProjectDashboard(
+            double bac, double pv, double ev, double ac,
+            Double cpi, Double spi,
+            double progressRatio,
+            Date baselineStart, Date baselineEnd,
+            int elapsedDays, int totalDays, int reportedDays,
+            int completedWorkItems, int totalWorkItems
+    ) {}
 
-        String sql = "{CALL calculateCpiSpi(?)}";
+    public record WorkItemDashboard(
+            int assignWorkItemId,
+            String workItemName,
+            String workItemStatus,
+            double bac, double pv, double ev, double ac,
+            Double cpi, Double spi,
+            double progressRatio
+    ) {}
 
-        try (CallableStatement stmt = con.prepareCall(sql)) {
+    public ProjectDashboard getProjectDashboard(int projectId, LocalDate asOf) {
+        final String sql = "{CALL getProjectDashboard(?,?)}";
+        Date asOfDate = Date.valueOf(asOf);
 
-            stmt.setInt(1, project.getAssignProjectId());
-            ResultSet rs = stmt.executeQuery();
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
 
-            if (rs.next()) {
-                pv = rs.getDouble("PV");
-                ev = rs.getDouble("EV");
-                ac = rs.getDouble("AC");
+            stmt.setInt(1, projectId);
+            stmt.setDate(2, asOfDate);
 
-                cpi = rs.getObject("CPI") != null ? rs.getDouble("CPI") : null;
-                spi = rs.getObject("SPI") != null ? rs.getDouble("SPI") : null;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return null;
 
-                cpiStatus = rs.getString("CPI_STATUS");
-                spiStatus = rs.getString("SPI_STATUS");
+                return new ProjectDashboard(
+                        rs.getDouble("BAC"),
+                        rs.getDouble("PV"),
+                        rs.getDouble("EV"),
+                        rs.getDouble("AC"),
+                        getNullableDouble(rs, "CPI"),
+                        getNullableDouble(rs, "SPI"),
+                        rs.getDouble("progressRatio"),
+                        rs.getDate("baselineStart"),
+                        rs.getDate("baselineEnd"),
+                        rs.getInt("elapsedDays"),
+                        rs.getInt("totalDays"),
+                        rs.getInt("reportedDays"),
+                        rs.getInt("completedWorkItems"),
+                        rs.getInt("totalWorkItems")
+                );
             }
-
         } catch (SQLException e) {
-            throw new RuntimeException("EVM calculation failed", e);
+            throw new RuntimeException("getProjectDashboard failed", e);
         }
     }
 
-    /* =====================================================
-       UI HELPERS
-       ===================================================== */
-    public void setupCpiCircle(Circle circle) {
-        if (cpi != null) {
-            setupCircle(circle, cpi, "CPI");
+    public ObservableList<WorkItemDashboard> getProjectWorkItemsDashboard(int projectId, LocalDate asOf) {
+        final String sql = "{CALL getProjectWorkItemsDashboard(?,?)}";
+        Date asOfDate = Date.valueOf(asOf);
+        ObservableList<WorkItemDashboard> list = FXCollections.observableArrayList();
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setInt(1, projectId);
+            stmt.setDate(2, asOfDate);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new WorkItemDashboard(
+                            rs.getInt("assignWorkItemId"),
+                            rs.getString("workItemName"),
+                            rs.getString("workItemStatus"),
+                            rs.getDouble("BAC"),
+                            rs.getDouble("PV"),
+                            rs.getDouble("EV"),
+                            rs.getDouble("AC"),
+                            getNullableDouble(rs, "CPI"),
+                            getNullableDouble(rs, "SPI"),
+                            rs.getDouble("progressRatio")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("getProjectWorkItemsDashboard failed", e);
+        }
+
+        return list;
+    }
+
+    public ProjectDashboard getWorkItemDashboardOnlyNumbers(int assignWorkItemId, LocalDate asOf) {
+        final String sql = "{CALL getWorkItemDashboard(?,?)}";
+        Date asOfDate = Date.valueOf(asOf);
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setInt(1, assignWorkItemId);
+            stmt.setDate(2, asOfDate);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return null;
+
+                // reuse ProjectDashboard shape for numeric fields (simple)
+                return new ProjectDashboard(
+                        rs.getDouble("BAC"),
+                        rs.getDouble("PV"),
+                        rs.getDouble("EV"),
+                        rs.getDouble("AC"),
+                        getNullableDouble(rs, "CPI"),
+                        getNullableDouble(rs, "SPI"),
+                        rs.getDouble("progressRatio"),
+                        rs.getDate("baselineStart"),
+                        rs.getDate("baselineEnd"),
+                        rs.getInt("elapsedDays"),
+                        rs.getInt("totalDays"),
+                        0, 0, 0
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("getWorkItemDashboard failed", e);
         }
     }
 
-    public void setupSpiCircle(Circle circle) {
-        if (spi != null) {
-            setupCircle(circle, spi, "SPI");
-        }
+    private static Double getNullableDouble(ResultSet rs, String col) throws SQLException {
+        Object obj = rs.getObject(col);
+        return (obj == null) ? null : ((Number) obj).doubleValue();
     }
-
-    /* =====================================================
-       CIRCLE ANIMATION
-       ===================================================== */
-    private void setupCircle(Circle circle, double value, String type) {
-
-        double radius = circle.getRadius();
-        double circumference = 2 * Math.PI * radius;
-        double progress = normalize(value);
-
-        circle.setFill(null);
-        circle.setRotate(-90);
-        circle.setStrokeWidth(6);
-
-        circle.getStrokeDashArray().clear();
-        circle.getStrokeDashArray().add(circumference);
-
-        circle.setStroke(getColor(type, value));
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(circle.strokeDashOffsetProperty(), circumference)
-                ),
-                new KeyFrame(Duration.seconds(1),
-                        new KeyValue(circle.strokeDashOffsetProperty(),
-                                circumference * (1 - progress))
-                )
-        );
-        timeline.play();
-    }
-
-    /* =====================================================
-       HELPERS
-       ===================================================== */
-    private double normalize(double value) {
-        if (value <= 0) return 0;
-        if (value >= 1) return 1;
-        return value;
-    }
-
-    private Color getColor(String type, double value) {
-
-        if (value > 1.05) return Color.web("#2ecc71");
-        if (value >= 0.95) return Color.web("#f1c40f");
-        return Color.web("#e74c3c");
-    }
-
-    /* =====================================================
-       GETTERS
-       ===================================================== */
-    public Double getPv() { return pv; }
-    public Double getEv() { return ev; }
-    public Double getAc() { return ac; }
-    public Double getCpi() { return cpi; }
-    public Double getSpi() { return spi; }
-    public String getCpiStatus() { return cpiStatus; }
-    public String getSpiStatus() { return spiStatus; }
 }

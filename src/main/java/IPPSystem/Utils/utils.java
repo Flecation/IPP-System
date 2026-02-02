@@ -231,43 +231,6 @@ public class utils {
 
     public static LocalDate toLocalDate(java.sql.Date date){return  dateFormatter.getLocalDate(date);}
 
-    public static void safeSet(Label lbl, String value) {
-        if (lbl != null) lbl.setText(value == null ? "" : value);
-    }
-
-    public static String formatPercent(double progress01) {
-        int pct = (int) Math.round(clamp01(progress01) * 100.0);
-        return pct + "%";
-    }
-
-    private static double clamp01(double v) {
-        if (v < 0) return 0;
-        if (v > 1) return 1;
-        return v;
-    }
-
-    public static String readTrim(TextField tf) {
-        if (tf == null) return null;
-        String s = tf.getText();
-        if (s == null) return null;
-        s = s.trim();
-        return s.isEmpty() ? null : s;
-    }
-
-    public static Double tryParseDouble(String s) {
-        if (s == null) return null;
-        try {
-            return Double.parseDouble(s.replace(",", ""));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static String formatMoney(double value) {
-        if (value <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(value) + " MMK";
-    }
-
     public static FontIcon iconSet(FontAwesomeSolid glyph){
         FontIcon icon = new FontIcon(glyph);
         icon.setIconSize(18);
