@@ -3,11 +3,14 @@ package IPPSystem.DAO;
 import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class projectDatabase {
     private static Connection con;
@@ -173,24 +176,47 @@ public class projectDatabase {
         return null; // return null if no project found
     }
 
-    public static void callUpdateProjectBaseline(int projectId, double cost,
-                                                 Date start, Date end,
-                                                 double duration) {
-        String sql = "{CALL updateProjectBaseline(?,?,?,?,?)}";
 
-        try (Connection con = databaseConnection.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
+    public static List<projects> getProjectsByEngineer(int engineerId) {
 
-            cs.setInt(1, projectId);
-            cs.setDouble(2, cost);
-            cs.setDate(3, start);
-            cs.setDate(4, end);
-            cs.setDouble(5, duration);
+        System.out.println("Engineer ID: " + engineerId);
 
-            cs.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        List<projects> list = new ArrayList<>();
+
+        String sql = "SELECT ap.*, ps.projectStatusName AS projectStatusName, pt.typeName AS projectTypeName " +
+                "FROM assignProjects ap " +
+                "LEFT JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId " +
+                "LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
+                "WHERE ap.supervisorId = ?";
+
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, engineerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                projects p = new projects();
+                p.setAssignProjectId(rs.getInt("assignProjectId"));
+                p.setProjectInstanceName(rs.getString("projectInstanceName"));
+                p.setProjectTypeName(rs.getString("projectTypeName"));
+                p.setProjectLocation(rs.getString("projectLocation"));
+                p.setProjectArea(rs.getDouble("projectArea"));
+                p.setProjectHeight(rs.getDouble("projectHeight"));
+                p.setTotalStories(rs.getDouble("totalStories"));
+                p.setTotalUnits(rs.getDouble("totalUnits"));
+                p.setProjectOverHeadCost(rs.getDouble("projectOverHeadCost"));
+                p.setProjectStatus(rs.getString("projectStatusName"));
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return list;
     }
 
 

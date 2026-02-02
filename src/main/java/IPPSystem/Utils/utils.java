@@ -197,7 +197,7 @@ public class utils {
         switchPage.getInstance(a).openWorkItemDetails(items);
     }
 
-    public static void viewUserInfo(users user){
+    public static void viewUserInfo(users user, StackPane loadPane){
         switchPage.getInstance(null).viewUsersInfo(user);
     }
 
