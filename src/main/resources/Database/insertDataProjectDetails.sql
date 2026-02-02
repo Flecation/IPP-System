@@ -985,7 +985,7 @@ SET quantityFormula = 'area * totalStories * 0.5',
 WHERE workItemDetailId IN (4,9,14,19,24,29,34,39);
 
 -- EXTERNAL Tasks
-UPDATE taskDetails
+UPD ATE taskDetails
 SET quantityFormula = 'area * 0.3',
     unitOfMeasure = 'sqm'
 WHERE workItemDetailId IN (5,10,15,20,25,30,35,40);

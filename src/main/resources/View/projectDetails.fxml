@@ -169,9 +169,9 @@
 
               <!-- Middle Section: Project Info + SPI/CPI -->
               <HBox alignment="CENTER" maxHeight="320.0" spacing="100.0">
-                  <StackPane maxWidth="500.0" minWidth="500.0">
+                  <StackPane maxWidth="500.0" minWidth="500.0" HBox.hgrow="ALWAYS">
                       <children>
-                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;" visible="false">
+                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;">
                               <children>
                                   <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" text="Project Info">
                            <VBox.margin>
@@ -237,14 +237,15 @@
                                           <Insets />
                                       </VBox.margin>
                                   </HBox>
-                                  <VBox alignment="CENTER_LEFT" spacing="10.0">
+                                  <VBox alignment="CENTER" spacing="10.0">
                                       <children>
-                                          <Label style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Additional Requirement :" />
-                              <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="0.0" maxWidth="500.0">
-                                 <content>
-                                    <VBox fx:id="moreDataVbox" alignment="CENTER_LEFT" />
-                                 </content>
-                              </ScrollPane>
+                              <HBox alignment="CENTER" spacing="120.0">
+                                 <children>
+                                                <Label style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Project Progress" />
+                                    <Label fx:id="projectProgressLbl" text="Label" />
+                                 </children>
+                              </HBox>
+                              <ProgressBar fx:id="projectProgress" maxHeight="20.0" maxWidth="250.0" minHeight="20.0" minWidth="250.0" progress="0.31" />
                                       </children>
                                       <VBox.margin>
                                           <Insets />
@@ -252,7 +253,7 @@
                                   </VBox>
                               </children>
                           </VBox>
-                          <VBox fx:id="editProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+                          <VBox fx:id="editProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10;" visible="false">
                               <children>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <VBox.margin>
@@ -355,8 +356,8 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                   </StackPane>
-                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0">
-                       <StackPane>
+                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                       <StackPane VBox.vgrow="NEVER">
                   <Circle fill="#1f93ff00" radius="75.0" stroke="BLACK" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                            <Circle fx:id="spiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" smooth="false" stroke="#4176f2" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                             <Label fx:id="spiLbl" text="0.78" StackPane.alignment="CENTER">
@@ -418,8 +419,8 @@
                   </padding>
                </HBox>
                    </VBox>
-                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0">
-                       <StackPane>
+                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                       <StackPane VBox.vgrow="NEVER">
                   <Circle fill="#1f93ff00" radius="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                            <Circle fx:id="cpiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" stroke="GREEN" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                             <Label fx:id="cpiLbl" text="0.6" StackPane.alignment="CENTER">
