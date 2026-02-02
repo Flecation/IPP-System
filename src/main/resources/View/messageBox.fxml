@@ -8,7 +8,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../CSS/messageBox.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.messageBoxController">
+<StackPane fx:id="messageBoxRoot" id="messageBoxRoot"
+           visible="false" managed="false"
+           mouseTransparent="true"
+           stylesheets="@../CSS/messageBox.css"
+           xmlns="http://javafx.com/javafx/24.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="IPPSystem.Controllers.messageBoxController">
    <children>
       <VBox fx:id="confirmMessageBox" id="confirmMessageBox" alignment="CENTER" maxHeight="150.0" maxWidth="380.0" minHeight="150.0" minWidth="380.0" spacing="10.0" visible="false">
          <children>
@@ -39,7 +45,11 @@
             </HBox>
          </children>
       </VBox>
-      <HBox fx:id="toastBox" id="toastBox" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="360.0" spacing="12.0" StackPane.alignment="TOP_CENTER">
+      <HBox fx:id="toastBox" id="toastBox"
+            visible="false" managed="false"
+            alignment="CENTER_LEFT" maxHeight="60.0"
+            maxWidth="360.0" spacing="12.0"
+            StackPane.alignment="TOP_CENTER">
          <StackPane.margin>
             <Insets top="20.0" />
          </StackPane.margin>
