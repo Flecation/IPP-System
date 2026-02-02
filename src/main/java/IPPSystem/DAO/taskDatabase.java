@@ -4,9 +4,10 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
 import IPPSystem.Models.tasks;
 import IPPSystem.Utils.dateFormatter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class taskDatabase {
     private static Connection con;
@@ -20,8 +21,8 @@ public class taskDatabase {
     }
 
     //get all task by the assign project of work item
-    public static ArrayList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){
-        ArrayList<tasks> ls =  new ArrayList<>();
+    public static ObservableList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){
+        ObservableList<tasks> ls = FXCollections.observableArrayList();
 
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllTasksByAssignWorkItem(?)}");
@@ -36,7 +37,9 @@ public class taskDatabase {
                         rs.getString("assignStatus"),
                         rs.getDouble("duration"),
                         rs.getDate("startDate"),
-                        rs.getDate("endDate")
+                        rs.getDate("endDate"),
+                        rs.getDouble("plannedQty"),
+                        rs.getString("unitOfMeasure")
                 ));
 
             }
@@ -48,8 +51,8 @@ public class taskDatabase {
     }
 
     //get all task details by project of work item
-    public static ArrayList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId,int buildingId, int levelId){
-        ArrayList<tasks> ls =  new ArrayList<>();
+    public static ObservableList<tasks> getAllTasksDetailsByWorkItem(int projectTypeId,int workItemId,int buildingId, int levelId){
+        ObservableList<tasks> ls =  FXCollections.observableArrayList();
 
         try {
             CallableStatement cstmt = con.prepareCall("{CALL getAllTasksDetailsByWorkItem(?,?,?,?)}");
@@ -81,9 +84,9 @@ public class taskDatabase {
         try {
             CallableStatement cstmt = con.prepareCall("{CALL addTaskDetailRecord(?,?,?,?,?)}");
             cstmt.setInt(1,changeTask.getAssignTaskId());
-            cstmt.setDate(2,changeTask.getStartDate());
-            cstmt.setDate(3,changeTask.getEndDate());
-            cstmt.setDouble(4,changeTask.getProjectDuration());
+            cstmt.setDouble(2,changeTask.getProjectDuration());
+            cstmt.setDate(3,changeTask.getStartDate());
+            cstmt.setDate(4,changeTask.getEndDate());
             cstmt.setString(5,status.toString());
             ResultSet rs = cstmt.executeQuery();
             return rs.getBoolean(1);
@@ -97,15 +100,17 @@ public class taskDatabase {
     //assign the task
     public static boolean assignTasks(tasks assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL assignTaskToWorkItem(?,?,?,?,?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL assignTaskToWorkItem(?,?,?,?,?,?,?,?,?,?)}");
             cstmt.setInt(1,assign.getAssignProjectId());
             cstmt.setInt(2,assign.getWorkItemId());
             cstmt.setInt(3,assign.getTaskId());
             cstmt.setDouble(4,assign.getProjectDuration());
             cstmt.setDate(5,assign.getStartDate());
             cstmt.setDate(6,assign.getEndDate());
-            cstmt.setString(7,projectStatus.toString());
-            cstmt.setString(8,assignStatus.toString());
+            cstmt.setDouble(7,assign.getPlannedQty());
+            cstmt.setString(8,assign.getUnitOfMeasure() == null ? "" : assign.getUnitOfMeasure());
+            cstmt.setString(9,projectStatus.toString());
+            cstmt.setString(10,assignStatus.toString());
             ResultSet rs = cstmt.executeQuery();
 
             return rs.getBoolean(1);

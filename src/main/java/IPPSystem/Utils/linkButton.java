@@ -21,7 +21,19 @@ public class linkButton {
 
     private final Map<Button, Parent> linkMap = new HashMap<>();
     private Button activeTab;
-    private HBox activeBox;
+    private Button activeCloseBtn;
+    private HBox activeTabBox;
+    
+    private static linkButton instance;
+
+    private linkButton(){}
+
+    public static linkButton getInstance(){
+        if (instance == null) instance = new linkButton();
+        return instance;
+    }
+
+
 
     /**
      * Create a new tab with FXML content
@@ -69,7 +81,10 @@ public class linkButton {
         linkMap.put(pageBtn, content);
 
         // ---------- Switch tab ----------
-        pageBtn.setOnAction(e -> switchTab(tabBar, pageBtn));
+        pageBtn.setOnAction(e -> switchTab(tabBar, tabBox, pageBtn, closeBtn));
+
+        // Clicking anywhere on the tab container should activate the tab
+        tabBox.setOnMouseClicked(e -> switchTab(tabBar, tabBox, pageBtn, closeBtn));
 
         // ---------- Close tab ----------
         closeBtn.setOnAction(e -> closeTab(tabBar, loadPane, tabBox, pageBtn, content));
@@ -78,25 +93,16 @@ public class linkButton {
         tabBar.getChildren().add(tabBar.getChildren().size() - 1, tabBox);
 
         // ---------- Activate first tab ----------
-            switchTab(tabBar, pageBtn);
+        switchTab(tabBar, tabBox, pageBtn, closeBtn);
     }
 
     // =========================================================
     // TAB SWITCHING
     // =========================================================
-    private void switchTab(HBox tabBar, Button selectedTab) {
+    private void switchTab(HBox tabBar, HBox tabBox, Button selectedTab, Button closeBtn) {
 
         // Hide all content
         linkMap.values().forEach(node -> node.setVisible(false));
-
-        // Remove active style
-        if (activeTab != null) {
-            activeTab.getStyleClass().remove("active-tab");
-
-        }
-        if(activeBox != null){
-            activeBox.getStyleClass().remove("active");
-        }
 
         // Show selected content
         Parent content = linkMap.get(selectedTab);
@@ -104,12 +110,31 @@ public class linkButton {
             content.setVisible(true);
         }
 
-        selectedTab.getStyleClass().add("active-tab");
-        tabBar.getStyleClass().add("active");
-        activeBox = tabBar;
-        activeTab = selectedTab;
+        setActiveTabStyles(tabBox, selectedTab, closeBtn);
 
         updateTabCloseButtons(tabBar);
+    }
+
+    private void setActiveTabStyles(HBox tabBox, Button pageBtn, Button closeBtn) {
+        // Remove old active style
+        if (activeTab != null) {
+            activeTab.getStyleClass().remove("active-tab");
+        }
+        if (activeCloseBtn != null) {
+            activeCloseBtn.getStyleClass().remove("active-tab");
+        }
+        if (activeTabBox != null) {
+            activeTabBox.getStyleClass().remove("active-tab");
+        }
+
+        // Apply active style to all 3 nodes
+        tabBox.getStyleClass().add("active-tab");
+        pageBtn.getStyleClass().add("active-tab");
+        closeBtn.getStyleClass().add("active-tab");
+
+        activeTab = pageBtn;
+        activeCloseBtn = closeBtn;
+        activeTabBox = tabBox;
     }
 
     // =========================================================
@@ -129,19 +154,18 @@ public class linkButton {
         tabBar.getChildren().remove(tabBox);
         linkMap.remove(pageBtn);
 
-        if (activeBox == tabBar){
-            activeBox = null;
-        }
-
         if (pageBtn == activeTab) {
             activeTab = null;
+            activeCloseBtn = null;
+            activeTabBox = null;
             int tabCount = tabBar.getChildren().size() - 1;
 
             if (tabCount > 0) {
                 int nextIndex = Math.min(closedIndex, tabCount - 1);
                 HBox nextTabBox = (HBox) tabBar.getChildren().get(nextIndex);
                 Button nextPageBtn = (Button) nextTabBox.getChildren().get(0);
-                switchTab(tabBar, nextPageBtn);
+                Button nextCloseBtn = (Button) nextTabBox.getChildren().get(1);
+                switchTab(tabBar, nextTabBox, nextPageBtn, nextCloseBtn);
             } else {
                 databaseConnection.closeConnection();
                 System.exit(0);
@@ -174,4 +198,19 @@ public class linkButton {
             }
         }
     }
+
+
+    public Button getTabButton() {
+        for (Button btn : linkMap.keySet()) {
+            if (btn.getStyleClass().contains("active-tab")) {
+                return btn;
+            }
+        }
+        return null;
+    }
+
+    public void setTabButtonName(String text){
+        getTabButton().setText(text);
+    }
+    
 }

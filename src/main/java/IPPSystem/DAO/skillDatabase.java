@@ -1,9 +1,10 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.skills;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class skillDatabase  {
 
@@ -16,8 +17,8 @@ public class skillDatabase  {
         }
     }
 
-    public static ArrayList<skills> getAllSkills(){
-        ArrayList<skills> skill = new ArrayList<>();
+    public static ObservableList<skills> getAllSkills(){
+        ObservableList<skills> skill = FXCollections.observableArrayList();
 
 
         try {
@@ -36,9 +37,9 @@ public class skillDatabase  {
 
     }
 
-    public static ArrayList<skills> getSkillByWorkItem(int projectTypeId, int workItemId){
-        ArrayList<skills> skill = new ArrayList<>();
-        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?);")){
+    public static ObservableList<skills> getSkillByWorkItem(int projectTypeId, int workItemId){
+        ObservableList<skills> skill = FXCollections.observableArrayList();
+        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?,?)}")){
             cs.setInt(1,projectTypeId);
             cs.setInt(2,workItemId);
             ResultSet rs = cs.executeQuery();

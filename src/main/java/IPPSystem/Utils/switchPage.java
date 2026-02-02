@@ -1,38 +1,64 @@
 package IPPSystem.Utils;
 
+import IPPSystem.Controllers.mgSEPersonalDetailController;
+import IPPSystem.Controllers.projectCardController;
+import IPPSystem.Controllers.viewProjectsController;
+import IPPSystem.Controllers.workItemDetailsController;
 import IPPSystem.Main.HelloApplication;
+import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
+import IPPSystem.Models.workItems;
 import javafx.animation.*;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Stack;
 
 public class switchPage extends utils {
 
+    private static switchPage instance;
+
+    protected StackPane loadPane;
+
+    private switchPage(){}
+
+    public static switchPage getInstance(StackPane pane){
+        if (instance == null){
+            instance = new switchPage();
+
+        }
+        if (pane != null) instance.loadPane = pane;
+        return instance;
+    }
+
     // Dashboard page switch animation
-    public static void setSwitchPane(
+    public void setSwitchPane(
             StackPane basePane,
-            Parent fromPane,
             String toPane,
             Button titleUrlButton,
-            Button clickedButton
+            String titleUrlName
     ) {
 
         // Loading spinner
         ProgressIndicator spinner = new ProgressIndicator();
         spinner.setMaxSize(14, 14);
-        titleUrlButton.setGraphic(spinner);
-        titleUrlButton.setText("Loading...");
+        if (titleUrlButton != null) {
+            titleUrlButton.setGraphic(spinner);
+            titleUrlButton.setText("Loading...");
+        }
 
         // Load next pane safely
         Parent nextPane;
@@ -43,8 +69,10 @@ public class switchPage extends utils {
             nextPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-            titleUrlButton.setGraphic(null);
-            titleUrlButton.setText("Error");
+            if (titleUrlButton != null) {
+                titleUrlButton.setGraphic(null);
+                titleUrlButton.setText("Error");
+            }
             return;
         }
 
@@ -58,7 +86,7 @@ public class switchPage extends utils {
 
         // Blur effect
         GaussianBlur blur = new GaussianBlur(0);
-        fromPane.setEffect(blur);
+        basePane.setEffect(blur);
 
         Timeline blurIn = new Timeline(
                 new KeyFrame(Duration.ZERO,
@@ -74,13 +102,14 @@ public class switchPage extends utils {
         blurIn.setOnFinished(event -> {
 
             // Update title button
-            titleUrlButton.setGraphic(null);
-            setToolTip(titleUrlButton, clickedButton.getText());
-            titleUrlButton.setText(clickedButton.getText());
+            if (titleUrlButton != null) {
+                titleUrlButton.setGraphic(null);
+                setToolTip(titleUrlButton, titleUrlName);
+                titleUrlButton.setText(titleUrlName);
+            }
 
             // Switch panes
-            basePane.getChildren().addAll(region, nextPane);
-            basePane.getChildren().remove(fromPane);
+            basePane.getChildren().setAll(region, nextPane);
 
             Timeline blurOut = new Timeline(
                     new KeyFrame(Duration.ZERO,
@@ -105,11 +134,16 @@ public class switchPage extends utils {
     }
 
     // Simple FXML opener utility
-    public static void openFxml(String fxmlFile, StackPane loadPane) {
+    public void openFxml(String fxmlFile) {
+
         try {
-            Parent newContent = FXMLLoader.load(
-                    HelloApplication.class.getResource("/View/" + fxmlFile)
-            );
+            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
+            Parent newContent = loader.load();
+
+            // Special handling for viewProjects.fxml to pass loadPane to controller
+            if ("viewProjects.fxml".equals(fxmlFile)) {
+                loader.getController();
+            }
 
             StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
             StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
@@ -126,32 +160,29 @@ public class switchPage extends utils {
                 return;
             }
 
-            Parent oldContent = (Parent) loadPane.getChildren().get(0);
+            Node oldContent = loadPane.getChildren().get(0);
             newContent.setOpacity(0);
 
             loadPane.getChildren().setAll(oldContent, newContent);
 
-            Timeline fadeOut = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(oldContent.opacityProperty(), 1)),
-                    new KeyFrame(Duration.millis(200), new KeyValue(oldContent.opacityProperty(), 0))
-            );
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(160), oldContent);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
 
-            fadeOut.setOnFinished(e -> {
-                Timeline fadeIn = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(newContent.opacityProperty(), 0)),
-                        new KeyFrame(Duration.millis(200), new KeyValue(newContent.opacityProperty(), 1))
-                );
-                fadeIn.play();
-            });
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), newContent);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
 
-            fadeOut.play();
+            ParallelTransition transition = new ParallelTransition(fadeOut, fadeIn);
+            transition.setOnFinished(e -> loadPane.getChildren().setAll(newContent));
+            transition.play();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     //from the login controller to the dashboard with animation
-    public static void switchScene(Button button, String fxmlPath) {
+    public void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;
 
@@ -233,4 +264,73 @@ public class switchPage extends utils {
         pause.play();
     }
 
+    public void loadProjects(ObservableList<projects> projectsList, VBox projectContainer) {
+        projectContainer.getChildren().clear();
+        HBox row = null;
+        int count = 0;
+
+        for (projects p : projectsList) {
+            if (count % 3 == 0) {
+                row = new HBox(20);
+                projectContainer.getChildren().add(row);
+                projectContainer.setAlignment(Pos.CENTER);
+            }
+
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        utils.class.getResource("/View/projectCard.fxml")
+                );
+
+                Parent card = loader.load();
+
+                projectCardController controller = loader.getController();
+                controller.setData(p,loadPane);
+//                HBox.setHgrow(card, Priority.SOMETIMES);
+
+
+                if (row != null) {
+                    row.getChildren().add(card);
+//                    row.setSpacing(15);
+//                    row.setAlignment(Pos.CENTER);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            row.setAlignment(Pos.CENTER_RIGHT);
+            count++;
+        }
+    }
+
+    public void openWorkItemDetails(workItems item){
+        if (item == null || loadPane == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/workItemDetails.fxml"));
+            Parent root = loader.load();
+            workItemDetailsController controller = loader.getController();
+            controller.setWorkItem(item /*, tasks list if you want later */);
+            loadPane.getChildren().setAll(root);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void viewUsersInfo(users user){
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/View/mgSEPersonalDetail.fxml"));
+
+            Parent page = loader.load();
+
+            mgSEPersonalDetailController controller =
+                    loader.getController();
+
+            controller.setEngineer(user);
+            controller.setLoadPane(loadPane);
+
+            loadPane.getChildren().setAll(page);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

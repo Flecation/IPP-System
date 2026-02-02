@@ -2,18 +2,16 @@ package IPPSystem.DAO;
 
 import IPPSystem.Models.users;
 import IPPSystem.Utils.dateFormatter;
-import IPPSystem.Utils.passwordCrafting;
-import IPPSystem.Utils.utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class userDatabase {
 
     private static Connection con;
 
-        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto;
+        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto,userAddress;
         private static int userId;
         private static boolean isActive;
         private static java.util.Date userDOB,userStartDate,userEndDate;
@@ -44,7 +42,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
+                userAddress = rs.getString("userAddress");
+
+                info = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -52,8 +52,8 @@ public class userDatabase {
         return info;
     }
 
-    public static ArrayList<users> getAllUser(){
-        ArrayList<users> ls = new ArrayList<users>();
+    public static ObservableList<users> getAllUser(){
+        ObservableList<users> ls = FXCollections.observableArrayList();
         try {
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users");
             ResultSet rs = pstmt.executeQuery();
@@ -69,7 +69,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto);
+                userAddress = rs.getString("userAddress");
+
+                users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
                 ls.add(users);
             }
         } catch (Exception e) {
@@ -78,8 +80,8 @@ public class userDatabase {
         return ls;
     }
 
-    public static ArrayList<users> getUserByRole(String role){
-        ArrayList<users> info = new ArrayList<>();
+    public static ObservableList<users> getUserByRole(String role){
+        ObservableList<users> info = FXCollections.observableArrayList();
         try {
 
             PreparedStatement pstmt = con.prepareCall("SELECT * FROM users WHERE userRole = ? ORDER BY isActive DESC, userEndDate DESC ");
@@ -97,7 +99,9 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto));
+                userAddress = rs.getString("userAddress");
+
+                info.add( new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -105,18 +109,17 @@ public class userDatabase {
         return info;
     }
 
-    public static users login(String userName, String userPassword){
+    public static users login(String userEmail){
         users users = new users();
 
         try {
-            PreparedStatement cstmt = con.prepareStatement("SELECT * FROM users WHERE userName = ?");
-            cstmt.setString(1,userName);
+            PreparedStatement cstmt = con.prepareStatement("SELECT * FROM users WHERE userEmail = ?");
+            cstmt.setString(1, userEmail);
             ResultSet rs = cstmt.executeQuery();
 
             if(rs.next()){
                 users = new users(
                         rs.getInt("userId"),
-                        rs.getString("userName"),
                         rs.getString("userEmail"),
                         rs.getString("userPhone"),
                         rs.getString("userRole"),
@@ -125,14 +128,14 @@ public class userDatabase {
                         rs.getDate("userEndDate"),
                         rs.getBoolean("isActive"),
                         rs.getString("userPassword"),
-                        rs.getString("userPhoto")
-                );
+                        rs.getString("userPhoto"),
+                        rs.getString("userAddress")
+
+                        );
             }else {
                 return null;
             }
-            if (!users.isActive()) return null;
-            if(utils.checkPassword(userPassword,users.getUserPassword())) return users;
-            else return null;
+            return users;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -176,6 +179,19 @@ public class userDatabase {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static boolean updatePasswordByEmail(String email, String hashedPassword) {
+        try {
+            PreparedStatement pstmt = con.prepareStatement(
+                    "UPDATE users SET userPassword = ? WHERE userEmail = ?"
+            );
+            pstmt.setString(1, hashedPassword);
+            pstmt.setString(2, email);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

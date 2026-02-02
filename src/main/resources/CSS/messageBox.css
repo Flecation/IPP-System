@@ -56,3 +56,21 @@
     -fx-Icon-color: -primary-bg-color;
     -fx-text-fill: -primary-bg-color;
 }
+
+.error-toast {
+    -fx-background-color: -error-color;
+    -fx-icon-color: -primary-bg-color;
+    -fx-text-fill: -primary-bg-color;
+}
+
+.info-toast {
+    -fx-background-color: -info-color;
+    -fx-icon-color: -primary-bg-color;
+    -fx-text-fill: -primary-bg-color;
+}
+
+.wrong-toast {
+    -fx-background-color: -wrong-color;
+    -fx-icon-color: -primary-bg-color;
+    -fx-text-fill: -primary-bg-color;
+}

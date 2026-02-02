@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `ippsystem` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `ippsystem`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: ippsystem
@@ -23,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '29c66e07-b7c2-11f0-a44b-002b675283cc:1-2905';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '29c66e07-b7c2-11f0-a44b-002b675283cc:1-3309';
 
 --
 -- Table structure for table `assignprojectdetails`
@@ -46,7 +44,7 @@ CREATE TABLE `assignprojectdetails` (
   KEY `assignStatusId` (`assignStatusId`),
   CONSTRAINT `assignprojectdetails_ibfk_1` FOREIGN KEY (`assignProjectId`) REFERENCES `assignprojects` (`assignProjectId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `assignprojectdetails_ibfk_2` FOREIGN KEY (`assignStatusId`) REFERENCES `assignstatus` (`assignStatusId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,7 +53,7 @@ CREATE TABLE `assignprojectdetails` (
 
 LOCK TABLES `assignprojectdetails` WRITE;
 /*!40000 ALTER TABLE `assignprojectdetails` DISABLE KEYS */;
-INSERT INTO `assignprojectdetails` VALUES (1,1,1,1500000,50,240,'2024-02-01','2024-10-01'),(2,2,1,3500000,80,420,'2024-03-15','2025-05-15'),(3,3,1,5000000,120,540,'2024-06-01','2025-12-01'),(4,4,1,2000000,60,180,'2024-04-01','2024-09-28'),(5,5,1,1200000,40,300,'2024-05-01','2025-02-25');
+INSERT INTO `assignprojectdetails` VALUES (1,1,1,1000000,44,180,'2024-01-01','2024-06-30'),(2,2,1,50000000,28.5,120,'2024-03-01','2024-06-29');
 /*!40000 ALTER TABLE `assignprojectdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +89,7 @@ CREATE TABLE `assignprojects` (
   CONSTRAINT `fk_ap_level` FOREIGN KEY (`projectLevelId`) REFERENCES `projectlevels` (`projectLevelId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ap_manager` FOREIGN KEY (`supervisorId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ap_projectType` FOREIGN KEY (`projectTypeId`) REFERENCES `projecttypes` (`projectTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +98,7 @@ CREATE TABLE `assignprojects` (
 
 LOCK TABLES `assignprojects` WRITE;
 /*!40000 ALTER TABLE `assignprojects` DISABLE KEYS */;
-INSERT INTO `assignprojects` VALUES (1,1,'Golden Tower Apartments',3,1,12000,45,5,20,2,'Yangon, Hlaing Township',18000,1),(2,2,'Skyline Office Tower',4,5,25000,120,12,48,3,'Mandalay, Chanayethazan',35000,1),(3,4,'Maha Bandoola Bridge',8,13,1500,25,1,4,4,'Yangon River Crossing',500000,1),(4,3,'Yangon Garment Factory',1,9,50000,20,1,10,5,'Yangon, Dagon Seikkan',25000,1),(5,5,'Al-Amin Grand Mosque',8,16,8000,60,2,1,6,'Naypyidaw, Zabuthiri',30000,1);
+INSERT INTO `assignprojects` VALUES (1,1,'Sunrise Apartments',3,1,5000,0,5,50,2,'Downtown',100000,1),(2,1,'Test Villa Project',2,3,200,0,1,5,2,'Test Location',5000000,1);
 /*!40000 ALTER TABLE `assignprojects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +145,7 @@ CREATE TABLE `assigntaskdetails` (
   KEY `assignStatusId` (`assignStatusId`),
   CONSTRAINT `assigntaskdetails_ibfk_1` FOREIGN KEY (`assignTaskId`) REFERENCES `assigntasks` (`assignTaskId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `assigntaskdetails_ibfk_2` FOREIGN KEY (`assignStatusId`) REFERENCES `assignstatus` (`assignStatusId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +154,7 @@ CREATE TABLE `assigntaskdetails` (
 
 LOCK TABLES `assigntaskdetails` WRITE;
 /*!40000 ALTER TABLE `assigntaskdetails` DISABLE KEYS */;
-INSERT INTO `assigntaskdetails` VALUES (1,1,1,10,'2024-02-01','2024-02-10'),(2,2,1,8,'2024-02-11','2024-02-18'),(3,3,1,6,'2024-02-19','2024-02-24'),(4,4,1,3,'2024-02-25','2024-02-27'),(5,5,1,3,'2024-02-28','2024-03-02'),(6,6,1,40,'2024-03-03','2024-04-11'),(7,7,1,30,'2024-04-12','2024-05-11'),(8,8,1,20,'2024-05-12','2024-05-31'),(9,9,1,25,'2024-06-02','2024-06-26'),(10,10,1,20,'2024-06-27','2024-07-16'),(11,11,1,15,'2024-07-17','2024-07-31'),(12,12,1,10,'2024-08-01','2024-08-10'),(13,13,1,15,'2024-08-11','2024-08-25'),(14,14,1,15,'2024-08-26','2024-09-09'),(15,15,1,10,'2024-09-10','2024-09-19'),(16,16,1,7,'2024-09-20','2024-09-26'),(17,17,1,5,'2024-09-27','2024-10-01'),(18,18,1,3,'2024-09-27','2024-09-29'),(19,19,1,20,'2024-03-15','2024-04-03'),(20,20,1,15,'2024-04-04','2024-04-18'),(21,21,1,10,'2024-04-19','2024-04-28'),(22,22,1,80,'2024-04-29','2024-07-17'),(23,23,1,60,'2024-07-18','2024-09-15'),(24,24,1,40,'2024-09-16','2024-10-25'),(25,25,1,45,'2024-06-01','2024-07-15'),(26,26,1,60,'2024-07-16','2024-09-13'),(27,27,1,75,'2024-09-14','2024-11-27'),(28,28,1,120,'2024-11-28','2025-03-27'),(29,29,1,60,'2025-03-28','2025-05-26'),(30,30,1,60,'2025-05-27','2025-07-26'),(31,31,1,30,'2025-07-27','2025-08-25'),(32,32,1,30,'2025-08-26','2025-09-24'),(33,33,1,30,'2025-09-25','2025-10-24'),(34,34,1,15,'2024-05-01','2024-05-15'),(35,35,1,20,'2024-05-16','2024-06-04'),(36,36,1,10,'2024-06-05','2024-06-14');
+INSERT INTO `assigntaskdetails` VALUES (1,1,1,1.6199999999999999,'2024-01-01','2024-01-03'),(2,2,1,2.79,'2024-01-01','2024-01-04'),(3,3,1,1.3499999999999999,'2024-01-01','2024-01-02'),(4,4,1,0.99,'2024-01-01','2024-01-02'),(5,5,1,0.8099999999999999,'2024-01-01','2024-01-02'),(6,6,1,7.667999999999999,'2024-01-01','2024-01-09'),(7,7,1,6.390000000000001,'2024-01-01','2024-01-07'),(8,8,1,5.431500000000001,'2024-01-01','2024-01-06'),(9,9,1,6.0705,'2024-01-01','2024-01-07'),(10,10,1,4.5,'2024-01-01','2024-01-05'),(11,11,1,3.375,'2024-01-01','2024-01-04'),(12,12,1,2.6999999999999997,'2024-01-01','2024-01-04'),(13,13,1,2.25,'2024-01-01','2024-01-03'),(14,14,1,1.7550000000000001,'2024-01-01','2024-01-03'),(15,15,1,1.485,'2024-01-01','2024-01-02'),(16,16,1,1.485,'2024-01-01','2024-01-02'),(17,17,1,0.15750000000000003,'2024-01-01','2024-01-01'),(18,18,1,0.15750000000000003,'2024-01-01','2024-01-01'),(19,19,1,0.1125,'2024-01-01','2024-01-01'),(20,20,1,0.8400000000000001,'2024-03-01','2024-03-02'),(21,21,1,1.56,'2024-03-01','2024-03-03'),(22,22,1,0.72,'2024-03-01','2024-03-02'),(23,23,1,0.42000000000000004,'2024-03-01','2024-03-01'),(24,24,1,0.42000000000000004,'2024-03-01','2024-03-01'),(25,25,1,3.833999999999999,'2024-03-01','2024-03-05'),(26,26,1,2.9819999999999998,'2024-03-01','2024-03-04'),(27,27,1,2.3429999999999995,'2024-03-01','2024-03-03'),(28,28,1,5.537999999999999,'2024-03-01','2024-03-07'),(29,29,1,2.4,'2024-03-01','2024-03-03'),(30,30,1,2.6999999999999997,'2024-03-01','2024-03-04'),(31,31,1,2.1,'2024-03-01','2024-03-03'),(32,32,1,1.7999999999999998,'2024-03-01','2024-03-03'),(33,33,1,0.8099999999999999,'2024-03-01','2024-03-02'),(34,34,1,0.8099999999999999,'2024-03-01','2024-03-02'),(35,35,1,0.6300000000000001,'2024-03-01','2024-03-02'),(36,36,1,0.15000000000000002,'2024-03-01','2024-03-01'),(37,37,1,0.135,'2024-03-01','2024-03-01'),(38,38,1,0.10500000000000001,'2024-03-01','2024-03-01');
 /*!40000 ALTER TABLE `assigntaskdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,6 +171,8 @@ CREATE TABLE `assigntasks` (
   `projectTaskId` int DEFAULT NULL,
   `isCancel` tinyint(1) DEFAULT '0',
   `taskStatus` int DEFAULT NULL,
+  `plannedQty` double NOT NULL,
+  `unitOfMeasure` varchar(50) NOT NULL,
   PRIMARY KEY (`assignTaskId`),
   KEY `taskStatus` (`taskStatus`),
   KEY `fk_at_assignWorkItem` (`assignWorkItemId`),
@@ -180,7 +180,7 @@ CREATE TABLE `assigntasks` (
   CONSTRAINT `assigntasks_ibfk_1` FOREIGN KEY (`taskStatus`) REFERENCES `projectstatus` (`projectStatusId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_at_assignWorkItem` FOREIGN KEY (`assignWorkItemId`) REFERENCES `assignworkitems` (`assignWorkItemId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_at_task` FOREIGN KEY (`projectTaskId`) REFERENCES `tasks` (`projectTaskId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,7 +189,7 @@ CREATE TABLE `assigntasks` (
 
 LOCK TABLES `assigntasks` WRITE;
 /*!40000 ALTER TABLE `assigntasks` DISABLE KEYS */;
-INSERT INTO `assigntasks` VALUES (1,1,1,0,1),(2,1,2,0,1),(3,1,3,0,1),(4,1,4,0,1),(5,1,5,0,1),(6,2,6,0,1),(7,2,7,0,1),(8,2,8,0,1),(9,3,10,0,1),(10,3,11,0,1),(11,3,12,0,1),(12,3,13,0,1),(13,4,14,0,1),(14,4,15,0,1),(15,4,16,0,1),(16,5,17,0,1),(17,5,18,0,1),(18,5,19,0,1),(19,6,1,0,1),(20,6,2,0,1),(21,6,3,0,1),(22,8,6,0,1),(23,8,7,0,1),(24,8,8,0,1),(25,12,20,0,1),(26,12,21,0,1),(27,12,28,0,1),(28,13,27,0,1),(29,13,7,0,1),(30,13,8,0,1),(31,14,11,0,1),(32,14,32,0,1),(33,14,33,0,1),(34,22,1,0,1),(35,22,2,0,1),(36,22,5,0,1);
+INSERT INTO `assigntasks` VALUES (1,1,1,0,1,25000,'m3'),(2,1,2,0,1,25000,'m3'),(3,1,3,0,1,25000,'m3'),(4,1,4,0,1,25000,'m3'),(5,1,5,0,1,25000,'m3'),(6,2,6,0,1,20000,'m3'),(7,2,7,0,1,20000,'m3'),(8,2,8,0,1,20000,'m3'),(9,2,9,0,1,20000,'m3'),(10,3,10,0,1,6000,'sqm'),(11,3,11,0,1,6000,'sqm'),(12,3,12,0,1,6000,'sqm'),(13,3,13,0,1,6000,'sqm'),(14,4,14,0,1,12500,'units'),(15,4,15,0,1,12500,'units'),(16,4,16,0,1,12500,'units'),(17,5,17,0,1,1500,'sqm'),(18,5,18,0,1,1500,'sqm'),(19,5,19,0,1,1500,'sqm'),(20,6,1,0,1,200,'m3'),(21,6,2,0,1,200,'m3'),(22,6,3,0,1,200,'m3'),(23,6,4,0,1,200,'m3'),(24,6,5,0,1,200,'m3'),(25,7,6,0,1,160,'m3'),(26,7,7,0,1,160,'m3'),(27,7,8,0,1,160,'m3'),(28,7,9,0,1,160,'m3'),(29,8,10,0,1,240,'sqm'),(30,8,11,0,1,240,'sqm'),(31,8,12,0,1,240,'sqm'),(32,8,13,0,1,240,'sqm'),(33,9,14,0,1,100,'units'),(34,9,15,0,1,100,'units'),(35,9,16,0,1,100,'units'),(36,10,17,0,1,60,'sqm'),(37,10,18,0,1,60,'sqm'),(38,10,19,0,1,60,'sqm');
 /*!40000 ALTER TABLE `assigntasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +243,7 @@ CREATE TABLE `assignworkitemdetails` (
   KEY `assignStatusId` (`assignStatusId`),
   CONSTRAINT `assignworkitemdetails_ibfk_1` FOREIGN KEY (`assignWorkItemId`) REFERENCES `assignworkitems` (`assignWorkItemId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `assignworkitemdetails_ibfk_2` FOREIGN KEY (`assignStatusId`) REFERENCES `assignstatus` (`assignStatusId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +252,7 @@ CREATE TABLE `assignworkitemdetails` (
 
 LOCK TABLES `assignworkitemdetails` WRITE;
 /*!40000 ALTER TABLE `assignworkitemdetails` DISABLE KEYS */;
-INSERT INTO `assignworkitemdetails` VALUES (1,1,1,225000,8,30,'2024-02-01','2024-03-02'),(2,2,1,510000,20,90,'2024-03-03','2024-06-01'),(3,3,1,420000,15,70,'2024-06-02','2024-08-10'),(4,4,1,330000,10,40,'2024-08-11','2024-09-19'),(5,5,1,150000,7,15,'2024-09-20','2024-10-01'),(6,6,1,560000,15,45,'2024-03-15','2024-04-28'),(7,8,1,1365000,35,180,'2024-04-29','2024-10-25'),(8,9,1,1050000,25,120,'2024-10-26','2025-02-23'),(9,10,1,490000,15,75,'2025-02-24','2025-05-09'),(10,11,1,35000,5,6,'2025-05-10','2025-05-15'),(11,12,1,1500000,40,180,'2024-06-01','2024-11-27'),(12,13,1,2400000,50,240,'2024-11-28','2025-07-26'),(13,14,1,750000,20,90,'2025-07-27','2025-10-24'),(14,15,1,300000,10,30,'2025-10-25','2025-11-23'),(15,16,1,50000,8,8,'2025-11-24','2025-12-01'),(16,17,1,300000,12,30,'2024-04-01','2024-04-30'),(17,18,1,1000000,25,90,'2024-05-01','2024-07-29'),(18,19,1,300000,10,30,'2024-07-30','2024-08-28'),(19,20,1,360000,13,25,'2024-08-29','2024-09-22'),(20,21,1,40000,5,6,'2024-09-23','2024-09-28'),(21,22,1,216000,10,45,'2024-05-01','2024-06-14'),(22,23,1,540000,15,135,'2024-06-15','2024-10-28'),(23,24,1,300000,10,90,'2024-10-29','2025-01-27'),(24,25,1,120000,5,25,'2025-01-28','2025-02-21'),(25,26,1,24000,5,4,'2025-02-22','2025-02-25');
+INSERT INTO `assignworkitemdetails` VALUES (1,1,1,175000,9,36,'2024-01-01','2024-02-06'),(2,2,1,350000,14,63.9,'2024-01-01','2024-03-05'),(3,3,1,290000,9,45,'2024-01-01','2024-02-15'),(4,4,1,250000,7.5,27,'2024-01-01','2024-01-28'),(5,5,1,75000,4.5,9,'2024-01-01','2024-01-10'),(6,6,1,8750000,6,24,'2024-03-01','2024-03-25'),(7,7,1,19250000,9,42.599999999999994,'2024-03-01','2024-04-13'),(8,8,1,17000000,6,30,'2024-03-01','2024-03-31'),(9,9,1,8750000,4.5,18,'2024-03-01','2024-03-19'),(10,10,1,6250000,3,6,'2024-03-01','2024-03-07');
 /*!40000 ALTER TABLE `assignworkitemdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,7 +275,7 @@ CREATE TABLE `assignworkitems` (
   CONSTRAINT `assignworkitems_ibfk_1` FOREIGN KEY (`workItemStatus`) REFERENCES `projectstatus` (`projectStatusId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_awi_project` FOREIGN KEY (`assignProjectId`) REFERENCES `assignprojects` (`assignProjectId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_awi_workItem` FOREIGN KEY (`projectWorkItemId`) REFERENCES `workitems` (`projectWorkItemId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,7 +284,7 @@ CREATE TABLE `assignworkitems` (
 
 LOCK TABLES `assignworkitems` WRITE;
 /*!40000 ALTER TABLE `assignworkitems` DISABLE KEYS */;
-INSERT INTO `assignworkitems` VALUES (1,1,1,1),(2,1,2,1),(3,1,3,1),(4,1,4,1),(5,1,5,1),(6,2,1,1),(8,2,2,1),(9,2,3,1),(10,2,4,1),(11,2,5,1),(12,3,1,1),(13,3,2,1),(14,3,3,1),(15,3,4,1),(16,3,5,1),(17,4,1,1),(18,4,2,1),(19,4,3,1),(20,4,4,1),(21,4,5,1),(22,5,1,1),(23,5,2,1),(24,5,3,1),(25,5,4,1),(26,5,5,1);
+INSERT INTO `assignworkitems` VALUES (1,1,1,1),(2,1,2,1),(3,1,3,1),(4,1,4,1),(5,1,5,1),(6,2,1,1),(7,2,2,1),(8,2,3,1),(9,2,4,1),(10,2,5,1);
 /*!40000 ALTER TABLE `assignworkitems` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -306,7 +306,7 @@ CREATE TABLE `assignworkitemskilldetails` (
   KEY `assignWorkItemSkillId` (`assignWorkItemSkillId`),
   CONSTRAINT `assignworkitemskilldetails_ibfk_1` FOREIGN KEY (`assignStatusId`) REFERENCES `assignstatus` (`assignStatusId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `assignworkitemskilldetails_ibfk_2` FOREIGN KEY (`assignWorkItemSkillId`) REFERENCES `assignworkitemskills` (`assignWorkItemSkillId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -315,7 +315,6 @@ CREATE TABLE `assignworkitemskilldetails` (
 
 LOCK TABLES `assignworkitemskilldetails` WRITE;
 /*!40000 ALTER TABLE `assignworkitemskilldetails` DISABLE KEYS */;
-INSERT INTO `assignworkitemskilldetails` VALUES (1,1,1,4,15),(2,2,1,2,25),(3,3,1,2,30),(4,4,1,6,30),(5,5,1,8,35),(6,6,1,6,28),(7,7,1,4,25),(8,8,1,5,22),(9,9,1,6,28),(10,10,1,4,35),(11,11,1,4,32),(12,12,1,2,40),(13,13,1,4,18),(14,14,1,2,30),(15,15,1,1,25),(16,16,1,3,40),(17,17,1,2,45),(18,18,1,5,50),(19,19,1,5,35),(20,20,1,5,45),(21,21,1,3,60),(22,22,1,2,50),(23,23,1,15,55),(24,24,1,4,35),(25,25,1,2,60),(26,26,1,4,30);
 /*!40000 ALTER TABLE `assignworkitemskilldetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -336,7 +335,7 @@ CREATE TABLE `assignworkitemskills` (
   KEY `fk_awis_skill` (`skillId`),
   CONSTRAINT `fk_awis_assignWorkItem` FOREIGN KEY (`assignWorkItemId`) REFERENCES `assignworkitems` (`assignWorkItemId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_awis_skill` FOREIGN KEY (`skillId`) REFERENCES `skills` (`skillId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -345,7 +344,6 @@ CREATE TABLE `assignworkitemskills` (
 
 LOCK TABLES `assignworkitemskills` WRITE;
 /*!40000 ALTER TABLE `assignworkitemskills` DISABLE KEYS */;
-INSERT INTO `assignworkitemskills` VALUES (1,1,1,0),(2,1,2,0),(3,1,3,0),(4,2,3,0),(5,2,7,0),(6,2,8,0),(7,3,13,0),(8,3,14,0),(9,3,15,0),(10,4,4,0),(11,4,5,0),(12,4,16,0),(13,5,1,0),(14,5,18,0),(15,5,19,0),(16,6,2,0),(17,6,10,0),(18,6,7,0),(19,6,3,0),(20,11,2,0),(21,11,20,0),(22,11,10,0),(23,11,7,0),(24,21,3,0),(25,21,22,0),(26,21,8,0);
 /*!40000 ALTER TABLE `assignworkitemskills` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -419,7 +417,6 @@ CREATE TABLE `dailyreports` (
   `weather` varchar(100) DEFAULT NULL,
   `generalRemark` text,
   `issue` longtext,
-  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`dailyReportId`),
   UNIQUE KEY `assignProjectId` (`assignProjectId`,`reportDate`),
   KEY `supervisorId` (`supervisorId`),
@@ -451,6 +448,7 @@ CREATE TABLE `dailyreporttasks` (
   `progressDescription` text,
   `workHours` double DEFAULT NULL,
   `completedQty` double DEFAULT NULL,
+  `dailyCost` double DEFAULT NULL,
   `isCompleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`dailyReportTaskId`),
   KEY `dailyReportId` (`dailyReportId`),
@@ -484,12 +482,14 @@ CREATE TABLE `labors` (
   `skillId` int DEFAULT NULL,
   `laborStartDate` date DEFAULT NULL,
   `laborEndDate` date DEFAULT NULL,
+  `proficiencyLevelId` int DEFAULT NULL,
+  `yearsExperience` int DEFAULT '1',
   `isActive` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`laborId`),
   UNIQUE KEY `laborNRC` (`laborNRC`),
   KEY `fk_labors_skill` (`skillId`),
   CONSTRAINT `fk_labors_skill` FOREIGN KEY (`skillId`) REFERENCES `skills` (`skillId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -498,8 +498,30 @@ CREATE TABLE `labors` (
 
 LOCK TABLES `labors` WRITE;
 /*!40000 ALTER TABLE `labors` DISABLE KEYS */;
-INSERT INTO `labors` VALUES (106,'Aung Kyaw','12/ABC100001','09123456701',1,'2020-01-15',NULL,1),(107,'Min Thu','12/ABC100002','09123456702',1,'2020-03-10',NULL,1),(108,'Hla Myint','12/ABC100003','09123456703',1,'2020-05-20',NULL,1),(109,'Ko Ko','12/ABC100004','09123456704',1,'2020-07-05',NULL,1),(110,'Zaw Win','12/ABC100005','09123456705',1,'2020-08-15',NULL,1),(111,'Myo Min','12/ABC100006','09123456706',1,'2020-09-25',NULL,1),(112,'Tin Htut','12/ABC100007','09123456707',1,'2020-11-10',NULL,1),(113,'Kyaw Swar','12/ABC100008','09123456708',1,'2021-01-15',NULL,1),(114,'Soe Moe','12/ABC100009','09123456709',1,'2021-03-20',NULL,1),(115,'Naing Lin','12/ABC100010','09123456710',1,'2021-05-30',NULL,1),(116,'Aung Myo','12/ABC100011','09123456711',1,'2021-07-15',NULL,1),(117,'Htet Aung','12/ABC100012','09123456712',1,'2021-09-10',NULL,1),(118,'Yan Naing','12/ABC100013','09123456713',1,'2021-11-25',NULL,1),(119,'Moe Kyaw','12/ABC100014','09123456714',1,'2022-02-15',NULL,1),(120,'Thu Rein','12/ABC100015','09123456715',1,'2022-04-10',NULL,1),(121,'Myint Aung','12/DEF200001','09223456701',2,'2019-06-15',NULL,1),(122,'Win Htay','12/DEF200002','09223456702',2,'2019-08-20',NULL,1),(123,'Aung Hla','12/DEF200003','09223456703',2,'2019-10-05',NULL,1),(124,'Kyaw Zin','12/DEF200004','09223456704',2,'2020-01-10',NULL,1),(125,'Hla Shwe','12/DEF200005','09223456705',2,'2020-03-25',NULL,1),(126,'Zaw Htwe','12/DEF200006','09223456706',2,'2020-05-15',NULL,1),(127,'Myo Swe','12/DEF200007','09223456707',2,'2020-07-30',NULL,1),(128,'Tin Maung','12/DEF200008','09223456708',2,'2020-09-10',NULL,1),(129,'Soe Win','12/DEF200009','09223456709',2,'2020-11-25',NULL,1),(130,'Naing Oo','12/DEF200010','09223456710',2,'2021-02-15',NULL,1),(131,'Aung Ko','12/GHI300001','09323456701',3,'2018-04-15',NULL,1),(132,'Ko Zaw','12/GHI300002','09323456702',3,'2018-06-20',NULL,1),(133,'Hla Tun','12/GHI300003','09323456703',3,'2018-08-05',NULL,1),(134,'Win Ko','12/GHI300004','09323456704',3,'2019-01-10',NULL,1),(135,'Kyaw Myint','12/GHI300005','09323456705',3,'2019-03-25',NULL,1),(136,'Myo Zaw','12/GHI300006','09323456706',3,'2019-05-15',NULL,1),(137,'Tin Ko','12/GHI300007','09323456707',3,'2019-07-30',NULL,1),(138,'Soe Naing','12/GHI300008','09323456708',3,'2019-09-10',NULL,1),(139,'Aung Zaw','12/JKL400001','09423456701',4,'2017-03-15',NULL,1),(140,'Ko Myint','12/JKL400002','09423456702',4,'2017-05-20',NULL,1),(141,'Hla Kyaw','12/JKL400003','09423456703',4,'2017-07-05',NULL,1),(142,'Win Htun','12/JKL400004','09423456704',4,'2018-01-10',NULL,1),(143,'Kyaw Hla','12/JKL400005','09423456705',4,'2018-03-25',NULL,1),(144,'Myo Kyaw','12/JKL400006','09423456706',4,'2018-05-15',NULL,1),(145,'Aung Htun','12/MNO500001','09523456701',5,'2017-02-15',NULL,1),(146,'Ko Htay','12/MNO500002','09523456702',5,'2017-04-20',NULL,1),(147,'Hla Myo','12/MNO500003','09523456703',5,'2017-06-05',NULL,1),(148,'Win Zaw','12/MNO500004','09523456704',5,'2018-01-10',NULL,1),(149,'Kyaw Ko','12/MNO500005','09523456705',5,'2018-03-25',NULL,1),(150,'Aung Myint','12/PQR600001','09623456701',6,'2016-05-15',NULL,1),(151,'Ko Kyaw','12/PQR600002','09623456702',6,'2016-07-20',NULL,1),(152,'Hla Zaw','12/PQR600003','09623456703',6,'2016-09-05',NULL,1),(153,'Win Myo','12/PQR600004','09623456704',6,'2017-01-10',NULL,1),(154,'Aung Win','12/STU700001','09723456701',7,'2019-08-15',NULL,1),(155,'Ko Tun','12/STU700002','09723456702',7,'2019-10-20',NULL,1),(156,'Hla Ko','12/STU700003','09723456703',7,'2020-01-05',NULL,1),(157,'Win Hla','12/STU700004','09723456704',7,'2020-03-10',NULL,1),(158,'Aung Tun','12/VWX800001','09823456701',8,'2018-07-15',NULL,1),(159,'Ko Zin','12/VWX800002','09823456702',8,'2018-09-20',NULL,1),(160,'Hla Win','12/VWX800003','09823456703',8,'2019-01-05',NULL,1),(161,'Win Kyaw','12/VWX800004','09823456704',8,'2019-03-10',NULL,1),(162,'Aung Zin','12/YZA900001','09923456701',9,'2015-04-15',NULL,1),(163,'Ko Myo','12/YZA900002','09923456702',9,'2015-06-20',NULL,1),(164,'Hla Min','12/YZA900003','09923456703',9,'2015-08-05',NULL,1),(165,'Win Naing','12/YZA900004','09923456704',9,'2016-01-10',NULL,1),(166,'U Myint','12/BCD100001','09013456701',10,'2010-03-15',NULL,1),(167,'U Kyaw','12/BCD100002','09013456702',10,'2012-05-20',NULL,1),(168,'U Hla','12/BCD100003','09013456703',10,'2014-07-05',NULL,1),(169,'Daw Mya','12/EFG110001','09023456701',11,'2016-02-15',NULL,1),(170,'Daw Khin','12/EFG110002','09023456702',11,'2017-04-20',NULL,1),(171,'Aung Khin','12/HIJ120001','09033456701',12,'2019-03-15',NULL,1),(172,'Ko Thant','12/HIJ120002','09033456702',12,'2019-05-20',NULL,1),(173,'Aung Thant','12/KLM130001','09043456701',13,'2018-06-15',NULL,1),(174,'Ko San','12/KLM130002','09043456702',13,'2018-08-20',NULL,1),(175,'Aung San','12/NOP140001','09053456701',14,'2019-01-15',NULL,1),(176,'Ko Lin','12/NOP140002','09053456702',14,'2019-03-20',NULL,1),(177,'Aung Lin','12/QRS150001','09063456701',15,'2018-04-15',NULL,1),(178,'Ko Htun','12/QRS150002','09063456702',15,'2018-06-20',NULL,1),(179,'Aung Htwe','12/TUV160001','09073456701',16,'2017-05-15',NULL,1),(180,'Ko Shwe','12/TUV160002','09073456702',16,'2017-07-20',NULL,1),(181,'Aung Shwe','12/WXY170001','09083456701',17,'2019-02-15',NULL,1),(182,'Ko Mya','12/WXY170002','09083456702',17,'2019-04-20',NULL,1),(183,'Aung Mya','12/ZAB180001','09093456701',18,'2018-03-15',NULL,1),(184,'Ko Khin','12/ZAB180002','09093456702',18,'2018-05-20',NULL,1),(185,'Aung Khin','12/CDE190001','09103456701',19,'2019-07-15',NULL,1),(186,'Ko Tha','12/CDE190002','09103456702',19,'2019-09-20',NULL,1),(187,'Aung Tha','12/FGH200001','09113456701',20,'2018-08-15',NULL,1),(188,'Ko Nyunt','12/FGH200002','09113456702',20,'2018-10-20',NULL,1),(189,'U Tin','12/IJK210001','09123456801',21,'2010-06-15',NULL,1),(190,'U Ba','12/IJK210002','09123456802',21,'2012-08-20',NULL,1),(191,'Aung Nyunt','12/LMN220001','09133456701',22,'2017-09-15',NULL,1),(192,'Ko Maung','12/LMN220002','09133456702',22,'2017-11-20',NULL,1),(193,'U Than','12/OPQ230001','09143456701',23,'2008-05-15',NULL,1),(194,'U Sein','12/OPQ230002','09143456702',23,'2010-07-20',NULL,1),(195,'Sayadaw U','12/RST240001','09153456701',24,'2005-04-15',NULL,1),(196,'U Paw','12/RST240002','09153456702',24,'2007-06-20',NULL,1),(197,'Former A','12/XXX990001','09163456701',1,'2019-01-15',NULL,0),(198,'Former B','12/XXX990002','09163456702',2,'2019-03-20',NULL,0),(199,'Former C','12/XXX990003','09163456703',3,'2018-05-15',NULL,0),(200,'Former D','12/XXX990004','09163456704',4,'2017-07-30',NULL,0),(201,'Additional 1','12/ADD100001','09173456701',1,'2022-01-15',NULL,1),(202,'Additional 2','12/ADD100002','09173456702',2,'2022-02-20',NULL,1),(203,'Additional 3','12/ADD100003','09173456703',3,'2022-03-15',NULL,1),(204,'Additional 4','12/ADD100004','09173456704',4,'2022-04-10',NULL,1),(205,'Additional 5','12/ADD100005','09173456705',5,'2022-05-05',NULL,1),(206,'Additional 6','12/ADD100006','09173456706',6,'2022-06-20',NULL,1),(207,'Additional 7','12/ADD100007','09173456707',7,'2022-07-15',NULL,1),(208,'Additional 8','12/ADD100008','09173456708',8,'2022-08-10',NULL,1),(209,'Additional 9','12/ADD100009','09173456709',9,'2022-09-05',NULL,1),(210,'Additional 10','12/ADD100010','09173456710',10,'2022-10-20',NULL,1);
 /*!40000 ALTER TABLE `labors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `proficiencylevels`
+--
+
+DROP TABLE IF EXISTS `proficiencylevels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `proficiencylevels` (
+  `proficiencyLevelId` int NOT NULL AUTO_INCREMENT,
+  `proficiencyLevelName` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`proficiencyLevelId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `proficiencylevels`
+--
+
+LOCK TABLES `proficiencylevels` WRITE;
+/*!40000 ALTER TABLE `proficiencylevels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `proficiencylevels` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -645,6 +667,8 @@ CREATE TABLE `taskdetails` (
   `projectTaskId` int DEFAULT NULL,
   `minDuration` double DEFAULT NULL,
   `maxDuration` double DEFAULT NULL,
+  `quantityFormula` varchar(255) DEFAULT NULL,
+  `unitOfMeasure` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`taskDetailId`),
   KEY `fk_td_workItemDetail` (`workItemDetailId`),
   KEY `fk_td_task` (`projectTaskId`),
@@ -659,7 +683,7 @@ CREATE TABLE `taskdetails` (
 
 LOCK TABLES `taskdetails` WRITE;
 /*!40000 ALTER TABLE `taskdetails` DISABLE KEYS */;
-INSERT INTO `taskdetails` VALUES (1,1,1,4,5),(2,1,2,7,8),(3,1,3,3,4),(4,1,4,2,2.5),(5,1,5,2,2.5),(6,6,1,4,5),(7,6,2,7,8.5),(8,6,3,3.5,4),(9,6,4,2.5,3),(10,6,5,2,2.5),(11,11,1,3.5,4.3),(12,11,2,6.5,7.5),(13,11,3,3.2,3.7),(14,11,4,2.5,2.9),(15,11,5,2.3,2.6),(16,16,1,4,5),(17,16,2,7,8.5),(18,16,3,3.5,4),(19,16,4,2.5,3),(20,16,5,2,2.5),(21,21,1,4,5.5),(22,21,2,8,9.5),(23,21,3,4,4.5),(24,21,4,3,3.5),(25,21,5,2.5,3),(26,26,1,3,4),(27,26,2,6,7),(28,26,3,2.5,3.5),(29,26,4,1.5,2),(30,26,5,1.5,2),(31,31,1,3,4),(32,31,2,6.5,7.5),(33,31,3,3,3.5),(34,31,4,2,2.5),(35,31,5,1.5,2),(36,36,1,3.5,4.5),(37,36,2,7,8),(38,36,3,3.5,4),(39,36,4,2.5,3),(40,36,5,2,2.5),(41,2,6,10,12),(42,2,7,8,10),(43,2,8,7,8),(44,2,9,8,9),(45,7,6,11,13),(46,7,7,9,11),(47,7,8,8,9),(48,7,9,9,10),(49,12,6,13,15),(50,12,7,10,12),(51,12,8,9,10),(52,12,9,10,11),(53,17,6,11,13),(54,17,7,9,11),(55,17,8,8,9),(56,17,9,9,10),(57,22,6,14,16),(58,22,7,11,13),(59,22,8,9,10),(60,22,9,11,12),(61,27,6,8,10),(62,27,7,6,8),(63,27,8,5,6),(64,27,9,12,14),(65,32,6,9,11),(66,32,7,7,9),(67,32,8,6,7),(68,32,9,10,12),(69,37,6,10,12),(70,37,7,8,10),(71,37,8,7,8),(72,37,9,11,13),(73,3,10,8,10),(74,3,11,6,7),(75,3,12,5,6),(76,3,13,4,5),(77,8,10,9,11),(78,8,11,7,8),(79,8,12,5.5,6.5),(80,8,13,4.5,5.5),(81,13,10,10,12),(82,13,11,8,9),(83,13,12,6,7),(84,13,13,5,6),(85,18,10,9,11),(86,18,11,8,9),(87,18,12,6,7),(88,18,13,5,6),(89,23,10,11,13),(90,23,11,9,10),(91,23,12,7,8),(92,23,13,6,7),(93,28,10,7,9),(94,28,11,8,10),(95,28,12,6,8),(96,28,13,5,7),(97,33,10,7,9),(98,33,11,6,7),(99,33,12,5,6),(100,33,13,4,5),(101,38,10,8,10),(102,38,11,7,8),(103,38,12,5.5,6.5),(104,38,13,4.5,5.5),(105,4,14,5,6),(106,4,15,4,5),(107,4,16,4,5),(108,9,14,6,7),(109,9,15,5,6),(110,9,16,5,6),(111,14,14,7,8),(112,14,15,6,7),(113,14,16,6,7),(114,19,14,6,7),(115,19,15,5,6),(116,19,16,5,6),(117,24,14,7,8),(118,24,15,6,7),(119,24,16,6,7),(120,29,14,4,5),(121,29,15,4,5),(122,29,16,3,4),(123,34,14,5,6),(124,34,15,4,5),(125,34,16,4,5),(126,39,14,5.5,6.5),(127,39,15,4.5,5.5),(128,39,16,4.5,5.5),(129,5,17,1.5,2),(130,5,18,1.5,2),(131,5,19,1,1.5),(132,10,17,1.5,2),(133,10,18,1.5,2),(134,10,19,1,1.5),(135,15,17,1.5,2),(136,15,18,1.5,2),(137,15,19,1,1.5),(138,20,17,1.5,2),(139,20,18,1.5,2),(140,20,19,1,1.5),(141,25,17,1.5,2),(142,25,18,1.5,2),(143,25,19,1,1.5),(144,30,17,2,3),(145,30,18,2,2.5),(146,30,19,1.5,2),(147,35,17,1.5,2),(148,35,18,1.5,2),(149,35,19,1,1.5),(150,40,17,1.5,2),(151,40,18,1.5,2),(152,40,19,1,1.5);
+INSERT INTO `taskdetails` VALUES (1,1,1,4,5,'area * totalStories * 1.0','m3'),(2,1,2,7,8,'area * totalStories * 1.0','m3'),(3,1,3,3,4,'area * totalStories * 1.0','m3'),(4,1,4,2,2.5,'area * totalStories * 1.0','m3'),(5,1,5,2,2.5,'area * totalStories * 1.0','m3'),(6,6,1,4,5,'area * totalStories * 1.0','m3'),(7,6,2,7,8.5,'area * totalStories * 1.0','m3'),(8,6,3,3.5,4,'area * totalStories * 1.0','m3'),(9,6,4,2.5,3,'area * totalStories * 1.0','m3'),(10,6,5,2,2.5,'area * totalStories * 1.0','m3'),(11,11,1,3.5,4.3,'area * totalStories * 1.0','m3'),(12,11,2,6.5,7.5,'area * totalStories * 1.0','m3'),(13,11,3,3.2,3.7,'area * totalStories * 1.0','m3'),(14,11,4,2.5,2.9,'area * totalStories * 1.0','m3'),(15,11,5,2.3,2.6,'area * totalStories * 1.0','m3'),(16,16,1,4,5,'area * totalStories * 1.0','m3'),(17,16,2,7,8.5,'area * totalStories * 1.0','m3'),(18,16,3,3.5,4,'area * totalStories * 1.0','m3'),(19,16,4,2.5,3,'area * totalStories * 1.0','m3'),(20,16,5,2,2.5,'area * totalStories * 1.0','m3'),(21,21,1,4,5.5,'area * totalStories * 1.0','m3'),(22,21,2,8,9.5,'area * totalStories * 1.0','m3'),(23,21,3,4,4.5,'area * totalStories * 1.0','m3'),(24,21,4,3,3.5,'area * totalStories * 1.0','m3'),(25,21,5,2.5,3,'area * totalStories * 1.0','m3'),(26,26,1,3,4,'area * totalStories * 1.0','m3'),(27,26,2,6,7,'area * totalStories * 1.0','m3'),(28,26,3,2.5,3.5,'area * totalStories * 1.0','m3'),(29,26,4,1.5,2,'area * totalStories * 1.0','m3'),(30,26,5,1.5,2,'area * totalStories * 1.0','m3'),(31,31,1,3,4,'area * totalStories * 1.0','m3'),(32,31,2,6.5,7.5,'area * totalStories * 1.0','m3'),(33,31,3,3,3.5,'area * totalStories * 1.0','m3'),(34,31,4,2,2.5,'area * totalStories * 1.0','m3'),(35,31,5,1.5,2,'area * totalStories * 1.0','m3'),(36,36,1,3.5,4.5,'area * totalStories * 1.0','m3'),(37,36,2,7,8,'area * totalStories * 1.0','m3'),(38,36,3,3.5,4,'area * totalStories * 1.0','m3'),(39,36,4,2.5,3,'area * totalStories * 1.0','m3'),(40,36,5,2,2.5,'area * totalStories * 1.0','m3'),(41,2,6,10,12,'area * totalStories * 0.8','m3'),(42,2,7,8,10,'area * totalStories * 0.8','m3'),(43,2,8,7,8,'area * totalStories * 0.8','m3'),(44,2,9,8,9,'area * totalStories * 0.8','m3'),(45,7,6,11,13,'area * totalStories * 0.8','m3'),(46,7,7,9,11,'area * totalStories * 0.8','m3'),(47,7,8,8,9,'area * totalStories * 0.8','m3'),(48,7,9,9,10,'area * totalStories * 0.8','m3'),(49,12,6,13,15,'area * totalStories * 0.8','m3'),(50,12,7,10,12,'area * totalStories * 0.8','m3'),(51,12,8,9,10,'area * totalStories * 0.8','m3'),(52,12,9,10,11,'area * totalStories * 0.8','m3'),(53,17,6,11,13,'area * totalStories * 0.8','m3'),(54,17,7,9,11,'area * totalStories * 0.8','m3'),(55,17,8,8,9,'area * totalStories * 0.8','m3'),(56,17,9,9,10,'area * totalStories * 0.8','m3'),(57,22,6,14,16,'area * totalStories * 0.8','m3'),(58,22,7,11,13,'area * totalStories * 0.8','m3'),(59,22,8,9,10,'area * totalStories * 0.8','m3'),(60,22,9,11,12,'area * totalStories * 0.8','m3'),(61,27,6,8,10,'area * totalStories * 0.8','m3'),(62,27,7,6,8,'area * totalStories * 0.8','m3'),(63,27,8,5,6,'area * totalStories * 0.8','m3'),(64,27,9,12,14,'area * totalStories * 0.8','m3'),(65,32,6,9,11,'area * totalStories * 0.8','m3'),(66,32,7,7,9,'area * totalStories * 0.8','m3'),(67,32,8,6,7,'area * totalStories * 0.8','m3'),(68,32,9,10,12,'area * totalStories * 0.8','m3'),(69,37,6,10,12,'area * totalStories * 0.8','m3'),(70,37,7,8,10,'area * totalStories * 0.8','m3'),(71,37,8,7,8,'area * totalStories * 0.8','m3'),(72,37,9,11,13,'area * totalStories * 0.8','m3'),(73,3,10,8,10,'area * 1.2','sqm'),(74,3,11,6,7,'area * 1.2','sqm'),(75,3,12,5,6,'area * 1.2','sqm'),(76,3,13,4,5,'area * 1.2','sqm'),(77,8,10,9,11,'area * 1.2','sqm'),(78,8,11,7,8,'area * 1.2','sqm'),(79,8,12,5.5,6.5,'area * 1.2','sqm'),(80,8,13,4.5,5.5,'area * 1.2','sqm'),(81,13,10,10,12,'area * 1.2','sqm'),(82,13,11,8,9,'area * 1.2','sqm'),(83,13,12,6,7,'area * 1.2','sqm'),(84,13,13,5,6,'area * 1.2','sqm'),(85,18,10,9,11,'area * 1.2','sqm'),(86,18,11,8,9,'area * 1.2','sqm'),(87,18,12,6,7,'area * 1.2','sqm'),(88,18,13,5,6,'area * 1.2','sqm'),(89,23,10,11,13,'area * 1.2','sqm'),(90,23,11,9,10,'area * 1.2','sqm'),(91,23,12,7,8,'area * 1.2','sqm'),(92,23,13,6,7,'area * 1.2','sqm'),(93,28,10,7,9,'area * 1.2','sqm'),(94,28,11,8,10,'area * 1.2','sqm'),(95,28,12,6,8,'area * 1.2','sqm'),(96,28,13,5,7,'area * 1.2','sqm'),(97,33,10,7,9,'area * 1.2','sqm'),(98,33,11,6,7,'area * 1.2','sqm'),(99,33,12,5,6,'area * 1.2','sqm'),(100,33,13,4,5,'area * 1.2','sqm'),(101,38,10,8,10,'area * 1.2','sqm'),(102,38,11,7,8,'area * 1.2','sqm'),(103,38,12,5.5,6.5,'area * 1.2','sqm'),(104,38,13,4.5,5.5,'area * 1.2','sqm'),(105,4,14,5,6,'area * totalStories * 0.5','units'),(106,4,15,4,5,'area * totalStories * 0.5','units'),(107,4,16,4,5,'area * totalStories * 0.5','units'),(108,9,14,6,7,'area * totalStories * 0.5','units'),(109,9,15,5,6,'area * totalStories * 0.5','units'),(110,9,16,5,6,'area * totalStories * 0.5','units'),(111,14,14,7,8,'area * totalStories * 0.5','units'),(112,14,15,6,7,'area * totalStories * 0.5','units'),(113,14,16,6,7,'area * totalStories * 0.5','units'),(114,19,14,6,7,'area * totalStories * 0.5','units'),(115,19,15,5,6,'area * totalStories * 0.5','units'),(116,19,16,5,6,'area * totalStories * 0.5','units'),(117,24,14,7,8,'area * totalStories * 0.5','units'),(118,24,15,6,7,'area * totalStories * 0.5','units'),(119,24,16,6,7,'area * totalStories * 0.5','units'),(120,29,14,4,5,'area * totalStories * 0.5','units'),(121,29,15,4,5,'area * totalStories * 0.5','units'),(122,29,16,3,4,'area * totalStories * 0.5','units'),(123,34,14,5,6,'area * totalStories * 0.5','units'),(124,34,15,4,5,'area * totalStories * 0.5','units'),(125,34,16,4,5,'area * totalStories * 0.5','units'),(126,39,14,5.5,6.5,'area * totalStories * 0.5','units'),(127,39,15,4.5,5.5,'area * totalStories * 0.5','units'),(128,39,16,4.5,5.5,'area * totalStories * 0.5','units'),(129,5,17,1.5,2,'area * 0.3','sqm'),(130,5,18,1.5,2,'area * 0.3','sqm'),(131,5,19,1,1.5,'area * 0.3','sqm'),(132,10,17,1.5,2,'area * 0.3','sqm'),(133,10,18,1.5,2,'area * 0.3','sqm'),(134,10,19,1,1.5,'area * 0.3','sqm'),(135,15,17,1.5,2,'area * 0.3','sqm'),(136,15,18,1.5,2,'area * 0.3','sqm'),(137,15,19,1,1.5,'area * 0.3','sqm'),(138,20,17,1.5,2,'area * 0.3','sqm'),(139,20,18,1.5,2,'area * 0.3','sqm'),(140,20,19,1,1.5,'area * 0.3','sqm'),(141,25,17,1.5,2,'area * 0.3','sqm'),(142,25,18,1.5,2,'area * 0.3','sqm'),(143,25,19,1,1.5,'area * 0.3','sqm'),(144,30,17,2,3,'area * 0.3','sqm'),(145,30,18,2,2.5,'area * 0.3','sqm'),(146,30,19,1.5,2,'area * 0.3','sqm'),(147,35,17,1.5,2,'area * 0.3','sqm'),(148,35,18,1.5,2,'area * 0.3','sqm'),(149,35,19,1,1.5,'area * 0.3','sqm'),(150,40,17,1.5,2,'area * 0.3','sqm'),(151,40,18,1.5,2,'area * 0.3','sqm'),(152,40,19,1,1.5,'area * 0.3','sqm');
 /*!40000 ALTER TABLE `taskdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -701,13 +725,16 @@ CREATE TABLE `users` (
   `userPhone` varchar(255) DEFAULT NULL,
   `userEmail` varchar(255) DEFAULT NULL,
   `userDOB` date DEFAULT NULL,
+  `userAddress` longtext,
   `userPassword` varchar(255) NOT NULL,
   `userPhoto` varchar(255) DEFAULT NULL,
   `userStartDate` date DEFAULT NULL,
   `userEndDate` date DEFAULT NULL,
   `isActive` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`userId`),
+  UNIQUE KEY `userPhone` (`userPhone`),
+  UNIQUE KEY `userEmail` (`userEmail`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -716,7 +743,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'manager','manager','099666','ant@gmail.com','2005-09-27','$2a$12$BMr7.0ZodXQq7n8SxTPfq.vvW4BJBsIcA0jpF/NYLam9UIS2xPOu6','','2026-01-21',NULL,1),(2,'supervisor','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$R/4YZ2ivHgXVohoeJktLRut.zGt48HElTMj/6AsOo39AjG9l2YA3y','','2026-01-21',NULL,1),(3,'Kyaw Kyaw','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$Hrol4WQ3QzJFrj6IdwSsxedOfKtqYm8NQFTnXs9B3kEP9MWlF4iMq','','2026-01-21',NULL,1),(4,'Mg Mg','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$adQYSH6.STwTMDTyCHfTa.YAf/GhsmCwBQ2iCn6HnEkKBPKa7DjRC','','2026-01-21',NULL,1),(5,'Zaw Zaw','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$EdDMgnYRuGQAM0YXd4iT6.gymOLmlKnQR/M59F.eANy.ixkwMeUOC','','2026-01-21',NULL,1),(6,'Hla Hla','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$YpX0LfEs9CQPJBCM6hNFmuaUYsg8berDVZR/ecp1Hl1RYLOVyKSlO','','2026-01-21',NULL,1),(7,'Mya Mya','supervisor','099666','ant@gmail.com','2005-09-27','$2a$12$EEclM2xBkM3ao8GeoRJ87.gfDZAs9xrI1cuSXAXlnU3RorydxEPgq','','2026-01-21',NULL,1);
+INSERT INTO `users` VALUES (1,'Manager','manager','099666','manager@gmail.com','2005-10-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1),(2,'Supervisor','supervisor','092666','supervisor@gmail.com','2005-08-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1),(3,'Mg Mg','supervisor','093666','mg@gmail.com','2005-03-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1),(4,'Zaw Zaw','supervisor','094666','zaw@gmail.com','2005-09-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1),(5,'Aung Aung','supervisor','098666','aung@gmail.com','2005-01-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1),(6,'Thuta','supervisor','091666','thuta@gmail.com','2005-02-27',NULL,'$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba','2024-01-21',NULL,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -975,6 +1002,426 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `assignFullProjectAuto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `assignFullProjectAuto`(
+    IN p_projectTypeId INT,
+    IN p_projectInstanceName VARCHAR(255),
+    IN p_projectBuildingId INT,
+    IN p_projectLevelId INT,
+    IN p_projectArea DOUBLE,
+    IN p_projectHeight DOUBLE,
+    IN p_totalStories DOUBLE,
+    IN p_totalUnits DOUBLE,
+    IN p_supervisorId INT,
+    IN p_projectLocation VARCHAR(255),
+    IN p_constructorCost DOUBLE,
+    IN p_projectDurationDays DOUBLE,  -- Fixed: consistent naming
+    IN p_projectStatusName VARCHAR(50),
+    IN p_projectStartDate DATE,
+    IN p_projectEndDate DATE
+)
+proc: BEGIN
+
+    -- Project IDs
+    DECLARE v_assignProjectId INT;
+    DECLARE v_projectStatusId INT;
+    DECLARE v_assignStatusId INT;
+    DECLARE v_assignWorkItemId INT;
+    
+    -- Work item values
+    DECLARE v_workItemCost DOUBLE;
+    DECLARE v_workItemDuration DOUBLE;
+    DECLARE v_workItemLabors DOUBLE;
+    DECLARE v_taskDuration DOUBLE;
+    
+    -- Percentages
+    DECLARE v_costPercent DOUBLE;
+    DECLARE v_durationPercent DOUBLE;
+    DECLARE v_taskDurationPercent DOUBLE;
+    
+    -- Totals
+    DECLARE v_totalLaborQty DOUBLE DEFAULT 0;
+    DECLARE v_totalWorkItemCost DOUBLE DEFAULT 0;
+    
+    -- Cursor variables for work items
+    DECLARE c_workItemDetailId INT;
+    DECLARE c_projectWorkItemId INT;
+    DECLARE c_minCostPercent DOUBLE;
+    DECLARE c_maxCostPercent DOUBLE;
+    DECLARE c_minDurationPercent DOUBLE;
+    DECLARE c_maxDurationPercent DOUBLE;
+    DECLARE c_minLabors DOUBLE;
+    DECLARE c_maxLabors DOUBLE;
+    
+    -- Cursor variables for tasks
+    DECLARE c_taskDetailId INT;
+    DECLARE c_projectTaskId INT;
+    DECLARE c_minTaskDurationPercent DOUBLE;
+    DECLARE c_maxTaskDurationPercent DOUBLE;
+    
+    -- Skill variables
+    DECLARE v_skillId INT;
+    DECLARE v_assignWorkItemSkillId INT;
+    DECLARE v_minRequireLabors DOUBLE;
+    DECLARE v_maxRequireLabors DOUBLE;
+    DECLARE v_minDailyWage DOUBLE;
+    DECLARE v_maxDailyWage DOUBLE;
+    
+    -- Quantity calculation variables
+    DECLARE v_quantityFormula VARCHAR(255);
+    DECLARE v_unitOfMeasure VARCHAR(50);
+    DECLARE v_quantity DOUBLE;
+    DECLARE v_sql TEXT;
+    
+    -- Cursors
+    DECLARE done INT DEFAULT 0;
+    
+    -- WorkItem cursor
+    DECLARE cur_workitems CURSOR FOR
+        SELECT 
+            wid.workItemDetailId,
+            wid.projectWorkItemId,
+            wid.minCost,
+            wid.maxCost,
+            wid.minDuration,
+            wid.maxDuration,
+            wid.minLabors,
+            wid.maxLabors
+        FROM workItemDetails wid
+        JOIN projectDetails pd ON wid.projectDetailId = pd.projectDetailId
+        WHERE pd.projectTypeId = p_projectTypeId
+          AND pd.projectLevelId = p_projectLevelId
+          AND pd.projectBuildingId = p_projectBuildingId;
+    
+    -- Task cursor
+    DECLARE cur_tasks CURSOR FOR
+        SELECT 
+            td.taskDetailId,
+            td.projectTaskId,
+            td.minDuration,
+            td.maxDuration
+        FROM taskDetails td
+        WHERE td.workItemDetailId = c_workItemDetailId;
+    
+    -- Skill cursor
+    DECLARE cur_skills CURSOR FOR
+        SELECT 
+            skillId,
+            minRequireLabors,
+            maxRequireLabors,
+            minDailyWage,
+            maxDailyWage
+        FROM workItemRequireSkills 
+        WHERE workItemDetailId = c_workItemDetailId;
+    
+    -- Handlers
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    -- VALIDATION: Check if project configuration exists
+    SELECT COUNT(*) INTO @config_exists
+    FROM projectDetails pd
+    WHERE pd.projectTypeId = p_projectTypeId
+      AND pd.projectLevelId = p_projectLevelId
+      AND pd.projectBuildingId = p_projectBuildingId;
+    
+    IF @config_exists = 0 THEN
+        SELECT FALSE AS success, 'No project configuration found for the given type, level, and building combination' AS message;
+        LEAVE proc;
+    END IF;
+
+    -- Get status IDs with validation
+    SELECT projectStatusId INTO v_projectStatusId
+    FROM projectStatus
+    WHERE projectStatusName = p_projectStatusName
+    LIMIT 1;
+    
+    IF v_projectStatusId IS NULL THEN
+        SELECT FALSE AS success, CONCAT('Invalid project status: ', p_projectStatusName) AS message;
+        LEAVE proc;
+    END IF;
+
+    SELECT assignStatusId INTO v_assignStatusId
+    FROM assignStatus
+    WHERE assignStatusName = 'autoAssign'
+    LIMIT 1;
+
+    START TRANSACTION;
+
+    -- 1. INSERT PROJECT
+    INSERT INTO assignProjects (
+        projectTypeId,
+        projectInstanceName,
+        projectBuildingId,
+        projectLevelId,
+        projectArea,
+        projectHeight,
+        totalStories,
+        totalUnits,
+        supervisorId,
+        projectLocation,
+        projectOverHeadCost,
+        projectStatus
+    ) VALUES (
+        p_projectTypeId,
+        p_projectInstanceName,
+        p_projectBuildingId,
+        p_projectLevelId,
+        p_projectArea,
+        p_projectHeight,
+        p_totalStories,
+        p_totalUnits,
+        p_supervisorId,
+        p_projectLocation,
+        0,  -- Overhead cost - can be calculated separately
+        v_projectStatusId
+    );
+
+    SET v_assignProjectId = LAST_INSERT_ID();
+
+    -- 2. PROCESS WORK ITEMS
+    SET done = 0;
+    OPEN cur_workitems;
+
+    workitem_loop: LOOP
+        FETCH cur_workitems INTO
+            c_workItemDetailId,
+            c_projectWorkItemId,
+            c_minCostPercent,
+            c_maxCostPercent,
+            c_minDurationPercent,
+            c_maxDurationPercent,
+            c_minLabors,
+            c_maxLabors;
+
+        IF done = 1 THEN
+            LEAVE workitem_loop;
+        END IF;
+
+        -- Calculate percentages (using midpoint)
+        SET v_costPercent = (c_minCostPercent + c_maxCostPercent) / 2;
+        SET v_durationPercent = (c_minDurationPercent + c_maxDurationPercent) / 2;
+
+        -- Calculate work item values
+        SET v_workItemCost = p_constructorCost * (v_costPercent / 100);
+        SET v_workItemDuration = p_projectDurationDays * (v_durationPercent / 100);
+        SET v_workItemLabors = (c_minLabors + c_maxLabors) / 2;
+        
+        -- Accumulate totals
+        SET v_totalWorkItemCost = v_totalWorkItemCost + v_workItemCost;
+        SET v_totalLaborQty = v_totalLaborQty + v_workItemLabors;
+
+        -- 2A. INSERT WORK ITEM
+        INSERT INTO assignWorkItems (
+            assignProjectId,
+            projectWorkItemId,
+            workItemStatus
+        ) VALUES (
+            v_assignProjectId,
+            c_projectWorkItemId,
+            v_projectStatusId  -- Correct: project status, not assign status
+        );
+
+        SET v_assignWorkItemId = LAST_INSERT_ID();
+
+        -- 2B. INSERT WORK ITEM DETAILS
+        INSERT INTO assignWorkItemDetails (
+            assignWorkItemId,
+            assignStatusId,
+            workItemCost,
+            workItemLaborQty,
+            workItemDuration,
+            startDate,
+            endDate
+        ) VALUES (
+            v_assignWorkItemId,
+            v_assignStatusId,
+            v_workItemCost,
+            v_workItemLabors,
+            v_workItemDuration,
+            p_projectStartDate,
+            DATE_ADD(p_projectStartDate, INTERVAL v_workItemDuration DAY)
+        );
+
+        -- 2C. PROCESS TASKS FOR THIS WORK ITEM
+        SET done = 0;
+        OPEN cur_tasks;
+
+        task_loop: LOOP
+            FETCH cur_tasks INTO
+                c_taskDetailId,
+                c_projectTaskId,
+                c_minTaskDurationPercent,
+                c_maxTaskDurationPercent;
+
+            IF done = 1 THEN
+                LEAVE task_loop;
+            END IF;
+
+            -- Calculate task duration
+            SET v_taskDurationPercent = (c_minTaskDurationPercent + c_maxTaskDurationPercent) / 2;
+            SET v_taskDuration = v_workItemDuration * (v_taskDurationPercent / 100);
+
+            -- GET QUANTITY FORMULA AND CALCULATE QUANTITY
+            SELECT quantityFormula, unitOfMeasure
+            INTO v_quantityFormula, v_unitOfMeasure
+            FROM taskDetails
+            WHERE taskDetailId = c_taskDetailId;
+
+            -- Safely evaluate quantity formula
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'area', p_projectArea);
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalStories', p_totalStories);
+            SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalUnits', p_totalUnits);
+            
+            -- Use user-defined variable to store result
+            SET @quantity = 0;
+            SET @dyn_sql = CONCAT('SELECT ', v_quantityFormula, ' INTO @quantity');
+            
+            PREPARE stmt FROM @dyn_sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            
+            SET v_quantity = @quantity;
+
+            -- INSERT TASK
+            INSERT INTO assignTasks (
+                assignWorkItemId,
+                projectTaskId,
+                taskStatus,
+                plannedQty,
+                unitOfMeasure
+            ) VALUES (
+                v_assignWorkItemId,
+                c_projectTaskId,
+                v_projectStatusId,  -- Correct: project status
+                v_quantity,
+                v_unitOfMeasure
+            );
+
+            -- INSERT TASK DETAILS
+            INSERT INTO assignTaskDetails (
+                assignTaskId,
+                assignStatusId,
+                taskDuration,
+                startDate,
+                endDate
+            ) VALUES (
+                LAST_INSERT_ID(),
+                v_assignStatusId,
+                v_taskDuration,
+                p_projectStartDate,
+                DATE_ADD(p_projectStartDate, INTERVAL v_taskDuration DAY)
+            );
+
+        END LOOP task_loop;
+
+        CLOSE cur_tasks;
+        SET done = 0;
+
+        -- 2D. PROCESS SKILL REQUIREMENTS FOR THIS WORK ITEM
+        SET done = 0;
+        OPEN cur_skills;
+
+        skill_loop: LOOP
+            FETCH cur_skills INTO
+                v_skillId,
+                v_minRequireLabors,
+                v_maxRequireLabors,
+                v_minDailyWage,
+                v_maxDailyWage;
+
+            IF done = 1 THEN
+                LEAVE skill_loop;
+            END IF;
+
+            -- INSERT SKILL ASSIGNMENT
+            INSERT INTO assignWorkItemSkills (
+                assignWorkItemId,
+                skillId
+            ) VALUES (
+                v_assignWorkItemId,
+                v_skillId
+            );
+
+            SET v_assignWorkItemSkillId = LAST_INSERT_ID();
+
+            -- INSERT SKILL DETAILS
+            INSERT INTO assignWorkItemSkillDetails (
+                assignWorkItemSkillId,
+                assignStatusId,
+                laborQty,
+                dailyWagePerLabor
+            ) VALUES (
+                v_assignWorkItemSkillId,
+                v_assignStatusId,
+                (v_minRequireLabors + v_maxRequireLabors) / 2,
+                (v_minDailyWage + v_maxDailyWage) / 2
+            );
+
+        END LOOP skill_loop;
+
+        CLOSE cur_skills;
+        SET done = 0;
+
+    END LOOP workitem_loop;
+
+    CLOSE cur_workitems;
+
+    -- 3. INSERT PROJECT DETAILS WITH CALCULATED TOTALS
+    INSERT INTO assignProjectDetails (
+        assignProjectId,
+        assignStatusId,
+        projectCost,
+        projectLaborQty,
+        projectDuration,
+        startDate,
+        endDate
+    ) VALUES (
+        v_assignProjectId,
+        v_assignStatusId,
+        p_constructorCost,
+        v_totalLaborQty,
+        p_projectDurationDays,
+        p_projectStartDate,
+        p_projectEndDate
+    );
+
+    -- 4. OPTIONAL: Calculate and update overhead cost if needed
+    -- This could be based on project type and level
+    UPDATE assignProjects 
+    SET projectOverHeadCost = p_constructorCost * 0.1  -- Example: 10% overhead
+    WHERE assignProjectId = v_assignProjectId;
+
+    COMMIT;
+
+    -- RETURN SUCCESS
+    SELECT 
+        TRUE AS success,
+        v_assignProjectId AS assignProjectId,
+        'Project successfully assigned with auto-planning' AS message,
+        v_totalLaborQty AS totalLaborQuantity,
+        v_totalWorkItemCost AS totalWorkItemCost;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `assignProjects` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1125,6 +1572,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `assignTaskToWorkItem`(
     IN p_duration DOUBLE,
     IN p_startDate DATE,
     IN p_endDate DATE,
+    IN p_plannedQty DOUBLE,
+    IN p_unitOfMeasure VARCHAR(50),
     IN p_projectStatusName VARCHAR(255),
     IN p_assignStatusName VARCHAR(255)
 )
@@ -1175,8 +1624,8 @@ BEGIN
     END IF;
 
     -- Insert task
-    INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus)
-    VALUES (v_assignWorkItemId, p_projectTaskId, v_taskStatusId);
+    INSERT INTO assignTasks(assignWorkItemId, projectTaskId, taskStatus, plannedQty, unitOfMeasure)
+    VALUES (v_assignWorkItemId, p_projectTaskId, v_taskStatusId, p_plannedQty, p_unitOfMeasure);
     SET v_assignTaskId = LAST_INSERT_ID();
 
     -- Insert task details
@@ -1298,6 +1747,97 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `calculateCpiSpi` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateCpiSpi`(
+    IN p_assignProjectId INT
+)
+BEGIN
+    DECLARE PV DOUBLE DEFAULT 0;
+    DECLARE EV DOUBLE DEFAULT 0;
+    DECLARE AC DOUBLE DEFAULT 0;
+    DECLARE CPI DOUBLE;
+    DECLARE SPI DOUBLE;
+
+    -- Planned Value (PV): latest plan cost (autoAssign/customAssign/extraAssign)
+    SELECT IFNULL(
+        (
+            SELECT apd.projectCost
+            FROM assignProjectDetails apd
+            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+            WHERE apd.assignProjectId = p_assignProjectId
+              AND s.assignStatusName IN ('autoAssign', 'customAssign', 'extraAssign')
+            ORDER BY apd.assignProjectDetailId DESC
+            LIMIT 1
+        ),
+        0
+    )
+    INTO PV;
+
+    -- Earned Value (EV):
+    -- - If an 'actualResult' record exists, use that
+    -- - Otherwise (project still running), use actual cost from dailyReportTasks.dailyCost
+    SELECT IFNULL(
+        (
+            SELECT SUM(apd.projectCost)
+            FROM assignProjectDetails apd
+            JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+            WHERE apd.assignProjectId = p_assignProjectId
+              AND s.assignStatusName = 'actualResult'
+        ),
+        (
+            SELECT IFNULL(SUM(drt.dailyCost), 0)
+            FROM dailyReports dr
+            LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+            WHERE dr.assignProjectId = p_assignProjectId
+        )
+    )
+    INTO EV;
+
+    -- Actual Cost (AC): from daily reports
+    SELECT
+        IFNULL(SUM(drt.dailyCost), 0)
+    INTO AC
+    FROM dailyReports dr
+    LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+
+    WHERE dr.assignProjectId = p_assignProjectId;
+
+    SET CPI = IF(AC = 0, NULL, EV / AC);
+    SET SPI = IF(PV = 0, NULL, EV / PV);
+
+    SELECT
+        PV,
+        EV,
+        AC,
+        CPI,
+        CASE
+            WHEN CPI IS NULL THEN 'No Data'
+            WHEN CPI >= 1.05 THEN 'Under Budget'
+            WHEN CPI >= 0.95 THEN 'On Budget'
+            ELSE 'Over Budget'
+        END AS CPI_STATUS,
+        SPI,
+        CASE
+            WHEN SPI IS NULL THEN 'No Data'
+            WHEN SPI >= 1.05 THEN 'Ahead of Schedule'
+            WHEN SPI >= 0.95 THEN 'On Schedule'
+            ELSE 'Behind Schedule'
+        END AS SPI_STATUS;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `getAllLabors` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1317,10 +1857,14 @@ BEGIN
         l.laborPhone,
         l.laborStartDate,
         l.laborEndDate,
+        l.isActive,
+        s.skillId,
         s.skillName
     FROM labors l
-    LEFT JOIN assignWorkers aw ON l.laborId = aw.laborId
-    LEFT JOIN skills s ON aw.skillId = s.skillId;
+    LEFT JOIN skills s ON l.skillId = s.skillId
+    ORDER BY
+        l.isActive DESC,
+        l.laborName;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1434,21 +1978,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSkillDetailsByAssignWorkItem`
 BEGIN
     SELECT
         awis.assignWorkItemSkillId,
+        s.skillId,
         s.skillName,
         ast.assignStatusName AS assignStatus,
         awisd.laborQty,
         awisd.dailyWagePerLabor,
-        awis.isCancel
-
+        awisd.assignWorkItemSkillDetailId,
+        awis.isCancel,
+        -- Calculate totals
+        ROUND(awisd.laborQty * awisd.dailyWagePerLabor, 2) AS totalDailyCost,
+        -- Status indicator
+        CASE
+            WHEN awis.isCancel = TRUE THEN 'Cancelled'
+            WHEN awisd.laborQty IS NULL OR awisd.dailyWagePerLabor IS NULL THEN 'Not Assigned'
+            ELSE 'Active'
+        END AS statusDescription
     FROM assignWorkItemSkills awis
     INNER JOIN skills s
         ON s.skillId = awis.skillId
     LEFT JOIN assignWorkItemSkillDetails awisd
         ON awisd.assignWorkItemSkillId = awis.assignWorkItemSkillId
     LEFT JOIN assignStatus ast
-        ON ast.assignStatusId = awisd.assignStatus
-
-    WHERE awis.assignWorkItemId = p_assignWorkItemId;
+        ON ast.assignStatusId = awisd.assignStatusId  -- Fixed column name: assignStatusId not assignStatus
+    WHERE awis.assignWorkItemId = p_assignWorkItemId
+    ORDER BY
+        CASE WHEN awis.isCancel = TRUE THEN 2 ELSE 1 END,  -- Active first, then cancelled
+        s.skillName;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1472,6 +2027,8 @@ BEGIN
     SELECT
         at.assignTaskId,
         t.projectTaskName AS taskName,
+        at.plannedQty AS plannedQty,
+        at.unitOfMeasure AS unitOfMeasure,
         ps.projectStatusName AS taskStatus,
         ast.assignStatusName AS assignStatus,
         atd.taskDuration AS duration,
@@ -1643,15 +2200,46 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getBuildingNameByProjectId`(IN p_assignProjectId INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBuildingNameByProjectId`(
+     IN p_projectTypeId INT
+ )
 BEGIN
-    SELECT
+     SELECT DISTINCT
+         b.projectBuildingId,
+         b.projectBuildingName
+     FROM projectDetails pd
+     INNER JOIN buildings b
+         ON b.projectBuildingId = pd.projectBuildingId
+     WHERE pd.projectTypeId = p_projectTypeId
+     ORDER BY b.projectBuildingName;
+ END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getBuildingsByProjectType` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBuildingsByProjectType`(
+    IN p_projectTypeId INT
+)
+BEGIN
+    SELECT DISTINCT
         b.projectBuildingId,
         b.projectBuildingName
-    FROM assignProjects ap
+    FROM projectDetails pd
     INNER JOIN buildings b
-        ON b.projectBuildingId = ap.projectBuildingId
-    WHERE ap.assignProjectId = p_assignProjectId;
+        ON b.projectBuildingId = pd.projectBuildingId
+    WHERE pd.projectTypeId = p_projectTypeId
+    ORDER BY b.projectBuildingName;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1668,15 +2256,17 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getLevelByProjectId`(IN p_assignProjectId INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getLevelByProjectId`(
+    IN p_projectTypeId INT
+)
 BEGIN
     SELECT
         pl.projectLevelId,
         pl.projectLevelName
-    FROM assignProjects ap
+    FROM ProjectDetails pd
     INNER JOIN projectLevels pl
-        ON pl.projectLevelId = ap.projectLevelId
-    WHERE ap.assignProjectId = p_assignProjectId;
+        ON pl.projectLevelId = pd.projectLevelId
+    WHERE pd.projectTypeId = p_projectTypeId;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1850,4 +2440,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-21 23:21:53
+-- Dump completed on 2026-02-01 13:10:06

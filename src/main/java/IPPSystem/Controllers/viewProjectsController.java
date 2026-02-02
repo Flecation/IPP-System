@@ -1,17 +1,21 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
+import IPPSystem.Utils.utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.util.ArrayList;
+public class viewProjectsController extends sideBarPaneController {
 
-public class viewProjectsController {
+    @FXML
+    private VBox viewProjectPane;
 
     @FXML
     private Button activeBtn;
@@ -32,96 +36,142 @@ public class viewProjectsController {
     private VBox projectContainer;
 
     @FXML
-    public void initialize(){
-        allBtn.setOnAction(e -> loadProjects(getDummyProjects()));
-        completedBtn.setOnAction(e -> loadProjectsByStatusDummy("Completed"));
-        activeBtn.setOnAction(e -> loadProjectsByStatusDummy("Active"));
-        planningBtn.setOnAction( e -> loadProjectsByStatusDummy("Planning"));
+    private Label noProjectLbl,choiceUserLbl;
 
-        loadProjects(getDummyProjects());
+    @FXML
+    private ComboBox<String> choiceUsersBox, choiceProjectTypesBox;
 
-
+    private enum StatusFilter {
+        ALL, ACTIVE, COMPLETED, PLANNING
     }
 
-    private ArrayList<projects> getDummyProjects(){
-        ArrayList<projects> list = new ArrayList<>();
+    private StatusFilter statusFilter = StatusFilter.ALL;
 
-        list.add(new projects("Project A", "Office", "Building 1", "Level 2", "John Doe", 1200, 15, 5, 50, 24, 500000, 100, 20000, java.sql.Date.valueOf("2025-01-01"), java.sql.Date.valueOf("2026-01-01"), "Yangon", "Active"));
-        list.add(new projects("Project B", "Residential", "Building 2", "Level 5", "Jane Smith", 800, 10, 4, 30, 18, 300000, 60, 15000, java.sql.Date.valueOf("2024-06-01"), java.sql.Date.valueOf("2025-06-01"), "Mandalay", "Completed"));
-        list.add(new projects("Project C", "Commercial", "Building 3", "Level 3", "Alice", 1500, 20, 6, 70, 36, 700000, 120, 30000, java.sql.Date.valueOf("2025-03-01"), java.sql.Date.valueOf("2026-03-01"), "Yangon", "Planning"));
-        list.add(new projects("Project D", "Office", "Building 4", "Level 1", "Bob", 900, 12, 4, 40, 20, 350000, 70, 18000, java.sql.Date.valueOf("2024-08-01"), java.sql.Date.valueOf("2025-08-01"), "Mandalay", "Active"));
+    protected users loginUser = user;
 
-        return list;
+    @FXML
+    public void initialize() {
 
-    }
-
-    private void loadProjectsByStatusDummy(String status) {
-        ArrayList<projects> all = getDummyProjects();
-        ArrayList<projects> filtered = new ArrayList<>();
-
-        for (projects p : all) {
-            if (p.getProjectStatus().equalsIgnoreCase(status)) {
-                filtered.add(p);
-            }
+        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+            choiceUsersBox.setDisable(true);
+            choiceUsersBox.setVisible(false);
+            addBtn.setVisible(false);
+            choiceUserLbl.setVisible(false);
+        }else {
+            choiceUsersBox.setVisible(true);
+            choiceUsersBox.setDisable(false);
+            choiceUserLbl.setVisible(true);
+            addBtn.setVisible(true);
         }
-        loadProjects(filtered);
+        setAllDataInChoiceBox();
+
+        allBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ALL;
+            applyFilters();
+        });
+
+        activeBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ACTIVE;
+            applyFilters();
+        });
+
+        completedBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.COMPLETED;
+            applyFilters();
+        });
+
+        planningBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.PLANNING;
+            applyFilters();
+        });
+
+        choiceUsersBox.setOnAction(e -> applyFilters());
+        choiceProjectTypesBox.setOnAction(e -> applyFilters());
+
+        applyFilters();
     }
 
-//    private void loadAllProjects(){
-//        ArrayList<projects> list = projectDatabase.getAllProjects();
-//        loadProjects(list);
-//    }
+    private void applyFilters() {
+        ObservableList<projects> source = FXCollections.observableArrayList();
+        boolean check = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
 
-
-//    private void loadProjectsByStatus(String status){
-//        ArrayList<projects> all = projectDatabase.getAllProjects();
-//        ArrayList<projects> filtered = new ArrayList<>();
-//
-//        for(projects p : all){
-//            if(p.getProjectStatus().equalsIgnoreCase(status)){
-//                filtered.add(p);
-//            }
-//        }
-//        loadProjects(filtered);
-//    }
-
-    private void loadProjects(ArrayList<projects> projectsList){
+        // Clear the container FIRST to prevent duplication
         projectContainer.getChildren().clear();
 
-        HBox row = null;
-        int count =0;
+        if (check){
+            source.setAll(data.getProjectsByUserId(loginUser.getUserId()));
+        }else{
+            source.setAll(data.getAllProjects());
+        }
 
-        for(projects p : projectsList){
+        ObservableList<projects> filtered = FXCollections.observableArrayList();
 
-//            a new row every 2 cards
-            if(count % 2 == 0){
-                row = new HBox(30);//30 px spacing between cards
-                projectContainer.getChildren().add(row);
+        String selectedUser = choiceUsersBox.getSelectionModel().getSelectedItem();
+        String selectedType = choiceProjectTypesBox.getSelectionModel().getSelectedItem();
+
+        // For supervisor, they should always see only their own projects
+        // unless they specifically filter by other supervisors (which is disabled)
+        for (projects p : source) {
+            if (p == null) continue;
+
+            // Apply status filter
+            if (statusFilter != StatusFilter.ALL) {
+                String status = safeLower(p.getProjectStatus());
+                if (statusFilter == StatusFilter.ACTIVE && !status.equals("active")) continue;
+                if (statusFilter == StatusFilter.COMPLETED && !status.equals("completed")) continue;
+                if (statusFilter == StatusFilter.PLANNING && !status.equals("planning")) continue;
             }
 
-
-
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/View/projectCard.fxml")
-                );
-
-                Parent card = loader.load();
-
-
-                projectCardController controller = loader.getController();
-                controller.setData(p);
-
-                row.getChildren().add(card);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            // Apply project type filter
+            if (selectedType != null && !selectedType.equals("All")) {
+                String typeName = p.getProjectTypeName();
+                if (typeName == null || !typeName.equalsIgnoreCase(selectedType)) continue;
             }
 
-           count++;
+            // Apply user filter (only for non-supervisors or if supervisor filter is enabled)
+            if (!check && selectedUser != null && !selectedUser.equals("All")) {
+                String supervisor = p.getUserName();
+                if (supervisor == null || !supervisor.equalsIgnoreCase(selectedUser)) continue;
+            }
+
+            filtered.add(p);
+        }
+
+        // Now show the cards - the container is already cleared
+        utils.showProjectCards(filtered, projectContainer);
+
+        // Show/hide "no projects" label
+        if (filtered.isEmpty()) {
+            noProjectLbl.setVisible(true);
+            projectContainer.getChildren().add(noProjectLbl);
+        }else{
+            noProjectLbl.setVisible(false);
         }
     }
 
+    private String safeLower(String s) {
+        return s == null ? "" : s.trim().toLowerCase();
+    }
 
+    private void setAllDataInChoiceBox() {
+        choiceUsersBox.getItems().clear();
+        choiceProjectTypesBox.getItems().clear();
 
+        choiceUsersBox.getItems().add("All");
+        choiceProjectTypesBox.getItems().add("All");
+
+        for (String type : data.getProjectTypes().values()) {
+            if (type != null) choiceProjectTypesBox.getItems().add(type);
+        }
+
+        for (users u : data.getAllUsers()) {
+            if (u != null && u.getUserRole() != null
+                    && u.getUserRole().equals(role.SUPERVISOR.toString())) {
+                choiceUsersBox.getItems().add(u.getUserName());
+            }
+        }
+
+        choiceProjectTypesBox.getSelectionModel().selectFirst();
+        choiceUsersBox.getSelectionModel().selectFirst();
+    }
 }

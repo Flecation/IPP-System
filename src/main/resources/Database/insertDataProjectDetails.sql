@@ -3,6 +3,16 @@
 -- All foreign key constraints will be satisfied
 -- =============================================
 
+INSERT INTO users(userName,userRole,userPhone,userEmail,userDOB,userPassword,userPhoto,userStartDate)
+VALUE
+("Manager", 'manager', '099666', 'manager@gmail.com', '2005-10-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21'),
+("Supervisor", 'supervisor', '092666', 'supervisor@gmail.com', '2005-08-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21'),
+("Mg Mg", 'supervisor', '093666', 'mg@gmail.com', '2005-03-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21'),
+("Zaw Zaw", 'supervisor', '094666', 'zaw@gmail.com', '2005-09-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21'),
+("Aung Aung", 'supervisor', '098666', 'aung@gmail.com', '2005-01-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21'),
+("Thuta", 'supervisor', '091666', 'thuta@gmail.com', '2005-02-27', '$2a$12$Yv3Q5c6SWe22d1eu3CtI9.3QotJrPULr7T2nEQqPxQRe56bDIhH/6','baba', '2024-01-21');
+
+
 -- ///// status table /////
 INSERT INTO assignStatus (assignStatusName)
 VALUES ('autoAssign'), ('customAssign'), ('actualResult'), ('extraAssign');
@@ -947,3 +957,36 @@ UPDATE taskDetails SET
     minDuration = 2.3, maxDuration = 2.6   -- Concrete: was 2.5-3
 WHERE workItemDetailId = 11 AND projectTaskId = 5;
 -- NEW TOTAL: 18-22%
+
+-- For the formula data
+
+-- SUBSTRUCTURE Tasks
+UPDATE taskDetails
+SET quantityFormula = 'area * totalStories * 1.0',
+    unitOfMeasure = 'm3'
+WHERE workItemDetailId IN (1,6,11,16,21,26,31,36);
+
+-- SUPERSTRUCTURE Tasks
+UPDATE taskDetails
+SET quantityFormula = 'area * totalStories * 0.8',
+    unitOfMeasure = 'm3'
+WHERE workItemDetailId IN (2,7,12,17,22,27,32,37);
+
+-- FINISHING Tasks
+UPDATE taskDetails
+SET quantityFormula = 'area * 1.2',
+    unitOfMeasure = 'sqm'
+WHERE workItemDetailId IN (3,8,13,18,23,28,33,38);
+
+-- MEP Tasks
+UPDATE taskDetails
+SET quantityFormula = 'area * totalStories * 0.5',
+    unitOfMeasure = 'units'
+WHERE workItemDetailId IN (4,9,14,19,24,29,34,39);
+
+-- EXTERNAL Tasks
+UPD ATE taskDetails
+SET quantityFormula = 'area * 0.3',
+    unitOfMeasure = 'sqm'
+WHERE workItemDetailId IN (5,10,15,20,25,30,35,40);
+
