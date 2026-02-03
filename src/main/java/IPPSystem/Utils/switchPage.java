@@ -335,7 +335,7 @@ public class switchPage extends utils {
             e.printStackTrace();
         }
     }
-}
+
 
     public void openProjectDetails(projects project){
 
