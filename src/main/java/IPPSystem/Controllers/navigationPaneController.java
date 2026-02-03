@@ -1,11 +1,9 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.Constants.notificationType;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.linkButton;
-import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
@@ -36,7 +34,6 @@ public class navigationPaneController{
     @FXML
 
     VBox root;
-     VBox root;
 
     @FXML
     private StackPane rootStack;
@@ -46,14 +43,13 @@ public class navigationPaneController{
 
     @FXML
     private StackPane modelBox;
-    @FXML
-    protected VBox alertPane;
-
 
 
     protected static users user = session.getInstance().getUser();
 
     protected linkButton linkButton = IPPSystem.Utils.linkButton.getInstance();
+
+
 
     @FXML
     private void initialize(){
@@ -76,7 +72,6 @@ public class navigationPaneController{
             }
         });
 
-        messageBoxService.init(alertPane);
 //        data.getProjectTypes.putAll(database.getAllProjectTypes());
 //        data.getALlProjects.addAll(database.getAllProjects());
 //        data.getALlUsers.addAll(database.getAllUsers());
