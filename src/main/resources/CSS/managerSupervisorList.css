@@ -245,3 +245,21 @@
 }
 
 
+/* Text Field and Input */
+
+.input-field{
+    -fx-background-color:white;
+    -fx-padding: 10;
+    -fx-border-color:#7FB8B6;
+    -fx-border-radius: 10;
+    -fx-border-width:1;
+}
+
+
+.input-field:focused{
+    -fx-background-color:white;
+    -fx-padding: 10;
+    -fx-border-color:#7FB8B6;
+    -fx-border-radius: 10;
+    -fx-border-width:1;
+}

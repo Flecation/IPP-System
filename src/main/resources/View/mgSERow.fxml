@@ -5,7 +5,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -51,17 +50,6 @@
          </children>
       </HBox>
       <Region prefHeight="50.0" prefWidth="208.0" HBox.hgrow="ALWAYS" />
-      <HBox alignment="CENTER" maxWidth="300.0" minWidth="200.0" HBox.hgrow="ALWAYS">
-         <children>
-            <ProgressBar fx:id="currentProjectPrograssBar" minWidth="100.0" progress="0.0" styleClass="managerAccSpProgressCtn" stylesheets="@../CSS/viewAllSiteEngineerList.css" />
-            <Label fx:id="currentProjectPrograssPercent" alignment="TOP_CENTER" prefHeight="15.0" prefWidth="70.0" styleClass="managerAccSpProgressPercentTxt" text="30%">
-               <font>
-                  <Font size="5.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-      <Region prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
       <HBox alignment="CENTER" maxWidth="200.0" minWidth="150.0" spacing="5.0" HBox.hgrow="ALWAYS">
          <children>
             <Button fx:id="mgSEViewBtn" mnemonicParsing="false" onAction="#clickMgSEViewBtn" prefHeight="18.0" prefWidth="53.0" stylesheets="@../CSS/managerSupervisorList.css" text="View">

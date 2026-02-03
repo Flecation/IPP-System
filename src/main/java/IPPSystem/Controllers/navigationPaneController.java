@@ -78,24 +78,6 @@ public class navigationPaneController{
     }
 
 
-//    public void showModal(String fxmlPath) {
-//        try {
-//            Parent modalUI = FXMLLoader.load(getClass().getResource("/View/" + fxmlPath));
-//
-//            AnchorPane.setTopAnchor(modalUI, 0.0);
-//            AnchorPane.setBottomAnchor(modalUI, 0.0);
-//            AnchorPane.setLeftAnchor(modalUI, 0.0);
-//            AnchorPane.setRightAnchor(modalUI, 0.0);
-//
-//            modalLayer.getChildren().setAll(modalUI);
-//            modalLayer.setVisible(true);
-//            modalLayer.toFront();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
     public void showModal(String fxmlPath) {
         try {
             String resourcePath = fxmlPath.startsWith("/") ? fxmlPath : "/View/" + fxmlPath;
@@ -111,13 +93,11 @@ public class navigationPaneController{
             // 1. Clear previous content and add new UI
             modelBox.getChildren().setAll(modalUI);
 
-            // 2. Ensure the StackPane (modelBox) itself is centered in the AnchorPane
-            // These constraints force the modelBox to fill the whole screen
-            // which allows the StackPane's internal alignment to work.
             AnchorPane.setTopAnchor(modelBox, 30.0);
             AnchorPane.setBottomAnchor(modelBox, 30.0);
             AnchorPane.setLeftAnchor(modelBox, 0.0);
             AnchorPane.setRightAnchor(modelBox, 0.0);
+            modelBox.getChildren().setAll(modalUI);
 
             modalLayer.setVisible(true);
             modalLayer.toFront();
@@ -128,7 +108,7 @@ public class navigationPaneController{
 
     public void closeModal() {
         modalLayer.setVisible(false);
-        modalLayer.getChildren().clear();
+
     }
 
 
