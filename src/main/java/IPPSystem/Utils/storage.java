@@ -8,6 +8,11 @@ import IPPSystem.Models.users;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 
 public class storage {
@@ -70,5 +75,30 @@ public class storage {
 
     public ObservableList<labors> getAllLabors() {
         return allLabors;
+    }
+
+    private static final String PROFILE_DIR = "assets/profile/";
+
+
+    public static String saveProfileImage(File source) {
+
+        try {
+            Files.createDirectories(Path.of(PROFILE_DIR));
+
+            String fileName = "profile_" + System.currentTimeMillis() + ".png";
+            Path target = Path.of(PROFILE_DIR + fileName);
+
+            Files.copy(
+                    source.toPath(),
+                    target,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            return target.toString(); // save this to DB
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

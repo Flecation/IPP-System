@@ -10,10 +10,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.HBox;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 public class mgSERowController {
@@ -60,11 +62,19 @@ public class mgSERowController {
 
         mgSENameTxt.setText(engineer.getUserName());
         mgSERoleTxt.setText(engineer.getUserRole());
-        mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+        if(database.currentAssignProject((engineer.getUserId())) == null){
+            mgSEProjectTypeTxt.setText("-");
+        }else{
+            mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+        }
 
 
         String status = engineer.isActive() ? "Active" : "Inactive";
         mgSEActive.setText(status);
+
+
+        mgSEImg.setImage(loadProfileImage(engineer.getUserPhoto()));
+
 
         ASiteEngineerCtn.getStyleClass().removeAll(
                 "managerAccSupervisorCtn",
@@ -80,6 +90,19 @@ public class mgSERowController {
         }
     }
 
+    private Image loadProfileImage(String path) {
+
+        if (path != null && !path.isBlank()) {
+            File f = new File(path);
+            if (f.exists()) {
+                return new Image(f.toURI().toString());
+            }
+        }
+
+        return new Image(
+                getClass().getResource("/assets/profile/default.png").toExternalForm()
+        );
+    }
 
 
 
