@@ -13,6 +13,11 @@ public class DailyReport {
     private String projectName;
     private String supervisorName;
 
+    // ==== No-arg constructor ထပ်ထည့်မယ် ====
+    public DailyReport() {
+        // Empty constructor for database operations
+    }
+
     // Constructor for Saving (Create)
     public DailyReport(int assignProjectId, LocalDate reportDate, String weatherType, String workAffect, String weatherNote, String issues, String comments, int supervisorId) {
         this.assignProjectId = assignProjectId;
@@ -60,4 +65,22 @@ public class DailyReport {
     public String getIssues() { return issues; }
     public String getComments() { return comments; }
     public int getSupervisorId() { return supervisorId; }
+
+    // ==== Setters ထပ်ထည့်မယ် ====
+    public void setReportId(int reportId) { this.reportId = reportId; }
+    public void setProjectName(String projectName) { this.projectName = projectName; }
+    public void setSupervisorName(String supervisorName) { this.supervisorName = supervisorName; }
+    public void setAssignProjectId(int assignProjectId) { this.assignProjectId = assignProjectId; }
+    public void setReportDate(LocalDate reportDate) { this.reportDate = reportDate; }
+    public void setWeatherType(String weatherType) { this.weatherType = weatherType; }
+    public void setWorkAffect(String workAffect) { this.workAffect = workAffect; }
+    public void setWeatherNote(String weatherNote) { this.weatherNote = weatherNote; }
+    public void setIssues(String issues) { this.issues = issues; }
+    public void setComments(String comments) { this.comments = comments; }
+    public void setSupervisorId(int supervisorId) { this.supervisorId = supervisorId; }
+
+    // ==== Additional method for formatted date display ====
+    public String getFormattedDate(String pattern) {
+        return reportDate.format(java.time.format.DateTimeFormatter.ofPattern(pattern));
+    }
 }

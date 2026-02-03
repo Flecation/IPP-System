@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class database {
 
-//    for the users database ( manager / supervisors ) of useful get function
+    //    for the users database ( manager / supervisors ) of useful get function
 
     public static ObservableList<users> getAllUsers(){return  userDatabase.getAllUser();}
 
@@ -28,7 +30,7 @@ public class database {
     public static boolean createUser(users users){return userDatabase.addUser(users);}
 
 
-//    For the labors functions
+    //    For the labors functions
 
     public static ObservableList<labors> getAllLabors(){return laborDatabase.getAllLabors();}
 
@@ -54,28 +56,28 @@ public class database {
 
     public static boolean resignLabor(int laborId){return  laborDatabase.resignLabor(laborId);}
     public  static  List<String> getAllSkills(){return laborDatabase.getAllSkills();}
-    
-    
-//    For the project types
+
+
+    //    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 
-//    For the project building
+    //    For the project building
     public static HashMap<Integer,String> getAllBuildings(){return otherRequireDatabase.getAllBuilding();}
 
     public static HashMap<Integer,String> getAllBuildingByProjectTypeId(int projectTypeId){return otherRequireDatabase.getBuildingNameByProjectId(projectTypeId);}
 
-//    For the project levels
+    //    For the project levels
     public static HashMap<Integer,String> getAllLevels(){return otherRequireDatabase.getAllLevel();}
 
     public static HashMap<Integer,String> getAllLevelByProjectTypeId(int projectTypeId){return otherRequireDatabase.getLevelByProjectId(projectTypeId);}
 
-//    For the Project skills
+    //    For the Project skills
 
     public static ObservableList<skills> getAllSkill(){return skillDatabase.getAllSkills();}
 
     public static ObservableList<skills> getSkillDetails(int projectTypeId,int workItemId){return skillDatabase.getSkillByWorkItem(projectTypeId,workItemId);}
 
-//    For the project tasks
+    //    For the project tasks
 
     public static boolean editAssignTasks(tasks task, assignStatus status){return taskDatabase.addTaskDetailRecord(task,status);}
 
@@ -89,7 +91,7 @@ public class database {
 
     public static void callUpdateProjectBaseline(int projectId, Double cost, LocalDate startDate, LocalDate endDate, Double duration){projectDatabase.callUpdateProjectBaseline(projectId,cost, Date.valueOf(startDate),Date.valueOf(endDate),duration);}
 
-//    For the WorkItems functions
+    //    For the WorkItems functions
 
     public static ObservableList<workItems> getAllWorkItemsForAutoGeneration(int projectTypeId,int buildingId, int levelId){return workItemDatabase.getAllWorkItemDetails(projectTypeId,buildingId,levelId);}
 
@@ -105,7 +107,7 @@ public class database {
 
     public static boolean setSkillsToWorkItem(skills skill,assignStatus status){return workItemDatabase.addSkillToWorkItem(skill,status);}
 
-//    For the project functions
+    //    For the project functions
 
     public static boolean deleteAssignProject(int assignProjectId){return projectDatabase.deleteAssignProject(assignProjectId);}
 
@@ -119,24 +121,61 @@ public class database {
 
     public  static  String currentAssignProject(int userId){return  projectDatabase.currentAssignProject(userId);}
 
-    public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId     );}
+    public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId);}
 
 
-//    For the Status Require functions
+    //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
 
     //    For project detail
-    
+
     // Current Project Workload
     public static double getWorkload(int userId) {
         return calculationDatabase.getWorkload(userId);
     }
 
-        // Historical Performance
+    // Historical Performance
     public static double getPerformance(int userId) {
         return calculationDatabase.getHistoryPerformance(userId);
+    }
+
+    // ======================== NEW METHODS FOR SUPERVISOR REPORT ========================
+
+    // For Supervisor Report Functions
+
+    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getFilteredReports(supervisorId, projectId, startDate, endDate);
+    }
+
+    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
+        return reportDatabase.getProjectsBySupervisorAndStatus(supervisorId, status);
+    }
+
+    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getReportStatistics(supervisorId, projectId, startDate, endDate);
+    }
+
+    // Existing report methods
+    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
+        return reportDatabase.getAllReports(supervisorId);
+    }
+
+    public static ArrayList<DailyReport> getAllReportsForManager() {
+        return reportDatabase.getAllReportsForManager();
+    }
+
+    public static DailyReport getReportById(int reportId) {
+        return reportDatabase.getReportById(reportId);
+    }
+
+    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
+        return reportDatabase.getProjectListForSupervisor(supervisorId);
+    }
+
+    public static int getProjectIdByName(String projectName, int supervisorId) {
+        return reportDatabase.getProjectIdByName(projectName, supervisorId);
     }
 }
