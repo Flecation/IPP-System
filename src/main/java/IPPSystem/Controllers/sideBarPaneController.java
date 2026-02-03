@@ -439,10 +439,11 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
-            System.out.println();
+            utils.openFxml("report.fxml", loadPane);
+            linkButton.setTabButtonName("Report");
         });
         reportIconBtn.setOnMouseClicked(e -> {
-            System.out.println();
+            utils.openFxml("report.fxml", loadPane);
         });
     }
 
