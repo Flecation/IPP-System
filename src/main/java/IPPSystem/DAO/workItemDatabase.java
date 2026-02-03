@@ -30,17 +30,17 @@ public class workItemDatabase {
             cstmt.setInt(1,assignProjectId);
             ResultSet rs = cstmt.executeQuery();
             while (rs.next()){
-                    workItems.add(new workItems(
-                            rs.getInt("assignWorkItemId"),
-                            rs.getString("workItemName"),
-                            rs.getString("workItemStatus"),
-                            rs.getString("assignStatus"),
-                            rs.getDouble("cost"),
-                            rs.getDouble("laborQty"),
-                            rs.getDouble("duration"),
-                            rs.getDate("startDate"),
-                            rs.getDate("endDate")
-                    ));
+                workItems.add(new workItems(
+                        rs.getInt("assignWorkItemId"),
+                        rs.getString("workItemName"),
+                        rs.getString("workItemStatus"),
+                        rs.getString("assignStatus"),
+                        rs.getDouble("cost"),
+                        rs.getDouble("laborQty"),
+                        rs.getDouble("duration"),
+                        rs.getDate("startDate"),
+                        rs.getDate("endDate")
+                ));
 
             }
         } catch (SQLException e) {
@@ -164,5 +164,36 @@ public class workItemDatabase {
         }
     }
 
+
+    /**
+     * Inserts a new baseline/detail record for an assigned work item.
+     * Backed by stored procedure: updateWorkItemBaseline(assignWorkItemId, cost, laborQty, duration, startDate, endDate)
+     */
+    public static void callUpdateWorkItemBaseline(int assignWorkItemId, double cost, double laborQty, double duration, Date startDate, Date endDate) {
+        String sql = "{CALL updateWorkItemBaseline(?,?,?,?,?,?)}";
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setInt(1, assignWorkItemId);
+            cs.setDouble(2, cost);
+            cs.setDouble(3, laborQty);
+            cs.setDouble(4, duration);
+            cs.setDate(5, startDate);
+            cs.setDate(6, endDate);
+
+            cs.execute();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(extractSqlMessage(e), e);
+        }
+    }
+
+    private static String extractSqlMessage(SQLException e) {
+        // Prefer SQLSTATE 45000 custom errors from SIGNAL MESSAGE_TEXT
+        String msg = e.getMessage();
+        if (msg == null || msg.isBlank()) msg = "Database error";
+        return msg;
+    }
 
 }
