@@ -54,17 +54,17 @@ public class database {
 
     public static boolean resignLabor(int laborId){return  laborDatabase.resignLabor(laborId);}
     public  static  List<String> getAllSkills(){return laborDatabase.getAllSkills();}
-
-
-    //    For the project types
+    
+    
+//    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 
-    //    For the project building
+//    For the project building
     public static HashMap<Integer,String> getAllBuildings(){return otherRequireDatabase.getAllBuilding();}
 
     public static HashMap<Integer,String> getAllBuildingByProjectTypeId(int projectTypeId){return otherRequireDatabase.getBuildingNameByProjectId(projectTypeId);}
 
-    //    For the project levels
+//    For the project levels
     public static HashMap<Integer,String> getAllLevels(){return otherRequireDatabase.getAllLevel();}
 
     public static HashMap<Integer,String> getAllLevelByProjectTypeId(int projectTypeId){return otherRequireDatabase.getLevelByProjectId(projectTypeId);}
@@ -124,21 +124,58 @@ public class database {
     public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId     );}
 
 
-    //    For the Status Require functions
+//    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
 
     //    For project detail
-
+    
     // Current Project Workload
     public static double getWorkload(int userId) {
         return calculationDatabase.getWorkload(userId);
     }
 
-    // Historical Performance
+        // Historical Performance
     public static double getPerformance(int userId) {
         return calculationDatabase.getHistoryPerformance(userId);
+    }
+
+    // ======================== NEW METHODS FOR SUPERVISOR REPORT ========================
+
+    // For Supervisor Report Functions
+
+    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getFilteredReports(supervisorId, projectId, startDate, endDate);
+    }
+
+    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
+        return reportDatabase.getProjectsBySupervisorAndStatus(supervisorId, status);
+    }
+
+    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getReportStatistics(supervisorId, projectId, startDate, endDate);
+    }
+
+    // Existing report methods
+    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
+        return reportDatabase.getAllReports(supervisorId);
+    }
+
+    public static ArrayList<DailyReport> getAllReportsForManager() {
+        return reportDatabase.getAllReportsForManager();
+    }
+
+    public static DailyReport getReportById(int reportId) {
+        return reportDatabase.getReportById(reportId);
+    }
+
+    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
+        return reportDatabase.getProjectListForSupervisor(supervisorId);
+    }
+
+    public static int getProjectIdByName(String projectName, int supervisorId) {
+        return reportDatabase.getProjectIdByName(projectName, supervisorId);
     }
 }
