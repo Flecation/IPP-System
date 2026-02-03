@@ -4,22 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="personal detail">
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborRowController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/laborRow.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/active.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/newhire.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/totallabor.png" afterDir="false" />
+    <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="project database">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/calculationDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/calculationDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/labors.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/workItemDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/workItemDetails.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/procedure.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +118,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Hsu-Myat-Rain&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/hsumyatmoe/Documents/ippsystem/src/main/resources/icons&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -151,13 +146,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -503,7 +491,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769567204797</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="project database">
+      <option name="closed" value="true" />
+      <created>1770059121781</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1770059121781</updated>
+    </task>
+    <task id="LOCAL-00044" summary="project database">
+      <option name="closed" value="true" />
+      <created>1770059191521</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1770059191521</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -525,7 +529,8 @@
     <MESSAGE value="navigationPane" />
     <MESSAGE value="c" />
     <MESSAGE value="personal detail" />
-    <option name="LAST_COMMIT_MESSAGE" value="personal detail" />
+    <MESSAGE value="project database" />
+    <option name="LAST_COMMIT_MESSAGE" value="project database" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

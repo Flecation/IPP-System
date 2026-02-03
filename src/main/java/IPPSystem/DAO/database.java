@@ -54,17 +54,17 @@ public class database {
 
     public static boolean resignLabor(int laborId){return  laborDatabase.resignLabor(laborId);}
     public  static  List<String> getAllSkills(){return laborDatabase.getAllSkills();}
-    
-    
-//    For the project types
+
+
+    //    For the project types
     public static HashMap<Integer,String> getAllProjectTypes(){return otherRequireDatabase.getAllProjectType();}
 
-//    For the project building
+    //    For the project building
     public static HashMap<Integer,String> getAllBuildings(){return otherRequireDatabase.getAllBuilding();}
 
     public static HashMap<Integer,String> getAllBuildingByProjectTypeId(int projectTypeId){return otherRequireDatabase.getBuildingNameByProjectId(projectTypeId);}
 
-//    For the project levels
+    //    For the project levels
     public static HashMap<Integer,String> getAllLevels(){return otherRequireDatabase.getAllLevel();}
 
     public static HashMap<Integer,String> getAllLevelByProjectTypeId(int projectTypeId){return otherRequireDatabase.getLevelByProjectId(projectTypeId);}
@@ -88,7 +88,9 @@ public class database {
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
     public static void callUpdateProjectBaseline(int projectId, Double cost, LocalDate startDate, LocalDate endDate, Double duration){projectDatabase.callUpdateProjectBaseline(projectId,cost, Date.valueOf(startDate),Date.valueOf(endDate),duration);}
-
+    public static void callUpdateWorkItemBaseline(int assignWorkItemId, Double cost, Double laborQty, Double duration, LocalDate startDate, LocalDate endDate){
+        workItemDatabase.callUpdateWorkItemBaseline(assignWorkItemId, cost, laborQty, duration, Date.valueOf(startDate), Date.valueOf(endDate));
+    }
 //    For the WorkItems functions
 
     public static ObservableList<workItems> getAllWorkItemsForAutoGeneration(int projectTypeId,int buildingId, int levelId){return workItemDatabase.getAllWorkItemDetails(projectTypeId,buildingId,levelId);}
@@ -122,20 +124,20 @@ public class database {
     public  static List<projects> getProjectsByEngineer(int engineerId){return projectDatabase.getProjectsByEngineer(engineerId     );}
 
 
-//    For the Status Require functions
+    //    For the Status Require functions
     public static HashMap<Integer,String> getAllAssignStatus(){return otherRequireDatabase.getAssignStatus();}
 
     public static HashMap<Integer,String> getAllProjectStatus(){return otherRequireDatabase.getProjectStatus();}
 
 
     //    For project detail
-    
+
     // Current Project Workload
     public static double getWorkload(int userId) {
         return calculationDatabase.getWorkload(userId);
     }
 
-        // Historical Performance
+    // Historical Performance
     public static double getPerformance(int userId) {
         return calculationDatabase.getHistoryPerformance(userId);
     }
