@@ -1494,7 +1494,9 @@ BEGIN
     DECLARE v_totalDays INT DEFAULT 0;
     DECLARE v_elapsedDays INT DEFAULT 0;
     DECLARE v_reportedDays INT DEFAULT 0;
-    DECLARE v_latestReportDate INT DEFAULT 0;
+
+    -- FIX: this should be DATE (not INT)
+    DECLARE v_latestReportDate DATE DEFAULT NULL;
 
     DECLARE v_totalWorkItems INT DEFAULT 0;
     DECLARE v_completedWorkItems INT DEFAULT 0;
@@ -1527,8 +1529,9 @@ BEGIN
             LEAST(v_totalDays, GREATEST(0, DATEDIFF(p_asOfDate, v_start) + 1));
     END IF;
 
--- For the max report date
-    SELECT MAX(reportDate) into v_latestReportDate
+    /* Latest report date (optional) */
+    SELECT MAX(reportDate)
+    INTO v_latestReportDate
     FROM dailyReports
     WHERE assignProjectId = p_assignProjectId;
 
@@ -1618,14 +1621,16 @@ BEGIN
     SET CPI = IF(AC = 0, NULL, EV / AC);
     SET SPI = IF(PV = 0, NULL, EV / PV);
 
+    -- FIX: elapsedDays must be v_elapsedDays (not latestReportDate)
     SELECT
         BAC, PV, EV, AC, CPI, SPI,
         v_progress AS progressRatio,
         v_start AS baselineStart,
         v_end AS baselineEnd,
-        v_latestReportDate AS elapsedDays,
+        v_elapsedDays AS elapsedDays,
         v_totalDays AS totalDays,
         v_reportedDays AS reportedDays,
+        v_latestReportDate AS latestReportDate,
         v_completedWorkItems AS completedWorkItems,
         v_totalWorkItems AS totalWorkItems,
         p_asOfDate AS asOfDate;

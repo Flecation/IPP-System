@@ -151,7 +151,7 @@ public class projectDatabase {
 
     public static String currentAssignProject(int userId) {
         try {
-            String sql = "SELECT projectInstanceName FROM assignProjects WHERE managerId = ? AND projectStatus = ?";
+            String sql = "SELECT projectInstanceName FROM assignProjects WHERE supervisorId = ? AND projectStatus = ?";
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, userId);
