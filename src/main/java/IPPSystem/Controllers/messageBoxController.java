@@ -9,12 +9,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class messageBoxController {
+
+    @FXML
+    private StackPane messageBoxRoot;
+
     @FXML
     VBox confirmMessageBox;
 
@@ -32,9 +37,8 @@ public class messageBoxController {
 
     public messageBoxController(){}
 
-    public void confirmMessage(Parent root,String title,String message,notificationType type, Runnable onCleanup){
-        parent = root;
-        this.onCleanup = onCleanup;
+    public void confirmMessage(String title, String message, notificationType type,
+                               Runnable onConfirm, Runnable onCancel) {
 
         FontIcon icon = switch (type) {
             case WARNING -> new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
@@ -49,29 +53,27 @@ public class messageBoxController {
         confirmMessageTitle.setText(title);
         confirmMessageLbl.setText(message);
 
+        // show root and block clicks (modal)
+        messageBoxRoot.setVisible(true);
+        messageBoxRoot.setManaged(true);
+        messageBoxRoot.setMouseTransparent(false);
+
+        toastBox.setVisible(false);
         confirmMessageBox.setVisible(true);
 
-        if (confirmMessageCancelBtn != null) {
-            confirmMessageCancelBtn.setOnAction(e -> {
-                confirmMessageBox.setVisible(false);
-                closeOverlay(confirmMessageBox);
-                if (this.onCleanup != null) this.onCleanup.run();
-            });
-        }
-        if (confirmMessageConfirmBtn != null) {
-            confirmMessageConfirmBtn.setOnAction(e -> {
-                confirmMessageBox.setVisible(false);
-                closeOverlay(confirmMessageBox);
-                if (this.onCleanup != null) this.onCleanup.run();
-            });
-        }
+        confirmMessageCancelBtn.setOnAction(e -> {
+            hideAll();
+            if (onCancel != null) onCancel.run();
+        });
+
+        confirmMessageConfirmBtn.setOnAction(e -> {
+            hideAll();
+            if (onConfirm != null) onConfirm.run();
+        });
     }
 
-    public void toastMessage(Parent root, String title, String message, notificationType type, Runnable onCleanup) {
-        // Create the icon using Ikonli
-        parent = root;
+    public void toastMessage(String title, String message, notificationType type, Runnable onCleanup) {
         this.onCleanup = onCleanup;
-
         FontIcon icon = switch (type) {
             case WARNING -> new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
             case SUCCESS -> new FontIcon(FontAwesomeSolid.CHECK);
@@ -83,11 +85,18 @@ public class messageBoxController {
         toastIcon.setText("");
 
         toastBox.getStyleClass().removeAll("warning-toast","wrong-toast","success-toast","info-toast");
-        toastBox.getStyleClass().add( type.toString()+ "-toast");
+        toastBox.getStyleClass().add(type.toString() + "-toast");
 
         toastTitle.setText(title);
         toastMessage.setText(message);
-        showAlert(toastBox);
+
+        // show root, but don't block clicks
+        messageBoxRoot.setVisible(true);
+        messageBoxRoot.setManaged(true);
+        messageBoxRoot.setMouseTransparent(true);
+
+        confirmMessageBox.setVisible(false);
+        showToastAnimation();
     }
 
     private void showAlert(Parent box){
@@ -137,4 +146,56 @@ public class messageBoxController {
             }
         }
     }
+
+    private void showToastAnimation() {
+        toastBox.applyCss();
+        toastBox.layout();
+
+        toastBox.setVisible(true);
+        toastBox.setManaged(true);
+
+        double hiddenY = -120.0;
+        toastBox.setTranslateY(hiddenY);
+
+        TranslateTransition down = new TranslateTransition(Duration.millis(400), toastBox);
+        down.setFromY(hiddenY);
+        down.setToY(0);
+
+        PauseTransition stay = new PauseTransition(Duration.millis(1200));
+
+        TranslateTransition up = new TranslateTransition(Duration.millis(400), toastBox);
+        up.setFromY(0);
+        up.setToY(hiddenY);
+
+        down.play();
+        down.setOnFinished(e -> stay.play());
+        stay.setOnFinished(e -> up.play());
+        up.setOnFinished(e -> {
+            toastBox.setVisible(false);
+            toastBox.setManaged(false);
+            hideRootIfNothingVisible();
+            if (onCleanup != null) onCleanup.run();
+        });
+    }
+
+    private void hideAll() {
+        confirmMessageBox.setVisible(false);
+        confirmMessageBox.setManaged(false);
+
+        toastBox.setVisible(false);
+        toastBox.setManaged(false);
+
+        messageBoxRoot.setVisible(false);
+        messageBoxRoot.setManaged(false);
+        messageBoxRoot.setMouseTransparent(true);
+    }
+
+    private void hideRootIfNothingVisible() {
+        if (!confirmMessageBox.isVisible() && !toastBox.isVisible()) {
+            messageBoxRoot.setVisible(false);
+            messageBoxRoot.setManaged(false);
+            messageBoxRoot.setMouseTransparent(true);
+        }
+    }
+
 }

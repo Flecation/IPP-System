@@ -62,37 +62,10 @@ public class projectCardController {
         projectStatus.setText(p.getProjectStatus());
         projectType.setText(p.getProjectTypeName());
         projectName.setText(p.getProjectInstanceName());
-        detailsBtn.setOnMouseClicked(event -> showDetails());
+        detailsBtn.setOnMouseClicked(event -> utils.openProjectDetails(project,pane));
         applyStatusStyle(p.getProjectStatus());
     }
 
-    private void showDetails(){
-
-        if (loadPane == null) {
-            return;
-        }
-
-        String fxml = (detailsFxml == null || detailsFxml.isBlank()) ? "projectDetails.fxml" : detailsFxml;
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
-            Parent newContent = loader.load();
-
-            projectDetailsController controller = loader.getController();
-            controller.setProjectData(project);
-
-            if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
-            }
-
-            loadPane.getChildren().setAll(newContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 

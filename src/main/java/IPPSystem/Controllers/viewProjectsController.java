@@ -1,5 +1,6 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -13,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class viewProjectsController extends sideBarPaneController {
+
+
 
     @FXML
     private VBox viewProjectPane;
