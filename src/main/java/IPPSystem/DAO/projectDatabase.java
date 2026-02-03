@@ -35,10 +35,10 @@ public class projectDatabase {
                         rs.getString("projectInstanceName"),
                         rs.getInt("projectTypeId"),
                         rs.getString("projectTypeName"),
-                        rs.getInt("buildingId"),
-                        rs.getString("buildingName"),
                         rs.getInt("levelId"),
                         rs.getString("levelName"),
+                        rs.getInt("buildingId"),
+                        rs.getString("buildingName"),
                         rs.getInt("userId"),
                         rs.getString("userName"),
                         rs.getDouble("projectArea"),
@@ -92,7 +92,7 @@ public class projectDatabase {
     //to assign the project
     public static boolean assignProjects(projects assign, projectStatus projectStatus, assignStatus assignStatus){
         try {
-            CallableStatement cstmt = con.prepareCall("{CALL assignProjects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{CALL assignFullProject(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cstmt.setInt(1,assign.getProjectTypeId());
             cstmt.setString(2,assign.getProjectInstanceName());
             cstmt.setInt(3,assign.getProjectBuildingId());
@@ -106,12 +106,10 @@ public class projectDatabase {
             cstmt.setDouble(11,assign.getProjectOverHeadCost());
             cstmt.setString(12, projectStatus.toString());
             cstmt.setString(13,assignStatus.toString());
-            cstmt.setDouble(14,assign.getProjectCost());
-            cstmt.setDouble(15,assign.getProjectLaborQty());
-            cstmt.setDouble(16,assign.getProjectDuration());
-            cstmt.setDate(17,assign.getStartDate());
-            cstmt.setDate(18,assign.getEndDate());
-            return cstmt.execute();
+            cstmt.setDate(14,assign.getStartDate());
+            cstmt.setDate(15,assign.getEndDate());
+            ResultSet rs = cstmt.executeQuery();
+            return rs.next() && rs.getBoolean(1);
 
 
         } catch (SQLException e) {
@@ -121,7 +119,7 @@ public class projectDatabase {
     }
 
     public static boolean updateAssignProject(projects assign,assignStatus assignStatus){
-        try(CallableStatement cs = con.prepareCall("")){
+        try(CallableStatement cs = con.prepareCall("{CALL updateAssignProject(?,?,?,?,?,?,?)}")){
             cs.setInt(1,assign.getAssignProjectId());
             cs.setString(2,assignStatus.toString());
             cs.setDouble(3,assign.getProjectCost());
@@ -129,7 +127,8 @@ public class projectDatabase {
             cs.setDouble(5,assign.getProjectDuration());
             cs.setDate(6,assign.getStartDate());
             cs.setDate(7,assign.getEndDate());
-            return cs.execute();
+            ResultSet rs = cs.executeQuery();
+            return rs.next() && rs.getBoolean(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -156,7 +155,7 @@ public class projectDatabase {
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, userId);
-            pstmt.setInt(2, 2);
+            pstmt.setInt(2, 2); // 2 = inProgressing;
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -218,6 +217,27 @@ public class projectDatabase {
         }
 
         return list;
+    }
+
+    public static void callUpdateProjectBaseline(int projectId, double cost,
+                                                 Date start, Date end,
+                                                 double duration) {
+        String sql = "{CALL updateProjectBaseline(?,?,?,?,?)}";
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setInt(1, projectId);
+            cs.setDouble(2, cost);
+            cs.setDate(3, start);
+            cs.setDate(4, end);
+            cs.setDouble(5, duration);
+
+            cs.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+//            aa
+        }
     }
 
 

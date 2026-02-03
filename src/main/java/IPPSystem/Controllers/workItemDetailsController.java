@@ -1,25 +1,36 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.skills;
 import IPPSystem.Models.tasks;
 import IPPSystem.Models.workItems;
+import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.utils;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 
-public class workItemDetailsController {
+/**
+ * Work Item Details screen controller.
+ *
+ * NOTE:
+ * - This controller is intentionally "view-only" to match the current FXML.
+ * - If you later add an edit panel, you can re-introduce edit fields + handlers.
+ */
+public class workItemDetailsController extends viewProjectsController {
 
+    // ===== Header =====
+    @FXML private Button backToProjectDetails;
+
+    // ===== KPI cards =====
     @FXML private Label actualCost;
     @FXML private Label actualCostPercent;
     @FXML private ProgressBar actualCostProgress;
@@ -31,6 +42,7 @@ public class workItemDetailsController {
     @FXML private Label totalEarnValue;
     @FXML private Label usedEarnValue;
 
+    // ===== SPI / CPI =====
     @FXML private Label spiStatusLbl;
     @FXML private Circle spiCircle;
     @FXML private Label spiCircleRate;
@@ -39,22 +51,7 @@ public class workItemDetailsController {
     @FXML private Circle cpiCircle;
     @FXML private Label cpiCircleRate;
 
-    @FXML private VBox editShowSkillBox;
-    @FXML private VBox editWorkItemInfo;
-
-    @FXML private TextField editBudgetTxt;
-    @FXML private TextField editLaborQtyTxt;
-    @FXML private TextField editDurationTxt;
-
-    @FXML private Label editActualStartDateLbl;
-    @FXML private Label editActualEndDateLbl;
-
-    @FXML private TextField editPlanStartDateTxt;
-    @FXML private TextField editPlanEndDateTxt;
-
-    @FXML private Button editConfirmBtn;
-    @FXML private Button editRevertBtn;
-
+    // ===== Work item info (view-only) =====
     @FXML private VBox viewOnlyWorkItemInfo;
     @FXML private Label viewBudget;
     @FXML private Label viewPlanStartDate;
@@ -64,134 +61,138 @@ public class workItemDetailsController {
     @FXML private Label viewDuration;
     @FXML private Label viewTotalLabors;
 
+    // ===== Skill table =====
     @FXML private TableView<skills> viewSkillTable;
     @FXML private TableColumn<skills, String> viewSkillCol;
     @FXML private TableColumn<skills, Double> viewQtyCol;
 
+    // ===== Task table =====
     @FXML private TableView<tasks> taskTable;
     @FXML private TableColumn<tasks, String> taskNameCol;
     @FXML private TableColumn<tasks, Double> taskDurationCol;
     @FXML private TableColumn<tasks, Date> taskPlanStartDateCol;
     @FXML private TableColumn<tasks, Date> taskPlanEndDateCol;
-    @FXML private TableColumn<tasks, Date> taskActualStartDate;
-    @FXML private TableColumn<tasks, Date> taskActualEndDateCol;
     @FXML private TableColumn<tasks, String> TaskStatusCol;
-    @FXML private TableColumn<tasks, Button> taskActionCol;
-
-    @FXML private Button backBtn;
 
     private workItems workItem;
+    private final calculationHelper helper = calculationHelper.getInstance();
+    private projects parentProject;
 
     @FXML
-    private void initialize() {
+    public void initialize() {
+
+        // ---- Task table mapping (keep your model property names) ----
         if (taskNameCol != null) taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         if (taskDurationCol != null) taskDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
         if (taskPlanStartDateCol != null) taskPlanStartDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskPlanEndDateCol != null) taskPlanEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        if (taskActualStartDate != null) taskActualStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-        if (taskActualEndDateCol != null) taskActualEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         if (TaskStatusCol != null) TaskStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
 
+        // ---- Skill table ----
         if (viewSkillCol != null) viewSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
         if (viewQtyCol != null) viewQtyCol.setCellValueFactory(new PropertyValueFactory<>("projectLaborQty"));
 
-        if (editConfirmBtn != null) editConfirmBtn.setOnAction(e -> onConfirmEdits());
-        if (editRevertBtn != null) editRevertBtn.setOnAction(e -> loadWorkItemIntoEditFields(workItem));
+        // Nice placeholders
+        if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
+        if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
+
+        // Back button
+        if (backToProjectDetails != null) {
+            backToProjectDetails.setOnAction(e -> utils.openProjectDetails(parentProject,null));
+        }
     }
 
-    public void setWorkItem(workItems item) {
+    /**
+     * Call this after loading the FXML to populate the screen.
+     */
+    public void setWorkItem(workItems item, projects project) {
+        this.parentProject = project;
         this.workItem = item;
         if (item == null) return;
 
-        loadWorkItemIntoEditFields(item);
-        loadWorkItemIntoViewFields(item);
+        // Show/Hide the "Edit" ability here later if you add it.
+        // For now: just keep view-only visible.
+        if (viewOnlyWorkItemInfo != null) viewOnlyWorkItemInfo.setVisible(true);
 
+        // Load tables
         if (taskTable != null) {
             taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
         }
-
         if (viewSkillTable != null) {
-            viewSkillTable.setItems(database.getAllAssignWorkItemDetails(item.getAssignWorkItemId()));
+            viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
         }
 
-        // Basic cost/EV placeholders (your model doesn't have actual vs planned cost yet)
-        double total = Math.max(0, item.getProjectCost());
-        double used = total; // placeholder: 100% used
-        double progress01 = total == 0 ? 0 : used / total;
+        // Load baseline fields
+        reloadFieldsFromModel();
 
-        safeSet(totalCost, formatMoney(total));
-        safeSet(totalEarnValue, formatMoney(total));
-        safeSet(actualCost, formatMoney(used));
-        safeSet(usedEarnValue, formatMoney(used));
-
-        safeSet(actualCostPercent, formatPercent(progress01));
-        safeSet(earnValuePercent, formatPercent(progress01));
-
-        if (actualCostProgress != null) actualCostProgress.setProgress(clamp01(progress01));
-        if (earnValueProgress != null) earnValueProgress.setProgress(clamp01(progress01));
-
-        // SPI/CPI placeholders
-        safeSet(spiStatusLbl, "-");
-        safeSet(cpiStatusLbl, "-");
-        safeSet(spiCircleRate, "-");
-        safeSet(cpiCircleRate, "-");
+        // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
+        loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
     }
 
-    private void loadWorkItemIntoEditFields(workItems item) {
-        if (item == null) return;
+    private void loadDashboardAsync(int assignWorkItemId, LocalDate asOf) {
+        Task<calculationHelper.ProjectDashboard> task = new Task<>() {
+            @Override
+            protected calculationHelper.ProjectDashboard call() {
+                return helper.getWorkItemDashboardOnlyNumbers(assignWorkItemId, asOf);
+            }
 
-        if (editBudgetTxt != null) editBudgetTxt.setText(String.valueOf(item.getProjectCost()));
-        if (editLaborQtyTxt != null) editLaborQtyTxt.setText(String.valueOf(item.getProjectLaborQty()));
-        if (editDurationTxt != null) editDurationTxt.setText(String.valueOf(item.getProjectDuration()));
+            @Override
+            protected void succeeded() {
+                calculationHelper.ProjectDashboard d = getValue();
+                if (d == null) return;
 
-        safeSet(editActualStartDateLbl, formatDate(item.getStartDate()));
-        safeSet(editActualEndDateLbl, formatDate(item.getEndDate()));
+                double bac = d.bac();   // Budget at Completion
+                double ev  = d.ev();    // Earned Value
+                double ac  = d.ac();    // Actual Cost
 
-        // No planned dates in model right now → just mirror actual
-        if (editPlanStartDateTxt != null) editPlanStartDateTxt.setText(formatDate(item.getStartDate()));
-        if (editPlanEndDateTxt != null) editPlanEndDateTxt.setText(formatDate(item.getEndDate()));
+                // ===== Cost card =====
+                safeSet(totalCost, formatMoney(bac));
+                safeSet(actualCost, formatMoney(ac));
+                safeSet(actualCostPercent, formatPercent(ac, bac));
+                if (actualCostProgress != null) {
+                    actualCostProgress.setProgress(clamp01(bac <= 0 ? 0 : ac / bac));
+                }
+
+                // ===== Earned value card =====
+                safeSet(totalEarnValue, formatMoney(bac));
+                safeSet(usedEarnValue, formatMoney(ev));
+                safeSet(earnValuePercent, formatPercent(ev, bac));
+                if (earnValueProgress != null) {
+                    earnValueProgress.setProgress(clamp01(bac <= 0 ? 0 : ev / bac));
+                }
+
+                // ===== SPI / CPI =====
+                safeSet(spiCircleRate, formatIndex(d.spi()));
+                safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
+                applyCircleProgress(spiCircle, d.spi());
+
+                safeSet(cpiCircleRate, formatIndex(d.cpi()));
+                safeSet(cpiStatusLbl, statusTextForIndex(d.cpi(), false));
+                applyCircleProgress(cpiCircle, d.cpi());
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
     }
 
-    private void loadWorkItemIntoViewFields(workItems item) {
-        if (item == null) return;
-
-        safeSet(viewBudget, formatMoney(item.getProjectCost()));
-        safeSet(viewPlanStartDate, formatDate(item.getStartDate()));
-        safeSet(viewPlanEndDate, formatDate(item.getEndDate()));
-        safeSet(viewActualStartDate, formatDate(item.getStartDate()));
-        safeSet(viewActualEndDate, formatDate(item.getEndDate()));
-        safeSet(viewDuration, formatDuration(item.getProjectDuration()));
-        safeSet(viewTotalLabors, formatQty(item.getProjectLaborQty()));
-    }
-
-    private void onConfirmEdits() {
-        // NOTE: Your DB update functions for workItems aren't implemented in DAO yet,
-        // so here we only refresh UI from the edited fields without saving.
+    private void reloadFieldsFromModel() {
         if (workItem == null) return;
 
-        Double budget = tryParseDouble(readTrim(editBudgetTxt));
-        Double labors = tryParseDouble(readTrim(editLaborQtyTxt));
-        Double duration = tryParseDouble(readTrim(editDurationTxt));
-
-        if (budget != null) workItem.setProjectCost(budget);
-        if (labors != null) workItem.setProjectLaborQty(labors);
-        if (duration != null) workItem.setProjectDuration(duration);
-
-        loadWorkItemIntoViewFields(workItem);
+        // View-only labels
+        safeSet(viewBudget, formatMoney(workItem.getProjectCost()));
+        safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
+        safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
+        safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
+        safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
+        safeSet(viewDuration, formatNumber(workItem.getProjectDuration()));
+        safeSet(viewTotalLabors, formatQty(workItem.getProjectLaborQty()));
     }
 
-    private String readTrim(TextField tf) {
-        if (tf == null || tf.getText() == null) return null;
-        String s = tf.getText().trim();
-        return s.isEmpty() ? null : s;
-    }
-
-    private Double tryParseDouble(String s) {
-        if (s == null) return null;
-        try { return Double.parseDouble(s.replace(",", "")); }
-        catch (NumberFormatException e) { return null; }
-    }
-
+    // ------------------------------
+    // Helper functions
+    // ------------------------------
     private void safeSet(Label lbl, String v) {
         if (lbl != null) lbl.setText(v == null ? "" : v);
     }
@@ -207,22 +208,52 @@ public class workItemDetailsController {
         return new DecimalFormat("#,##0.##").format(value) + " MMK";
     }
 
-    private String formatPercent(double p01) {
-        int pct = (int) Math.round(clamp01(p01) * 100.0);
-        return pct + "%";
-    }
-
-    private String formatDate(Date d) {
-        return d == null ? "-" : d.toString();
-    }
-
-    private String formatDuration(double d) {
-        if (d <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(d);
+    private String formatNumber(double v) {
+        if (v <= 0) return "-";
+        return new DecimalFormat("#,##0.##").format(v);
     }
 
     private String formatQty(double q) {
         if (q <= 0) return "-";
         return new DecimalFormat("#,##0.##").format(q) + " persons";
+    }
+
+    private String formatPercent(double numerator, double denominator) {
+        if (denominator <= 0) return "-";
+        double ratio = numerator / denominator;
+        long pct = Math.round(ratio * 100.0);
+        return pct + "%";
+    }
+
+    private String formatIndex(Double v) {
+        if (v == null) return "-";
+        return new DecimalFormat("0.00").format(v);
+    }
+
+    private String statusTextForIndex(Double idx, boolean isSchedule) {
+        if (idx == null) return "No Data";
+
+        if (isSchedule) {
+            if (idx >= 1.05) return "Ahead of Schedule";
+            if (idx >= 0.95) return "On Schedule";
+            return "Behind Schedule";
+        } else {
+            if (idx >= 1.05) return "Under Budget";
+            if (idx >= 0.95) return "On Budget";
+            return "Over Budget";
+        }
+    }
+
+    private void applyCircleProgress(Circle circle, Double idx) {
+        if (circle == null) return;
+
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+
+        circle.getStrokeDashArray().setAll(circumference);
+
+        // 1.0 => full ring, clamp anything above 1 to full ring
+        double p = (idx == null) ? 0 : clamp01(idx);
+        circle.setStrokeDashOffset(circumference * (1 - p));
     }
 }

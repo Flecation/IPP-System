@@ -39,7 +39,7 @@ public class skillDatabase  {
 
     public static ObservableList<skills> getSkillByWorkItem(int projectTypeId, int workItemId){
         ObservableList<skills> skill = FXCollections.observableArrayList();
-        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?);")){
+        try(CallableStatement cs = con.prepareCall("{CALL getSkillByWorkItem(?,?)}")){
             cs.setInt(1,projectTypeId);
             cs.setInt(2,workItemId);
             ResultSet rs = cs.executeQuery();

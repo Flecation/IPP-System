@@ -22,6 +22,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -33,7 +35,7 @@ public class utils {
 
     private static Parent currentAlertRoot = null;
 
-    private static durationHelper helper = new durationHelper();
+    private static durationHelper durationHelper = new durationHelper();
 
     //setting the tile bar of the exit,mini,restore buttons called from the tileBar class
     public static void setTitleBar(Parent basePane, Button minimizeBtn, Button restoreBtn, Button exitBtn) {
@@ -94,54 +96,7 @@ public class utils {
         focusAnimation.animateUnderline(underline,From,To);
     }
 
-    public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> setAlertBox(root, title, message, type, onlyShow));
-            return;
-        }
 
-        try {
-            Pane targetPane = findOverlayTargetPane(root);
-            if (targetPane == null) {
-                return;
-            }
-
-            // If an old alert is still attached, remove it so the new one always shows
-            if (currentAlertRoot != null && currentAlertRoot.getParent() instanceof Pane oldPane) {
-                oldPane.getChildren().remove(currentAlertRoot);
-            }
-            currentAlertRoot = null;
-            targetPane.getChildren().removeIf(node -> "messageBoxRoot".equals(node.getId()));
-
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
-            Parent msgRoot = loader.load();
-            currentAlertRoot = msgRoot;
-            IPPSystem.Controllers.messageBoxController controller = loader.getController();
-
-            // Make it behave like an overlay (not normal VBox layout)
-            msgRoot.setId("messageBoxRoot");
-            msgRoot.setManaged(true);
-            msgRoot.setLayoutX(0);
-            msgRoot.setLayoutY(0);
-            if (msgRoot instanceof Region region) {
-                region.prefWidthProperty().bind(targetPane.widthProperty());
-                region.prefHeightProperty().bind(targetPane.heightProperty());
-                region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            }
-
-            targetPane.getChildren().add(msgRoot);
-            msgRoot.toFront();
-
-            Runnable cleanup = () -> currentAlertRoot = null;
-            if (onlyShow) {
-                controller.toastMessage(msgRoot, title, message, type, cleanup);
-            } else {
-                controller.confirmMessage(msgRoot, title, message, type, cleanup);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static Pane findOverlayTargetPane(Parent node) {
         if (node == null) {
@@ -195,20 +150,24 @@ public class utils {
         switchPage.getInstance(null).loadProjects(projects, containerPane);
     }
 
-    public static void openWorkItemDetails(workItems items, StackPane a){
-        switchPage.getInstance(a).openWorkItemDetails(items);
+    public static void openProjectDetails(projects project,StackPane a){
+        switchPage.getInstance(a).openProjectDetails(project);
+    }
+
+    public static void openWorkItemDetails(workItems items,projects project, StackPane a){
+        switchPage.getInstance(a).openWorkItemDetails(items,project);
     }
 
     public static void viewUserInfo(users user, StackPane loadPane){
         switchPage.getInstance(null).viewUsersInfo(user);
     }
 
-    public static Double durationFormat(Double duration, enumDuration durationStatus){return helper.durationAssign(duration,durationStatus);}
+    public static Double durationFormat(Double duration, enumDuration durationStatus){return durationHelper.durationAssign(duration,durationStatus);}
 
-    public static HashMap<enumDuration,Double> getDuration(Double duration){return helper.showDuration(duration);}
+    public static HashMap<enumDuration,Double> getDuration(Double duration){return durationHelper.showDuration(duration);}
 
     public static String generateProjectId(int projectId){
-        String result = "pj-";
+        String result = "PRJ-";
         if (projectId >99){
             result += projectId;
         }else if(projectId >9){
@@ -219,11 +178,19 @@ public class utils {
         return result;
     }
 
-    public static void durationShowHelper(projects project,ComboBox<String> durationBox,TextField durationTxt){
-        helper.durationAssignHelper(project,durationBox,durationTxt);
+    public static void durationShowHelper(projects project,ComboBox<enumDuration> durationBox,TextField durationTxt){
+        durationHelper.durationAssignHelper(project,durationBox,durationTxt);
+    }
+
+    public static String getOnlyOneDuration(Double duration,enumDuration durationType){
+        if (durationType.equals(enumDuration.MONTH)) return durationHelper.showMonthDuration(duration);
+        else if (durationType.equals(enumDuration.DAY)) return durationHelper.showDayDuration(duration);
+        else return durationHelper.showYearDuration(duration);
     }
 
     public static String dateFormat(Date date){return dateFormatter.formatDate(date);}
+
+    public static LocalDate toLocalDate(java.sql.Date date){return  dateFormatter.getLocalDate(date);}
 
     public static FontIcon iconSet(FontAwesomeSolid glyph){
         FontIcon icon = new FontIcon(glyph);

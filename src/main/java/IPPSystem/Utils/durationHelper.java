@@ -9,50 +9,66 @@ import java.util.HashMap;
 
 public class durationHelper {
 
-    public Double durationAssign(Double duration, enumDuration durationStatus){
-        if (durationStatus.equals(enumDuration.DAY)){
-              return duration/26; // working Days Per month is 26
-        }else if(durationStatus.equals(enumDuration.MONTH)){
-            return duration;
-        }else {
-            return duration*12;
+    private static final double WORKING_DAYS_PER_MONTH = 26;
+    private static final double MONTHS_PER_YEAR = 12;
+
+    public Double durationAssign(Double duration, enumDuration durationStatus) {
+        switch (durationStatus) {
+            case DAY:
+                return Math.ceil(duration);
+            case MONTH:
+                return Math.ceil(duration * WORKING_DAYS_PER_MONTH);
+            case YEAR:
+                return Math.ceil(duration * WORKING_DAYS_PER_MONTH * MONTHS_PER_YEAR);
+            default:
+                return 0.0;
         }
     }
 
-    public HashMap<enumDuration,Double> showDuration(Double duration){
-        HashMap<enumDuration,Double> result = new HashMap<>();
-        Double year = duration/12;
-        Double day = duration*26;
+    public HashMap<enumDuration, Double> showDuration(Double duration) {
+        HashMap<enumDuration, Double> result = new HashMap<>();
 
-        result.put(enumDuration.DAY,day);
-        result.put(enumDuration.MONTH,duration);
-        result.put(enumDuration.YEAR,year);
+        double month = Math.ceil(duration / WORKING_DAYS_PER_MONTH);
+        double year  = Math.ceil(duration / (WORKING_DAYS_PER_MONTH * MONTHS_PER_YEAR));
+
+        result.put(enumDuration.DAY, Math.ceil(duration));
+        result.put(enumDuration.MONTH, month);
+        result.put(enumDuration.YEAR, year);
 
         return result;
     }
 
-    public void durationAssignHelper(projects project, ComboBox<String> durationComboBox, TextField durationShowTxt){
-        HashMap<enumDuration,Double> getDuration = showDuration(project.getProjectDuration());
-        for (enumDuration s : getDuration.keySet()){
-            durationComboBox.getItems().add(s.toString());
-        }
+    public String showMonthDuration(Double duration) {
+        return Math.ceil(duration / WORKING_DAYS_PER_MONTH) + " Months";
+    }
 
-        durationComboBox.getSelectionModel().selectFirst();
-        durationShowTxt.setText(String.valueOf(project.getProjectDuration()));
-        durationComboBox.setOnAction(e->{
-            // to get duration of Calculate Function
-            Double d = 0.0;
-            if (durationComboBox.getSelectionModel().getSelectedItem().equals(enumDuration.DAY.toString())){
-                d = getDuration.get(enumDuration.DAY);
-            }
-            if (durationComboBox.getSelectionModel().getSelectedItem().equals(enumDuration.MONTH.toString())){
-                d = getDuration.get(enumDuration.MONTH);
-            }
-            if(durationComboBox.getSelectionModel().getSelectedItem().equals(enumDuration.YEAR.toString())){
-                d = getDuration.get(enumDuration.YEAR);
-            }
+    public String showDayDuration(Double duration) {
+        return Math.ceil(duration) + " Days";
+    }
 
+    public String showYearDuration(Double duration) {
+        return Math.ceil(duration / (WORKING_DAYS_PER_MONTH * MONTHS_PER_YEAR)) + " Years";
+    }
+
+    public void durationAssignHelper(projects project,
+                                     ComboBox<enumDuration> durationComboBox,
+                                     TextField durationShowTxt) {
+
+        HashMap<enumDuration, Double> getDuration =
+                showDuration(project.getProjectDuration());
+
+        durationComboBox.getItems().setAll(enumDuration.values());
+        durationComboBox.getSelectionModel().select(enumDuration.DAY);
+
+        durationShowTxt.setText(showDayDuration(project.getProjectDuration()));
+
+        durationComboBox.setOnAction(e -> {
+            enumDuration selected =
+                    durationComboBox.getSelectionModel().getSelectedItem();
+
+            Double d = getDuration.get(selected);
             durationShowTxt.setText(String.valueOf(d));
         });
     }
+
 }

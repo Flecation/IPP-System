@@ -1,5 +1,6 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -298,6 +300,8 @@ public class sideBarPaneController extends navigationPaneController{
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
 
+
+
         // Setup button click handlers
         setupNavigationHandlers();
         setupSidebarToggleHandlers();
@@ -332,6 +336,9 @@ public class sideBarPaneController extends navigationPaneController{
         reloadBtn.setOnMouseClicked(e->data.reload());
 
         setFirstPage();
+
+//        utils.switchNewScene(logoutIcon,"login.fxml");
+
     }
 
     // ... rest of your methods remain the same

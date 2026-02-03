@@ -1,58 +1,81 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Constants.enumDuration;
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.workItems;
 import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 
-import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 
-public class projectDetailsController extends viewProjectsController{
+public class projectDetailsController extends viewProjectsController {
 
-    @FXML private Label completedDay;
-    @FXML private Label completedTask;
-    @FXML private Label cpiEvLbl;
-    @FXML private Label cpiLbl;
-    @FXML private Circle cpiProgressCircle;
-    @FXML private Label cpiPvLbl;
-    @FXML private Label cpiStatusLbl;
-
-    @FXML private Label dayCompleteLbl;
-    @FXML private ProgressBar dayCompleteProgress;
-
-    @FXML private ProgressBar earnValueProgress;
-    @FXML private Label earnedValueLbl;
-
-    @FXML private Label editAddressLbl;
-    @FXML private TextField editAddressTxt;
-    @FXML private Button editConfirmBtn;
-    @FXML private Label editContactLbl;
-    @FXML private TextField editContractTxt;
-    @FXML private Label editDurationLbl;
-    @FXML private TextField editDurationTxt;
-    @FXML private DatePicker editEndDate;
-    @FXML private Label levelLbl;
-    @FXML private TextField editLevelTxt;
-    @FXML private VBox editProjectInfo;
-    @FXML private Button editRevertBtn;
-    @FXML private DatePicker editStartDate;
-
-    @FXML private Label projectGeneral;
+    // ===== Header =====
     @FXML private Label projectName;
     @FXML private Label projectStatus;
+    @FXML private Label projectGeneral;
+    @FXML private Button backToViewProjectBtn;
 
+    // ===== Top cards =====
+    @FXML private Label dayCompleteLbl;
+    @FXML private Label completedDay;
+    @FXML private Label totalDay;
+    @FXML private ProgressBar dayCompleteProgress;
+
+    @FXML private Label wiCompleteLbl;
+    @FXML private Label completedWi;
+    @FXML private Label totalWi;
+    @FXML private ProgressBar wiCompleteProgress;
+
+    @FXML private Label earnedValueLbl;
+    @FXML private Label usedEarnValue;
+    @FXML private Label totalEarnValue;
+    @FXML private ProgressBar earnValueProgress;
+
+    // ===== Project Info (view-only) =====
+    @FXML private VBox viewOnlyProjectInfo;
+    @FXML private Label projectViewLevel;
+    @FXML private Label projectViewStartDate;
+    @FXML private Label projectViewDuration;
+    @FXML private Label projectViewContract;
+    @FXML private Label projectViewEndDate;
+    @FXML private Label projectViewAddress;
+    @FXML private ProgressBar projectProgress;
+    @FXML private Label projectProgressLbl;
+
+
+    // floating labels (your note)
+    @FXML private Label editContactLbl;   // Contract Value label (typo in FXML: Contact)
+    @FXML private Label editDurationLbl;  // Duration label
+    @FXML private Label editAddressLbl;   // Address label
+    @FXML private Label levelLbl;         // exists in FXML header row
+
+    // ===== CPI / SPI widgets =====
+    @FXML private Circle spiProgressCircle;
+    @FXML private Label spiLbl;
+    @FXML private Label spiStatusLbl;
+    @FXML private Label spiPvLbl;
+    @FXML private Label spiEvLbl;
+
+    @FXML private Circle cpiProgressCircle;
+    @FXML private Label cpiLbl;
+    @FXML private Label cpiStatusLbl;
+    @FXML private Label cpiPvLbl;
+    @FXML private Label cpiEvLbl;
+
+    // ===== Work items table =====
     @FXML private TableView<workItems> workItemTable;
     @FXML private TableColumn<workItems, String> workItemNameCol;
     @FXML private TableColumn<workItems, String> workItemStatusCol;
@@ -61,219 +84,160 @@ public class projectDetailsController extends viewProjectsController{
     @FXML private TableColumn<workItems, java.sql.Date> workItemStartCol;
     @FXML private TableColumn<workItems, java.sql.Date> workItemEndCol;
 
-    @FXML private Label projectViewAddress;
-    @FXML private Label projectViewContract;
-    @FXML private Label projectViewDuration;
-    @FXML private Label projectViewEndDate;
-    @FXML private Label projectViewFinishLbl;
-    @FXML private ProgressBar projectViewFinishProgress;
-    @FXML private Label projectViewLevel;
-    @FXML private Label projectViewStartDate;
-
-    @FXML private Label spiEvLbl;
-    @FXML private Label spiLbl;
-    @FXML private Circle spiProgressCircle;
-    @FXML private Label spiPvLbl;
-    @FXML private Label spiStatusLbl;
-
-    @FXML private Label taskCompleteLbl;
-    @FXML private ProgressBar taskCompleteProgress;
-
-    @FXML private Label totalDay;
-    @FXML private Label totalEarnValue;
-    @FXML private Label totalTask;
-    @FXML private Label usedEarnValue;
-
-    @FXML private VBox viewOnlyProjectInfo;
-
-    @FXML private ComboBox<String> durationComboBox;
+    @FXML private Button pDetailEditBtn;
 
     private projects project;
-
-    private calculationHelper calculate = calculationHelper.getInstance();
+    private final calculationHelper helper = calculationHelper.getInstance();
 
     @FXML
     public void initialize() {
 
-        utils.setFloatTextFieldStyle(editAddressLbl,editAddressTxt);
-        utils.setFloatTextFieldStyle(editDurationLbl,editDurationTxt);
-        utils.setFloatTextFieldStyle(editContactLbl,editContractTxt);
-        if (editConfirmBtn != null) {
-            editConfirmBtn.setOnAction(e -> onConfirmEdits());
-        }
-        if (editRevertBtn != null) {
-            editRevertBtn.setOnAction(e -> loadProjectIntoEditFields(project));
+        pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
+        pDetailEditBtn.setOnAction(e->{
+            messageBoxService.toast("Not Allow To Edit",
+                    "If you want to edit buy Premium!!",
+                    notificationType.WARNING);});
+        if (backToViewProjectBtn != null) {
+            backToViewProjectBtn.setOnAction(e -> utils.openFxml("viewProjects.fxml", null));
         }
 
-        if (workItemNameCol != null) workItemNameCol.setCellValueFactory(new PropertyValueFactory<>("workItemName"));
-        if (workItemStatusCol != null) workItemStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
-        if (workItemCostCol != null) workItemCostCol.setCellValueFactory(new PropertyValueFactory<>("projectCost"));
-        if (workItemDurationCol != null) workItemDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
-        if (workItemStartCol != null) workItemStartCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-        if (workItemEndCol != null) workItemEndCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        // Double-click open work item details
         if (workItemTable != null) {
             workItemTable.setRowFactory(tv -> {
                 TableRow<workItems> row = new TableRow<>();
                 row.setOnMouseClicked(e -> {
                     if (e.getClickCount() == 2 && !row.isEmpty()) {
-                       utils.openWorkItemDetails(row.getItem(),null);
+                        utils.openWorkItemDetails(row.getItem(),project, null);
                     }
                 });
                 return row;
             });
         }
-        if (editConfirmBtn != null) editConfirmBtn.setOnAction(e -> onConfirmEdits());
-        if (editRevertBtn != null) editRevertBtn.setOnAction(e -> loadProjectIntoEditFields(project));
     }
 
     public void setProjectData(projects project) {
         this.project = project;
         if (project == null) return;
 
-        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
-            editProjectInfo.setVisible(false);
-            viewOnlyProjectInfo.setVisible(true);
+        // Toggle view/edit by role (your old logic)
+        boolean isSupervisor = loginUser != null && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
+        if(isSupervisor){
+            pDetailEditBtn.setVisible(false);
         }else{
-            editProjectInfo.setVisible(true);
-            viewOnlyProjectInfo.setVisible(false);
+            pDetailEditBtn.setVisible(true);
         }
-
-        calculate.calculate(project);
-
-//        For the duration path
-        utils.durationShowHelper(project,durationComboBox,editDurationTxt);
-
 
         // Header
         safeSet(projectName, project.getProjectInstanceName());
         safeSet(projectStatus, project.getProjectStatus());
         safeSet(projectGeneral,
-                project.getProjectTypeName() + " - " + project.getProjectBuildingName());
+                (project.getProjectTypeName() != null ? project.getProjectTypeName() : "") +
+                        (project.getProjectBuildingName() != null ? (", " + project.getProjectBuildingName()) : "")
+        );
 
-        // View-only info
+        // View section
         safeSet(projectViewLevel, project.getProjectLevelName());
         safeSet(projectViewAddress, project.getProjectLocation());
-//        safeSet(projectViewDuration,);
         safeSet(projectViewContract, formatMoney(project.getProjectCost()));
-
-        safeSet(projectViewStartDate,utils.dateFormat(project.getStartDate()));
+        safeSet(projectViewStartDate, utils.dateFormat(project.getStartDate()));
         safeSet(projectViewEndDate, utils.dateFormat(project.getEndDate()));
+        safeSet(projectViewDuration, utils.getOnlyOneDuration(project.getProjectDuration(), enumDuration.DAY));
 
-        // Progress (days)
-        ProgressInfo days = computeDaysProgress(project.getStartDate(), project.getEndDate());
-        safeSet(completedDay, days.completedText);
-        safeSet(totalDay, days.totalText);
-        safeSet(dayCompleteLbl, days.percentText);
-        safeSet(projectViewFinishLbl, days.percentText);
 
-        if (dayCompleteProgress != null) dayCompleteProgress.setProgress(days.progress01);
-        if (projectViewFinishProgress != null) projectViewFinishProgress.setProgress(days.progress01);
+        // Work items table
+        refreshWorkItems();
 
-        // Earned value (placeholder logic: used = progress% of total cost)
-        double totalCost = Math.max(0, project.getProjectCost());
-        double usedCost = totalCost * clamp01(days.progress01);
+        // Dashboard metrics
+        loadDashboardAsync(project.getAssignProjectId(), LocalDate.now());
+    }
 
-        safeSet(totalEarnValue, formatMoney(totalCost));
-        safeSet(usedEarnValue, formatMoney(usedCost));
-        safeSet(earnedValueLbl, formatPercent(days.progress01));
-        if (earnValueProgress != null) earnValueProgress.setProgress(days.progress01);
+    private void loadDashboardAsync(int projectId, LocalDate asOf) {
+        Task<calculationHelper.ProjectDashboard> task = new Task<>() {
+            @Override
+            protected calculationHelper.ProjectDashboard call() {
+                return helper.getProjectDashboard(projectId, asOf);
+            }
 
-        // Tasks/SPI/CPI are not available in [projects](cci:2://file:///d:/IPP-System/src/main/java/IPPSystem/Models/projects.java:4:0-482:1) model currently -> keep safe defaults
-        safeSet(taskCompleteLbl, "0%");
-        if (taskCompleteProgress != null) taskCompleteProgress.setProgress(0);
+            @Override
+            protected void succeeded() {
+                calculationHelper.ProjectDashboard d = getValue();
+                if (d == null) return;
 
-        safeSet(spiLbl, "-");
-        safeSet(spiStatusLbl, "-");
-        safeSet(spiPvLbl, "-");
-        safeSet(spiEvLbl, "-");
+                // ===== Completed Days card =====
+                int elapsed = d.elapsedDays();
+                int total = d.totalDays();
 
-        safeSet(cpiLbl, "-");
-        safeSet(cpiStatusLbl, "-");
-        safeSet(cpiPvLbl, "-");
-        safeSet(cpiEvLbl, "-");
+                double day01 = (total <= 0) ? 0 : Math.min(1.0, elapsed / (double) total);
 
-        loadProjectIntoEditFields(project);
-        if (workItemTable != null) {
+                completedDay.setText(elapsed + " days");
+                totalDay.setText(total + " days");
+                dayCompleteLbl.setText(Math.round(day01 * 100) + "%");
+                dayCompleteProgress.setProgress(day01);
+
+                // ==== for the project progress =====
+
+                double progress01 = d.progressRatio();   // already 0..1
+                projectProgress.setProgress(progress01);
+                projectProgressLbl.setText(Math.round(progress01 * 100) + "%");
+
+
+                // ===== Completed WorkItems card =====
+                int doneWi = d.completedWorkItems();
+                int totalWiCount = d.totalWorkItems();
+                double wi01 = (totalWiCount <= 0) ? 0 : clamp01(doneWi / (double) totalWiCount);
+
+                safeSet(completedWi, String.valueOf(doneWi) + " items");
+                safeSet(totalWi, String.valueOf(totalWiCount) + " items");
+                safeSet(wiCompleteLbl, formatPercent(wi01));
+                if (wiCompleteProgress != null) wiCompleteProgress.setProgress(wi01);
+
+                // ===== Earned Value card =====
+                double bac = d.bac();
+                double ev = d.ev();
+                double ev01 = (bac <= 0) ? 0 : clamp01(ev / bac);
+
+                safeSet(usedEarnValue, formatMoney(ev));
+                safeSet(totalEarnValue, formatMoney(bac));
+                safeSet(earnedValueLbl, formatPercent(ev01));
+                if (earnValueProgress != null) earnValueProgress.setProgress(ev01);
+
+                // ===== SPI + CPI panels =====
+                safeSet(spiLbl, formatIndex(d.spi()));
+                safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
+                safeSet(spiPvLbl, formatMoney(d.pv()));
+                safeSet(spiEvLbl, formatMoney(d.ev()));
+                applyCircleProgress(spiProgressCircle, d.spi()); // optional visual
+
+                safeSet(cpiLbl, formatIndex(d.cpi()));
+                safeSet(cpiStatusLbl, statusTextForIndex(d.cpi(), false));
+                safeSet(cpiPvLbl, formatMoney(d.pv()));
+                safeSet(cpiEvLbl, formatMoney(d.ev()));
+                applyCircleProgress(cpiProgressCircle, d.cpi()); // optional visual
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void refreshWorkItems() {
+        if (project == null || workItemTable == null) return;
+
+        Runnable r = () -> {
             workItemTable.setItems(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
-        }
+            workItemTable.refresh();
+        };
+
+        if (Platform.isFxApplicationThread()) r.run();
+        else Platform.runLater(r);
     }
 
-    private void onConfirmEdits() {
-        if (project == null) return;
-
-        // Apply edits to UI fields (and to project object where possible)
-        String newLevel = readTrim(editLevelTxt);
-        String newAddress = readTrim(editAddressTxt);
-
-        Double newContract = tryParseDouble(readTrim(editContractTxt));
-        Double newDuration = tryParseDouble(readTrim(editDurationTxt));
-
-        LocalDate start = editStartDate != null ? editStartDate.getValue() : null;
-        LocalDate end = editEndDate != null ? editEndDate.getValue() : null;
-
-
-
-        // Recompute progress after date edits
-        ProgressInfo days = computeDaysProgress(project.getStartDate(), project.getEndDate());
-        safeSet(completedDay, days.completedText);
-        safeSet(totalDay, days.totalText);
-        safeSet(dayCompleteLbl, days.percentText);
-        safeSet(projectViewFinishLbl, days.percentText);
-        if (dayCompleteProgress != null) dayCompleteProgress.setProgress(days.progress01);
-        if (projectViewFinishProgress != null) projectViewFinishProgress.setProgress(days.progress01);
-    }
-
-    private void loadProjectIntoEditFields(projects p) {
-        if (p == null) return;
-
-        if (editLevelTxt != null) editLevelTxt.setText(nullToEmpty(p.getProjectLevelName()));
-        if (editAddressTxt != null) editAddressTxt.setText(nullToEmpty(p.getProjectLocation()));
-        if (editContractTxt != null) editContractTxt.setText(String.valueOf(p.getProjectCost()));
-        if (editDurationTxt != null) editDurationTxt.setText(String.valueOf(p.getProjectDuration()));
-
-        if (editStartDate != null) editStartDate.setValue(toLocalDate(p.getStartDate()));
-        if (editEndDate != null) editEndDate.setValue(toLocalDate(p.getEndDate()));
-    }
-
-    private LocalDate toLocalDate(Date d) {
-        return d == null ? null : d.toLocalDate();
-    }
-
-    private void safeSet(Label lbl, String value) {
-        if (lbl != null) lbl.setText(value == null ? "" : value);
-    }
-
-    private String nullToEmpty(String s) {
-        return s == null ? "" : s;
-    }
-
-    private String readTrim(TextField tf) {
-        if (tf == null) return null;
-        String s = tf.getText();
-        if (s == null) return null;
-        s = s.trim();
-        return s.isEmpty() ? null : s;
-    }
-
-    private Double tryParseDouble(String s) {
-        if (s == null) return null;
-        try {
-            return Double.parseDouble(s.replace(",", ""));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-
-
-    private String formatMoney(double value) {
-        if (value <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(value) + " MMK";
-    }
-
-    private String formatPercent(double progress01) {
-        int pct = (int) Math.round(clamp01(progress01) * 100.0);
-        return pct + "%";
+    // ------------------------------
+    // UI helpers
+    // ------------------------------
+    private void safeSet(Label lbl, String v) {
+        if (lbl != null) lbl.setText(v == null ? "" : v);
     }
 
     private double clamp01(double v) {
@@ -282,43 +246,47 @@ public class projectDetailsController extends viewProjectsController{
         return v;
     }
 
-    private ProgressInfo computeDaysProgress(Date start, Date end) {
-        ProgressInfo info = new ProgressInfo();
+    private String formatPercent(double p01) {
+        int pct = (int) Math.round(clamp01(p01) * 100.0);
+        return pct + "%";
+    }
 
-        LocalDate s = start == null ? null : start.toLocalDate();
-        LocalDate e = end == null ? null : end.toLocalDate();
+    private String formatMoney(double value) {
+        if (value <= 0) return "-";
+        return new DecimalFormat("#,##0.##").format(value) + " MMK";
+    }
 
-        if (s == null || e == null || !e.isAfter(s)) {
-            info.progress01 = 0;
-            info.percentText = "0%";
-            info.completedText = "-";
-            info.totalText = "-";
-            return info;
+    private String formatIndex(Double v) {
+        if (v == null) return "-";
+        return new DecimalFormat("0.00").format(v);
+    }
+
+    private String statusTextForIndex(Double idx, boolean isSchedule) {
+        if (idx == null) return "No Data";
+
+        if (isSchedule) {
+            if (idx >= 1.05) return "Ahead of Schedule";
+            if (idx >= 0.95) return "On Schedule";
+            return "Behind Schedule";
+        } else {
+            if (idx >= 1.05) return "Under Budget";
+            if (idx >= 0.95) return "On Budget";
+            return "Over Budget";
+        }
+    }
+
+    private void applyCircleProgress(Circle circle, Double idx) {
+        if (circle == null) return;
+        if (idx == null) {
+            circle.setStrokeDashOffset(2 * Math.PI * circle.getRadius());
+            return;
         }
 
-        long total = ChronoUnit.DAYS.between(s, e);
-        long done = ChronoUnit.DAYS.between(s, LocalDate.now());
+        // simple static ring fill: treat 1.0 as full ring, clamp 0..1
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
 
-        if (done < 0) done = 0;
-        if (done > total) done = total;
-
-        double p = (total == 0) ? 0 : (done * 1.0 / total);
-
-        info.progress01 = clamp01(p);
-        info.percentText = formatPercent(info.progress01);
-        info.completedText = done + " days";
-        info.totalText = total + " days";
-        return info;
-    }
-
-    private static class ProgressInfo {
-        double progress01;
-        String percentText;
-        String completedText;
-        String totalText;
-    }
-
-    private void setWorkItems(){
-
+        circle.getStrokeDashArray().setAll(circumference);
+        circle.setStrokeDashOffset(circumference * (1 - clamp01(idx)));
     }
 }

@@ -8,6 +8,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -66,9 +67,27 @@
                                   <Insets />
                               </HBox.margin>
                           </Button>
-                  <Region maxWidth="170.0" minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="choiceProjectTypesBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
-                  <ComboBox fx:id="choiceUsersBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
+                  <Region minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <StackPane>
+                     <children>
+                        <Label fx:id="choiceUserLbl" text="Supervisors" translateY="-10.0" StackPane.alignment="TOP_LEFT">
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
+                        </Label>
+                        <ComboBox fx:id="choiceUsersBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
+                     </children>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Label text="Project Types" translateY="-10.0" StackPane.alignment="TOP_LEFT">
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
+                        </Label>
+                        <ComboBox fx:id="choiceProjectTypesBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
+                     </children>
+                  </StackPane>
                       </children>
                   </HBox>
             <VBox fx:id="projectContainer" alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" spacing="10.0" VBox.vgrow="ALWAYS">

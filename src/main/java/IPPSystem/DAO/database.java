@@ -6,7 +6,8 @@ import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 import javafx.collections.ObservableList;
 
-import java.lang.reflect.Array;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,6 +87,8 @@ public class database {
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
+    public static void callUpdateProjectBaseline(int projectId, Double cost, LocalDate startDate, LocalDate endDate, Double duration){projectDatabase.callUpdateProjectBaseline(projectId,cost, Date.valueOf(startDate),Date.valueOf(endDate),duration);}
+
 //    For the WorkItems functions
 
     public static ObservableList<workItems> getAllWorkItemsForAutoGeneration(int projectTypeId,int buildingId, int levelId){return workItemDatabase.getAllWorkItemDetails(projectTypeId,buildingId,levelId);}
@@ -98,7 +101,7 @@ public class database {
 
     public static boolean deleteSkillFromWorkItem(int assignWorkItemId,int skillId){return workItemDatabase.deleteSkillFromWorkItem(assignWorkItemId,skillId);}
 
-    public static ObservableList<skills> getAllAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
+    public static ObservableList<skills> getAllSkillByAssignWorkItemDetails(int assignWorkItemId){return workItemDatabase.getAllSkillDetailsByAssignWorkItem(assignWorkItemId);}
 
     public static boolean setSkillsToWorkItem(skills skill,assignStatus status){return workItemDatabase.addSkillToWorkItem(skill,status);}
 

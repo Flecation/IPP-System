@@ -1,147 +1,287 @@
 package IPPSystem.Utils;
 
 import IPPSystem.DAO.databaseConnection;
-import IPPSystem.Models.projects;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.util.Duration;
+import javafx.collections.ObservableList;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
-public class calculationHelper {
+/**
+ * Data + calculation helper for Earned Value (BAC/PV/EV/AC) and performance indexes (CPI/SPI).
+ *
+ * - DB-side numbers come from stored procedures:
+ *      getProjectDashboard(projectId, asOfDate)
+ *      getProjectWorkItemsDashboard(projectId, asOfDate)
+ *      getWorkItemDashboard(assignWorkItemId, asOfDate)
+ *
+ * - This class also provides small "utils-like" pure functions for CPI/SPI and day calculations.
+ */
+public final class calculationHelper {
 
-    private static calculationHelper instance;
-    private static Connection con;
+    private static final calculationHelper INSTANCE = new calculationHelper();
 
-    // ===== EVM VALUES =====
-    private Double pv, ev, ac, cpi, spi;
-    private String cpiStatus, spiStatus;
-
-    private calculationHelper() {
-        try {
-            con = databaseConnection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private calculationHelper() {}
 
     public static calculationHelper getInstance() {
-        if (instance == null) instance = new calculationHelper();
-        return instance;
+        return INSTANCE;
     }
 
-    // ==============================
-    // DB CALCULATION
-    // ==============================
-    public void calculate(projects project) {
+    /**
+     * Aggregated dashboard for a project.
+     */
+    public record ProjectDashboard(
+            double bac, double pv, double ev, double ac,
+            Double cpi, Double spi,
+            double progressRatio,
+            Date baselineStart, Date baselineEnd,
+            int elapsedDays, int totalDays, int reportedDays,
+            int completedWorkItems, int totalWorkItems
+    ) {}
 
-        String sql = "{CALL calculateCpiSpi(?)}";
+    /**
+     * Per work-item dashboard row inside a project.
+     */
+    public record WorkItemDashboard(
+            int assignWorkItemId,
+            String workItemName,
+            String workItemStatus,
+            double bac, double pv, double ev, double ac,
+            Double cpi, Double spi,
+            double progressRatio
+    ) {}
 
-        try (CallableStatement stmt = con.prepareCall(sql)) {
+    // ---------------------------------------------------------------------
+    // Pure calculations ("utils-like")
+    // ---------------------------------------------------------------------
 
-            stmt.setInt(1, project.getAssignProjectId());
-            ResultSet rs = stmt.executeQuery();
+    /** CPI = EV / AC. Returns null when AC <= 0. */
+    public static Double calcCpi(double ev, double ac) {
+        return (ac <= 0) ? null : (ev / ac);
+    }
 
-            if (rs.next()) {
-                pv = rs.getDouble("PV");
-                ev = rs.getDouble("EV");
-                ac = rs.getDouble("AC");
+    /** SPI = EV / PV. Returns null when PV <= 0. */
+    public static Double calcSpi(double ev, double pv) {
+        return (pv <= 0) ? null : (ev / pv);
+    }
 
-                cpi = rs.getObject("CPI") != null ? rs.getDouble("CPI") : null;
-                spi = rs.getObject("SPI") != null ? rs.getDouble("SPI") : null;
+    /** Total baseline days (inclusive). Returns 0 when dates are invalid. */
+    public static int computeTotalDays(Date start, Date end) {
+        if (start == null || end == null) return 0;
+        LocalDate s = start.toLocalDate();
+        LocalDate e = end.toLocalDate();
+        if (e.isBefore(s)) return 0;
+        long days = ChronoUnit.DAYS.between(s, e) + 1;
+        if (days <= 0) return 0;
+        return (days > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) days;
+    }
 
-                cpiStatus = rs.getString("CPI_STATUS");
-                spiStatus = rs.getString("SPI_STATUS");
+    /**
+     * Elapsed days from baseline start to asOf (inclusive), clamped to 0..totalDays.
+     * Returns 0 if baseline dates are invalid.
+     */
+    public static int computeElapsedDays(Date start, Date end, LocalDate asOf) {
+        if (start == null || end == null || asOf == null) return 0;
+        int total = computeTotalDays(start, end);
+        if (total <= 0) return 0;
+
+        LocalDate s = start.toLocalDate();
+        long raw = ChronoUnit.DAYS.between(s, asOf) + 1;
+        if (raw < 0) return 0;
+        if (raw > total) return total;
+        return (raw > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) raw;
+    }
+
+    /**
+     * Shared status text for CPI/SPI.
+     *
+     * schedule=true  -> SPI meaning: Ahead/On/Behind schedule
+     * schedule=false -> CPI meaning: Under/On/Over budget
+     */
+    public static String statusTextForIndex(Double idx, boolean schedule) {
+        if (idx == null) return "No Data";
+
+        if (schedule) {
+            if (idx >= 1.05) return "Ahead of Schedule";
+            if (idx >= 0.95) return "On Schedule";
+            return "Behind Schedule";
+        } else {
+            if (idx >= 1.05) return "Under Budget";
+            if (idx >= 0.95) return "On Budget";
+            return "Over Budget";
+        }
+    }
+
+
+    // ---------------------------------------------------------------------
+    // Stored procedure calls
+    // ---------------------------------------------------------------------
+
+    public ProjectDashboard getProjectDashboard(int projectId, LocalDate asOf) {
+        final String sql = "{CALL getProjectDashboard(?,?)}";
+        LocalDate effectiveAsOf = (asOf == null) ? LocalDate.now() : asOf;
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setInt(1, projectId);
+            stmt.setDate(2, Date.valueOf(effectiveAsOf));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return null;
+
+                double bac = rs.getDouble("BAC");
+                double pv  = rs.getDouble("PV");
+                double ev  = rs.getDouble("EV");
+                double ac  = rs.getDouble("AC");
+
+                Double cpi = getNullableDouble(rs, "CPI");
+                if (cpi == null) cpi = calcCpi(ev, ac);
+
+                Double spi = getNullableDouble(rs, "SPI");
+                if (spi == null) spi = calcSpi(ev, pv);
+
+                double progressRatio = clamp01(rs.getDouble("progressRatio"));
+
+                Date baselineStart = rs.getDate("baselineStart");
+                Date baselineEnd   = rs.getDate("baselineEnd");
+
+                // NOTE: your current SQL returns a wrong "elapsedDays" (it outputs latestReportDate).
+                // So we recompute days safely from baselineStart/baselineEnd + asOf.
+                int totalDays   = computeTotalDays(baselineStart, baselineEnd);
+                int elapsedDays = computeElapsedDays(baselineStart, baselineEnd, effectiveAsOf);
+
+                // If baseline dates are missing (shouldn't happen), fall back to DB fields.
+                if (totalDays <= 0) totalDays = rs.getInt("totalDays");
+                if (elapsedDays <= 0) elapsedDays = rs.getInt("elapsedDays");
+
+                return new ProjectDashboard(
+                        bac, pv, ev, ac,
+                        cpi, spi,
+                        progressRatio,
+                        baselineStart, baselineEnd,
+                        elapsedDays,
+                        totalDays,
+                        rs.getInt("reportedDays"),
+                        rs.getInt("completedWorkItems"),
+                        rs.getInt("totalWorkItems")
+                );
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("getProjectDashboard failed", e);
         }
     }
 
-    // ==============================
-    // UNIVERSAL CIRCLE SETUP
-    // ==============================
-    public void setupCpiCircle(Circle circle) {
-        if (cpi == null) return;
-        setupCircle(circle, cpi, cpiStatus, "CPI");
-    }
+    public ObservableList<WorkItemDashboard> getProjectWorkItemsDashboard(int projectId, LocalDate asOf) {
+        final String sql = "{CALL getProjectWorkItemsDashboard(?,?)}";
+        LocalDate effectiveAsOf = (asOf == null) ? LocalDate.now() : asOf;
 
-    public void setupSpiCircle(Circle circle) {
-        if (spi == null) return;
-        setupCircle(circle, spi, spiStatus, "SPI");
-    }
+        ObservableList<WorkItemDashboard> list = FXCollections.observableArrayList();
 
-    // ==============================
-    // CORE CIRCLE LOGIC (REUSABLE)
-    // ==============================
-    private void setupCircle(Circle circle, double value, String status, String type) {
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
 
-        double radius = circle.getRadius();
-        double circumference = 2 * Math.PI * radius;
-        double progress = normalize(value);
+            stmt.setInt(1, projectId);
+            stmt.setDate(2, Date.valueOf(effectiveAsOf));
 
-        circle.setFill(null);
-        circle.setRotate(-90);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    double bac = rs.getDouble("BAC");
+                    double pv  = rs.getDouble("PV");
+                    double ev  = rs.getDouble("EV");
+                    double ac  = rs.getDouble("AC");
 
-        // Color
-        circle.setStroke(getColor(type, value));
+                    Double cpi = getNullableDouble(rs, "CPI");
+                    if (cpi == null) cpi = calcCpi(ev, ac);
 
-        // Animation
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(circle.strokeDashOffsetProperty(), circumference)
-                ),
-                new KeyFrame(Duration.seconds(1),
-                        new KeyValue(circle.strokeDashOffsetProperty(),
-                                circumference * (1 - progress))
-                )
-        );
-        timeline.play();
-    }
+                    Double spi = getNullableDouble(rs, "SPI");
+                    if (spi == null) spi = calcSpi(ev, pv);
 
-    // ==============================
-    // HELPERS
-    // ==============================
-    private double normalize(double value) {
-        double min = 0.8;
-        double max = 1.2;
-        double progress = (value - min) / (max - min);
-        return Math.max(0, Math.min(1, progress));
-    }
-
-    private Color getColor(String type, double value) {
-
-        if ("CPI".equals(type)) {
-            if (value > 1.05) return Color.web("#2ecc71"); // green
-            if (value >= 0.95) return Color.web("#f1c40f"); // yellow
-            return Color.web("#e74c3c"); // red
+                    list.add(new WorkItemDashboard(
+                            rs.getInt("assignWorkItemId"),
+                            rs.getString("workItemName"),
+                            rs.getString("workItemStatus"),
+                            bac, pv, ev, ac,
+                            cpi, spi,
+                            clamp01(rs.getDouble("progressRatio"))
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("getProjectWorkItemsDashboard failed", e);
         }
 
-        if ("SPI".equals(type)) {
-            if (value > 1.05) return Color.web("#2ecc71");
-            if (value >= 0.95) return Color.web("#f1c40f");
-            return Color.web("#e74c3c");
-        }
-
-        return Color.GRAY;
+        return list;
     }
 
-    // ==============================
-    // GETTERS
-    // ==============================
-    public Double getCpi() { return cpi; }
-    public Double getSpi() { return spi; }
-    public String getCpiStatus() { return cpiStatus; }
-    public String getSpiStatus() { return spiStatus; }
-    public Double getPv() { return pv; }
-    public Double getEv() { return ev; }
-    public Double getAc() { return ac; }
+    /**
+     * For work item details screen we only need the numeric fields.
+     * (We reuse ProjectDashboard record for convenience.)
+     */
+    public ProjectDashboard getWorkItemDashboardOnlyNumbers(int assignWorkItemId, LocalDate asOf) {
+        final String sql = "{CALL getWorkItemDashboard(?,?)}";
+        LocalDate effectiveAsOf = (asOf == null) ? LocalDate.now() : asOf;
+
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setInt(1, assignWorkItemId);
+            stmt.setDate(2, Date.valueOf(effectiveAsOf));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return null;
+
+                double bac = rs.getDouble("BAC");
+                double pv  = rs.getDouble("PV");
+                double ev  = rs.getDouble("EV");
+                double ac  = rs.getDouble("AC");
+
+                Double cpi = getNullableDouble(rs, "CPI");
+                if (cpi == null) cpi = calcCpi(ev, ac);
+
+                Double spi = getNullableDouble(rs, "SPI");
+                if (spi == null) spi = calcSpi(ev, pv);
+
+                double progressRatio = clamp01(rs.getDouble("progressRatio"));
+
+                Date baselineStart = rs.getDate("baselineStart");
+                Date baselineEnd   = rs.getDate("baselineEnd");
+
+                int totalDays   = computeTotalDays(baselineStart, baselineEnd);
+                int elapsedDays = computeElapsedDays(baselineStart, baselineEnd, effectiveAsOf);
+
+                if (totalDays <= 0) totalDays = rs.getInt("totalDays");
+                if (elapsedDays <= 0) elapsedDays = rs.getInt("elapsedDays");
+
+                return new ProjectDashboard(
+                        bac, pv, ev, ac,
+                        cpi, spi,
+                        progressRatio,
+                        baselineStart, baselineEnd,
+                        elapsedDays,
+                        totalDays,
+                        0, 0, 0
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("getWorkItemDashboard failed", e);
+        }
+    }
+
+
+    // ---------------------------------------------------------------------
+    // Internal helpers
+    // ---------------------------------------------------------------------
+
+    private static Double getNullableDouble(ResultSet rs, String col) throws SQLException {
+        Object obj = rs.getObject(col);
+        return (obj == null) ? null : ((Number) obj).doubleValue();
+    }
+
+    private static double clamp01(double v) {
+        if (v < 0) return 0;
+        if (v > 1) return 1;
+        return v;
+    }
 }
