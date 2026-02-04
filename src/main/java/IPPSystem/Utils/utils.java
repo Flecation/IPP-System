@@ -139,15 +139,25 @@ public class utils {
     }
 
     public static void switchNewScene(Button clickButton, String fxmlName){
-        switchPage.getInstance(null).switchScene(clickButton,fxmlName);
+        switchPage.switchScene(clickButton, fxmlName);
     }
 
-    public static void openFxml(String fxml, StackPane loadPane){
+    public static StackPane findTabLoadPane(Node anyNodeInThatTab) {
+        if (anyNodeInThatTab == null || anyNodeInThatTab.getScene() == null) return null;
+
+        Object p = anyNodeInThatTab.getScene().getRoot().getProperties().get("TAB_LOAD_PANE");
+        return (p instanceof StackPane sp) ? sp : null;
+    }
+
+
+    public static void openFxml(String fxml,Node node){
+        StackPane loadPane = findTabLoadPane(node);
+        if (loadPane == null) return;
         switchPage.getInstance(loadPane).openFxml(fxml);
     }
 
-    public static void showProjectCards(ObservableList<projects> projects, VBox containerPane){
-        switchPage.getInstance(null).loadProjects(projects, containerPane);
+    public static void showProjectCards(ObservableList<projects> projects, VBox containerPane, StackPane loadPane){
+        switchPage.getInstance(loadPane).loadProjects(projects, containerPane);
     }
 
     public static void openProjectDetails(projects project,StackPane a){
@@ -159,7 +169,7 @@ public class utils {
     }
 
     public static void viewUserInfo(users user, StackPane loadPane){
-        switchPage.getInstance(null).viewUsersInfo(user);
+        switchPage.getInstance(loadPane).viewUsersInfo(user);
     }
 
     public static Double durationFormat(Double duration, enumDuration durationStatus){return durationHelper.durationAssign(duration,durationStatus);}

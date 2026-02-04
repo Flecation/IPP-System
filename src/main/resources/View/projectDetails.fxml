@@ -403,37 +403,37 @@
                </HBox>
                           <TableView fx:id="workItemTable" maxWidth="1180.0" minHeight="300.0" prefHeight="0.0" VBox.vgrow="ALWAYS">
                               <columns>
-                                  <TableColumn fx:id="workItemNameCol" prefWidth="250" text="Work Item">
+                                  <TableColumn fx:id="workItemNameCol" editable="false" prefWidth="250" text="Work Item">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="workItemName" />
                                       </cellValueFactory>
                                   </TableColumn>
 
-                                  <TableColumn fx:id="workItemStatusCol" prefWidth="150" text="Status">
+                                  <TableColumn fx:id="workItemStatusCol" editable="false" prefWidth="150" text="Status">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="projectStatus" />
                                       </cellValueFactory>
                                   </TableColumn>
 
-                                  <TableColumn fx:id="workItemCostCol" prefWidth="150" text="Cost">
+                                  <TableColumn fx:id="workItemCostCol" editable="false" prefWidth="150" text="Cost">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="projectCost" />
                                       </cellValueFactory>
                                   </TableColumn>
 
-                                  <TableColumn fx:id="workItemDurationCol" prefWidth="150" text="Duration">
+                                  <TableColumn fx:id="workItemDurationCol" editable="false" prefWidth="150" text="Duration">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="projectDuration" />
                                       </cellValueFactory>
                                   </TableColumn>
 
-                                  <TableColumn fx:id="workItemStartCol" prefWidth="150" text="Start">
+                                  <TableColumn fx:id="workItemStartCol" editable="false" prefWidth="150" text="Start">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="startDate" />
                                       </cellValueFactory>
                                   </TableColumn>
 
-                                  <TableColumn fx:id="workItemEndCol" prefWidth="150" text="End">
+                                  <TableColumn fx:id="workItemEndCol" editable="false" prefWidth="150" text="End">
                                       <cellValueFactory>
                                           <PropertyValueFactory property="endDate" />
                                       </cellValueFactory>

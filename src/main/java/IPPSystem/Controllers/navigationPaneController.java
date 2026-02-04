@@ -55,6 +55,8 @@ public class navigationPaneController{
     private void initialize(){
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
+
+        linkButton.bindHost(tapBar, loadPane);
         linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");
 
         FontIcon pageAddIcon  = new FontIcon(FontAwesomeSolid.PLUS);

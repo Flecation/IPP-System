@@ -19,6 +19,24 @@ public class reportDatabase {
             throw new RuntimeException(e);
         }
     }
+    public static int getCompletedDaysByAssignProject(int assignProjectId) {
+        String sql =
+                "SELECT COUNT(DISTINCT r.reportDate) AS completedDays " +
+                        "FROM dailyReports r " +
+                        "JOIN dailyReportTasks rd ON rd.dailyReportId = r.dailyReportId " +
+                        "WHERE r.assignProjectId = ? " +
+                        "AND rd.isCompleted = true";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, assignProjectId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("completedDays");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     // ======================== EXISTING METHODS ========================
 

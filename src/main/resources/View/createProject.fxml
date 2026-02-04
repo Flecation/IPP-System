@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="692.0" prefWidth="558.0"
+      xmlns="http://javafx.com/javafx/24.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="IPPSystem.Controllers.createProjectController">
+
+    <children>
+        <VBox prefHeight="669.0" prefWidth="558.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <children>
+
+                <!-- header -->
+                <HBox prefHeight="26.0" prefWidth="485.0">
+                    <children>
+                        <Label text="Creating Project" wrapText="true">
+                            <font><Font size="20.0"/></font>
+                        </Label>
+
+                        <Button fx:id="closeBtn"
+                                alignment="TOP_LEFT"
+                                mnemonicParsing="false"
+                                prefHeight="26.0" prefWidth="40.0"
+                                style="-fx-background-color: white;"
+                                text="✗" textFill="GREY"
+                                onAction="#onClose">
+                            <HBox.margin>
+                                <Insets left="320.0"/>
+                            </HBox.margin>
+                            <font><Font size="17.0"/></font>
+                        </Button>
+                    </children>
+
+                    <VBox.margin>
+                        <Insets bottom="20.0" left="10.0" top="20.0"/>
+                    </VBox.margin>
+                </HBox>
+
+                <!-- body -->
+                <ScrollPane hbarPolicy="NEVER"
+                            prefHeight="596.0" prefWidth="412.0"
+                            style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                            vbarPolicy="ALWAYS">
+                    <content>
+                        <VBox prefHeight="706.0" prefWidth="459.0">
+
+                            <children>
+
+                                <!-- General Info -->
+                                <TitledPane animated="false"
+                                            prefHeight="443.0" prefWidth="443.0"
+                                            style="-fx-background-color: white; -fx-border-color: 10;"
+                                            text="General Info">
+                                    <font><Font name="System Bold Italic" size="17.0"/></font>
+
+                                    <content>
+                                        <VBox style="-fx-background-color: white;">
+                                            <children>
+
+                                                <HBox prefHeight="55.0" prefWidth="431.0">
+                                                    <children>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Instance Name"/>
+                                                                <TextField fx:id="instanceNameTxt">
+                                                                    <VBox.margin><Insets right="10.0"/></VBox.margin>
+                                                                </TextField>
+                                                            </children>
+                                                            <HBox.margin><Insets right="30.0"/></HBox.margin>
+                                                        </VBox>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Site Engineer Name"/>
+                                                                <!-- better as ComboBox because you already have supervisors/users -->
+                                                                <ComboBox fx:id="siteEngineerBox" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                                <HBox prefHeight="55.0" prefWidth="484.0">
+                                                    <children>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Project Type"/>
+                                                                <ComboBox fx:id="projectTypeBox" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                            <HBox.margin><Insets right="30.0"/></HBox.margin>
+                                                        </VBox>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Finishing Level"/>
+                                                                <ComboBox fx:id="levelBox" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                                <!-- building (your createViewProject uses building) -->
+                                                <HBox prefHeight="55.0" prefWidth="484.0">
+                                                    <children>
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Building"/>
+                                                                <ComboBox fx:id="buildingBox" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                            <HBox.margin><Insets right="30.0"/></HBox.margin>
+                                                        </VBox>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Contract Value"/>
+                                                                <TextField fx:id="contractValueTxt" prefHeight="28.0" prefWidth="193.0"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                                <HBox prefHeight="106.0" prefWidth="462.0">
+                                                    <children>
+                                                        <VBox prefHeight="129.0" prefWidth="300.0">
+                                                            <children>
+                                                                <Label text="Address"/>
+                                                                <TextField fx:id="addressTxt" prefHeight="72.0" prefWidth="304.0"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+
+                                <!-- Scheduling -->
+                                <TitledPane animated="false"
+                                            prefHeight="183.0" prefWidth="443.0"
+                                            style="-fx-background-color: white; -fx-border-color: 10;"
+                                            text="Scheduling">
+                                    <font><Font name="System Bold Italic" size="17.0"/></font>
+
+                                    <content>
+                                        <VBox prefHeight="301.0" prefWidth="441.0" style="-fx-background-color: white;">
+                                            <children>
+
+                                                <HBox prefHeight="55.0" prefWidth="431.0">
+                                                    <children>
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Planned Start Date"/>
+                                                                <DatePicker fx:id="startDatePicker" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                            <HBox.margin><Insets right="30.0"/></HBox.margin>
+                                                        </VBox>
+
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Planned End Date"/>
+                                                                <DatePicker fx:id="endDatePicker" prefHeight="28.0" prefWidth="170.0"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                                <HBox prefHeight="55.0" prefWidth="484.0">
+                                                    <children>
+                                                        <VBox prefHeight="55.0" prefWidth="193.0">
+                                                            <children>
+                                                                <Label text="Duration"/>
+                                                                <TextField fx:id="durationTxt" prefHeight="28.0" prefWidth="179.0"/>
+                                                            </children>
+                                                            <HBox.margin><Insets right="30.0"/></HBox.margin>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin><Insets left="20.0" right="20.0"/></VBox.margin>
+                                                </HBox>
+
+                                            </children>
+                                        </VBox>
+                                    </content>
+
+                                    <VBox.margin><Insets top="20.0"/></VBox.margin>
+                                </TitledPane>
+
+                                <!-- footer buttons -->
+                                <HBox prefHeight="50.0" prefWidth="425.0">
+                                    <children>
+                                        <Button fx:id="denyBtn" mnemonicParsing="false"
+                                                prefWidth="100.0" text="Deny"
+                                                onAction="#onDeny"/>
+
+                                        <Button fx:id="approveBtn" mnemonicParsing="false"
+                                                prefHeight="26.0" prefWidth="100.0"
+                                                text="Approve"
+                                                onAction="#onApprove">
+                                            <HBox.margin><Insets left="10.0"/></HBox.margin>
+                                        </Button>
+                                    </children>
+                                    <VBox.margin><Insets left="270.0" top="20.0"/></VBox.margin>
+                                </HBox>
+
+                            </children>
+                        </VBox>
+                    </content>
+
+                    <VBox.margin><Insets left="22.0" right="30.0"/></VBox.margin>
+                </ScrollPane>
+
+            </children>
+        </VBox>
+    </children>
+</VBox>
