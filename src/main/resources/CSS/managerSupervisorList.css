@@ -135,6 +135,47 @@
 }
 
 
+/* Create Supervisor */
+
+.promtTxt{
+    -fx-font-size: 15;
+}
+
+.datePicker{
+    -fx-font-size: 12;
+}
+
+.inputFields{
+    -fx-font-size: -paragraph-font-size;
+    -fx-border-width: .3;
+    -fx-border-color:#558C8A;
+    -fx-border-radius: 5;
+}
+
+.firstName{
+    -fx-pref-width: 500;
+    -fx-text-fill:#000000;
+    -fx-padding: 2 10 2 10;
+    -fx-font-size: -paragraph-font-size;
+
+
+}
+.email{
+     -fx-pref-width: 500;
+     -fx-text-fill:#000000;
+     -fx-padding: 2 10 2 10;
+     -fx-font-size: -paragraph-font-size;
+
+}
+
+
+.roleAndProjectCombo{
+     -fx-padding: 3 10 3 10;
+}
+
+.date{
+    -fx-pref-width:10;
+}
 
  /* :: Add Btn */
 .addSupervisorBtn{
@@ -142,107 +183,13 @@
    -fx-padding: 3 10 3 10;
 }
 
+
 .subTitle{
     -fx-font-size: 16;
 }
 
 
 
-/* Other Engineer List */
-.active-engineer {
-    -fx-background-color:#D9D9D9;
-    -fx-background-radius: 8;
-    -fx-padding: 8 12 8 12; /* TOP RIGHT BOTTOM LEFT */
-}
-
-/* Hover effect */
-.active-engineer:hover,.other-engineer:hover{
-       -fx-background-color:#D9D9D9;
-    -fx-opacity: 0.7;
-}
-
-.active-engineer .label {
-    -fx-text-fill: #558C8A;
-    -fx-font-weight: bold;
-}
-
-.active{
-    -fx-border-width: 0.5;
-    -fx-border-color: #558C8A;
-    -fx-border-radius: 100;
-}
-
-.inactive{
-    -fx-border-width: 0.5;
-    -fx-border-color: #C01111;
-    -fx-border-radius: 100;
-
-}
-
-.resign{
-    -fx-background-color: #C01111;
-    -fx-opacity: 0.7;
-    -fx-padding:5 10;
-    -fx-background-radius:20;
-    -fx-text-fill:#ffffff;
-}
-
-.resign:hover{
-    -fx-background-color: #C01111;
-   -fx-opacity: 0.5;
-}
-
-.resign-color{
-    -fx-text-fill: #a1220e;
-}
-
-
-
-
-/* Match the main container to the ComboBox height and border */
-.date-picker {
-    -fx-background-color: #b0b0b0, linear-gradient(to bottom, #f2f2f2, #dcdcdc);
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 5;
-    -fx-padding: 0;
-    -fx-alignment: CENTER_LEFT;
-}
-
-/* Style the text area inside the DatePicker */
-.date-picker > .text-field {
-    -fx-background-color: transparent;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold; /* Matches your "Skill/Status" bold text */
-    -fx-font-size: 13px;
-    -fx-padding: 5 10 5 10;
-}
-
-/* Match the button part on the right */
-.date-picker > .arrow-button {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0 5 5 0;
-    -fx-padding: 0 8 0 8;
-}
-
-/* Target the calendar icon specifically */
-.date-picker > .arrow-button > .icon {
-    -fx-background-color: #444444;
-    -fx-padding: 0.416667em; /* standard icon size */
-}
-
-/* Hover effect to match ComboBox interactivity */
-.date-picker:hover {
-    -fx-border-color: #999999;
-}
-
-/* Focus effect (the blue glow in your second screenshot) */
-.date-picker:focused {
-    -fx-background-color: none;
-    -fx-background-insets: -1, 1;
-    -fx-border-color: #999999;
-    -fx-border-radius: 20;
-}
 
 
 /* Text Field and Input */

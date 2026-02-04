@@ -1,0 +1,580 @@
+Index: src/main/resources/CSS/lightMode.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*{\n    /* background colors */\n    -primary-bg-color: #deedfc;\n    -secondary-bg-color: white;\n\n     /* for the text color */\n     -primary-text-color: #233D4D;\n     -secondary-text-color: #5C6F7C;\n     -muted-text-color: #8A9AA6;\n\n     /* for the navigation bar */\n     -nav-color: white;\n\n     /* for the underline */\n     -underline-color: #E09F3E;\n\n     /* for the border color */\n     -border-color: #D6C7B2;\n\n     /* for the hover color */\n     -hover-color: #BAD3E1;\n\n     /* for the focus color */\n     -focus-color: #faa424;\n\n}\n .miniIcon,.restoreIcon,.exitIcon{\n    -fx-fill: white;\n }\n\n.label{\n    -fx-text-fill: -primary-text-color;\n}\n\n.text-field, .password-field{\n    -fx-text-fill: -secondary-text-color;\n    -fx-border-color: -secondary-text-color;\n}\n\n.text-field:focused , .password-field:focused{\n    -fx-border-color: -focus-color;\n    -fx-border-width: 0 0 2 0;\n}\n\n/* for the check box field */\n.check-box {\n    -fx-text-fill: -secondary-text-color;\n}\n\n.check-box .box {\n    -fx-border-color: -secondary-bg-color;\n}\n\n.check-box:selected .mark {\n    -fx-background-color: -primary-text-color;\n}\n\n.check-box:selected .box {\n    -fx-background-color: -info-color;\n    -fx-border-color: -info-color;\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/lightMode.css b/src/main/resources/CSS/lightMode.css
+--- a/src/main/resources/CSS/lightMode.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/lightMode.css	(date 1770123329118)
+@@ -1,32 +1,33 @@
+ *{
+     /* background colors */
+-    -primary-bg-color: #deedfc;
+-    -secondary-bg-color: white;
++    -primary-bg-color: #EBEBEB;
++    -secondary-bg-color: #BDBDBD;
++    -color: black;
+ 
+-     /* for the text color */
+-     -primary-text-color: #233D4D;
+-     -secondary-text-color: #5C6F7C;
+-     -muted-text-color: #8A9AA6;
++    /* for the text color */
++    -primary-text-color: #212529;
++    -secondary-text-color: #495057;
++    -muted-text-color: #495057;
+ 
+-     /* for the navigation bar */
+-     -nav-color: white;
++    /* for the navigation bar */
++    -nav-color: #EBEBEB;
+ 
+-     /* for the underline */
+-     -underline-color: #E09F3E;
++    /* for the underline */
++    -underline-color: #FF8C00;
+ 
+-     /* for the border color */
+-     -border-color: #D6C7B2;
++    /* for the border color */
++    -border-color: #BDBDBD;
+ 
+-     /* for the hover color */
+-     -hover-color: #BAD3E1;
++    /* for the hover color */
++    -hover-color: #BDBDBD;
+ 
+-     /* for the focus color */
+-     -focus-color: #faa424;
+-
++    /* for the focus color */
++    -focus-color: #FF8C00;
+ }
+- .miniIcon,.restoreIcon,.exitIcon{
+-    -fx-fill: white;
+- }
++
++.miniIcon,.restoreIcon,.exitIcon{
++    -fx-fill: -secondary-text-color;
++}
+ 
+ .label{
+     -fx-text-fill: -primary-text-color;
+Index: src/main/resources/CSS/projectCard.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>.root{\n    -fx-background-color:beige;\n    -fx-background-radius:10;\n    -fx-effect: dropshadow(gaussian, grey, 5, 0.3, 1, 1);\n}\n.project-id,.project-type{\n    -fx-font-size:10;\n    -fx-text-fill:grey;\n}\n.project-name{\n    -fx-text-fill:black;\n    -fx-font-size:18;\n}\n.project-status {\n    -fx-padding: 4 10;\n    -fx-font-size: 10;\n    -fx-font-weight: bold;\n    -fx-text-fill: white;\n    -fx-background-radius: 10;\n    -fx-height:20;\n}\n\n/* Active */\n.status-active {\n    -fx-background-color: #4CAF50;\n}\n\n/* Completed */\n.status-finished {\n    -fx-background-color: #2196F3;\n}\n\n/* Planning */\n.status-planning {\n    -fx-background-color: #f57f4c;\n}\n.project-general{\n    -fx-font-size:18;\n    -fx-text-fill:black;\n}\n\n.view-details{\n    -fx-background-color:black;\n    -fx-text-fill:white;\n    -fx-background-radius:20;\n    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0.2, 0, 2);\n    -fx-transition: all 0.2s ease-in-out;\n\n}\n\n.view-details:hover{\n    -fx-background-color:white;\n    -fx-text-fill:black;\n    -fx-border-style: solid;\n    -fx-border-width:1;\n    -fx-border-color:black;\n    -fx-border-radius:20;\n    -fx-background-radius:20;\n    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0.25, 0, 4);\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/projectCard.css b/src/main/resources/CSS/projectCard.css
+--- a/src/main/resources/CSS/projectCard.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/projectCard.css	(date 1770123403298)
+@@ -26,7 +26,7 @@
+ }
+ 
+ /* Completed */
+-.status-finished {
++.status-completed {
+     -fx-background-color: #2196F3;
+ }
+ 
+Index: src/main/resources/CSS/main.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*{\n    /* font family */\n    -fx-font-family: \"Poppins\";\n    -fx-font-weight: bold;\n\n    /* For the specific color */\n    -warning-color: #E09F3E;\n    -success-color : #3FA37A;\n    -danger-color : #C44536;\n    -info-color : #3A86A8;\n}\n\n.cardPane {\n    -fx-border-radius: 20px;\n    -fx-background-radius: 20px;\n}\n\n.label.header-text{\n    -fx-font-size: 25px;\n    -fx-text-fill: #011121;\n\n}\n.label.info-text{\n    -fx-font-size: 15px;\n    -fx-text-fill :#011121;\n}\n\n.button {\n    -fx-font-size: 14px;\n    -fx-cursor: hand;\n    -fx-font-weight: bold;\n    -fx-border-radius: 2px;\n    -fx-background-radius: 2px;\n}\n\n\n.text-field{\n    -fx-font-size:18px;\n    -fx-text-fill : white;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius: 0;\n}\n.password-field{\n    -fx-font-size: 18px;\n    -fx-text-fill : white;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius:0;\n}\n\n.check-box {\n    -fx-font-size : 12 px;\n    -fx-cursor : hand;\n}\n\n/*For the exit mini button*/\n #exitBtn ,#minimizeBtn  ,#restoreBtn{\n     -fx-font-size: 15px;\n     -fx-border-color: none;\n     -fx-background-color: transparent;\n     -fx-padding: 0;\n     -fx-margin: 0;\n     -fx-border-radius: 0;\n     -fx-background-radius: 0;\n }\n #exitBtn:hover{\n     -fx-fill: white;\n     -fx-background-color: orange;\n }\n #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,\n #restoreBtn:hover .restoreIcon{\n    -fx-font-size: 20px;\n }\n\n #minimizeBtn:hover, #restoreBtn:hover{\n    -fx-background-color : #314E63;\n }\n\n\n\n.check-box {\n    -fx-font-size: 12px;\n}\n\n/* Box */\n.check-box .box {\n    -fx-background-color: transparent;\n    -fx-border-width: 1;\n    -fx-background-radius: 2;\n}\n\n#showPasswordCheckBox{\n    -fx-font-size : 10px;\n    -fx-text-fill : grey;\n\n}\n\n/* FORCE TEXT TO BE BLACK (Before, During, and After Typing) */\n.root .text-field,\n.root .password-field,\n.root .text-field:focused,\n.root .password-field:focused,\n#userNameTxt,\n#hidePasswordTxt,\n#showPasswordTxt {\n    -fx-text-fill: black !important;\n    -fx-prompt-text-fill: #555555 !important; /* Makes prompt text dark grey */\n}\n\n/* THE GREY SHOW PASSWORD TEXT */\n#showPasswordCheckBox .label {\n    -fx-text-fill: grey !important;\n    -fx-padding: 10px 0 0 5px;\n}\n\n\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/main.css b/src/main/resources/CSS/main.css
+--- a/src/main/resources/CSS/main.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/main.css	(date 1770123057054)
+@@ -15,14 +15,11 @@
+     -fx-background-radius: 20px;
+ }
+ 
+-.label.header-text{
++.header-text{
+     -fx-font-size: 25px;
+-    -fx-text-fill: #011121;
+-
+ }
+-.label.info-text{
+-    -fx-font-size: 15px;
+-    -fx-text-fill :#011121;
++.info-text{
++    -fx-font-size: 18px;
+ }
+ 
+ .button {
+@@ -36,14 +33,12 @@
+ 
+ .text-field{
+     -fx-font-size:18px;
+-    -fx-text-fill : white;
+     -fx-background-color: transparent;
+     -fx-border-width: 0 0 1 0;
+     -fx-background-radius: 0;
+ }
+ .password-field{
+     -fx-font-size: 18px;
+-    -fx-text-fill : white;
+     -fx-background-color: transparent;
+     -fx-border-width: 0 0 1 0;
+     -fx-background-radius:0;
+@@ -65,8 +60,8 @@
+      -fx-background-radius: 0;
+  }
+  #exitBtn:hover{
+-     -fx-fill: white;
+-     -fx-background-color: orange;
++     -fx-fill: rgb(242,242,242);
++     -fx-background-color: #d91f1f;
+  }
+  #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,
+  #restoreBtn:hover .restoreIcon{
+@@ -90,30 +85,6 @@
+     -fx-background-radius: 2;
+ }
+ 
+-#showPasswordCheckBox{
+-    -fx-font-size : 10px;
+-    -fx-text-fill : grey;
+-
+-}
+-
+-/* FORCE TEXT TO BE BLACK (Before, During, and After Typing) */
+-.root .text-field,
+-.root .password-field,
+-.root .text-field:focused,
+-.root .password-field:focused,
+-#userNameTxt,
+-#hidePasswordTxt,
+-#showPasswordTxt {
+-    -fx-text-fill: black !important;
+-    -fx-prompt-text-fill: #555555 !important; /* Makes prompt text dark grey */
+-}
+-
+-/* THE GREY SHOW PASSWORD TEXT */
+-#showPasswordCheckBox .label {
+-    -fx-text-fill: grey !important;
+-    -fx-padding: 10px 0 0 5px;
+-}
+-
+ 
+ 
+ 
+Index: src/main/resources/CSS/login.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@import url(\"main.css\");\n\n.background{\n  -fx-background-image: url(\"/Photos/logInImage1.png\");\n  -fx-background-repeat: no-repeat;\n  -fx-background-size: cover;\n  -fx-background-position: center;\n  -fx-width: 100%;\n  -fx-height: 100%;\n\n}\n\n.header-text{\n    -fx-font-size: 25px;\n    -fx-font-family : \"Poppins\";\n    -fx-font-weight: bold;\n    -fx-text-fill: white;\n}\n\n.rightPane {\n    /* Semi-transparent white background */\n    -fx-background-color: rgba(255,255,255, 0.7) ;\n\n    /* Rounded corners to match the glass look */\n    -fx-background-radius: 70 0 0 70;\n    -fx-border-radius: 70 0 0 70;\n\n    /* A thin, subtle white border creates the \"edge\" of the glass */\n    -fx-border-color: rgba(255, 255, 255, 0.3);\n    -fx-border-width: 1px;\n\n    /* This adds the inner glow/blur effect */\n    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);\n\n}\n.rightBlur{\n        -fx-background-color: rgba(255,255,255, 0.35);\n\n        -fx-background-radius: 70 0 0 70;\n        -fx-border-radius: 70 0 0 70;\n\n        -fx-border-color: rgba(255, 255, 255, 0.4);\n        -fx-border-width: 1px;\n\n        /* REAL blur effect on this node */\n        -fx-effect: gaussian-blur(200);\n}\n\n.loginTitle {\n    -fx-font-size: 20px;\n    -fx-text-fill: -primary-text-color;\n    -fx-fill: -primary-text-color;\n}\n\n.loginLogoName {\n    -fx-font-size: 38px;\n    -fx-text-fill: -primary-text-color;\n    -fx-fill: -primary-text-color;\n}\n\n#userNameLbl , #passwordLbl {\n    -fx-text-fill: #011121;\n    -fx-background-color: transparent;\n    -fx-font-size: 15px;\n}\n\n#loginBtn:pressed {\n    -fx-background-color: #011121;\n    -fx-text-fill: white;\n}\n/* 1. The default state of the button */\n#loginBtn,#sentResetCodeBtn,#changePwBtn {\n    -fx-background-color: #FFA500; /* Standard Orange */\n    -fx-border-radius: 15px;\n    -fx-background-radius: 15px;\n    -fx-text-fill: white;\n    -fx-font-weight: bold;\n    -fx-font-family: \"Poppins\";\n    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 0, 4);\n}\n\n\n/* 3. When you CLICK/SELECT the button (Brighter Orange) */\n#loginBtn:pressed {\n    /* Using derive(color, percentage) makes it 30% brighter than the original */\n    -fx-background-color: #f57f18;\n    -fx-text-fill: white;\n}\n#forgetBtn {\n      -fx-underline: true;\n      -fx-font-size: 10px;\n      -fx-text-fill: #011121;\n      -fx-font-weight: bold;\n      -fx-font-family: \"Poppins\";\n      -fx-cursor: hand;\n      -fx-background-color: transparent;\n}\n.info-text{\n  -fx-text-fill: #011121;\n  -fx-font-size :15px;\n}\n\n/* Target the text color and the cursor for all input fields */\n.text-field, .password-field, .text-field > .text, .password-field > .text {\n    -fx-text-fill: white !important;\n    -fx-fill: white !important; /* For the internal Text node */\n    -fx-caret-fill: white;      /* Makes the blinking cursor white */\n}\n\n.check-box .box {\n    -fx-background-color: transparent !important;\n    -fx-border-color: grey !important; /* Forces the border to be black */\n    -fx-border-width: 2px;\n    -fx-border-radius: 2px;\n    -fx-background-radius: 2px;\n}\n\n/* This makes the 'check' mark black to match */\n.check-box:selected .mark {\n    -fx-background-color: black !important;\n    -fx-mark-color: black !important;\n}\n\n/* 1. Apply the UPWARDS movement and font size to BOTH checkboxes */\n#showPasswordCheckBox,\n#showChangePwChoiceBox {\n    -fx-translate-y: -4px;\n    -fx-font-size: 10px;\n}\n\n/* 2. FORCE the text to be GREY and add the downward padding */\n#showPasswordCheckBox .label,\n#showChangePwChoiceBox .label {\n    -fx-text-fill: #808080 !important; /* Grey color */\n    -fx-padding: 10px 0 0 5px;         /* Moves text down 10px relative to box */\n}\n\n/* 3. Make the square SMALL and HOLLOW for both */\n#showPasswordCheckBox .box,\n#showChangePwChoiceBox .box {\n    -fx-padding: 0;\n    -fx-min-width: 13px;\n    -fx-max-width: 13px;\n    -fx-min-height: 13px;\n    -fx-max-height: 13px;\n    -fx-background-color: transparent !important;\n    -fx-border-color: black !important;\n    -fx-border-width: 1.5px;\n    -fx-background-radius: 2px;\n    -fx-border-radius: 2px;\n}\n\n/* 4. Handle the CHECKED state (White box, Black mark) */\n#showPasswordCheckBox:selected .box,\n#showChangePwChoiceBox:selected .box {\n    -fx-background-color: white !important;\n}\n\n#showPasswordCheckBox:selected .mark,\n#showChangePwChoiceBox:selected .mark {\n    -fx-background-color: black !important;\n    -fx-scale-x: 0.6;\n    -fx-scale-y: 0.6;\n}\n/* 1. Sets the color of the text to black while typing */\n.text-field:focused,\n.password-field:focused,\n#userNameTxt:focused,\n#hidePasswordTxt:focused {\n    -fx-text-fill: black !important;\n}\n\n/* 2. Sets the blinking cursor (caret) to black so it is visible */\n.text-field, .password-field {\n    -fx-caret-fill: black;\n}\n\n/* 3. Ensure the text stays black even if there is an internal 'text' node conflict */\n.text-field:focused .text,\n.password-field:focused .text {\n    -fx-fill: black !important;\n}\n\n#forgetBtn{\n    -fx-font-weight: regular;\n}\n.label .backTo{\n    -fx-text-fill: grey;\n}\n#backToLogin {\n    -fx-text-fill: black !important;   /* Sets the color to grey */\n    -fx-underline: true;               /* Adds the underline */\n    -fx-background-color: transparent; /* Makes the button background invisible */\n    -fx-cursor: hand;                  /* Changes cursor to a hand on hover */\n    -fx-font-family: \"Poppins\";        /* Matches your other text */\n    -fx-font-size: 12px;\n}\n\n.backTo {\n    -fx-text-fill: grey !important;\n    -fx-font-family: \"Poppins\";\n    -fx-font-size: 12px;\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/login.css b/src/main/resources/CSS/login.css
+--- a/src/main/resources/CSS/login.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/login.css	(date 1770122831635)
+@@ -69,7 +69,7 @@
+     -fx-text-fill: white;
+ }
+ /* 1. The default state of the button */
+-#loginBtn,#sentResetCodeBtn,#changePwBtn {
++#loginBtn,#sentResetCodeBtn,#changePwBtn, #verifyOtpBtn {
+     -fx-background-color: #FFA500; /* Standard Orange */
+     -fx-border-radius: 15px;
+     -fx-background-radius: 15px;
+Index: src/main/resources/CSS/darkMode.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*{\n    /* for background color */\n    -primary-bg-color: #0b1f33;\n    -secondary-bg-color: #011121;\n\n    /* for the text color */\n    -primary-text-color: #F8FAFC;\n    -secondary-text-color: orange;\n    -muted-text-color: #94A3B8;\n\n    /* for the navigation bar */\n    -nav-color: #011121;\n\n    /* for the underline */\n    -underline-color: #D68C2F;\n\n    /* for the border color */\n    -border-color : #3F6478;\n\n    /* for the focus color */\n    -focus-color: #FF881F;\n\n    /* for the hover color */\n    -hover-color: #5B81A5;\n\n\n}\n .miniIcon,.restoreIcon,.exitIcon{\n    -fx-fill: -secondary-text-color;\n }\n\n.label{\n    -fx-text-fill: -primary-text-color;\n}\n\n /* fo the text field and password field of the colors */\n.text-field, .password-field{\n    -fx-text-fill: -secondary-text-color;\n    -fx-border-color: -secondary-text-color;\n}\n\n.text-field:focused , .password-field:focused{\n    -fx-border-color: -focus-color;\n    -fx-border-width: 0 0 2 0;\n}\n\n/* for the check box field */\n.check-box {\n    -fx-text-fill: -secondary-text-color;\n}\n\n.check-box .box {\n    -fx-border-color: -secondary-bg-color;\n}\n\n.check-box:selected .mark {\n    -fx-background-color: -primary-text-color;\n}\n\n.check-box:selected .box {\n    -fx-background-color: -info-color;\n    -fx-border-color: -info-color;\n}\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/darkMode.css b/src/main/resources/CSS/darkMode.css
+--- a/src/main/resources/CSS/darkMode.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/darkMode.css	(date 1770123315422)
+@@ -1,27 +1,28 @@
+ *{
+     /* for background color */
+-    -primary-bg-color: #0b1f33;
+-    -secondary-bg-color: #011121;
++    -primary-bg-color: #1D2E4A;
++    -secondary-bg-color: #32548E;
++    -color: white;
+ 
+     /* for the text color */
+     -primary-text-color: #F8FAFC;
+-    -secondary-text-color: orange;
+-    -muted-text-color: #94A3B8;
++    -secondary-text-color: #CBD5E1;
++    -muted-text-color: #495057;
+ 
+     /* for the navigation bar */
+-    -nav-color: #011121;
++    -nav-color: #1D2E4A;
+ 
+     /* for the underline */
+-    -underline-color: #D68C2F;
++    -underline-color: #FF8C00;
+ 
+     /* for the border color */
+-    -border-color : #3F6478;
++    -border-color : #32548E;
+ 
+     /* for the focus color */
+-    -focus-color: #FF881F;
++    -focus-color: #FF8C00;
+ 
+     /* for the hover color */
+-    -hover-color: #5B81A5;
++    -hover-color: #32548E;
+ 
+ 
+ }
+Index: src/main/resources/CSS/managerSupervisorList.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@import url(\"main.css\");\n\n*{\n    -title-font-size:23;\n    -title-line-height: 34.5;\n    -paragraph-font-size: 15;\n\n}\n\n\n/* View Supervisor */\n.createBtn{\n    -fx-background-color:#558C8A;\n    -fx-text-fill:#ffffff;\n    -fx-border-radius: 10;\n    -fx-background-radius: 5;\n    -fx-padding: 6 30;\n    -fx-pref-width: 120;\n}\n\n.createBtn:hover{\n    -fx-opacity:0.9;\n    -fx-text-fill:#EFBF04;\n}\n\n.managerAccSupervisorCtn{\n    -fx-background-radius: 10;\n    -fx-border-radius: 10;\n    -fx-background-color:#ebeef2;\n\n}\n\n.managerAccSupervisorCtn:hover{\n    -fx-opacity: 0.8;\n}\n\n.managerAccSupervisorCtn-Inactive{\n  -fx-background-radius: 10;\n  -fx-border-radius: 10;\n  -fx-background-color: #ebeef4;\n  -fx-opacity: 0.5;\n}\n\n.imgRounded{\n    -fx-pref-width: 50;\n    -fx-pref-height: 50;\n    -fx-background-radius: 50;\n    -fx-border-radius: 50;\n}\n\n.managerAccSupervisorName{\n    -fx-text-fill: #000000;\n    -fx-font-size: 15;\n    -fx-font-weight:normal;\n}\n\n.managerAccSupervisor{\n     -fx-text-fill: #000000;\n     -fx-font-size: 12;\n     -fx-opacity: 0.7;\n     -fx-font-weight: normal;\n}\n\n.managerAccSpProjectType{\n     -fx-text-fill: #000000;\n     -fx-font-size: 12;\n     -fx-opacity: 0.8;\n}\n\n.managerAccSpProgressCtn{\n     -fx-pref-width: 50;\n     -fx-pref-height: 10;\n}\n\n\n.managerAccSpProgressBar{\n     -fx-pref-width: 37;\n     -fx-pref-height: 5;\n     -fx-accent: #558C8A;\n\n\n}\n.managerAccSpProgressPercentTxt{\n    -fx-font-size: 12;\n}\n\n.managerAccSpBtn{\n    -fx-pref-width: 50;\n    -fx-pref-height: 15;\n    -fx-font-size: 10;\n    -fx-opacity:0.5;\n    -fx-text-fill:#000000;\n\n}\n\n.managerAccSpBtnView{\n    -fx-pref-width:100;\n    -fx-background-color: #11C04C;\n    -fx-opacity:0.8;\n    -fx-text-fill: #f4f4f4f4;\n\n    -fx-background-radius: 5;\n    -fx-padding:5 10 5 10;\n\n\n}\n\n.managerAccSpBtnView:hover{\n    -fx-text-fill: #ffffff;\n\n\n}\n.managerAccSpBtnDel{\n    -fx-pref-width:100;\n    -fx-background-color: #C01111;\n    -fx-text-fill: #dedede;\n\n    -fx-opacity:0.8;\n\n\n    -fx-background-radius: 5;\n    -fx-padding:5 10 5 10;\n}\n\n\n.managerAccSpBtnDel:hover{\n    -fx-background-color: #C01111;\n    -fx-text-fill: #dedede;\n    -fx-text-fill: #EFBF04;\n\n\n}\n\n/* Personal Information  */\n.managerAccSpSubLabel{\n    -fx-font-size: -title-font-size;\n}\n\n\n\n /* :: Add Btn */\n.addSupervisorBtn{\n   -fx-background-color:#558C8A;\n   -fx-padding: 3 10 3 10;\n}\n\n.subTitle{\n    -fx-font-size: 16;\n}\n\n\n\n/* Other Engineer List */\n.active-engineer {\n    -fx-background-color:#D9D9D9;\n    -fx-background-radius: 8;\n    -fx-padding: 8 12 8 12; /* TOP RIGHT BOTTOM LEFT */\n}\n\n/* Hover effect */\n.active-engineer:hover,.other-engineer:hover{\n       -fx-background-color:#D9D9D9;\n    -fx-opacity: 0.7;\n}\n\n.active-engineer .label {\n    -fx-text-fill: #558C8A;\n    -fx-font-weight: bold;\n}\n\n.active{\n    -fx-border-width: 0.5;\n    -fx-border-color: #558C8A;\n    -fx-border-radius: 100;\n}\n\n.inactive{\n    -fx-border-width: 0.5;\n    -fx-border-color: #C01111;\n    -fx-border-radius: 100;\n\n}\n\n.resign{\n    -fx-background-color: #C01111;\n    -fx-opacity: 0.7;\n    -fx-padding:5 10;\n    -fx-background-radius:20;\n    -fx-text-fill:#ffffff;\n}\n\n.resign:hover{\n    -fx-background-color: #C01111;\n   -fx-opacity: 0.5;\n}\n\n.resign-color{\n    -fx-text-fill: #a1220e;\n}\n\n\n\n\n/* Match the main container to the ComboBox height and border */\n.date-picker {\n    -fx-background-color: #b0b0b0, linear-gradient(to bottom, #f2f2f2, #dcdcdc);\n    -fx-background-insets: 0, 1;\n    -fx-background-radius: 5;\n    -fx-padding: 0;\n    -fx-alignment: CENTER_LEFT;\n}\n\n/* Style the text area inside the DatePicker */\n.date-picker > .text-field {\n    -fx-background-color: transparent;\n    -fx-text-fill: #333333;\n    -fx-font-weight: bold; /* Matches your \"Skill/Status\" bold text */\n    -fx-font-size: 13px;\n    -fx-padding: 5 10 5 10;\n}\n\n/* Match the button part on the right */\n.date-picker > .arrow-button {\n    -fx-background-color: transparent;\n    -fx-background-insets: 0;\n    -fx-background-radius: 0 5 5 0;\n    -fx-padding: 0 8 0 8;\n}\n\n/* Target the calendar icon specifically */\n.date-picker > .arrow-button > .icon {\n    -fx-background-color: #444444;\n    -fx-padding: 0.416667em; /* standard icon size */\n}\n\n/* Hover effect to match ComboBox interactivity */\n.date-picker:hover {\n    -fx-border-color: #999999;\n}\n\n/* Focus effect (the blue glow in your second screenshot) */\n.date-picker:focused {\n    -fx-background-color: none;\n    -fx-background-insets: -1, 1;\n    -fx-border-color: #999999;\n    -fx-border-radius: 20;\n}\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/CSS/managerSupervisorList.css b/src/main/resources/CSS/managerSupervisorList.css
+--- a/src/main/resources/CSS/managerSupervisorList.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/CSS/managerSupervisorList.css	(date 1770123295040)
+@@ -137,6 +137,47 @@
+ }
+ 
+ 
++/* Create Supervisor */
++
++.promtTxt{
++    -fx-font-size: 15;
++}
++
++.datePicker{
++    -fx-font-size: 12;
++}
++
++.inputFields{
++    -fx-font-size: -paragraph-font-size;
++    -fx-border-width: .3;
++    -fx-border-color:#558C8A;
++    -fx-border-radius: 5;
++}
++
++.firstName{
++    -fx-pref-width: 500;
++    -fx-text-fill:#000000;
++    -fx-padding: 2 10 2 10;
++    -fx-font-size: -paragraph-font-size;
++
++
++}
++.email{
++     -fx-pref-width: 500;
++     -fx-text-fill:#000000;
++     -fx-padding: 2 10 2 10;
++     -fx-font-size: -paragraph-font-size;
++
++}
++
++
++.roleAndProjectCombo{
++     -fx-padding: 3 10 3 10;
++}
++
++.date{
++    -fx-pref-width:10;
++}
+ 
+  /* :: Add Btn */
+ .addSupervisorBtn{
+@@ -144,106 +185,12 @@
+    -fx-padding: 3 10 3 10;
+ }
+ 
++
+ .subTitle{
+     -fx-font-size: 16;
+ }
+ 
+ 
+ 
+-/* Other Engineer List */
+-.active-engineer {
+-    -fx-background-color:#D9D9D9;
+-    -fx-background-radius: 8;
+-    -fx-padding: 8 12 8 12; /* TOP RIGHT BOTTOM LEFT */
+-}
+-
+-/* Hover effect */
+-.active-engineer:hover,.other-engineer:hover{
+-       -fx-background-color:#D9D9D9;
+-    -fx-opacity: 0.7;
+-}
+-
+-.active-engineer .label {
+-    -fx-text-fill: #558C8A;
+-    -fx-font-weight: bold;
+-}
+-
+-.active{
+-    -fx-border-width: 0.5;
+-    -fx-border-color: #558C8A;
+-    -fx-border-radius: 100;
+-}
+-
+-.inactive{
+-    -fx-border-width: 0.5;
+-    -fx-border-color: #C01111;
+-    -fx-border-radius: 100;
+-
+-}
+-
+-.resign{
+-    -fx-background-color: #C01111;
+-    -fx-opacity: 0.7;
+-    -fx-padding:5 10;
+-    -fx-background-radius:20;
+-    -fx-text-fill:#ffffff;
+-}
+-
+-.resign:hover{
+-    -fx-background-color: #C01111;
+-   -fx-opacity: 0.5;
+-}
+-
+-.resign-color{
+-    -fx-text-fill: #a1220e;
+-}
+-
+-
+-
+-
+-/* Match the main container to the ComboBox height and border */
+-.date-picker {
+-    -fx-background-color: #b0b0b0, linear-gradient(to bottom, #f2f2f2, #dcdcdc);
+-    -fx-background-insets: 0, 1;
+-    -fx-background-radius: 5;
+-    -fx-padding: 0;
+-    -fx-alignment: CENTER_LEFT;
+-}
+-
+-/* Style the text area inside the DatePicker */
+-.date-picker > .text-field {
+-    -fx-background-color: transparent;
+-    -fx-text-fill: #333333;
+-    -fx-font-weight: bold; /* Matches your "Skill/Status" bold text */
+-    -fx-font-size: 13px;
+-    -fx-padding: 5 10 5 10;
+-}
+-
+-/* Match the button part on the right */
+-.date-picker > .arrow-button {
+-    -fx-background-color: transparent;
+-    -fx-background-insets: 0;
+-    -fx-background-radius: 0 5 5 0;
+-    -fx-padding: 0 8 0 8;
+-}
+-
+-/* Target the calendar icon specifically */
+-.date-picker > .arrow-button > .icon {
+-    -fx-background-color: #444444;
+-    -fx-padding: 0.416667em; /* standard icon size */
+-}
+-
+-/* Hover effect to match ComboBox interactivity */
+-.date-picker:hover {
+-    -fx-border-color: #999999;
+-}
+-
+-/* Focus effect (the blue glow in your second screenshot) */
+-.date-picker:focused {
+-    -fx-background-color: none;
+-    -fx-background-insets: -1, 1;
+-    -fx-border-color: #999999;
+-    -fx-border-radius: 20;
+-}
+ 
+ 
+Index: target/classes/CSS/main.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*{\n    /* font family */\n    -fx-font-family: \"Poppins\";\n    -fx-font-weight: bold;\n\n    /* For the specific color */\n    -warning-color: #E09F3E;\n    -success-color : #3FA37A;\n    -danger-color : #C44536;\n    -info-color : #3A86A8;\n}\n\n.cardPane {\n    -fx-border-radius: 20px;\n    -fx-background-radius: 20px;\n}\n\n.label.header-text{\n    -fx-font-size: 25px;\n    -fx-text-fill: #011121;\n\n}\n.label.info-text{\n    -fx-font-size: 15px;\n    -fx-text-fill :#011121;\n}\n\n.button {\n    -fx-font-size: 14px;\n    -fx-cursor: hand;\n    -fx-font-weight: bold;\n    -fx-border-radius: 2px;\n    -fx-background-radius: 2px;\n}\n\n\n.text-field{\n    -fx-font-size:18px;\n    -fx-text-fill : white;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius: 0;\n}\n.password-field{\n    -fx-font-size: 18px;\n    -fx-text-fill : white;\n    -fx-background-color: transparent;\n    -fx-border-width: 0 0 1 0;\n    -fx-background-radius:0;\n}\n\n.check-box {\n    -fx-font-size : 12 px;\n    -fx-cursor : hand;\n}\n\n/*For the exit mini button*/\n #exitBtn ,#minimizeBtn  ,#restoreBtn{\n     -fx-font-size: 15px;\n     -fx-border-color: none;\n     -fx-background-color: transparent;\n     -fx-padding: 0;\n     -fx-margin: 0;\n     -fx-border-radius: 0;\n     -fx-background-radius: 0;\n }\n #exitBtn:hover{\n     -fx-fill: white;\n     -fx-background-color: orange;\n }\n #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,\n #restoreBtn:hover .restoreIcon{\n    -fx-font-size: 20px;\n }\n\n #minimizeBtn:hover, #restoreBtn:hover{\n    -fx-background-color : #314E63;\n }\n\n\n\n.check-box {\n    -fx-font-size: 12px;\n}\n\n/* Box */\n.check-box .box {\n    -fx-background-color: transparent;\n    -fx-border-width: 1;\n    -fx-background-radius: 2;\n}\n\n#showPasswordCheckBox{\n    -fx-font-size : 10px;\n    -fx-text-fill : grey;\n\n}\n\n/* FORCE TEXT TO BE BLACK (Before, During, and After Typing) */\n.root .text-field,\n.root .password-field,\n.root .text-field:focused,\n.root .password-field:focused,\n#userNameTxt,\n#hidePasswordTxt,\n#showPasswordTxt {\n    -fx-text-fill: black !important;\n    -fx-prompt-text-fill: #555555 !important; /* Makes prompt text dark grey */\n}\n\n/* THE GREY SHOW PASSWORD TEXT */\n#showPasswordCheckBox .label {\n    -fx-text-fill: grey !important;\n    -fx-padding: 10px 0 0 5px;\n}\n\n\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/CSS/main.css b/target/classes/CSS/main.css
+--- a/target/classes/CSS/main.css	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/target/classes/CSS/main.css	(date 1770123440439)
+@@ -15,14 +15,11 @@
+     -fx-background-radius: 20px;
+ }
+ 
+-.label.header-text{
++.header-text{
+     -fx-font-size: 25px;
+-    -fx-text-fill: #011121;
+-
+ }
+-.label.info-text{
+-    -fx-font-size: 15px;
+-    -fx-text-fill :#011121;
++.info-text{
++    -fx-font-size: 18px;
+ }
+ 
+ .button {
+@@ -36,14 +33,12 @@
+ 
+ .text-field{
+     -fx-font-size:18px;
+-    -fx-text-fill : white;
+     -fx-background-color: transparent;
+     -fx-border-width: 0 0 1 0;
+     -fx-background-radius: 0;
+ }
+ .password-field{
+     -fx-font-size: 18px;
+-    -fx-text-fill : white;
+     -fx-background-color: transparent;
+     -fx-border-width: 0 0 1 0;
+     -fx-background-radius:0;
+@@ -65,8 +60,8 @@
+      -fx-background-radius: 0;
+  }
+  #exitBtn:hover{
+-     -fx-fill: white;
+-     -fx-background-color: orange;
++     -fx-fill: rgb(242,242,242);
++     -fx-background-color: #d91f1f;
+  }
+  #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,
+  #restoreBtn:hover .restoreIcon{
+@@ -90,30 +85,6 @@
+     -fx-background-radius: 2;
+ }
+ 
+-#showPasswordCheckBox{
+-    -fx-font-size : 10px;
+-    -fx-text-fill : grey;
+-
+-}
+-
+-/* FORCE TEXT TO BE BLACK (Before, During, and After Typing) */
+-.root .text-field,
+-.root .password-field,
+-.root .text-field:focused,
+-.root .password-field:focused,
+-#userNameTxt,
+-#hidePasswordTxt,
+-#showPasswordTxt {
+-    -fx-text-fill: black !important;
+-    -fx-prompt-text-fill: #555555 !important; /* Makes prompt text dark grey */
+-}
+-
+-/* THE GREY SHOW PASSWORD TEXT */
+-#showPasswordCheckBox .label {
+-    -fx-text-fill: grey !important;
+-    -fx-padding: 10px 0 0 5px;
+-}
+-
+ 
+ 
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"2b09615c-858c-4c42-aee3-546cd2ea4e33\" name=\"Changes\" comment=\"log in design\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/CSS/login.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/CSS/login.css\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/CSS/main.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/CSS/main.css\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/CSS/sideBar.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/CSS/sideBar.css\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/View/login.fxml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/View/login.fxml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/target/classes/CSS/main.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/CSS/main.css\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;GeekyEllie&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/Flecation/IPP-System.git&quot;,\n    &quot;accountId&quot;: &quot;65f3b870-8d5d-4109-8a94-8773397bccf9&quot;\n  },\n  &quot;recentNewPullRequestHead&quot;: {\n    &quot;server&quot;: {\n      &quot;useHttp&quot;: false,\n      &quot;host&quot;: &quot;github.com&quot;,\n      &quot;port&quot;: null,\n      &quot;suffix&quot;: null\n    },\n    &quot;owner&quot;: &quot;Flecation&quot;,\n    &quot;repository&quot;: &quot;IPP-System&quot;\n  }\n}</component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 6\n}</component>\n  <component name=\"ProjectId\" id=\"38ry7vtb4WJfwRdtTA3F7Ca1Yvb\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,\n    &quot;Application.start.executor&quot;: &quot;Run&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;Win-Lae-Shwe-Yee&quot;,\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/Users/winlaeshweyee/IdeaProjects/IPP-System/src/main/resources/Photos&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/src/main/resources/Photos\" />\n    </key>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"2b09615c-858c-4c42-aee3-546cd2ea4e33\" name=\"Changes\" comment=\"\" />\n      <created>1769571822051</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1769571822051</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"log in design\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1770049555325</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1770049555325</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"2\" />\n    <servers />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"log in design\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"log in design\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/.idea/workspace.xml	(date 1770123270540)
+@@ -8,8 +8,6 @@
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/login.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
+     </list>
+@@ -96,8 +94,27 @@
+       <option name="project" value="LOCAL" />
+       <updated>1770049555325</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="log in design">
++      <option name="closed" value="true" />
++      <created>1770121940679</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1770121940679</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="log in design" />
+Index: src/main/resources/View/login.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<?import javafx.geometry.Insets?>\n<?import javafx.scene.control.Button?>\n<?import javafx.scene.control.CheckBox?>\n<?import javafx.scene.control.Label?>\n<?import javafx.scene.control.PasswordField?>\n<?import javafx.scene.control.TextField?>\n<?import javafx.scene.layout.BorderPane?>\n<?import javafx.scene.layout.HBox?>\n<?import javafx.scene.layout.Region?>\n<?import javafx.scene.layout.StackPane?>\n<?import javafx.scene.layout.VBox?>\n\n<VBox fx:id=\"root\" alignment=\"CENTER\" maxHeight=\"535.0\" maxWidth=\"900.0\" minHeight=\"535.0\" minWidth=\"900.0\" prefHeight=\"535.0\" prefWidth=\"900.0\" styleClass=\"background\" stylesheets=\"@../CSS/login.css\" xmlns=\"http://javafx.com/javafx/25\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller=\"IPPSystem.Controllers.loginController\">\n   <children>\n      <HBox alignment=\"TOP_RIGHT\" maxWidth=\"1605.0\" minHeight=\"17.0\" minWidth=\"900.0\" prefHeight=\"46.0\" prefWidth=\"900.0\" styleClass=\"topBar\">\n         <children>\n            <Button fx:id=\"minimizeBtn\" maxHeight=\"25.0\" maxWidth=\"25.0\" minHeight=\"25.0\" minWidth=\"25.0\" mnemonicParsing=\"false\" />\n            <Button fx:id=\"restoreBtn\" maxHeight=\"25.0\" maxWidth=\"25.0\" minHeight=\"25.0\" minWidth=\"25.0\" mnemonicParsing=\"false\" />\n            <Button fx:id=\"exitBtn\" alignment=\"CENTER\" maxHeight=\"25.0\" maxWidth=\"25.0\" minHeight=\"25.0\" minWidth=\"25.0\" mnemonicParsing=\"false\" />\n         </children>\n      </HBox>\n      <StackPane fx:id=\"overlayPane\" prefHeight=\"534.0\" prefWidth=\"900.0\">\n         <children>\n            <HBox alignment=\"CENTER_RIGHT\" maxHeight=\"523.0\" maxWidth=\"900.0\" minHeight=\"462.0\" minWidth=\"900.0\" prefHeight=\"523.0\" prefWidth=\"900.0\" StackPane.alignment=\"CENTER\">\n               <children>\n                  <StackPane alignment=\"TOP_CENTER\" maxHeight=\"550.0\" maxWidth=\"300.0\" minHeight=\"500.0\" minWidth=\"320.0\" prefHeight=\"550.0\" prefWidth=\"300.0\">\n                     <HBox.margin>\n                        <Insets />\n                     </HBox.margin>\n                     <children>\n                        <VBox alignment=\"CENTER\" prefHeight=\"200.0\" prefWidth=\"100.0\" styleClass=\"rightBlur\" StackPane.alignment=\"CENTER\" />\n                        <VBox fx:id=\"loginBox\" alignment=\"CENTER\" maxHeight=\"500.0\" maxWidth=\"320.0\" minHeight=\"515.0\" minWidth=\"320.0\" styleClass=\"rightPane\" visible=\"false\">\n                           <children>\n                              <Label alignment=\"CENTER\" contentDisplay=\"CENTER\" styleClass=\"header-text\" text=\"Sign in your Account\" translateY=\"-20.0\" />\n                              <StackPane maxHeight=\"80.0\" minHeight=\"80.0\" prefHeight=\"150.0\" prefWidth=\"200.0\">\n                                 <children>\n                                    <TextField fx:id=\"userEmailTxt\" maxHeight=\"40.0\" maxWidth=\"250.0\" minHeight=\"40.0\" minWidth=\"250.0\" StackPane.alignment=\"CENTER\" />\n                                    <Label fx:id=\"userEmailLbl\" styleClass=\"info-text\" text=\"User Email\" StackPane.alignment=\"CENTER_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                    <Label fx:id=\"emailWrongLbl\" minWidth=\"250.0\" text=\"Label\" StackPane.alignment=\"BOTTOM_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                 </children>\n                                 <VBox.margin>\n                                    <Insets />\n                                 </VBox.margin>\n                              </StackPane>\n                              <StackPane maxHeight=\"80.0\" minHeight=\"80.0\">\n                                 <children>\n                                    <TextField fx:id=\"showPasswordTxt\" maxHeight=\"40.0\" maxWidth=\"250.0\" minHeight=\"40.0\" minWidth=\"250.0\" StackPane.alignment=\"CENTER\" />\n                                    <PasswordField fx:id=\"hidePasswordTxt\" maxHeight=\"40.0\" maxWidth=\"250.0\" minHeight=\"40.0\" minWidth=\"250.0\" prefHeight=\"40.0\" prefWidth=\"396.0\" StackPane.alignment=\"CENTER\" />\n                                    <Label fx:id=\"passwordLbl\" styleClass=\"info-text\" text=\"Password\" StackPane.alignment=\"CENTER_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                    <CheckBox fx:id=\"showPasswordCheckBox\" alignment=\"TOP_LEFT\" mnemonicParsing=\"false\" styleClass=\"info-text\" text=\"Show Password\" translateY=\"18.0\" StackPane.alignment=\"BOTTOM_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </CheckBox>\n                                    <Label fx:id=\"pwWrongLbl\" minWidth=\"250.0\" text=\"Label\" StackPane.alignment=\"BOTTOM_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                 </children>\n                                 <VBox.margin>\n                                    <Insets bottom=\"30.0\" />\n                                 </VBox.margin>\n                              </StackPane>\n                              <Button fx:id=\"loginBtn\" maxHeight=\"36.0\" maxWidth=\"250.0\" minHeight=\"36.0\" minWidth=\"250.0\" mnemonicParsing=\"false\" text=\"Login\" translateY=\"5.0\" />\n                              <Button fx:id=\"forgetBtn\" mnemonicParsing=\"false\" prefHeight=\"25.0\" prefWidth=\"143.0\" text=\"forget password ?\" translateY=\"10.0\">\n                                 <VBox.margin>\n                                    <Insets />\n                                 </VBox.margin>\n                              </Button>\n                           </children>\n                        </VBox>\n                        <VBox fx:id=\"otpBox\" alignment=\"CENTER\" maxHeight=\"515.0\" maxWidth=\"320.0\" minHeight=\"515.0\" minWidth=\"320.0\" spacing=\"5.0\" styleClass=\"rightPane\" visible=\"false\" StackPane.alignment=\"CENTER\">\n                           <padding>\n                              <Insets top=\"10.0\" />\n                           </padding>\n                           <children>\n                              <Label styleClass=\"header-text\" text=\"OTP Verification\" />\n                              <Label styleClass=\"info-text\" text=\"One Time Password(OTP) has been sent\">\n                                 <VBox.margin>\n                                    <Insets top=\"10.0\" />\n                                 </VBox.margin>\n                              </Label>\n                              <Label fx:id=\"otpEmail\" styleClass=\"info-text\" text=\"via Email to :\" />\n                              <Label fx:id=\"otpEmailName\" styleClass=\"info-text\" text=\"Label\" wrapText=\"true\">\n                                 <VBox.margin>\n                                    <Insets />\n                                 </VBox.margin>\n                              </Label>\n                              <Label text=\"Enter the OTP below to verify it\">\n                                 <VBox.margin>\n                                    <Insets top=\"30.0\" />\n                                 </VBox.margin>\n                              </Label>\n                              <HBox alignment=\"CENTER\" minHeight=\"70.0\" prefWidth=\"200.0\" spacing=\"10.0\">\n                                 <children>\n                                    <TextField fx:id=\"otp1\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                    <TextField fx:id=\"otp2\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                    <TextField fx:id=\"otp3\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                    <TextField fx:id=\"otp4\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                    <TextField fx:id=\"otp5\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                    <TextField fx:id=\"otp6\" minHeight=\"50.0\" minWidth=\"50.0\" styleClass=\"otpInput\" />\n                                 </children>\n                              </HBox>\n                              <Button fx:id=\"verifyOtpBtn\" minHeight=\"36.0\" minWidth=\"250.0\" mnemonicParsing=\"false\" text=\"Verify OTP\">\n                                 <VBox.margin>\n                                    <Insets top=\"10.0\" />\n                                 </VBox.margin>\n                              </Button>\n                           </children>\n                        </VBox>\n                        <VBox fx:id=\"forgetPwBox\" alignment=\"CENTER\" maxHeight=\"515.0\" maxWidth=\"320.0\" minHeight=\"515.0\" minWidth=\"320.0\" prefHeight=\"515.0\" prefWidth=\"320.0\" spacing=\"5.0\" styleClass=\"rightPane\">\n                           <padding>\n                              <Insets right=\"10.0\" />\n                           </padding>\n                           <children>\n                              <Label alignment=\"CENTER\" contentDisplay=\"CENTER\" minWidth=\"272.0\" prefHeight=\"27.0\" prefWidth=\"272.0\" styleClass=\"info-text\" text=\"Forgot Password ?\" />\n                              <Label alignment=\"CENTER\" minWidth=\"300.0\" prefHeight=\"22.0\" prefWidth=\"308.0\" text=\"Please type your email to receive the confirmation\">\n                                 <padding>\n                                    <Insets left=\"10.0\" />\n                                 </padding></Label>\n                              <Label alignment=\"CENTER\" minWidth=\"300.0\" prefHeight=\"22.0\" prefWidth=\"308.0\" text=\"code to reset a new password.\">\n                                 <padding>\n                                    <Insets left=\"10.0\" />\n                                 </padding>\n                                 <VBox.margin>\n                                    <Insets top=\"-10.0\" />\n                                 </VBox.margin>\n                              </Label>\n                              <StackPane maxHeight=\"80.0\" minHeight=\"80.0\" prefHeight=\"150.0\" prefWidth=\"200.0\">\n                                 <children>\n                                    <TextField fx:id=\"forgetPwEmailTxt\" maxHeight=\"40.0\" maxWidth=\"300.0\" minHeight=\"40.0\" minWidth=\"300.0\" StackPane.alignment=\"CENTER_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"10.0\" />\n                                       </StackPane.margin>\n                                    </TextField>\n                                    <Label fx:id=\"forgetPwEmailLbl\" styleClass=\"info-text\" text=\"User Email\" StackPane.alignment=\"CENTER_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"30.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                 </children>\n                              </StackPane>\n                              <Button fx:id=\"sentResetCodeBtn\" minHeight=\"36.0\" minWidth=\"250.0\" mnemonicParsing=\"false\" text=\"Sent reset Code\">\n                                 <VBox.margin>\n                                    <Insets top=\"15.0\" />\n                                 </VBox.margin>\n                              </Button>\n                              <HBox fx:id=\"backToLoginRow\" alignment=\"CENTER\" spacing=\"10.0\">\n                                 <children>\n                                    <Label styleClass=\"backTo\" text=\"Back to\" />\n                                    <Label fx:id=\"backToLogin\" text=\"Log in\" />\n                                 </children>\n                              </HBox>\n                           </children>\n                        </VBox>\n                        <VBox fx:id=\"changeNewPwBox\" alignment=\"CENTER\" maxHeight=\"515.0\" maxWidth=\"320.0\" minHeight=\"515.0\" minWidth=\"320.0\" prefHeight=\"515.0\" prefWidth=\"320.0\" spacing=\"10.0\" styleClass=\"rightPane\" visible=\"false\">\n                           <padding>\n                              <Insets left=\"50.0\" right=\"10.0\" top=\"10.0\" />\n                           </padding>\n                           <children>\n                              <Label styleClass=\"loginTitle\" text=\"Change Password\" />\n                              <StackPane maxHeight=\"80.0\" minHeight=\"80.0\">\n                                 <children>\n                                    <TextField fx:id=\"showChangePwTxt\" maxHeight=\"40.0\" maxWidth=\"250.0\" minHeight=\"40.0\" minWidth=\"250.0\" StackPane.alignment=\"CENTER\" />\n                                    <PasswordField fx:id=\"hideChangePwTxt\" maxHeight=\"40.0\" maxWidth=\"250.0\" minHeight=\"40.0\" minWidth=\"250.0\" prefHeight=\"40.0\" prefWidth=\"396.0\" StackPane.alignment=\"CENTER\" />\n                                    <Label fx:id=\"showChangePwLbl\" styleClass=\"info-text\" text=\"New Password\" StackPane.alignment=\"CENTER_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"60.0\" />\n                                       </StackPane.margin>\n                                    </Label>\n                                    <CheckBox fx:id=\"showChangePwChoiceBox\" mnemonicParsing=\"false\" styleClass=\"info-text\" text=\"Show Password\" translateY=\"15.0\" StackPane.alignment=\"BOTTOM_LEFT\">\n                                       <StackPane.margin>\n                                          <Insets left=\"50.0\" />\n                                       </StackPane.margin>\n                                    </CheckBox>\n                                 </children>\n                              </StackPane>\n                              <Button fx:id=\"changePwBtn\" minHeight=\"36.0\" minWidth=\"250.0\" mnemonicParsing=\"false\" text=\"Change Password\">\n                                 <VBox.margin>\n                                    <Insets top=\"10.0\" />\n                                 </VBox.margin>\n                              </Button>\n                           </children>\n                        </VBox>\n                     </children>\n                  </StackPane>\n               </children>\n            </HBox>\n            <BorderPane fx:id=\"openWithEmail\" visible=\"false\" StackPane.alignment=\"CENTER\">\n               <center>\n                  <Label fx:id=\"openEmailAction\" minHeight=\"50.0\" minWidth=\"200.0\" styleClass=\"header-text\" text=\"Open Via Email Code\" BorderPane.alignment=\"CENTER\" />\n               </center>\n               <top>\n                  <Region maxHeight=\"200.0\" minHeight=\"196.0\" opacity=\"0.48\" prefHeight=\"196.0\" prefWidth=\"900.0\" BorderPane.alignment=\"CENTER\" />\n               </top>\n               <left>\n                  <Region minWidth=\"300.0\" opacity=\"0.48\" prefHeight=\"117.0\" prefWidth=\"300.0\" BorderPane.alignment=\"CENTER\" />\n               </left>\n               <bottom>\n                  <Region maxHeight=\"250.0\" minHeight=\"250.0\" opacity=\"0.48\" BorderPane.alignment=\"CENTER\" />\n               </bottom>\n               <right>\n                  <Region maxWidth=\"300.0\" minWidth=\"300.0\" opacity=\"0.48\" BorderPane.alignment=\"CENTER\" />\n               </right>\n            </BorderPane>\n         </children>\n      </StackPane>\n   </children>\n</VBox>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/View/login.fxml b/src/main/resources/View/login.fxml
+--- a/src/main/resources/View/login.fxml	(revision 89563caccaeb60608a4035030e828479928bdec1)
++++ b/src/main/resources/View/login.fxml	(date 1770122848177)
+@@ -84,7 +84,7 @@
+                               </Button>
+                            </children>
+                         </VBox>
+-                        <VBox fx:id="otpBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
++                        <VBox fx:id="otpBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" spacing="5.0" styleClass="rightPane" StackPane.alignment="CENTER">
+                            <padding>
+                               <Insets top="10.0" />
+                            </padding>
+@@ -123,7 +123,7 @@
+                               </Button>
+                            </children>
+                         </VBox>
+-                        <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane">
++                        <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false">
+                            <padding>
+                               <Insets right="10.0" />
+                            </padding>
+@@ -170,7 +170,7 @@
+                         </VBox>
+                         <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="10.0" styleClass="rightPane" visible="false">
+                            <padding>
+-                              <Insets left="50.0" right="10.0" top="10.0" />
++                              <Insets right="10.0" />
+                            </padding>
+                            <children>
+                               <Label styleClass="loginTitle" text="Change Password" />
+@@ -185,7 +185,7 @@
+                                     </Label>
+                                     <CheckBox fx:id="showChangePwChoiceBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="15.0" StackPane.alignment="BOTTOM_LEFT">
+                                        <StackPane.margin>
+-                                          <Insets left="50.0" />
++                                          <Insets left="60.0" />
+                                        </StackPane.margin>
+                                     </CheckBox>
+                                  </children>
