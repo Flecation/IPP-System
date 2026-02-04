@@ -1519,15 +1519,25 @@ BEGIN
     ORDER BY apd.assignProjectDetailId DESC
     LIMIT 1;
 
-    /* Days */
-    IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
-        SET v_totalDays = 0;
-        SET v_elapsedDays = 0;
-    ELSE
-        SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
-        SET v_elapsedDays =
-            LEAST(v_totalDays, GREATEST(0, DATEDIFF(p_asOfDate, v_start) + 1));
-    END IF;
+   /* Days */
+   IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
+       SET v_totalDays = 0;
+       SET v_elapsedDays = 0;
+   ELSE
+       SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
+
+       /* elapsedDays = number of days that actually have completed tasks in reports */
+       SELECT COUNT(DISTINCT dr.reportDate)
+       INTO v_elapsedDays
+       FROM dailyReports dr
+       JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+       WHERE dr.assignProjectId = p_assignProjectId
+         AND dr.reportDate <= p_asOfDate
+         AND IFNULL(drt.completedQty, 0) > 0;
+
+       /* safety cap (don’t exceed baseline totalDays) */
+       SET v_elapsedDays = LEAST(v_totalDays, v_elapsedDays);
+   END IF;
 
     /* Latest report date (optional) */
     SELECT MAX(reportDate)
