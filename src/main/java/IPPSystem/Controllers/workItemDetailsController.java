@@ -1,36 +1,37 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.notificationType;
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.skills;
 import IPPSystem.Models.tasks;
 import IPPSystem.Models.workItems;
 import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
-/**
- * Work Item Details screen controller.
- *
- * NOTE:
- * - This controller is intentionally "view-only" to match the current FXML.
- * - If you later add an edit panel, you can re-introduce edit fields + handlers.
- */
 public class workItemDetailsController extends viewProjectsController {
 
-    // ===== Header =====
-    @FXML private Button backToProjectDetails;
-
-    // ===== KPI cards =====
+    // ===== Top cards =====
     @FXML private Label actualCost;
     @FXML private Label actualCostPercent;
     @FXML private ProgressBar actualCostProgress;
@@ -51,7 +52,7 @@ public class workItemDetailsController extends viewProjectsController {
     @FXML private Circle cpiCircle;
     @FXML private Label cpiCircleRate;
 
-    // ===== Work item info (view-only) =====
+    // ===== View-only WorkItem info =====
     @FXML private VBox viewOnlyWorkItemInfo;
     @FXML private Label viewBudget;
     @FXML private Label viewPlanStartDate;
@@ -61,74 +62,232 @@ public class workItemDetailsController extends viewProjectsController {
     @FXML private Label viewDuration;
     @FXML private Label viewTotalLabors;
 
-    // ===== Skill table =====
+    // ===== Skill + Task tables =====
     @FXML private TableView<skills> viewSkillTable;
     @FXML private TableColumn<skills, String> viewSkillCol;
     @FXML private TableColumn<skills, Double> viewQtyCol;
 
-    // ===== Task table =====
     @FXML private TableView<tasks> taskTable;
     @FXML private TableColumn<tasks, String> taskNameCol;
     @FXML private TableColumn<tasks, Double> taskDurationCol;
     @FXML private TableColumn<tasks, Date> taskPlanStartDateCol;
     @FXML private TableColumn<tasks, Date> taskPlanEndDateCol;
+    @FXML private TableColumn<tasks, Date> taskActualStartDate;
+    @FXML private TableColumn<tasks, Date> taskActualEndDateCol;
     @FXML private TableColumn<tasks, String> TaskStatusCol;
+    @FXML private TableColumn<tasks, Void> taskActionCol;
+
+    // In your FXML: fx:id="backToProjectDetails"
+    @FXML private Button backToProjectDetails;
 
     private workItems workItem;
     private final calculationHelper helper = calculationHelper.getInstance();
-    private projects parentProject;
+    private boolean canEditTasks = true;
+
+    private projects project;
+    // Flexible date parser: supports "2026-01-14" and "14-JAN-2026"
+    private static final DateTimeFormatter FLEX_DATE = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE) // yyyy-MM-dd
+            .appendOptional(DateTimeFormatter.ofPattern("d-MMM-uuuu", Locale.ENGLISH))
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MMM-uuuu", Locale.ENGLISH))
+            .toFormatter(Locale.ENGLISH);
 
     @FXML
     public void initialize() {
 
-        // ---- Task table mapping (keep your model property names) ----
+        // ---- Task table mapping ----
         if (taskNameCol != null) taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         if (taskDurationCol != null) taskDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
         if (taskPlanStartDateCol != null) taskPlanStartDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskPlanEndDateCol != null) taskPlanEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
+        // Your tasks model currently mirrors planned into actual in UI
+        if (taskActualStartDate != null) taskActualStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        if (taskActualEndDateCol != null) taskActualEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
         if (TaskStatusCol != null) TaskStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
 
         // ---- Skill table ----
         if (viewSkillCol != null) viewSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
         if (viewQtyCol != null) viewQtyCol.setCellValueFactory(new PropertyValueFactory<>("projectLaborQty"));
 
-        // Nice placeholders
         if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
         if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
 
-        // Back button
-        if (backToProjectDetails != null) {
-            backToProjectDetails.setOnAction(e -> utils.openProjectDetails(parentProject,null));
-        }
+        // ---- Action column: Edit button ----
+        setupTaskActionColumn();
+
     }
 
-    /**
-     * Call this after loading the FXML to populate the screen.
-     */
     public void setWorkItem(workItems item, projects project) {
-        this.parentProject = project;
         this.workItem = item;
+        this.project = project;
         if (item == null) return;
 
-        // Show/Hide the "Edit" ability here later if you add it.
-        // For now: just keep view-only visible.
-        if (viewOnlyWorkItemInfo != null) viewOnlyWorkItemInfo.setVisible(true);
+        // Supervisor can't edit (same style as your projectDetailsController)
+        boolean isSupervisor = (loginUser != null)
+                && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
+        this.canEditTasks = !isSupervisor;
 
         // Load tables
-        if (taskTable != null) {
-            taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
-        }
-        if (viewSkillTable != null) {
-            viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
-        }
+        if (taskTable != null) taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
+        if (viewSkillTable != null) viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
 
-        // Load baseline fields
         reloadFieldsFromModel();
 
-        // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
+        // Load EVM numbers
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
+        backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
     }
 
+    // ------------------------------------------------------------
+    // Task action column
+    // ------------------------------------------------------------
+    private void setupTaskActionColumn() {
+        if (taskActionCol == null) return;
+
+        taskActionCol.setCellFactory(col -> new TableCell<>() {
+            private final Button editBtn = new Button("Edit");
+
+            {
+                editBtn.setStyle("-fx-background-color:#4176f2; -fx-text-fill:white; -fx-background-radius:8; -fx-padding:4 10 4 10;");
+                editBtn.setOnAction(e -> {
+                    tasks t = getTableView().getItems().get(getIndex());
+                    openEditTaskDialog(t);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+                editBtn.setDisable(!canEditTasks);
+                setGraphic(editBtn);
+            }
+        });
+    }
+
+    private void openEditTaskDialog(tasks task) {
+        if (task == null) return;
+
+        if (!canEditTasks) {
+            messageBoxService.toast("No Permission",
+                    "Supervisor role cannot edit tasks.",
+                    notificationType.WRONG);
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Edit Task");
+        dialog.setHeaderText(task.getTaskName());
+
+        ButtonType saveBtnType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtnType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        TextField durationTxt = new TextField(String.valueOf(task.getProjectDuration()));
+        TextField startTxt = new TextField(task.getStartDate() == null ? "" : task.getStartDate().toString());
+        TextField endTxt = new TextField(task.getEndDate() == null ? "" : task.getEndDate().toString());
+
+        durationTxt.setPromptText("Duration (days)");
+        startTxt.setPromptText("Start date (yyyy-MM-dd)");
+        endTxt.setPromptText("End date (yyyy-MM-dd)");
+
+        grid.addRow(0, new Label("Duration"), durationTxt);
+        grid.addRow(1, new Label("Start"), startTxt);
+        grid.addRow(2, new Label("End"), endTxt);
+
+        dialog.getDialogPane().setContent(grid);
+
+        Node saveBtn = dialog.getDialogPane().lookupButton(saveBtnType);
+        if (saveBtn != null) {
+            saveBtn.setDisable(false);
+            durationTxt.textProperty().addListener((obs, o, n) -> saveBtn.setDisable(tryParseDouble(n) == null));
+        }
+
+        dialog.showAndWait().ifPresent(btn -> {
+            if (btn != saveBtnType) return;
+
+            Double dur = tryParseDouble(durationTxt.getText());
+            LocalDate start = tryParseDate(startTxt.getText());
+            LocalDate end = tryParseDate(endTxt.getText());
+
+            if (dur == null || dur <= 0) {
+                messageBoxService.toast("Invalid Duration", "Please enter a duration (> 0).", notificationType.WRONG);
+                return;
+            }
+            if (start == null || end == null) {
+                messageBoxService.toast("Invalid Date",
+                        "Use yyyy-MM-dd or dd-MMM-yyyy (e.g., 2026-01-14 or 14-JAN-2026).",
+                        notificationType.WRONG);
+                return;
+            }
+            if (end.isBefore(start)) {
+                messageBoxService.toast("Invalid Date Range", "End date cannot be before start date.", notificationType.WRONG);
+                return;
+            }
+
+            tasks updated = new tasks();
+            updated.setAssignTaskId(task.getAssignTaskId());
+            updated.setProjectDuration(dur);
+            updated.setStartDate(Date.valueOf(start));
+            updated.setEndDate(Date.valueOf(end));
+
+            saveTaskEditAsync(updated);
+        });
+    }
+
+    private void saveTaskEditAsync(tasks updated) {
+        if (updated == null || workItem == null) return;
+
+        Task<Boolean> save = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return database.editAssignTasks(updated, assignStatus.CUSTOM);
+            }
+
+            @Override
+            protected void succeeded() {
+                Boolean ok = getValue();
+                if (ok != null && ok) {
+                    messageBoxService.toast("Saved", "Task updated successfully.", notificationType.SUCCESS);
+
+                    if (taskTable != null) {
+                        taskTable.setItems(database.getAllTasksByAssignWorkItem(workItem.getAssignWorkItemId()));
+                        taskTable.refresh();
+                    }
+
+                    loadDashboardAsync(workItem.getAssignWorkItemId(), LocalDate.now());
+                } else {
+                    messageBoxService.toast("Update Failed", "Database returned false.", notificationType.WRONG);
+                }
+            }
+
+            @Override
+            protected void failed() {
+                Throwable ex = getException();
+                messageBoxService.toast("Update Failed",
+                        ex == null ? "Unknown error" : ex.getMessage(),
+                        notificationType.WRONG);
+            }
+        };
+
+        Thread t = new Thread(save);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    // ------------------------------------------------------------
+    // Dashboard
+    // ------------------------------------------------------------
     private void loadDashboardAsync(int assignWorkItemId, LocalDate asOf) {
         Task<calculationHelper.ProjectDashboard> task = new Task<>() {
             @Override
@@ -141,27 +300,20 @@ public class workItemDetailsController extends viewProjectsController {
                 calculationHelper.ProjectDashboard d = getValue();
                 if (d == null) return;
 
-                double bac = d.bac();   // Budget at Completion
-                double ev  = d.ev();    // Earned Value
-                double ac  = d.ac();    // Actual Cost
+                double bac = d.bac();
+                double ev  = d.ev();
+                double ac  = d.ac();
 
-                // ===== Cost card =====
                 safeSet(totalCost, formatMoney(bac));
                 safeSet(actualCost, formatMoney(ac));
                 safeSet(actualCostPercent, formatPercent(ac, bac));
-                if (actualCostProgress != null) {
-                    actualCostProgress.setProgress(clamp01(bac <= 0 ? 0 : ac / bac));
-                }
+                if (actualCostProgress != null) actualCostProgress.setProgress(clamp01(bac <= 0 ? 0 : ac / bac));
 
-                // ===== Earned value card =====
                 safeSet(totalEarnValue, formatMoney(bac));
                 safeSet(usedEarnValue, formatMoney(ev));
                 safeSet(earnValuePercent, formatPercent(ev, bac));
-                if (earnValueProgress != null) {
-                    earnValueProgress.setProgress(clamp01(bac <= 0 ? 0 : ev / bac));
-                }
+                if (earnValueProgress != null) earnValueProgress.setProgress(clamp01(bac <= 0 ? 0 : ev / bac));
 
-                // ===== SPI / CPI =====
                 safeSet(spiCircleRate, formatIndex(d.spi()));
                 safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
                 applyCircleProgress(spiCircle, d.spi());
@@ -180,19 +332,32 @@ public class workItemDetailsController extends viewProjectsController {
     private void reloadFieldsFromModel() {
         if (workItem == null) return;
 
-        // View-only labels
         safeSet(viewBudget, formatMoney(workItem.getProjectCost()));
         safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
         safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
+
         safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
         safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
+
         safeSet(viewDuration, formatNumber(workItem.getProjectDuration()));
         safeSet(viewTotalLabors, formatQty(workItem.getProjectLaborQty()));
     }
 
-    // ------------------------------
-    // Helper functions
-    // ------------------------------
+    // ------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------
+    private Double tryParseDouble(String s) {
+        if (s == null) return null;
+        try { return Double.parseDouble(s.trim().replace(",", "")); }
+        catch (NumberFormatException e) { return null; }
+    }
+
+    private LocalDate tryParseDate(String s) {
+        if (s == null) return null;
+        try { return LocalDate.parse(s.trim(), FLEX_DATE); }
+        catch (DateTimeParseException e) { return null; }
+    }
+
     private void safeSet(Label lbl, String v) {
         if (lbl != null) lbl.setText(v == null ? "" : v);
     }
@@ -220,8 +385,7 @@ public class workItemDetailsController extends viewProjectsController {
 
     private String formatPercent(double numerator, double denominator) {
         if (denominator <= 0) return "-";
-        double ratio = numerator / denominator;
-        long pct = Math.round(ratio * 100.0);
+        long pct = Math.round((numerator / denominator) * 100.0);
         return pct + "%";
     }
 
@@ -252,7 +416,6 @@ public class workItemDetailsController extends viewProjectsController {
 
         circle.getStrokeDashArray().setAll(circumference);
 
-        // 1.0 => full ring, clamp anything above 1 to full ring
         double p = (idx == null) ? 0 : clamp01(idx);
         circle.setStrokeDashOffset(circumference * (1 - p));
     }

@@ -305,7 +305,7 @@ public class switchPage extends utils {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/workItemDetails.fxml"));
             Parent root = loader.load();
             workItemDetailsController controller = loader.getController();
-            controller.setWorkItem(item,project /*, tasks list if you want later */);
+            controller.setWorkItem(item,project/* tasks list if you want later */);
             loadPane.getChildren().setAll(root);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -335,6 +335,7 @@ public class switchPage extends utils {
             e.printStackTrace();
         }
     }
+
 
     public void openProjectDetails(projects project){
 
