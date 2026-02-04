@@ -64,7 +64,7 @@ public class  loginController {
     @FXML private Button sentResetCodeBtn, verifyOtpBtn;
     @FXML private TextField otp1, otp2, otp3, otp4, otp5, otp6;
     @FXML private Label openEmailAction,showChangePwLbl;
-    @FXML private BorderPane openwithEmail;
+    @FXML private BorderPane openWithEmail;
     @FXML private HBox backToLoginRow;
     @FXML private Button changePwBtn;
     @FXML private TextField showChangePwTxt;
@@ -93,7 +93,7 @@ public class  loginController {
         otpBox.setVisible(false);
         forgetPwBox.setVisible(false);
         changeNewPwBox.setVisible(false);
-        openwithEmail.setVisible(false);
+        openWithEmail.setVisible(false);
         try {
             databaseConnection.getConnection();
         } catch (SQLException e) {
@@ -151,8 +151,8 @@ public class  loginController {
             pwWrongLbl.setVisible(false);
             emailWrongLbl.setVisible(false);
             if (count <= 0) {
-                openwithEmail.toFront();
-                showNode(openwithEmail);
+                openWithEmail.toFront();
+                showNode(openWithEmail);
 //                utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
                 messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                 return;
@@ -180,8 +180,8 @@ public class  loginController {
             if (user == null) {
                 count = Math.max(0, count - 1);
                 if (count == 0) {
-                    openwithEmail.toFront();
-                    showNode(openwithEmail);
+                    openWithEmail.toFront();
+                    showNode(openWithEmail);
 //                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
                     messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                     return;
@@ -196,8 +196,8 @@ public class  loginController {
             if (!utils.checkPassword(password, user.getUserPassword())) {
                 count = Math.max(0, count - 1);
                 if (count == 0) {
-                    openwithEmail.toFront();
-                    showNode(openwithEmail);
+                    openWithEmail.toFront();
+                    showNode(openWithEmail);
 //                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
                     messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                     return;
@@ -230,7 +230,7 @@ public class  loginController {
         verifyOtpBtn.setOnAction(e -> onVerifyOtp());
         // Optional: open email client when "Open Via Email Code" is clicked
         openEmailAction.setOnMouseClicked(e -> {
-            hideNode(openwithEmail, null);
+            hideNode(openWithEmail, null);
             switchPane(loginBox, forgetPwBox);
             backToLoginRow.setVisible(false);
             backToLoginRow.setManaged(false);
@@ -378,7 +378,7 @@ public class  loginController {
         showChangePwTxt.clear();
         hideChangePwTxt.clear();
 
-        hideNode(openwithEmail, null);
+        hideNode(openWithEmail, null);
         hideNode(otpBox, null);
         hideNode(forgetPwBox, null);
         hideNode(changeNewPwBox, null);
