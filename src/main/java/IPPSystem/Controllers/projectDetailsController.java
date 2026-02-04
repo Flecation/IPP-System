@@ -7,12 +7,14 @@ import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.workItems;
 import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.loadPaneAware;
 import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
@@ -20,7 +22,9 @@ import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
-public class projectDetailsController extends viewProjectsController {
+import static IPPSystem.Controllers.dashboardController.loginUser;
+
+public class projectDetailsController  implements loadPaneAware {
 
     // ===== Header =====
     @FXML private Label projectName;
@@ -89,6 +93,14 @@ public class projectDetailsController extends viewProjectsController {
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+
     @FXML
     public void initialize() {
 
@@ -98,7 +110,7 @@ public class projectDetailsController extends viewProjectsController {
                     "If you want to edit buy Premium!!",
                     notificationType.WARNING);});
         if (backToViewProjectBtn != null) {
-            backToViewProjectBtn.setOnAction(e -> utils.openFxml("viewProjects.fxml", null));
+            backToViewProjectBtn.setOnAction(e -> utils.openFxml("viewProjects.fxml", loadPane));
         }
 
         // Double-click open work item details
@@ -164,15 +176,16 @@ public class projectDetailsController extends viewProjectsController {
                 if (d == null) return;
 
                 // ===== Completed Days card =====
-                int elapsed = d.elapsedDays();
+                int completedDaysCount = database.getCompletedDaysByAssignProject(projectId); // ✅ from report
                 int total = d.totalDays();
 
-                double day01 = (total <= 0) ? 0 : Math.min(1.0, elapsed / (double) total);
+                double day01 = (total <= 0) ? 0 : clamp01(completedDaysCount / (double) total);
 
-                completedDay.setText(elapsed + " days");
+                completedDay.setText(completedDaysCount + " days");
                 totalDay.setText(total + " days");
                 dayCompleteLbl.setText(Math.round(day01 * 100) + "%");
                 dayCompleteProgress.setProgress(day01);
+
 
                 // ==== for the project progress =====
 

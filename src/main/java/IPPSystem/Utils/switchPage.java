@@ -26,20 +26,24 @@ import java.util.Stack;
 
 public class switchPage extends utils {
 
-    private static switchPage instance;
+    private static final java.util.IdentityHashMap<StackPane, switchPage> INSTANCES = new java.util.IdentityHashMap<>();
+
 
     protected StackPane loadPane;
 
     private switchPage(){}
 
-    public static switchPage getInstance(StackPane pane){
-        if (instance == null){
-            instance = new switchPage();
-
+    public static switchPage getInstance(StackPane pane) {
+        if (pane == null) {
+            throw new IllegalArgumentException("switchPage.getInstance(...) requires a non-null StackPane.");
         }
-        if (pane != null) instance.loadPane = pane;
-        return instance;
+        return INSTANCES.computeIfAbsent(pane, p -> {
+            switchPage sp = new switchPage();
+            sp.loadPane = p;
+            return sp;
+        });
     }
+
 
     // Dashboard page switch animation
     public void setSwitchPane(
@@ -133,14 +137,14 @@ public class switchPage extends utils {
 
     // Simple FXML opener utility
     public void openFxml(String fxmlFile) {
-
         try {
             FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
             Parent newContent = loader.load();
 
-            // Special handling for viewProjects.fxml to pass loadPane to controller
-            if ("viewProjects.fxml".equals(fxmlFile)) {
-                loader.getController();
+            // ✅ Inject this tab's loadPane into the loaded controller (if it supports it)
+            Object controller = loader.getController();
+            if (controller instanceof loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
             }
 
             StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
@@ -179,8 +183,9 @@ public class switchPage extends utils {
             e.printStackTrace();
         }
     }
+
     //from the login controller to the dashboard with animation
-    public void switchScene(Button button, String fxmlPath) {
+    public static  void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;
 
