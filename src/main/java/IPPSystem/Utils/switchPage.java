@@ -47,6 +47,7 @@ public class switchPage extends utils {
             String toPane,
             Button titleUrlButton,
             String titleUrlName
+
     ) {
 
         // Loading spinner
