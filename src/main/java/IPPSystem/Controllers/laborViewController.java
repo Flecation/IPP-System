@@ -2,10 +2,13 @@ package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
 import IPPSystem.Models.labors;
+import IPPSystem.Utils.session;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -27,7 +30,16 @@ public class laborViewController implements Initializable {
     @FXML private ComboBox<String> skillFilterCombo;
     @FXML private ComboBox<String> statusFilterCombo;
     @FXML private Label resignedQty;
+    @FXML
+    private Button addLaborBtn;
 
+
+    @FXML
+    void clickAddLabor(ActionEvent event) {
+        session.getInstance()
+                .getNavigationController()
+                .showModal("createLaborModal.fxml");
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

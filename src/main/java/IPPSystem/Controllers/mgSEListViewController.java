@@ -4,7 +4,9 @@ import IPPSystem.Constants.role;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.PaginationHelper;
+import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,8 +24,7 @@ public class mgSEListViewController {
     private Label emptyLabel;
 
     @FXML
-    private Button managerSpCreateBtn;
-
+    private Button addNewEngineerBtn;
 
     @FXML
     private ComboBox<String> managerSpStatusCombo;
@@ -50,6 +51,16 @@ public class mgSEListViewController {
     public List<users> allEngineers = new ArrayList<>();
 
     private PaginationHelper<users> pagination;
+
+
+    @FXML
+    void addNewEngineer(ActionEvent event) {
+
+        session.getInstance()
+                .getNavigationController()
+                .showModal("createSupervisorModal.fxml");
+
+    }
 
     @FXML
     public void initialize() {

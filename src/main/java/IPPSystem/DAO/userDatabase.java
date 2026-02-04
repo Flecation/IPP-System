@@ -7,6 +7,9 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 
+//import static IPPSystem.Controllers.loginController.user;
+
+
 public class userDatabase {
 
     private static Connection con;
@@ -193,5 +196,33 @@ public class userDatabase {
             throw new RuntimeException(e);
         }
     }
+
+
+
+    public static boolean createSupervisor(users u) {
+        String sql = """
+            INSERT INTO users
+            (userName, userRole, userPhone, userEmail, userDOB, userPassword, userPhoto, userStartDate)
+            VALUES (?, 'supervisor', ?, ?, ?, ?, ?, CURDATE())
+        """;
+
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, u.getUserName());
+            ps.setString(2, u.getUserPhone());
+            ps.setString(3, u.getUserEmail());
+            ps.setDate(4, (Date) u.getUserDOB());
+            ps.setString(5, u.getUserPassword()); // default password
+            ps.setString(6, u.getUserPhoto());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

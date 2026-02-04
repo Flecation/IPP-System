@@ -22,8 +22,8 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Region prefHeight="27.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="managerSpCreateBtn" contentDisplay="TOP" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ Create" textFill="WHITE">
+            <Region prefHeight="30.0" prefWidth="638.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="addNewEngineerBtn" contentDisplay="TOP" mnemonicParsing="false" onAction="#addNewEngineer" styleClass="createBtn" text="+ Add" textFill="WHITE" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -56,8 +56,6 @@
                         <Region prefHeight="20.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
                         <Label maxWidth="150.0" minWidth="100.0" text="Status" />
                         <Region prefHeight="20.0" prefWidth="162.0" HBox.hgrow="ALWAYS" />
-                        <Label maxWidth="150.0" minWidth="50.0" text="Progress" />
-                        <Region prefWidth="150.0" HBox.hgrow="ALWAYS" />
                         <Label maxWidth="150.0" minWidth="50.0" text="Action" />
                      </children>
                      <padding>
@@ -67,7 +65,7 @@
                         <Insets top="12.0" />
                      </VBox.margin>
                   </HBox>
-                  <VBox fx:id="managerSupervisorListPane" alignment="CENTER" prefHeight="407.0" prefWidth="1180.0" spacing="16.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="SOMETIMES">
+                  <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" prefHeight="407.0" prefWidth="1180.0" spacing="16.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: none;" VBox.vgrow="SOMETIMES">
                      <VBox.margin>
                         <Insets top="8.0" />
                      </VBox.margin>
