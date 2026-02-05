@@ -568,7 +568,7 @@ public class sideBarPaneController extends navigationPaneController{
 
             if( isManager)
             {
-                utils.openFxml("mgSEListView.fxml",loadPane);
+                utils.openFxml("engineerView.fxml",loadPane);
                 linkButton.setTabButtonName("Supervisors View");
             }else{
                 utils.openFxml("laborView.fxml",loadPane);
@@ -576,9 +576,6 @@ public class sideBarPaneController extends navigationPaneController{
             }
 
 
-        });
-        userViewBtn.setOnMouseClicked(e -> {
-            openInnerView("mgSEListView.fxml");
         });
 
         // Report navigation
