@@ -30,7 +30,7 @@
       <Region minWidth="30.0" HBox.hgrow="ALWAYS" />
       <Label fx:id="laborEndDate" minWidth="140.0" prefHeight="17.0" prefWidth="143.0" text="11-12-2025" HBox.hgrow="ALWAYS" />
       <Region minWidth="20.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-      <Button fx:id="actionResignBtn" minWidth="80.0" mnemonicParsing="false" onAction="#actionResign" stylesheets="@../CSS/managerSupervisorList.css" text="Resign" />
+      <Button fx:id="actionResignBtn" minWidth="80.0" mnemonicParsing="false" onAction="#actionResign" styleClass="resign-btn" stylesheets="@../CSS/managerSupervisorList.css" text="Resign" />
    </children>
    <padding>
       <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />

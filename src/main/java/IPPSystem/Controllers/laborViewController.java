@@ -35,85 +35,89 @@ public class laborViewController implements Initializable {
 
 
     @FXML
-    void clickAddLabor(ActionEvent event) {
+    private void clickAddLabor(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/createLaborModal.fxml"));
+            Parent modal = loader.load();
+
+            createLaborController controller = loader.getController();
+
+            // Set callback: after adding a labor, refresh list + stats
+            controller.setOnLaborAdded(() -> {
+                applyFilters();   // rebuild labor rows with current filter
+                updateLaborStats(); // refresh total/new/active/resigned numbers
+            });
+
         session.getInstance()
                 .getNavigationController()
                 .showModal("createLaborModal.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        updateLaborStats();
-        loadFilterOptions();
-        loadLaborRows();
 
-        skillFilterCombo.setOnAction(e -> applyFilters());
-        statusFilterCombo.setOnAction(e -> applyFilters());
 
-    }
 
     public void updateLaborStats() {
+        // Ensure data is fresh from database
         totalLaborQty.setText(String.valueOf(database.getTotalLabors()));
         newHireQty.setText(String.valueOf(database.getNewHires()));
         activeLaborQty.setText(String.valueOf(database.getActiveLabors()));
         resignedQty.setText(String.valueOf(database.getResignedLaborsCount()));
     }
 
-    private void loadFilterOptions() {
-        // Status options
-        statusFilterCombo.getItems().setAll("All", "Active", "Resigned");
-        statusFilterCombo.setValue("Status");
 
-        // Skill options from DB
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        loadFilterOptions();
+        resetFilters();     // load rows
+        updateLaborStats(); // load numbers
+
+        skillFilterCombo.setOnAction(e -> applyFilters());
+        statusFilterCombo.setOnAction(e -> applyFilters());
+    }
+
+    private void loadFilterOptions() {
+
+        statusFilterCombo.getItems().setAll("All", "Active", "Resigned");
+        statusFilterCombo.setValue("All");
+
         List<String> skills = database.getAllSkills();
-        skillFilterCombo.getItems().clear();
-        skillFilterCombo.getItems().add("All");
+        skillFilterCombo.getItems().setAll("All");
         skillFilterCombo.getItems().addAll(skills);
         skillFilterCombo.setValue("Skill");
     }
 
-    @FXML
-    public void loadLaborRows() {
-        resetFilters();
-    }
 
     @FXML
     private void applyFilters() {
+
         String selectedSkill = skillFilterCombo.getValue();
         String selectedStatus = statusFilterCombo.getValue();
 
         laborsPane.getChildren().clear();
 
-        // Data comes pre-sorted from the Database:
-        // [Assigned] -> [Active but Unassigned] -> [Resigned]
         List<labors> laborList = database.getAllLaborsSortedByAssignment();
 
         for (labors labor : laborList) {
-            boolean matchesSkill = true;
-            boolean matchesStatus = true;
 
-            // 1. Skill Filter Logic
-            if (selectedSkill != null && !selectedSkill.equals("All")) {
-                matchesSkill = labor.getSkillName() != null &&
-                        labor.getSkillName().equalsIgnoreCase(selectedSkill);
-            }
+            boolean matchesSkill = selectedSkill.equals("All") ||
+                    (labor.getSkillName() != null &&
+                            labor.getSkillName().equalsIgnoreCase(selectedSkill));
 
-            // 2. Status Filter Logic
-            if (selectedStatus != null && !selectedStatus.equals("All")) {
-                if (selectedStatus.equals("Active")) {
-                    matchesStatus = labor.isActive();
-                } else if (selectedStatus.equals("Resigned")) {
-                    matchesStatus = !labor.isActive();
-                }
-            }
-
+            boolean matchesStatus =
+                    selectedStatus.equals("All") ||
+                            (selectedStatus.equals("Active") && labor.isActive()) ||
+                            (selectedStatus.equals("Resigned") && !labor.isActive());
 
             if (matchesSkill && matchesStatus) {
                 addLaborRow(labor);
             }
         }
-    }
 
+        updateLaborStats();   // 🔥 stats update after filtering
+    }
 
 
 
@@ -121,9 +125,11 @@ public class laborViewController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/laborRow.fxml"));
             Parent row = loader.load();
+
             laborRowController controller = loader.getController();
 
-            controller.setData(labor, this::applyFilters);
+            // Pass labor + callback to update parent UI after resign
+            controller.setData(labor, this::refreshAfterChange);
 
             laborsPane.getChildren().add(row);
         } catch (Exception e) {
@@ -131,18 +137,23 @@ public class laborViewController implements Initializable {
         }
     }
 
+
+    private void refreshAfterChange() {
+        // reload filtered list
+        applyFilters();   // will rebuild the rows according to skill/status
+
+        // refresh stats
+        updateLaborStats();
+    }
+
+
     @FXML
     private void resetFilters() {
-        skillFilterCombo.setValue("Skill");
-        statusFilterCombo.setValue("Status");
-
-
-
-        // Clear and reload everything
-        laborsPane.getChildren().clear();
-        List<labors> laborList = database.getAllLaborsSortedByAssignment();
-        for(labors l : laborList) {
-            addLaborRow(l);
-        }
+        skillFilterCombo.setValue("All");
+        statusFilterCombo.setValue("All");
+        applyFilters();
     }
+
+
+
 }

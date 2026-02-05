@@ -2,7 +2,6 @@ package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
 import IPPSystem.Models.labors;
-import com.fasterxml.jackson.annotation.JacksonInject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,60 +11,23 @@ import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 public class laborRowController {
 
-    @FXML
-    private Button actionResignBtn;
-
-    @FXML
-    private Label assignedProject;
-
-    @FXML
-    private Label laborEndDate;
-
-    @FXML
-    private Label laborNRC;
-
-    @FXML
-    private Label laborName;
-
-    @FXML
-    private Label laborPhone;
-
-    @FXML
-    private Label laborStartDate;
-
-    @FXML
-    private Label laborStatus;
+    @FXML private Button actionResignBtn;
+    @FXML private Label assignedProject;
+    @FXML private Label laborEndDate;
+    @FXML private Label laborNRC;
+    @FXML private Label laborName;
+    @FXML private Label laborPhone;
+    @FXML private Label laborStartDate;
+    @FXML private Label laborStatus;
 
     private labors currentLabor;
-    private Runnable refreshCallback;
+    private Runnable refreshCallback; // callback to parent
+    private final database db = new database();
 
-    @FXML
-    void actionResign(ActionEvent event) {
-
-        if (currentLabor == null || !currentLabor.isActive()) return;
-
-        boolean success = database.resignLabor(currentLabor.getLaborId());
-
-        if (success) {
-            currentLabor.setActive(false);
-            currentLabor.setLaborEndDate(
-                    Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
-            );
-            updateStatusUI(currentLabor);
-
-            if (refreshCallback != null) {
-                refreshCallback.run();
-            }
-        }
-    }
-
-
-
-
+    // Called by parent to pass data and callback
     public void setData(labors labor, Runnable refreshCallback) {
         this.currentLabor = labor;
         this.refreshCallback = refreshCallback;
@@ -76,14 +38,34 @@ public class laborRowController {
         laborStartDate.setText(labor.getLaborStartDate().toString());
         laborEndDate.setText(labor.getLaborEndDate() != null ? labor.getLaborEndDate().toString() : "-");
 
-        updateStatusUI(labor);
+        assignedProject.setText(db.getAssignedProjectName(labor.getLaborId()));
 
-        String projectName = database.getAssignedProjectName(labor.getLaborId());
-        assignedProject.setText(projectName);
+        updateStatusUI(labor);
     }
 
+    @FXML
+    void actionResign(ActionEvent event) {
+        if (currentLabor == null || !currentLabor.isActive()) return;
 
+        boolean success = db.resignLabor(currentLabor.getLaborId());
 
+        if (success) {
+            // update model
+            currentLabor.setActive(false);
+            currentLabor.setLaborEndDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            // update this row UI instantly
+            laborEndDate.setText(currentLabor.getLaborEndDate().toString());
+            updateStatusUI(currentLabor);
+
+            // notify parent controller to refresh the list and stats
+            if (refreshCallback != null) {
+                refreshCallback.run();
+            }
+        }
+    }
+
+    // update row status UI
     private void updateStatusUI(labors labor) {
         laborStatus.getStyleClass().removeAll("active", "inactive");
 
@@ -94,7 +76,6 @@ public class laborRowController {
 
             actionResignBtn.setText("Resign");
             actionResignBtn.setDisable(false);
-
         } else {
             laborStatus.setText("Resigned");
             laborStatus.setTextFill(Color.GRAY);
@@ -104,12 +85,4 @@ public class laborRowController {
             actionResignBtn.setDisable(true);
         }
     }
-
-
 }
-
-
-
-
-
-
