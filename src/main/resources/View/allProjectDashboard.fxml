@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.allProjectDashboardController">
    <children>
       <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" prefWidth="1220.0" spacing="10.0" style="-fx-background-color: #c7d5f2; -fx-background-radius: 10;">
          <children>

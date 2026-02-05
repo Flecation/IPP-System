@@ -32,6 +32,12 @@
 .label{
     -fx-text-fill: -primary-text-color;
 }
+.info-text{
+    -fx-text-fill: -secondary-text-color;
+}
+.header-text{
+    -fx-text-fill: -primary-text-color;
+}
 
 .text-field, .password-field{
     -fx-text-fill: -secondary-text-color;

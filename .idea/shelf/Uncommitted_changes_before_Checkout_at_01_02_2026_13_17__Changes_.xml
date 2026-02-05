@@ -1,0 +1,39 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]" date="1769928468744" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 01/02/2026 13:17 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/DAO/databaseConnection.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/DAO/databaseConnection.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/databaseConnection.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/DAO/dotenv.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/DAO/dotenv.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/dotenv.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Controllers/HelloController.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Controllers/HelloController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/HelloController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Utils/titleBar.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Utils/titleBar.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/titleBar.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/LoginController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Main/HelloApplication.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Main/HelloApplication.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/HelloApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Utils/switchPage.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Utils/switchPage.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/switchPage.class" />
+  </binary>
+</changelist>
