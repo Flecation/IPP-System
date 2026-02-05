@@ -147,6 +147,35 @@ public class database {
     public static double getPerformance(int userId) {
         return calculationDatabase.getHistoryPerformance(userId);
     }
+//    Addition info for allproject controller
+    // Add these to your existing database.java file in the DAO package
+    public static double getTotalRevenue() {
+        return calculationDatabase.getTotalRevenue();
+    }
+
+    public static double getTotalExpenses() {
+        return calculationDatabase.getTotalExpenses();
+    }
+
+    public static int getTotalLaborsCount() {
+        return calculationDatabase.getTotalLaborsCount();
+    }
+
+    public static Map<String, Integer> getProjectStatusDistribution() {
+        return calculationDatabase.getProjectStatusDistribution();
+    }
+
+    public static Map<String, Integer> getProjectTimingStatus() {
+        return calculationDatabase.getProjectTimingStatus();
+    }
+
+    public static Map<String, Double> getTopThreeCosts() {
+        return calculationDatabase.getTopThreeMostExpensiveProjects();
+    }
+//    Project Status for piechart
+    public static Map<String, Integer> getProjectStatusMetrics() {
+        return calculationDatabase.getProjectStatusMetrics();
+    }
 
     // ======================== NEW METHODS FOR SUPERVISOR REPORT ========================
 
