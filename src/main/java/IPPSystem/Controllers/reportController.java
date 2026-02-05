@@ -412,11 +412,67 @@ public class reportController extends sideBarPaneController {
                 System.out.println("👉 Selected project: " + currentProjectName +
                         " (ID: " + currentProjectId +
                         ", Status: " + project.getProjectStatus() + ")");
+
+                // 🔥 AUTO SET DATE RANGE ထည့်ပါ
+                if (currentProjectId > 0) {
+                    setDateRangeForSelectedProject(currentProjectId);
+                }
+
                 applyFilters();
             });
         }
 
         System.out.println("✅ Displayed " + cardCount + " unique project cards in sidebar");
+    }
+
+    // 🔥 NEW METHOD: Project အတွက် date range auto set လုပ်မယ့် method
+    private void setDateRangeForSelectedProject(int projectId) {
+        try {
+            // ဒီ project အတွက် report အားလုံးရဲ့ date တွေကို ရှာမယ်
+            String query = "SELECT reportDate FROM dailyreports " +
+                    "WHERE assignProjectId = ? " +
+                    "ORDER BY reportDate";
+
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, projectId);
+            ResultSet rs = pstmt.executeQuery();
+
+            List<LocalDate> dates = new ArrayList<>();
+            while (rs.next()) {
+                java.sql.Date reportDate = rs.getDate("reportDate");
+                if (reportDate != null) {
+                    dates.add(reportDate.toLocalDate());
+                }
+            }
+
+            if (!dates.isEmpty()) {
+                // ပထမဆုံး date ကို start date အဖြစ်ထည့်
+                startDatePicker.setValue(dates.get(0));
+
+                // နောက်ဆုံး date ကို end date အဖြစ်ထည့်
+                endDatePicker.setValue(dates.get(dates.size() - 1));
+
+                System.out.println("📅 Auto-set date range to: " +
+                        dates.get(0) + " - " + dates.get(dates.size() - 1) +
+                        " (" + dates.size() + " reports)");
+            } else {
+                // Report မရှိရင် default dates ထားမယ်
+                startDatePicker.setValue(LocalDate.now().minusDays(30));
+                endDatePicker.setValue(LocalDate.now());
+                System.out.println("ℹ️ No reports found for this project, using default dates");
+            }
+
+            rs.close();
+            pstmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Error getting date range for project: " + e.getMessage());
+
+            // Error ဖြစ်ရင် default dates ထားမယ်
+            startDatePicker.setValue(LocalDate.now().minusDays(30));
+            endDatePicker.setValue(LocalDate.now());
+        }
     }
 
     private VBox createProjectCard(projects project) {
@@ -477,6 +533,14 @@ public class reportController extends sideBarPaneController {
         if (selectedStatus == null || selectedStatus.equals("All Assigned")) {
             filteredProjectList.setAll(projectList);
             System.out.println("   Showing all " + projectList.size() + " projects");
+
+            // 🔥 "All Assigned" ရွေးတဲ့အခါ date တွေ default ပြန်ထား
+            if (currentProjectId > 0) {
+                currentProjectId = 0;
+                currentProjectName = "";
+                startDatePicker.setValue(LocalDate.now().minusDays(30));
+                endDatePicker.setValue(LocalDate.now());
+            }
         } else {
             for (projects project : projectList) {
                 if (project.getProjectStatus() != null &&
@@ -647,8 +711,11 @@ public class reportController extends sideBarPaneController {
 
         currentProjectId = 0;
         currentProjectName = "";
+
+        // 🔥 Date တွေကို default (ဒီနေ့ နှင့် လွန်ခဲ့သော ၃၀ရက်) ပြန်ထားပါ
         startDatePicker.setValue(LocalDate.now().minusDays(30));
         endDatePicker.setValue(LocalDate.now());
+
         projectSidebarFilter.setValue("All Assigned");
 
         // Reset project sidebar
