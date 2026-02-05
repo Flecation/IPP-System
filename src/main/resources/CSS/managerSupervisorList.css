@@ -10,17 +10,21 @@
 
 /* View Supervisor */
 .createBtn{
-    -fx-background-color:#558C8A;
+    -fx-background-color:#EFBF04;
     -fx-text-fill:#ffffff;
     -fx-border-radius: 10;
     -fx-background-radius: 5;
-    -fx-padding: 6 30;
-    -fx-pref-width: 120;
+    -fx-pref-width: 180;
+    -fx-pref-height: 30;
+    -fx-opacity: 0.8;
 }
 
 .createBtn:hover{
-    -fx-opacity:0.9;
-    -fx-text-fill:#EFBF04;
+    -fx-background-color:#ffffff;
+    -fx-text-fill: #EFBF04;
+    -fx-border-color: #EFBF04;
+    -fx-border-radius: 10;
+
 }
 
 .managerAccSupervisorCtn{
@@ -94,17 +98,21 @@
 }
 
 .managerAccSpBtnView{
-    -fx-pref-width:100;
-    -fx-background-color: #11C04C;
-    -fx-opacity:0.8;
-    -fx-text-fill: #f4f4f4f4;
+    -fx-pref-width:50;
+
+    -fx-text-fill: #E18600;
+    -fx-border-color:#E18600;
+    -fx-background-color: #ffffff;
 
     -fx-background-radius: 5;
     -fx-padding:5 10 5 10;
 }
 
+
 .managerAccSpBtnView:hover{
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #E18600;
+    -fx-opacity:0.8;
+    -fx-text-fill: #f4f4f4f4;
 
 
 }
@@ -197,7 +205,7 @@
 .input-field{
     -fx-background-color:white;
     -fx-padding: 10;
-    -fx-border-color:#7FB8B6;
+    -fx-border-color:#E18600;
     -fx-border-radius: 10;
     -fx-border-width:1;
 }
@@ -206,7 +214,58 @@
 .input-field:focused{
     -fx-background-color:white;
     -fx-padding: 10;
-    -fx-border-color:#7FB8B6;
+    -fx-border-color:#E18600;
+    -fx-opacity: 0.5;
     -fx-border-radius: 10;
     -fx-border-width:1;
+}
+
+.combo-box {
+    -fx-pref-width: 150;
+    -fx-pref-height: 30;
+}
+
+.text-color{
+    -fx-text-fill: #75490b;
+}
+
+.box-qty{
+    -fx-text-fill:  #E18600;
+}
+.box-qty-resign{
+    -fx-text-fill : #a1220e;
+}
+
+.box-qty-active{
+    -fx-text-fill: #17a460;
+}
+
+.resign-btn{
+    -fx-background-color: #a1220e;
+    -fx-text-fill: #f4f4f4f4;
+}
+
+.resign-btn:hover{
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #a1220e;
+    -fx-border-color: #a1220e;
+}
+
+
+.account-create-btn{
+    -fx-background-color: #E18600;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius:10;
+    -fx-opacity: 0.8;
+}
+
+.account-create-btn:hover{
+    -fx-border-color: #E18600;
+    -fx-text-fill: #E18600;
+    -fx-border-radius: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-opacity: 0.8;
+
 }

@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -12,17 +11,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1120.0" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.laborViewController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1120.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.engineerViewController">
    <children>
       <HBox prefHeight="27.0" prefWidth="1120.0" VBox.vgrow="NEVER">
          <children>
-            <Label minWidth="200.0" stylesheets="@../CSS/managerSupervisorList.css" text=" Labors List" HBox.hgrow="ALWAYS">
+            <Label minWidth="200.0" stylesheets="@../CSS/managerSupervisorList.css" text=" Engineer List" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="addLaborBtn" mnemonicParsing="false" onAction="#clickAddLabor" prefHeight="20.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ New Labor" textFill="WHITE" HBox.hgrow="ALWAYS">
+            <Button fx:id="addNewEngineerBtn" mnemonicParsing="false" onAction="#addNewEngineer" prefHeight="20.0" prefWidth="163.0" styleClass="createBtn" stylesheets="@../CSS/managerSupervisorList.css" text="+ New Engineer" textFill="#fffdfd" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
@@ -43,14 +42,14 @@
                               <Image url="@../icons/totallabor.png" />
                            </image>
                         </ImageView>
-                        <Label text="TOTAL LABORS">
+                        <Label text="TOTAL ENGINEER">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="totalLaborQty" styleClass="box-qty" text="130" textFill="#17a460" VBox.vgrow="ALWAYS">
+                  <Label fx:id="totalSupervisorQty" styleClass="box-qty" text="130" textFill="#17a460" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
@@ -61,7 +60,7 @@
                </padding>
             </VBox>
             <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
@@ -97,7 +96,7 @@
                </padding>
             </VBox>
             <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
@@ -113,7 +112,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="activeLaborQty" styleClass="box-qty-active" text="130" textFill="#17a460" VBox.vgrow="ALWAYS">
+                  <Label fx:id="activeSupervisorQty" styleClass="box-qty-active" text="130" textFill="#17a460" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
@@ -124,7 +123,7 @@
                </padding>
             </VBox>
             <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;">
+            <VBox alignment="CENTER_LEFT" minWidth="250.0" prefHeight="50.0" spacing="8.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 10;">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
@@ -155,64 +154,52 @@
             <Insets top="32.0" />
          </VBox.margin>
       </HBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" prefHeight="620.0" prefWidth="1080.0" style="-fx-background-color: #eeeeee; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" prefHeight="15.0" prefWidth="1040.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label minWidth="80.0" text="Total Labors " HBox.hgrow="ALWAYS" />
-                  <Region prefHeight="26.0" prefWidth="686.0" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="skillFilterCombo" minWidth="150.0" prefHeight="26.0" prefWidth="201.0" promptText="Skill" HBox.hgrow="ALWAYS" />
-                  <Region minWidth="10.0" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="statusFilterCombo" minWidth="100.0" prefHeight="26.0" prefWidth="247.0" promptText="Status" HBox.hgrow="ALWAYS" />
+                  <Label minWidth="80.0" text="Total Engineer " HBox.hgrow="ALWAYS" />
+                  <Region prefHeight="26.0" prefWidth="686.0" />
+                  <Region minWidth="1.0" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="managerSpStatusCombo" minWidth="100.0" prefHeight="26.0" prefWidth="194.0" promptText="Status" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1040.0" style="-fx-background-color: #e4e4e4e4; -fx-border-radius: 5; -fx-background-radius: 10 10 0 0;" stylesheets="@../CSS/managerSupervisorList.css" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER" maxHeight="50.0" prefHeight="50.0" prefWidth="1040.0" style="-fx-background-color: #e4e4e4e4; -fx-border-radius: 5; -fx-background-radius: 10 10 0 0;" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" VBox.vgrow="NEVER">
                <children>
-                  <Label minWidth="80.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Name" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="80.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Name" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Region minWidth="50.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Label minWidth="100.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Assigned Project" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="100.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Current Project" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Region minWidth="80.0" />
-                  <Label minWidth="100.0" prefHeight="17.0" prefWidth="119.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Phone" textFill="#296967" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
-                  <Region minWidth="10.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Label minWidth="100.0" prefHeight="17.0" prefWidth="117.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="NRC" textFill="#296967" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
                   <Region minWidth="50.0" prefHeight="40.0" prefWidth="61.0" />
-                  <Label minWidth="55.0" prefHeight="17.0" prefWidth="82.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Status" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="55.0" prefHeight="17.0" prefWidth="82.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Status" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Region minWidth="10.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Label minWidth="100.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Start Date" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="100.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="Start Date" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Region minWidth="10.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Label minWidth="110.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="End Date" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="110.0" styleClass="text-color" stylesheets="@../CSS/managerSupervisorList.css" text="End Date" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Region minWidth="10.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Label minWidth="90.0" styleClass="text-color" text="Action" textFill="#296967" HBox.hgrow="ALWAYS">
+                  <Label minWidth="90.0" styleClass="text-color" text="Action" textFill="#75490b" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                </children>
@@ -220,21 +207,26 @@
                   <Insets left="25.0" right="10.0" />
                </padding>
                <VBox.margin>
-                  <Insets top="16.0" />
+                  <Insets />
                </VBox.margin>
             </HBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="378.0" prefWidth="1077.0" style="-fx-background-radius: 0 0 10 10; -fx-border-width: 0; -fx-background-color: none;" VBox.vgrow="ALWAYS">
-               <content>
-                  <VBox fx:id="laborsPane" alignment="CENTER" prefHeight="341.0" prefWidth="1038.0" spacing="5.0" style="-fx-background-radius: 0 0 10 10;" />
-               </content>
-            </ScrollPane>
+            <VBox fx:id="managerSupervisorListPane" alignment="TOP_CENTER" minHeight="270.0" prefHeight="323.0" prefWidth="1040.0" spacing="7.0" style="-fx-background-radius: 0 0 10 10;" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </VBox>
+            <HBox fx:id="paginationBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="60.0" minWidth="400.0" spacing="20.0" stylesheets="@../CSS/pagination.css">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
          </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
          </padding>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
       </VBox>
    </children>
    <padding>

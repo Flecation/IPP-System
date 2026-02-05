@@ -147,7 +147,7 @@ public class mgSEPersonalDetailController {
         if (pageData != null && !pageData.isEmpty()) {
             for (projects project : pageData) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectCardByOne.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectCard.fxml"));
                     Parent card = loader.load();
                     projectCardController controller = loader.getController();
                     controller.setData(project, loadPane);

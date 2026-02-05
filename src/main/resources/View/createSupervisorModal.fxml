@@ -35,14 +35,14 @@
          <children>
             <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <StackPane prefHeight="143.0" prefWidth="284.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 2;" translateY="-15.0" VBox.vgrow="NEVER">
+                  <StackPane prefHeight="143.0" prefWidth="284.0" styleClass="input-field" translateY="-15.0" VBox.vgrow="NEVER">
                      <children>
                         <Label style="-fx-border-style: dotted; -fx-border-radius: 10; -fx-border-color: #558C8A;" text="Drag and Drop" textFill="#b9abab">
                            <padding>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                            </padding>
                         </Label>
-                        <ImageView fx:id="profileImg" fitHeight="139.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true" styleClass="input-field" StackPane.alignment="CENTER" />
+                        <ImageView fx:id="profileImg" fitHeight="198.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true" styleClass="input-field" StackPane.alignment="CENTER" />
                      </children>
                      <VBox.margin>
                         <Insets left="70.0" right="50.0" top="40.0" />
@@ -50,7 +50,7 @@
                   </StackPane>
                   <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="35.0" prefWidth="181.0" styleClass="\\">
                      <children>
-                        <Button fx:id="UploadPhotobtn" mnemonicParsing="false" onAction="#ClickPhoto" style="-fx-background-color: #558c8a; -fx-border-radius: 10; -fx-background-radius: 10;" text="Upload Profile" textFill="WHITE">
+                        <Button fx:id="UploadPhotobtn" mnemonicParsing="false" onAction="#ClickPhoto" styleClass="account-create-btn" text="Upload Profile" textFill="WHITE">
                            <padding>
                               <Insets bottom="10.0" left="20.0" right="30.0" top="10.0" />
                            </padding>
@@ -85,9 +85,9 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT">
                      <children>
-                        <Button fx:id="Cancelbtn" mnemonicParsing="false" onAction="#ClickCancel" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: white; -fx-border-radius: 6; -fx-background-radius: 6; -fx-border-color: #D1E3E2; -fx-border-width: 2;" styleClass="input-field" text="Cancel" />
+                        <Button fx:id="Cancelbtn" mnemonicParsing="false" onAction="#ClickCancel" prefHeight="34.0" prefWidth="125.0" styleClass="input-field" text="Cancel" />
                         <Region minWidth="10.0" />
-                        <Button fx:id="Createbtn" mnemonicParsing="false" onAction="#ClickCreate" prefHeight="40.0" prefWidth="123.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #558C8A; -fx-text-fill: #ffffff;" styleClass="input-field" text="Create" />
+                        <Button fx:id="Createbtn" mnemonicParsing="false" onAction="#ClickCreate" prefHeight="47.0" prefWidth="123.0" styleClass="account-create-btn" text="Create" />
                      </children>
                   </HBox>
                </children>
