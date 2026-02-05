@@ -125,6 +125,18 @@
 .table-view .column-header .label {
     -fx-text-fill: #1F2A44;
     -fx-font-weight: bold;
+}
+
+/* rows + zebra */
+.table-row-cell { -fx-background-color: transparent; -fx-cell-size: 40px; }
+.table-row-cell:odd { -fx-background-color: rgba(255,255,255,0.02); }
+.table-row-cell:hover { -fx-background-color: rgba(255,255,255,0.05); }
+.table-row-cell:selected { -fx-background-color: rgba(58,134,168,0.22); }
+
+/* cells */
+.table-cell {
+    -fx-padding: 8 12;
+    -fx-text-fill: -secondary-text-color;
     -fx-font-size: 13px;
     -fx-alignment: CENTER;
 }

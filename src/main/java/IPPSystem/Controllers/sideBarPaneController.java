@@ -4,14 +4,13 @@ import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
-import IPPSystem.Utils.storage;
-import IPPSystem.Utils.themeToggle;
-import IPPSystem.Utils.utils;
+import IPPSystem.Utils.*;
 import com.almasb.fxgl.ui.InGamePanel;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -24,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -40,6 +40,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class sideBarPaneController extends navigationPaneController{
+
+    // holds the controller loaded into the add overlay (addNew)
+    private Object currentAddController;
+
 
     @FXML
     private BorderPane addNewPane,basePane;
@@ -93,7 +97,7 @@ public class sideBarPaneController extends navigationPaneController{
     private Circle imageCircle, imageBtn; // Changed from logoIcon to locoIcon
 
     @FXML
-    private Circle locoIcon; // Added this field (exists in FXML)
+    private Circle logoIcon; // Added this field (exists in FXML)
 
     @FXML
     private Region leftRegion;
@@ -242,8 +246,6 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private ImageView userImage;
 
-    @FXML
-    private HBox userInfoCard;
 
     @FXML
     private Label userNameLbl;
@@ -261,26 +263,12 @@ public class sideBarPaneController extends navigationPaneController{
     private HBox userViewBtn;
 
     @FXML
-    private Label userViewLbl, addNewTitle;
-
-    @FXML
-    private Button addNewExitBtn;
-
+    private Label userViewLbl;
     @FXML
     private Label dashboardIcon, projectIcon, userIcon, reportIcon, settingIcon, logoutIcon, changePwIcon, profileIcon;
 
-    @FXML
-    private VBox createLaborPane, createProjectPane, createReportPane;
-
-    @FXML
-    private Button createAccCancelBtn; // Exists in FXML but wasn't in controller
-
-    @FXML
-    private Button createAccCreateBtn; // Exists in FXML but wasn't in controller
-
     // Removed userViewImage field as it doesn't exist in FXML
     // Removed imageIconBtn field as it doesn't exist in FXML
-
 
     private users loginUser = user;
 
@@ -297,6 +285,15 @@ public class sideBarPaneController extends navigationPaneController{
             if (view == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
                 view = loader.load();
+
+                // ✅ Make sure controllers inside this tab can navigate using utils.openFxml(...)
+                // by injecting this tab's loadPane when supported.
+                Object controller = loader.getController();
+                currentAddController = controller;
+                if (controller instanceof loadPaneAware aware) {
+                    aware.setLoadPane(loadPane);
+                }
+
                 viewCache.put(fxml, view);
             }
 
@@ -309,12 +306,24 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
+
     @FXML
     public void initialize() {
+
+        // ✅ Let any inner controller access this sideBarPaneController (per-tab safe)
+        loadPane.getProperties().put("SIDEBAR_CONTROLLER", this);
+
+        // ✅ Critical: mark THIS sidebar root as belonging to THIS tab's inner loadPane.
+        // utils.findTabLoadPane(...) will walk up parent nodes to find this and avoid cross-tab switching.
+        if (loadPane != null) {
+            loadPane.getProperties().put("TAB_LOAD_PANE", loadPane);
+        }
+        if (basePane != null && loadPane != null) {
+            basePane.getProperties().put("TAB_LOAD_PANE", loadPane);
+        }
         // ... rest of your initialize method remains the same
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
-
 
         lightDarkIconChange();
         circleMove();
@@ -338,6 +347,9 @@ public class sideBarPaneController extends navigationPaneController{
 
         addNewPane.setVisible(false);
         basePane.setVisible(true);
+
+        setupAddOverlayOutsideClick();
+        currentAddController = null;
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
@@ -382,6 +394,82 @@ public class sideBarPaneController extends navigationPaneController{
 //        utils.switchNewScene(logoutIcon,"login.fxml");
 
     }
+
+    private void setupAddOverlayOutsideClick() {
+
+        // make regions clickable even if “transparent”
+        String catcherStyle = "-fx-background-color: rgba(0,0,0,0.001);";
+        topRegion.setStyle(catcherStyle);
+        leftRegion.setStyle(catcherStyle);
+        rightRegion.setStyle(catcherStyle);
+        bottomRegion.setStyle(catcherStyle);
+
+        EventHandler<MouseEvent> handler = e -> {
+
+            if (!addNewPane.isVisible()) return;
+
+            if (currentAddController instanceof IPPSystem.Utils.AddOverlayForm form) {
+
+                if (form.hasUnsavedChanges() && !form.isFormValid()) {
+//                    messageBoxService.(loadPane, notificationType.WARNING, form.getValidationMessage());
+                    e.consume();
+                    return;
+                }
+
+                if (form.hasUnsavedChanges() && form.isFormValid()) {
+//                    messageBoxService.showToast(loadPane, notificationType.INFO, "Please save or cancel first.");
+                    e.consume();
+                    return;
+                }
+
+                closeAddOverlay();
+                e.consume();
+                return;
+            }
+
+            closeAddOverlay();
+            e.consume();
+        };
+
+        topRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        leftRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        rightRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+        bottomRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
+    }
+
+
+    public void openAddOverlay(String fxml) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
+            Parent view = loader.load();
+
+            // allow the opened add-page controller to navigate too (optional but useful)
+            Object controller = loader.getController();
+            currentAddController = controller;
+            if (controller instanceof IPPSystem.Utils.loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
+            }
+
+            addNew.getChildren().setAll(view);
+            addNewPane.setVisible(true);
+            basePane.setVisible(false);
+
+            view.toFront();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeAddOverlay() {
+        addNew.getChildren().clear();
+        addNewPane.setVisible(false);
+        basePane.setVisible(true);
+
+        setupAddOverlayOutsideClick();
+        currentAddController = null;
+    }
+
 
     // ... rest of your methods remain the same
     private void setFirstPage(){
@@ -450,76 +538,47 @@ public class sideBarPaneController extends navigationPaneController{
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
-//        dashboardViewBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("dashboard.fxml", loadPane);
-//            linkButton.setTabButtonName("Dashboard View");
-//        });
-//        dashboardIconBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("dashboard.fxml", loadPane);
-//            linkButton.setTabButtonName("Dashboard View");
-//        });
-
+        boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
         dashboardViewBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("dashboard.fxml", loadPane);
-            openInnerView("dashboard.fxml");
-            linkButton.setTabButtonName("Dashboard View");
+            if (isManager) {
+                utils.openFxml("allProjectDashboard.fxml",loadPane);
+                linkButton.setTabButtonName("Overall Dashboard");
+            }else{
+                utils.openFxml("currentProjectDashboard.fxml", loadPane);
+                linkButton.setTabButtonName("Current Dashboard");
+            }
 
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("dashboard.fxml", loadPane);
-            openInnerView("dashboard.fxml");
-            linkButton.setTabButtonName("Dashboard View");
+            utils.openFxml("dashboard.fxml", loadPane);
         });
 
         // Project navigation
-//        projectViewBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("viewProjects.fxml", loadPane);
-//            linkButton.setTabButtonName("Projects View");
-//        });
-//        projectIconBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("viewProjects.fxml", loadPane);
-//            linkButton.setTabButtonName("Projects View");
-//        });
-
         projectViewBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("viewProjects.fxml", loadPane);
-            openInnerView("viewProjects.fxml");
+            utils.openFxml("viewProjects.fxml", loadPane);
             linkButton.setTabButtonName("Projects View");
-
-
         });
         projectIconBtn.setOnMouseClicked(e -> {
-//            utils.openFxml("viewProjects.fxml", loadPane);
-            openInnerView("viewProjects.fxml");
+            utils.openFxml("viewProjects.fxml", loadPane);
             linkButton.setTabButtonName("Projects View");
-
         });
 
         // User navigation
-//        userViewBtn.setOnMouseClicked(e -> {
-//
-//           if( loginUser.getUserRole().equals(role.MANAGER.toString()))
-//           {
-//               utils.openFxml("engineerView.fxml",loadPane);
-//           }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
-//               utils.openFxml("laborView.fxml",loadPane);
-//           }
-//
-//
-//        });
-
         userViewBtn.setOnMouseClicked(e -> {
 
-            if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+            if( isManager)
             {
-                openInnerView("engineerView.fxml");
-                linkButton.setTabButtonName("Engineers");
-            }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
-                openInnerView("laborView.fxml");
-                linkButton.setTabButtonName("Labors");
+                utils.openFxml("engineerView.fxml",loadPane);
+                linkButton.setTabButtonName("Supervisors View");
+            }else{
+                utils.openFxml("laborView.fxml",loadPane);
+                linkButton.setTabButtonName("Labors View");
             }
+
+
         });
 
+        // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
             openInnerView("report.fxml");
             linkButton.setTabButtonName("Report");
@@ -528,7 +587,6 @@ public class sideBarPaneController extends navigationPaneController{
             openInnerView("report.fxml");
             linkButton.setTabButtonName("Report");
         });
-
     }
 
     private void setupSidebarToggleHandlers() {
@@ -627,6 +685,7 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Get the CURRENT state BEFORE changing it
         boolean isCurrentlyDarkMode = themeToggle.isDarkMode();
+
         if (isCurrentlyDarkMode) {
             // Currently dark mode, so we're switching to light mode
             moving.setToX(10);
@@ -650,6 +709,8 @@ public class sideBarPaneController extends navigationPaneController{
         moving.setOnFinished(event -> {
             // Change the theme first
             utils.changeTheme();
+            // Then update the icons based on the NEW theme state
+            lightDarkIconChange();
         });
 
         ParallelTransition run = new ParallelTransition(moving1, moving);

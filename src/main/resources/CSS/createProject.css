@@ -1,0 +1,142 @@
+/* Root card look */
+.cp-root {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #E6E9EF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 18, 0.15, 0, 6);
+}
+
+/* Header */
+.cp-header {
+    -fx-padding: 18 18 10 18;
+    -fx-border-color: transparent transparent #EEF1F6 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.cp-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1F2A44;
+}
+
+/* Close icon button */
+.cp-icon-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7A8599;
+    -fx-font-size: 16px;
+    -fx-padding: 6 10 6 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.cp-icon-btn:hover {
+    -fx-background-color: #F3F5F9;
+    -fx-text-fill: #2C3A57;
+}
+
+/* Scroll */
+.cp-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.cp-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Content spacing */
+.cp-content {
+    -fx-padding: 16 18 18 18;
+    -fx-spacing: 14;
+}
+
+/* TitledPane styling */
+.cp-titled {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #E6E9EF;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+.cp-titled > .title {
+    -fx-background-color: #F8FAFD;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 10 12 10 12;
+}
+.cp-titled > .title > .text {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-fill: #1F2A44;
+}
+
+.cp-section {
+    -fx-padding: 14;
+    -fx-spacing: 12;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 12 12;
+}
+
+/* Grid */
+.cp-grid {
+    -fx-hgap: 14;
+    -fx-vgap: 12;
+}
+
+/* Fields */
+.cp-field {
+    -fx-spacing: 6;
+}
+
+.cp-label {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+/* Inputs */
+.cp-input {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D8DEE8;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8 10 8 10;
+}
+.cp-input:focused {
+    -fx-border-color: #3B82F6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 10, 0.25, 0, 2);
+}
+
+/* Address height */
+.cp-address {
+    -fx-pref-height: 40px;
+}
+
+/* Footer */
+.cp-footer {
+    -fx-padding: 8 2 0 2;
+    -fx-spacing: 10;
+}
+
+/* Buttons */
+.cp-btn {
+    -fx-padding: 9 14 9 14;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.cp-btn-secondary {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D8DEE8;
+    -fx-text-fill: #1F2A44;
+}
+.cp-btn-secondary:hover {
+    -fx-background-color: #F3F5F9;
+}
+
+.cp-btn-primary {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: #FFFFFF;
+}
+.cp-btn-primary:hover {
+    -fx-background-color: #1D4ED8;
+}

@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]" date="1769875612880" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 31/01/2026 22:36 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Main/Launcher.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Main/Launcher.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/Launcher.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Controllers/LoginController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/LoginController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Main/HelloApplication.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Main/HelloApplication.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/HelloApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/IPPSystem/Utils/switchPage.class" />
+    <option name="AFTER_PATH" value="target/classes/IPPSystem/Utils/switchPage.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/switchPage.class" />
+  </binary>
+</changelist>

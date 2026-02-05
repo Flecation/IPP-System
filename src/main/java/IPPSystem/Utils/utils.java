@@ -143,8 +143,19 @@ public class utils {
     }
 
     public static StackPane findTabLoadPane(Node anyNodeInThatTab) {
-        if (anyNodeInThatTab == null || anyNodeInThatTab.getScene() == null) return null;
+        if (anyNodeInThatTab == null) return null;
 
+        // ✅ First try: walk up the node hierarchy to find a per-tab property.
+        // This avoids cross-tab bugs when multiple sideBarPane.fxml instances share the same Scene.
+        Node current = anyNodeInThatTab;
+        while (current != null) {
+            Object p = current.getProperties().get("TAB_LOAD_PANE");
+            if (p instanceof StackPane sp) return sp;
+            current = current.getParent();
+        }
+
+        // Fallback: scene root (kept for backward compatibility)
+        if (anyNodeInThatTab.getScene() == null) return null;
         Object p = anyNodeInThatTab.getScene().getRoot().getProperties().get("TAB_LOAD_PANE");
         return (p instanceof StackPane sp) ? sp : null;
     }
@@ -156,20 +167,63 @@ public class utils {
         switchPage.getInstance(loadPane).openFxml(fxml);
     }
 
+    /**
+     * Backward-compatible API.
+     *
+     * IMPORTANT: Some controllers call this during their initialize(). At that moment,
+     * a loadPane-aware injection may not have happened yet (because FXMLLoader runs
+     * controller.initialize() during load()). In those cases, loadPane can be null.
+     */
     public static void showProjectCards(ObservableList<projects> projects, VBox containerPane, StackPane loadPane){
+        if (loadPane == null) {
+            // Try best-effort discovery from any node we already have.
+            StackPane discovered = findTabLoadPane(containerPane);
+            if (discovered == null) return;
+            loadPane = discovered;
+        }
+        switchPage.getInstance(loadPane).loadProjects(projects, containerPane);
+    }
+
+    /**
+     * Preferred API: derive the correct per-tab loadPane from any node inside the tab.
+     */
+    public static void showProjectCards(ObservableList<projects> projects, VBox containerPane, Node anyNodeInThatTab){
+        StackPane loadPane = findTabLoadPane(anyNodeInThatTab);
+        if (loadPane == null) return;
         switchPage.getInstance(loadPane).loadProjects(projects, containerPane);
     }
 
     public static void openProjectDetails(projects project,StackPane a){
+        if (a == null) return;
         switchPage.getInstance(a).openProjectDetails(project);
     }
 
+    public static void openProjectDetails(projects project, Node anyNodeInThatTab){
+        StackPane lp = findTabLoadPane(anyNodeInThatTab);
+        if (lp == null) return;
+        switchPage.getInstance(lp).openProjectDetails(project);
+    }
+
     public static void openWorkItemDetails(workItems items,projects project, StackPane a){
+        if (a == null) return;
         switchPage.getInstance(a).openWorkItemDetails(items,project);
     }
 
+    public static void openWorkItemDetails(workItems items, projects project, Node anyNodeInThatTab){
+        StackPane lp = findTabLoadPane(anyNodeInThatTab);
+        if (lp == null) return;
+        switchPage.getInstance(lp).openWorkItemDetails(items, project);
+    }
+
     public static void viewUserInfo(users user, StackPane loadPane){
+        if (loadPane == null) return;
         switchPage.getInstance(loadPane).viewUsersInfo(user);
+    }
+
+    public static void viewUserInfo(users user, Node anyNodeInThatTab){
+        StackPane lp = findTabLoadPane(anyNodeInThatTab);
+        if (lp == null) return;
+        switchPage.getInstance(lp).viewUsersInfo(user);
     }
 
     public static Double durationFormat(Double duration, enumDuration durationStatus){return durationHelper.durationAssign(duration,durationStatus);}

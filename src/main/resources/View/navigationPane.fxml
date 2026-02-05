@@ -45,6 +45,7 @@
             </HBox>
             <StackPane fx:id="loadPane" VBox.vgrow="ALWAYS">
                <children>
+                   <VBox fx:id="alertLayer" StackPane.alignment="CENTER" alignment="CENTER" managed="false" mouseTransparent="true" />
                   <AnchorPane fx:id="modalLayer" style="-fx-background-color: rgba(0,0,0,0.3);" visible="false" StackPane.alignment="CENTER">
                      <children>
                         <StackPane fx:id="modelBox" pickOnBounds="false" prefHeight="164.0" prefWidth="199.0" />
