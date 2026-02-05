@@ -10,17 +10,21 @@
 
 /* View Supervisor */
 .createBtn{
-    -fx-background-color:#558C8A;
+    -fx-background-color:#EFBF04;
     -fx-text-fill:#ffffff;
     -fx-border-radius: 10;
     -fx-background-radius: 5;
-    -fx-padding: 6 30;
-    -fx-pref-width: 120;
+    -fx-pref-width: 180;
+    -fx-pref-height: 30;
+    -fx-opacity: 0.8;
 }
 
 .createBtn:hover{
-    -fx-opacity:0.9;
-    -fx-text-fill:#EFBF04;
+    -fx-background-color:#ffffff;
+    -fx-text-fill: #EFBF04;
+    -fx-border-color: #EFBF04;
+    -fx-border-radius: 10;
+
 }
 
 .managerAccSupervisorCtn{
@@ -94,19 +98,21 @@
 }
 
 .managerAccSpBtnView{
-    -fx-pref-width:100;
-    -fx-background-color: #11C04C;
-    -fx-opacity:0.8;
-    -fx-text-fill: #f4f4f4f4;
+    -fx-pref-width:50;
+
+    -fx-text-fill: #E18600;
+    -fx-border-color:#E18600;
+    -fx-background-color: #ffffff;
 
     -fx-background-radius: 5;
     -fx-padding:5 10 5 10;
-
-
 }
 
+
 .managerAccSpBtnView:hover{
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #E18600;
+    -fx-opacity:0.8;
+    -fx-text-fill: #f4f4f4f4;
 
 
 }
@@ -137,6 +143,47 @@
 }
 
 
+/* Create Supervisor */
+
+.promtTxt{
+    -fx-font-size: 15;
+}
+
+.datePicker{
+    -fx-font-size: 12;
+}
+
+.inputFields{
+    -fx-font-size: -paragraph-font-size;
+    -fx-border-width: .3;
+    -fx-border-color:#558C8A;
+    -fx-border-radius: 5;
+}
+
+.firstName{
+    -fx-pref-width: 500;
+    -fx-text-fill:#000000;
+    -fx-padding: 2 10 2 10;
+    -fx-font-size: -paragraph-font-size;
+
+
+}
+.email{
+     -fx-pref-width: 500;
+     -fx-text-fill:#000000;
+     -fx-padding: 2 10 2 10;
+     -fx-font-size: -paragraph-font-size;
+
+}
+
+
+.roleAndProjectCombo{
+     -fx-padding: 3 10 3 10;
+}
+
+.date{
+    -fx-pref-width:10;
+}
 
  /* :: Add Btn */
 .addSupervisorBtn{
@@ -144,106 +191,81 @@
    -fx-padding: 3 10 3 10;
 }
 
+
 .subTitle{
     -fx-font-size: 16;
 }
 
 
 
-/* Other Engineer List */
-.active-engineer {
-    -fx-background-color:#D9D9D9;
-    -fx-background-radius: 8;
-    -fx-padding: 8 12 8 12; /* TOP RIGHT BOTTOM LEFT */
+
+
+/* Text Field and Input */
+
+.input-field{
+    -fx-background-color:white;
+    -fx-padding: 10;
+    -fx-border-color:#E18600;
+    -fx-border-radius: 10;
+    -fx-border-width:1;
 }
 
-/* Hover effect */
-.active-engineer:hover,.other-engineer:hover{
-       -fx-background-color:#D9D9D9;
-    -fx-opacity: 0.7;
+
+.input-field:focused{
+    -fx-background-color:white;
+    -fx-padding: 10;
+    -fx-border-color:#E18600;
+    -fx-opacity: 0.5;
+    -fx-border-radius: 10;
+    -fx-border-width:1;
 }
 
-.active-engineer .label {
-    -fx-text-fill: #558C8A;
-    -fx-font-weight: bold;
+.combo-box {
+    -fx-pref-width: 150;
+    -fx-pref-height: 30;
 }
 
-.active{
-    -fx-border-width: 0.5;
-    -fx-border-color: #558C8A;
-    -fx-border-radius: 100;
+.text-color{
+    -fx-text-fill: #75490b;
 }
 
-.inactive{
-    -fx-border-width: 0.5;
-    -fx-border-color: #C01111;
-    -fx-border-radius: 100;
-
+.box-qty{
+    -fx-text-fill:  #E18600;
+}
+.box-qty-resign{
+    -fx-text-fill : #a1220e;
 }
 
-.resign{
-    -fx-background-color: #C01111;
-    -fx-opacity: 0.7;
-    -fx-padding:5 10;
-    -fx-background-radius:20;
-    -fx-text-fill:#ffffff;
+.box-qty-active{
+    -fx-text-fill: #17a460;
 }
 
-.resign:hover{
-    -fx-background-color: #C01111;
-   -fx-opacity: 0.5;
+.resign-btn{
+    -fx-background-color: #a1220e;
+    -fx-text-fill: #f4f4f4f4;
 }
 
-.resign-color{
+.resign-btn:hover{
+    -fx-background-color: #ffffff;
     -fx-text-fill: #a1220e;
+    -fx-border-color: #a1220e;
 }
 
 
-
-
-/* Match the main container to the ComboBox height and border */
-.date-picker {
-    -fx-background-color: #b0b0b0, linear-gradient(to bottom, #f2f2f2, #dcdcdc);
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 5;
-    -fx-padding: 0;
-    -fx-alignment: CENTER_LEFT;
+.account-create-btn{
+    -fx-background-color: #E18600;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius:10;
+    -fx-opacity: 0.8;
 }
 
-/* Style the text area inside the DatePicker */
-.date-picker > .text-field {
-    -fx-background-color: transparent;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold; /* Matches your "Skill/Status" bold text */
-    -fx-font-size: 13px;
-    -fx-padding: 5 10 5 10;
+.account-create-btn:hover{
+    -fx-border-color: #E18600;
+    -fx-text-fill: #E18600;
+    -fx-border-radius: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-opacity: 0.8;
+
 }
-
-/* Match the button part on the right */
-.date-picker > .arrow-button {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0 5 5 0;
-    -fx-padding: 0 8 0 8;
-}
-
-/* Target the calendar icon specifically */
-.date-picker > .arrow-button > .icon {
-    -fx-background-color: #444444;
-    -fx-padding: 0.416667em; /* standard icon size */
-}
-
-/* Hover effect to match ComboBox interactivity */
-.date-picker:hover {
-    -fx-border-color: #999999;
-}
-
-/* Focus effect (the blue glow in your second screenshot) */
-.date-picker:focused {
-    -fx-background-color: none;
-    -fx-background-insets: -1, 1;
-    -fx-border-color: #999999;
-    -fx-border-radius: 20;
-}
-
-

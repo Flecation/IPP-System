@@ -1,25 +1,45 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.assignStatus;
+import IPPSystem.Constants.notificationType;
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.skills;
 import IPPSystem.Models.tasks;
 import IPPSystem.Models.workItems;
+import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Utils.messageBoxService;
+import IPPSystem.Utils.utils;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.util.StringConverter;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
-public class workItemDetailsController {
+import static IPPSystem.Controllers.dashboardController.loginUser;
 
+public class workItemDetailsController implements loadPaneAware {
+
+//    ==== title ====
+    @FXML private Label workItemTitle,workItemTitleStatus;
+    // ===== Top cards =====
     @FXML private Label actualCost;
     @FXML private Label actualCostPercent;
     @FXML private ProgressBar actualCostProgress;
@@ -31,6 +51,7 @@ public class workItemDetailsController {
     @FXML private Label totalEarnValue;
     @FXML private Label usedEarnValue;
 
+    // ===== SPI / CPI =====
     @FXML private Label spiStatusLbl;
     @FXML private Circle spiCircle;
     @FXML private Label spiCircleRate;
@@ -39,22 +60,7 @@ public class workItemDetailsController {
     @FXML private Circle cpiCircle;
     @FXML private Label cpiCircleRate;
 
-    @FXML private VBox editShowSkillBox;
-    @FXML private VBox editWorkItemInfo;
-
-    @FXML private TextField editBudgetTxt;
-    @FXML private TextField editLaborQtyTxt;
-    @FXML private TextField editDurationTxt;
-
-    @FXML private Label editActualStartDateLbl;
-    @FXML private Label editActualEndDateLbl;
-
-    @FXML private TextField editPlanStartDateTxt;
-    @FXML private TextField editPlanEndDateTxt;
-
-    @FXML private Button editConfirmBtn;
-    @FXML private Button editRevertBtn;
-
+    // ===== View-only WorkItem info =====
     @FXML private VBox viewOnlyWorkItemInfo;
     @FXML private Label viewBudget;
     @FXML private Label viewPlanStartDate;
@@ -64,6 +70,7 @@ public class workItemDetailsController {
     @FXML private Label viewDuration;
     @FXML private Label viewTotalLabors;
 
+    // ===== Skill + Task tables =====
     @FXML private TableView<skills> viewSkillTable;
     @FXML private TableColumn<skills, String> viewSkillCol;
     @FXML private TableColumn<skills, Double> viewQtyCol;
@@ -76,120 +83,318 @@ public class workItemDetailsController {
     @FXML private TableColumn<tasks, Date> taskActualStartDate;
     @FXML private TableColumn<tasks, Date> taskActualEndDateCol;
     @FXML private TableColumn<tasks, String> TaskStatusCol;
-    @FXML private TableColumn<tasks, Button> taskActionCol;
+    @FXML private TableColumn<tasks, Void> taskActionCol;
 
-    @FXML private Button backBtn;
+    // In your FXML: fx:id="backToProjectDetails"
+    @FXML private Button backToProjectDetails;
+
+    @FXML private Button wItemEditBtn;
 
     private workItems workItem;
+    private final calculationHelper helper = calculationHelper.getInstance();
+    private boolean canEditTasks = true;
+
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+
+    // Flexible date parser: supports "2026-01-14" and "14-JAN-2026"
+    private static final DateTimeFormatter FLEX_DATE = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE) // yyyy-MM-dd
+            .appendOptional(DateTimeFormatter.ofPattern("d-MMM-uuuu", Locale.ENGLISH))
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MMM-uuuu", Locale.ENGLISH))
+            .toFormatter(Locale.ENGLISH);
 
     @FXML
-    private void initialize() {
+    public void initialize() {
+        wItemEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
+        wItemEditBtn.setOnAction(e->{
+            messageBoxService.toast("Not Allow To Edit",
+                    "If you want to edit buy Premium!!",
+                    notificationType.WARNING);});
+
+        // ---- Task table mapping ----
         if (taskNameCol != null) taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         if (taskDurationCol != null) taskDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
         if (taskPlanStartDateCol != null) taskPlanStartDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskPlanEndDateCol != null) taskPlanEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
+        // Your tasks model currently mirrors planned into actual in UI
         if (taskActualStartDate != null) taskActualStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskActualEndDateCol != null) taskActualEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
         if (TaskStatusCol != null) TaskStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
 
+        // ---- Skill table ----
         if (viewSkillCol != null) viewSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
         if (viewQtyCol != null) viewQtyCol.setCellValueFactory(new PropertyValueFactory<>("projectLaborQty"));
 
-        if (editConfirmBtn != null) editConfirmBtn.setOnAction(e -> onConfirmEdits());
-        if (editRevertBtn != null) editRevertBtn.setOnAction(e -> loadWorkItemIntoEditFields(workItem));
+        if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
+        if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
+
+        // ---- Action column: Edit button ----
+        setupTaskActionColumn();
+
     }
 
-    public void setWorkItem(workItems item) {
+    public void setWorkItem(workItems item, projects project) {
         this.workItem = item;
         if (item == null) return;
 
-        loadWorkItemIntoEditFields(item);
-        loadWorkItemIntoViewFields(item);
+        // Supervisor can't edit (same style as your projectDetailsController)
+        boolean isSupervisor = (loginUser != null)
+                && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
+        this.canEditTasks = !isSupervisor;
 
-        if (taskTable != null) {
-            taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
+        // Load tables
+        if (taskTable != null) taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
+        if (viewSkillTable != null) viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
+
+        reloadFieldsFromModel();
+
+        // Load EVM numbers
+        loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
+        backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
+
+        workItemTitle.setText(item.getWorkItemName());
+        workItemTitleStatus.setText("- "+item.getProjectStatus());
+    }
+
+    // ------------------------------------------------------------
+    // Task action column
+    // ------------------------------------------------------------
+    private void setupTaskActionColumn() {
+        if (taskActionCol == null) return;
+
+        taskActionCol.setCellFactory(col -> new TableCell<>() {
+            private final Button editBtn = new Button("Edit");
+
+            {
+                editBtn.setStyle("-fx-background-color:#4176f2; -fx-text-fill:white; -fx-background-radius:8; -fx-padding:4 10 4 10;");
+                editBtn.setOnAction(e -> {
+                    tasks t = getTableView().getItems().get(getIndex());
+                    openEditTaskDialog(t);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+                editBtn.setDisable(!canEditTasks);
+                setGraphic(editBtn);
+            }
+        });
+    }
+
+    private void openEditTaskDialog(tasks task) {
+        if (task == null) return;
+
+        if (!canEditTasks) {
+            messageBoxService.toast("No Permission",
+                    "Supervisor role cannot edit tasks.",
+                    notificationType.WRONG);
+            return;
         }
 
-        if (viewSkillTable != null) {
-            viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Edit Task");
+        dialog.setHeaderText(task.getTaskName());
+
+        ButtonType saveBtnType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtnType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        TextField durationTxt = new TextField(String.valueOf(task.getProjectDuration()));
+
+
+        durationTxt.setPromptText("Duration (days)");
+
+
+        grid.addRow(0, new Label("Duration"), durationTxt);
+
+        DatePicker startPicker = new DatePicker(task.getStartDate() == null ? null : task.getStartDate().toLocalDate());
+        DatePicker endPicker   = new DatePicker(task.getEndDate() == null ? null : task.getEndDate().toLocalDate());
+
+// Optional: force a consistent display format (yyyy-MM-dd)
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override public String toString(LocalDate date) {
+                return date == null ? "" : fmt.format(date);
+            }
+            @Override public LocalDate fromString(String s) {
+                return (s == null || s.trim().isEmpty()) ? null : LocalDate.parse(s.trim(), fmt);
+            }
+        };
+        startPicker.setConverter(converter);
+        endPicker.setConverter(converter);
+        startPicker.setPromptText("yyyy-MM-dd");
+        endPicker.setPromptText("yyyy-MM-dd");
+
+// If you want: user must pick from calendar (no manual typing)
+        startPicker.setEditable(false);
+        endPicker.setEditable(false);
+
+        grid.addRow(1, new Label("Start"), startPicker);
+        grid.addRow(2, new Label("End"), endPicker);
+
+
+        LocalDate start = startPicker.getValue();
+        LocalDate end = endPicker.getValue();
+
+        dialog.getDialogPane().setContent(grid);
+
+        Node saveBtn = dialog.getDialogPane().lookupButton(saveBtnType);
+        if (saveBtn != null) {
+            saveBtn.setDisable(false);
+            durationTxt.textProperty().addListener((obs, o, n) -> saveBtn.setDisable(tryParseDouble(n) == null));
         }
 
-        // Basic cost/EV placeholders (your model doesn't have actual vs planned cost yet)
-        double total = Math.max(0, item.getProjectCost());
-        double used = total; // placeholder: 100% used
-        double progress01 = total == 0 ? 0 : used / total;
+        dialog.showAndWait().ifPresent(btn -> {
+            if (btn != saveBtnType) return;
 
-        safeSet(totalCost, formatMoney(total));
-        safeSet(totalEarnValue, formatMoney(total));
-        safeSet(actualCost, formatMoney(used));
-        safeSet(usedEarnValue, formatMoney(used));
+            Double dur = tryParseDouble(durationTxt.getText());
 
-        safeSet(actualCostPercent, formatPercent(progress01));
-        safeSet(earnValuePercent, formatPercent(progress01));
 
-        if (actualCostProgress != null) actualCostProgress.setProgress(clamp01(progress01));
-        if (earnValueProgress != null) earnValueProgress.setProgress(clamp01(progress01));
+            if (dur == null || dur <= 0) {
+                messageBoxService.toast("Invalid Duration", "Please enter a duration (> 0).", notificationType.WRONG);
+                return;
+            }
 
-        // SPI/CPI placeholders
-        safeSet(spiStatusLbl, "-");
-        safeSet(cpiStatusLbl, "-");
-        safeSet(spiCircleRate, "-");
-        safeSet(cpiCircleRate, "-");
+
+            tasks updated = new tasks();
+            updated.setAssignTaskId(task.getAssignTaskId());
+            updated.setProjectDuration(dur);
+            updated.setStartDate(Date.valueOf(start));
+            updated.setEndDate(Date.valueOf(end));
+
+            saveTaskEditAsync(updated);
+        });
     }
 
-    private void loadWorkItemIntoEditFields(workItems item) {
-        if (item == null) return;
+    private void saveTaskEditAsync(tasks updated) {
+        if (updated == null || workItem == null) return;
 
-        if (editBudgetTxt != null) editBudgetTxt.setText(String.valueOf(item.getProjectCost()));
-        if (editLaborQtyTxt != null) editLaborQtyTxt.setText(String.valueOf(item.getProjectLaborQty()));
-        if (editDurationTxt != null) editDurationTxt.setText(String.valueOf(item.getProjectDuration()));
+        Task<Boolean> save = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return database.editAssignTasks(updated, assignStatus.CUSTOM);
+            }
 
-        safeSet(editActualStartDateLbl, formatDate(item.getStartDate()));
-        safeSet(editActualEndDateLbl, formatDate(item.getEndDate()));
+            @Override
+            protected void succeeded() {
+                Boolean ok = getValue();
+                if (ok != null && ok) {
+                    messageBoxService.toast("Saved", "Task updated successfully.", notificationType.SUCCESS);
 
-        // No planned dates in model right now → just mirror actual
-        if (editPlanStartDateTxt != null) editPlanStartDateTxt.setText(formatDate(item.getStartDate()));
-        if (editPlanEndDateTxt != null) editPlanEndDateTxt.setText(formatDate(item.getEndDate()));
+                    if (taskTable != null) {
+                        taskTable.setItems(database.getAllTasksByAssignWorkItem(workItem.getAssignWorkItemId()));
+                        taskTable.refresh();
+                    }
+
+                    loadDashboardAsync(workItem.getAssignWorkItemId(), LocalDate.now());
+                } else {
+                    messageBoxService.toast("Update Failed", "Database returned false.", notificationType.WRONG);
+                }
+            }
+
+            @Override
+            protected void failed() {
+                Throwable ex = getException();
+                messageBoxService.toast("Update Failed",
+                        ex == null ? "Unknown error" : ex.getMessage(),
+                        notificationType.WRONG);
+            }
+        };
+
+        Thread t = new Thread(save);
+        t.setDaemon(true);
+        t.start();
     }
 
-    private void loadWorkItemIntoViewFields(workItems item) {
-        if (item == null) return;
+    // ------------------------------------------------------------
+    // Dashboard
+    // ------------------------------------------------------------
+    private void loadDashboardAsync(int assignWorkItemId, LocalDate asOf) {
+        Task<calculationHelper.ProjectDashboard> task = new Task<>() {
+            @Override
+            protected calculationHelper.ProjectDashboard call() {
+                return helper.getWorkItemDashboardOnlyNumbers(assignWorkItemId, asOf);
+            }
 
-        safeSet(viewBudget, formatMoney(item.getProjectCost()));
-        safeSet(viewPlanStartDate, formatDate(item.getStartDate()));
-        safeSet(viewPlanEndDate, formatDate(item.getEndDate()));
-        safeSet(viewActualStartDate, formatDate(item.getStartDate()));
-        safeSet(viewActualEndDate, formatDate(item.getEndDate()));
-        safeSet(viewDuration, formatDuration(item.getProjectDuration()));
-        safeSet(viewTotalLabors, formatQty(item.getProjectLaborQty()));
+            @Override
+            protected void succeeded() {
+                calculationHelper.ProjectDashboard d = getValue();
+                if (d == null) return;
+
+                double bac = d.bac();
+                double ev  = d.ev();
+                double ac  = d.ac();
+
+                safeSet(totalCost, formatMoney(bac));
+                safeSet(actualCost, formatMoney(ac));
+                safeSet(actualCostPercent, formatPercent(ac, bac));
+                if (actualCostProgress != null) actualCostProgress.setProgress(clamp01(bac <= 0 ? 0 : ac / bac));
+
+                safeSet(totalEarnValue, formatMoney(bac));
+                safeSet(usedEarnValue, formatMoney(ev));
+                safeSet(earnValuePercent, formatPercent(ev, bac));
+                if (earnValueProgress != null) earnValueProgress.setProgress(clamp01(bac <= 0 ? 0 : ev / bac));
+
+                safeSet(spiCircleRate, formatIndex(d.spi()));
+                safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
+                applyCircleProgress(spiCircle, d.spi());
+
+                safeSet(cpiCircleRate, formatIndex(d.cpi()));
+                safeSet(cpiStatusLbl, statusTextForIndex(d.cpi(), false));
+                applyCircleProgress(cpiCircle, d.cpi());
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
     }
 
-    private void onConfirmEdits() {
-        // NOTE: Your DB update functions for workItems aren't implemented in DAO yet,
-        // so here we only refresh UI from the edited fields without saving.
+    private void reloadFieldsFromModel() {
         if (workItem == null) return;
 
-        Double budget = tryParseDouble(readTrim(editBudgetTxt));
-        Double labors = tryParseDouble(readTrim(editLaborQtyTxt));
-        Double duration = tryParseDouble(readTrim(editDurationTxt));
+        safeSet(viewBudget, formatMoney(workItem.getProjectCost()));
+        safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
+        safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
 
-        if (budget != null) workItem.setProjectCost(budget);
-        if (labors != null) workItem.setProjectLaborQty(labors);
-        if (duration != null) workItem.setProjectDuration(duration);
+        safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
+        safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
 
-        loadWorkItemIntoViewFields(workItem);
+        safeSet(viewDuration, formatNumber(workItem.getProjectDuration()));
+        safeSet(viewTotalLabors, formatQty(workItem.getProjectLaborQty()));
     }
 
-    private String readTrim(TextField tf) {
-        if (tf == null || tf.getText() == null) return null;
-        String s = tf.getText().trim();
-        return s.isEmpty() ? null : s;
-    }
-
+    // ------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------
     private Double tryParseDouble(String s) {
         if (s == null) return null;
-        try { return Double.parseDouble(s.replace(",", "")); }
+        try { return Double.parseDouble(s.trim().replace(",", "")); }
         catch (NumberFormatException e) { return null; }
+    }
+
+    private LocalDate tryParseDate(String s) {
+        if (s == null) return null;
+        try { return LocalDate.parse(s.trim(), FLEX_DATE); }
+        catch (DateTimeParseException e) { return null; }
     }
 
     private void safeSet(Label lbl, String v) {
@@ -207,22 +412,50 @@ public class workItemDetailsController {
         return new DecimalFormat("#,##0.##").format(value) + " MMK";
     }
 
-    private String formatPercent(double p01) {
-        int pct = (int) Math.round(clamp01(p01) * 100.0);
-        return pct + "%";
-    }
-
-    private String formatDate(Date d) {
-        return d == null ? "-" : d.toString();
-    }
-
-    private String formatDuration(double d) {
-        if (d <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(d);
+    private String formatNumber(double v) {
+        if (v <= 0) return "-";
+        return new DecimalFormat("#,##0.##").format(v);
     }
 
     private String formatQty(double q) {
         if (q <= 0) return "-";
         return new DecimalFormat("#,##0.##").format(q) + " persons";
+    }
+
+    private String formatPercent(double numerator, double denominator) {
+        if (denominator <= 0) return "-";
+        long pct = Math.round((numerator / denominator) * 100.0);
+        return pct + "%";
+    }
+
+    private String formatIndex(Double v) {
+        if (v == null) return "-";
+        return new DecimalFormat("0.00").format(v);
+    }
+
+    private String statusTextForIndex(Double idx, boolean isSchedule) {
+        if (idx == null) return "No Data";
+
+        if (isSchedule) {
+            if (idx >= 1.05) return "Ahead of Schedule";
+            if (idx >= 0.95) return "On Schedule";
+            return "Behind Schedule";
+        } else {
+            if (idx >= 1.05) return "Under Budget";
+            if (idx >= 0.95) return "On Budget";
+            return "Over Budget";
+        }
+    }
+
+    private void applyCircleProgress(Circle circle, Double idx) {
+        if (circle == null) return;
+
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+
+        circle.getStrokeDashArray().setAll(circumference);
+
+        double p = (idx == null) ? 0 : clamp01(idx);
+        circle.setStrokeDashOffset(circumference * (1 - p));
     }
 }

@@ -151,7 +151,7 @@ public class projectDatabase {
 
     public static String currentAssignProject(int userId) {
         try {
-            String sql = "SELECT projectInstanceName FROM assignProjects WHERE managerId = ? AND projectStatus = ?";
+            String sql = "SELECT projectInstanceName FROM assignProjects WHERE supervisorId = ? AND projectStatus = ?";
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, userId);
@@ -219,5 +219,24 @@ public class projectDatabase {
         return list;
     }
 
+    public static void callUpdateProjectBaseline(int projectId, double cost,
+                                                 Date start, Date end,
+                                                 double duration) {
+        String sql = "{CALL updateProjectBaseline(?,?,?,?,?)}";
 
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setInt(1, projectId);
+            cs.setDouble(2, cost);
+            cs.setDate(3, start);
+            cs.setDate(4, end);
+            cs.setDouble(5, duration);
+
+            cs.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+//            aa
+        }
+    }
 }

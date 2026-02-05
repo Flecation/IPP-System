@@ -1,17 +1,49 @@
 @import url("main.css");
 
-#root{
-    -fx-background-color :  -secondary-bg-color;
+.background{
+  -fx-background-image: url("/Photos/logInImage1.png");
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: cover;
+  -fx-background-position: center;
+  -fx-width: 100%;
+  -fx-height: 100%;
+
 }
 
-.leftPane{
-    -fx-background-color: -secondary-bg-color;
+.header-text{
+    -fx-font-size: 25px;
+    -fx-font-family : "Poppins";
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
-.cardPane{
-    -fx-background-color: -primary-bg-color;
+
+.rightPane {
+    /* Semi-transparent white background */
+    -fx-background-color: rgba(255,255,255, 0.7) ;
+
+    /* Rounded corners to match the glass look */
+    -fx-background-radius: 70 0 0 70;
+    -fx-border-radius: 70 0 0 70;
+
+    /* A thin, subtle white border creates the "edge" of the glass */
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1px;
+
+    /* This adds the inner glow/blur effect */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+
 }
-.rightPane{
-    -fx-background-color : -primary-bg-color;
+.rightBlur{
+        -fx-background-color: rgba(255,255,255, 0.35);
+
+        -fx-background-radius: 70 0 0 70;
+        -fx-border-radius: 70 0 0 70;
+
+        -fx-border-color: rgba(255, 255, 255, 0.4);
+        -fx-border-width: 1px;
+
+        /* REAL blur effect on this node */
+        -fx-effect: gaussian-blur(200);
 }
 
 .loginTitle {
@@ -19,6 +51,7 @@
     -fx-text-fill: -primary-text-color;
     -fx-fill: -primary-text-color;
 }
+
 .loginLogoName {
     -fx-font-size: 38px;
     -fx-text-fill: -primary-text-color;
@@ -26,49 +59,145 @@
 }
 
 #userNameLbl , #passwordLbl {
-    -fx-color: -primary-text-color;
+    -fx-text-fill: #011121;
     -fx-background-color: transparent;
     -fx-font-size: 15px;
 }
 
-#loginBtn,#sentResetCodeBtn,#changePwBtn,#verifyOtpBtn{
-    -fx-background-color:  #3b82f6;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-text-fill: -primary-text-color;
+#loginBtn:pressed {
+    -fx-background-color: #011121;
+    -fx-text-fill: white;
 }
-#forgetBtn,#backToLogin {
+/* 1. The default state of the button */
+#loginBtn,#sentResetCodeBtn,#changePwBtn {
+    -fx-background-color: #FFA500; /* Standard Orange */
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-family: "Poppins";
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 0, 4);
+}
+
+
+/* 3. When you CLICK/SELECT the button (Brighter Orange) */
+#loginBtn:pressed {
+    /* Using derive(color, percentage) makes it 30% brighter than the original */
+    -fx-background-color: #f57f18;
+    -fx-text-fill: white;
+}
+#forgetBtn {
       -fx-underline: true;
       -fx-font-size: 10px;
-      -fx-text-fill: -muted-text-color;
+      -fx-text-fill: #011121;
+      -fx-font-weight: bold;
+      -fx-font-family: "Poppins";
       -fx-cursor: hand;
       -fx-background-color: transparent;
 }
-
-.shape {
-    -fx-fill: -secondary-bg-color;
-    -fx-stoke: none;
-
+.info-text{
+  -fx-text-fill: #011121;
+  -fx-font-size :15px;
 }
 
-.rightShape {
-    -fx-fill: -primary-bg-color;
+/* Target the text color and the cursor for all input fields */
+.text-field, .password-field, .text-field > .text, .password-field > .text {
+    -fx-text-fill: white !important;
+    -fx-fill: white !important; /* For the internal Text node */
+    -fx-caret-fill: white;      /* Makes the blinking cursor white */
 }
 
-/* For other added functions */
-
-/* For the attempt time out section */
-#openEmailAction{
-    -fx-text-fill: -danger-color;
-    -fx-cursor: hand;
-    -fx-underline: true;
-}
-#openWithEmail {
-    -fx-background-color: rgba(0,0,0,0.48);
+.check-box .box {
+    -fx-background-color: transparent !important;
+    -fx-border-color: grey !important; /* Forces the border to be black */
+    -fx-border-width: 2px;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
 }
 
-/* For the wrong message label */
-#emailWrongLbl, #pwWrongLbl{
-    -fx-text-fill: -danger-color;
+/* This makes the 'check' mark black to match */
+.check-box:selected .mark {
+    -fx-background-color: black !important;
+    -fx-mark-color: black !important;
 }
 
+/* 1. Apply the UPWARDS movement and font size to BOTH checkboxes */
+#showPasswordCheckBox,
+#showChangePwChoiceBox {
+    -fx-translate-y: -4px;
+    -fx-font-size: 10px;
+}
+
+/* 2. FORCE the text to be GREY and add the downward padding */
+#showPasswordCheckBox .label,
+#showChangePwChoiceBox .label {
+    -fx-text-fill: #808080 !important; /* Grey color */
+    -fx-padding: 10px 0 0 5px;         /* Moves text down 10px relative to box */
+}
+
+/* 3. Make the square SMALL and HOLLOW for both */
+#showPasswordCheckBox .box,
+#showChangePwChoiceBox .box {
+    -fx-padding: 0;
+    -fx-min-width: 13px;
+    -fx-max-width: 13px;
+    -fx-min-height: 13px;
+    -fx-max-height: 13px;
+    -fx-background-color: transparent !important;
+    -fx-border-color: black !important;
+    -fx-border-width: 1.5px;
+    -fx-background-radius: 2px;
+    -fx-border-radius: 2px;
+}
+
+/* 4. Handle the CHECKED state (White box, Black mark) */
+#showPasswordCheckBox:selected .box,
+#showChangePwChoiceBox:selected .box {
+    -fx-background-color: white !important;
+}
+
+#showPasswordCheckBox:selected .mark,
+#showChangePwChoiceBox:selected .mark {
+    -fx-background-color: black !important;
+    -fx-scale-x: 0.6;
+    -fx-scale-y: 0.6;
+}
+/* 1. Sets the color of the text to black while typing */
+.text-field:focused,
+.password-field:focused,
+#userNameTxt:focused,
+#hidePasswordTxt:focused {
+    -fx-text-fill: black !important;
+}
+
+/* 2. Sets the blinking cursor (caret) to black so it is visible */
+.text-field, .password-field {
+    -fx-caret-fill: black;
+}
+
+/* 3. Ensure the text stays black even if there is an internal 'text' node conflict */
+.text-field:focused .text,
+.password-field:focused .text {
+    -fx-fill: black !important;
+}
+
+#forgetBtn{
+    -fx-font-weight: regular;
+}
+.label .backTo{
+    -fx-text-fill: grey;
+}
+#backToLogin {
+    -fx-text-fill: black !important;   /* Sets the color to grey */
+    -fx-underline: true;               /* Adds the underline */
+    -fx-background-color: transparent; /* Makes the button background invisible */
+    -fx-cursor: hand;                  /* Changes cursor to a hand on hover */
+    -fx-font-family: "Poppins";        /* Matches your other text */
+    -fx-font-size: 12px;
+}
+
+.backTo {
+    -fx-text-fill: grey !important;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+}

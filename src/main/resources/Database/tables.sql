@@ -238,10 +238,10 @@ create table assignWorkers (
     workerId int,
     isCancel boolean default false
 );
-
 CREATE TABLE dailyReports (
     dailyReportId INT PRIMARY KEY AUTO_INCREMENT,
     assignProjectId INT NOT NULL,
+    assignWorkItemId INT NOT NULL,
     reportDate DATE NOT NULL,
     supervisorId INT,
     actualCost  DOUBLE,
@@ -249,14 +249,18 @@ CREATE TABLE dailyReports (
     weather VARCHAR(100),
     generalRemark TEXT,
     issue LONGTEXT,
-    UNIQUE (assignProjectId, reportDate),
+
+    UNIQUE (assignProjectId, assignWorkItemId, reportDate),
 
     FOREIGN KEY (assignProjectId)
         REFERENCES assignProjects(assignProjectId)
         ON DELETE CASCADE,
     FOREIGN KEY (supervisorId)
         REFERENCES users(userId)
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
+    FOREIGN KEY (assignWorkItemId)
+        REFERENCES assignWorkItems(assignWorkItemId)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE dailyReportTasks (

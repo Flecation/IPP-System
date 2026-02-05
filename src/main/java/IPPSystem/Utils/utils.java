@@ -20,9 +20,13 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -64,9 +68,9 @@ public class utils {
 
         showPasswordCheckBox.setOnAction(event -> {
             if(showPasswordCheckBox.isSelected()){
-               showPasswordField.setText(hidePasswordField.getText());
-               hidePasswordField.setVisible(false);
-               showPasswordField.setVisible(true);
+                showPasswordField.setText(hidePasswordField.getText());
+                hidePasswordField.setVisible(false);
+                showPasswordField.setVisible(true);
 
             }else{
                 hidePasswordField.setText(showPasswordField.getText());
@@ -92,54 +96,7 @@ public class utils {
         focusAnimation.animateUnderline(underline,From,To);
     }
 
-    public static void setAlertBox(Parent root, String title, String message, notificationType type, boolean onlyShow) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> setAlertBox(root, title, message, type, onlyShow));
-            return;
-        }
 
-        try {
-            Pane targetPane = findOverlayTargetPane(root);
-            if (targetPane == null) {
-                return;
-            }
-
-            // If an old alert is still attached, remove it so the new one always shows
-            if (currentAlertRoot != null && currentAlertRoot.getParent() instanceof Pane oldPane) {
-                oldPane.getChildren().remove(currentAlertRoot);
-            }
-            currentAlertRoot = null;
-            targetPane.getChildren().removeIf(node -> "messageBoxRoot".equals(node.getId()));
-
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/messageBox.fxml"));
-            Parent msgRoot = loader.load();
-            currentAlertRoot = msgRoot;
-            IPPSystem.Controllers.messageBoxController controller = loader.getController();
-
-            // Make it behave like an overlay (not normal VBox layout)
-            msgRoot.setId("messageBoxRoot");
-            msgRoot.setManaged(true);
-            msgRoot.setLayoutX(0);
-            msgRoot.setLayoutY(0);
-            if (msgRoot instanceof Region region) {
-                region.prefWidthProperty().bind(targetPane.widthProperty());
-                region.prefHeightProperty().bind(targetPane.heightProperty());
-                region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            }
-
-            targetPane.getChildren().add(msgRoot);
-            msgRoot.toFront();
-
-            Runnable cleanup = () -> currentAlertRoot = null;
-            if (onlyShow) {
-                controller.toastMessage(msgRoot, title, message, type, cleanup);
-            } else {
-                controller.confirmMessage(msgRoot, title, message, type, cleanup);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static Pane findOverlayTargetPane(Parent node) {
         if (node == null) {
@@ -182,23 +139,37 @@ public class utils {
     }
 
     public static void switchNewScene(Button clickButton, String fxmlName){
-        switchPage.getInstance(null).switchScene(clickButton,fxmlName);
+        switchPage.switchScene(clickButton, fxmlName);
     }
 
-    public static void openFxml(String fxml, StackPane loadPane){
+    public static StackPane findTabLoadPane(Node anyNodeInThatTab) {
+        if (anyNodeInThatTab == null || anyNodeInThatTab.getScene() == null) return null;
+
+        Object p = anyNodeInThatTab.getScene().getRoot().getProperties().get("TAB_LOAD_PANE");
+        return (p instanceof StackPane sp) ? sp : null;
+    }
+
+
+    public static void openFxml(String fxml,Node node){
+        StackPane loadPane = findTabLoadPane(node);
+        if (loadPane == null) return;
         switchPage.getInstance(loadPane).openFxml(fxml);
     }
 
-    public static void showProjectCards(ObservableList<projects> projects, VBox containerPane){
-        switchPage.getInstance(null).loadProjects(projects, containerPane);
+    public static void showProjectCards(ObservableList<projects> projects, VBox containerPane, StackPane loadPane){
+        switchPage.getInstance(loadPane).loadProjects(projects, containerPane);
     }
 
-    public static void openWorkItemDetails(workItems items, StackPane a){
-        switchPage.getInstance(a).openWorkItemDetails(items);
+    public static void openProjectDetails(projects project,StackPane a){
+        switchPage.getInstance(a).openProjectDetails(project);
+    }
+
+    public static void openWorkItemDetails(workItems items,projects project, StackPane a){
+        switchPage.getInstance(a).openWorkItemDetails(items,project);
     }
 
     public static void viewUserInfo(users user, StackPane loadPane){
-        switchPage.getInstance(null).viewUsersInfo(user);
+        switchPage.getInstance(loadPane).viewUsersInfo(user);
     }
 
     public static Double durationFormat(Double duration, enumDuration durationStatus){return durationHelper.durationAssign(duration,durationStatus);}
@@ -231,47 +202,14 @@ public class utils {
 
     public static LocalDate toLocalDate(java.sql.Date date){return  dateFormatter.getLocalDate(date);}
 
-    public static void safeSet(Label lbl, String value) {
-        if (lbl != null) lbl.setText(value == null ? "" : value);
-    }
-
-    public static String formatPercent(double progress01) {
-        int pct = (int) Math.round(clamp01(progress01) * 100.0);
-        return pct + "%";
-    }
-
-    private static double clamp01(double v) {
-        if (v < 0) return 0;
-        if (v > 1) return 1;
-        return v;
-    }
-
-    public static String readTrim(TextField tf) {
-        if (tf == null) return null;
-        String s = tf.getText();
-        if (s == null) return null;
-        s = s.trim();
-        return s.isEmpty() ? null : s;
-    }
-
-    public static Double tryParseDouble(String s) {
-        if (s == null) return null;
-        try {
-            return Double.parseDouble(s.replace(",", ""));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static String formatMoney(double value) {
-        if (value <= 0) return "-";
-        return new DecimalFormat("#,##0.##").format(value) + " MMK";
-    }
-
     public static FontIcon iconSet(FontAwesomeSolid glyph){
         FontIcon icon = new FontIcon(glyph);
         icon.setIconSize(18);
         icon.getStyleClass().add("icon-Style");
         return icon;
     }
+
+
+
+
 }

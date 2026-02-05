@@ -149,6 +149,22 @@ public class laborDatabase {
         return projectName;
     }
 
+    public static int getSkillIdByName(String skillName) {
+        String sql = "SELECT skillId FROM skills WHERE skillName = ?";
+
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, skillName);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt("skillId");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
 //    public static List<labors> getAllLaborsSortedByAssignment() {
 //        List<labors> list = new ArrayList<>();

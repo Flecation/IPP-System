@@ -1,8 +1,12 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
+import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Utils.session;
+import IPPSystem.Utils.storage;
 import IPPSystem.Utils.utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,54 +14,56 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class viewProjectsController extends sideBarPaneController {
+import static IPPSystem.Controllers.navigationPaneController.user;
+import static IPPSystem.Utils.utils.showProjectCards;
 
-    @FXML
-    private VBox viewProjectPane;
+public class viewProjectsController implements loadPaneAware {
 
-    @FXML
-    private Button activeBtn;
+    @FXML private VBox viewProjectPane;
+    @FXML private Button activeBtn;
+    @FXML private Button addBtn;
+    @FXML private Button allBtn;
+    @FXML private Button completedBtn;
+    @FXML private Button planningBtn;
+    @FXML private VBox projectContainer;
+    @FXML private Label noProjectLbl, choiceUserLbl;
+    @FXML private ComboBox<String> choiceUsersBox, choiceProjectTypesBox;
 
-    @FXML
-    private Button addBtn;
-
-    @FXML
-    private Button allBtn;
-
-    @FXML
-    private Button completedBtn;
-
-    @FXML
-    private Button planningBtn;
-
-    @FXML
-    private VBox projectContainer;
-
-    @FXML
-    private Label noProjectLbl;
-
-    @FXML
-    private ComboBox<String> choiceUsersBox, choiceProjectTypesBox;
+    protected final storage data = storage.getInstance();
+    protected final users loginUser = session.getInstance().getUser();
 
     private enum StatusFilter {
         ALL, ACTIVE, COMPLETED, PLANNING
     }
 
-    private StatusFilter statusFilter = StatusFilter.ALL;
+    private StackPane loadPane;
 
-    protected users loginUser = user;
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+
+
+    private StatusFilter statusFilter = StatusFilter.ALL;
 
     @FXML
     public void initialize() {
-        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())) {
             choiceUsersBox.setDisable(true);
             choiceUsersBox.setVisible(false);
-        }else {
+            addBtn.setVisible(false);
+            choiceUserLbl.setVisible(false);
+        } else {
             choiceUsersBox.setVisible(true);
             choiceUsersBox.setDisable(false);
+            choiceUserLbl.setVisible(true);
+            addBtn.setVisible(true);
         }
+
         setAllDataInChoiceBox();
 
         allBtn.setOnAction(e -> {
@@ -88,14 +94,13 @@ public class viewProjectsController extends sideBarPaneController {
 
     private void applyFilters() {
         ObservableList<projects> source = FXCollections.observableArrayList();
-        boolean check = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
+        boolean isSupervisor = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
 
-        // Clear the container FIRST to prevent duplication
         projectContainer.getChildren().clear();
 
-        if (check){
+        if (isSupervisor) {
             source.setAll(data.getProjectsByUserId(loginUser.getUserId()));
-        }else{
+        } else {
             source.setAll(data.getAllProjects());
         }
 
@@ -104,27 +109,34 @@ public class viewProjectsController extends sideBarPaneController {
         String selectedUser = choiceUsersBox.getSelectionModel().getSelectedItem();
         String selectedType = choiceProjectTypesBox.getSelectionModel().getSelectedItem();
 
-        // For supervisor, they should always see only their own projects
-        // unless they specifically filter by other supervisors (which is disabled)
         for (projects p : source) {
             if (p == null) continue;
 
-            // Apply status filter
+            // ✅ FIXED: status filter using ProjectStatus enum
             if (statusFilter != StatusFilter.ALL) {
-                String status = safeLower(p.getProjectStatus());
-                if (statusFilter == StatusFilter.ACTIVE && !status.equals("active")) continue;
-                if (statusFilter == StatusFilter.COMPLETED && !status.equals("completed")) continue;
-                if (statusFilter == StatusFilter.PLANNING && !status.equals("planning")) continue;
+                projectStatus ps = projectStatus.fromString(p.getProjectStatus());
+
+                if (statusFilter == StatusFilter.ACTIVE) {
+                    if (ps == null || !ps.isActive()) continue;
+                }
+
+                if (statusFilter == StatusFilter.COMPLETED) {
+                    if (ps == null || !ps.isCompleted()) continue;
+                }
+
+                if (statusFilter == StatusFilter.PLANNING) {
+                    if (ps != projectStatus.PLANNING) continue;
+                }
             }
 
-            // Apply project type filter
+            // project type filter
             if (selectedType != null && !selectedType.equals("All")) {
                 String typeName = p.getProjectTypeName();
                 if (typeName == null || !typeName.equalsIgnoreCase(selectedType)) continue;
             }
 
-            // Apply user filter (only for non-supervisors or if supervisor filter is enabled)
-            if (!check && selectedUser != null && !selectedUser.equals("All")) {
+            // user filter (only for non-supervisors)
+            if (!isSupervisor && selectedUser != null && !selectedUser.equals("All")) {
                 String supervisor = p.getUserName();
                 if (supervisor == null || !supervisor.equalsIgnoreCase(selectedUser)) continue;
             }
@@ -132,20 +144,15 @@ public class viewProjectsController extends sideBarPaneController {
             filtered.add(p);
         }
 
-        // Now show the cards - the container is already cleared
-        utils.showProjectCards(filtered, projectContainer);
+        showProjectCards(filtered, projectContainer, loadPane);
 
-        // Show/hide "no projects" label
+
         if (filtered.isEmpty()) {
             noProjectLbl.setVisible(true);
             projectContainer.getChildren().add(noProjectLbl);
-        }else{
+        } else {
             noProjectLbl.setVisible(false);
         }
-    }
-
-    private String safeLower(String s) {
-        return s == null ? "" : s.trim().toLowerCase();
     }
 
     private void setAllDataInChoiceBox() {

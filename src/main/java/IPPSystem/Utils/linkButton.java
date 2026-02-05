@@ -1,13 +1,12 @@
 package IPPSystem.Utils;
 
-import IPPSystem.DAO.databaseConnection;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -23,7 +22,11 @@ public class linkButton {
     private Button activeTab;
     private Button activeCloseBtn;
     private HBox activeTabBox;
-    
+
+    // ✅ host (navigationPane) references
+    private HBox hostTabBar;
+    private StackPane hostLoadPane;
+
     private static linkButton instance;
 
     private linkButton(){}
@@ -33,28 +36,52 @@ public class linkButton {
         return instance;
     }
 
+    // ✅ bind once from navigationPaneController
+    public void bindHost(HBox tabBar, StackPane loadPane) {
+        this.hostTabBar = tabBar;
+        this.hostLoadPane = loadPane;
+    }
 
+    public void createTab(HBox tabBar, StackPane loadPane, String fxmlFile, String title) {
+        createTabInternal(tabBar, loadPane, fxmlFile, title, null);
 
-    /**
-     * Create a new tab with FXML content
-     */
-    public void createTab(
+    }
+
+    // ✅ create new tab and load same inner page (duplicate tab feature)
+    public void createTabWithInitialInner(String fxmlFile, String title, String initialInnerFxml) {
+        if (hostTabBar == null || hostLoadPane == null) {
+            throw new IllegalStateException("Host not bound. Call linkButton.bindHost(tapBar, loadPane) in navigationPaneController.");
+        }
+        createTabInternal(hostTabBar, hostLoadPane, fxmlFile, title, initialInnerFxml);
+    }
+
+    private void createTabInternal(
             HBox tabBar,
             StackPane loadPane,
             String fxmlFile,
-            String title
+            String title,
+            String initialInnerFxml
     ) {
+        if (tabBar == null || loadPane == null) {
+            throw new IllegalArgumentException("tabBar/loadPane cannot be null");
+        }
 
-        // ---------- Load FXML ----------
+        // ---------- Load FXML with controller access ----------
         Parent content;
+        Object controller;
         try {
-            content = FXMLLoader.load(getClass().getResource("/View/" + fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxmlFile));
+            content = loader.load();
+            controller = loader.getController();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
         }
 
         content.setVisible(false);
+        content.setManaged(false);
+        content.setMouseTransparent(true);
         loadPane.getChildren().add(content);
+
 
         // ---------- Tab buttons ----------
         Button pageBtn = new Button(title);
@@ -82,8 +109,6 @@ public class linkButton {
 
         // ---------- Switch tab ----------
         pageBtn.setOnAction(e -> switchTab(tabBar, tabBox, pageBtn, closeBtn));
-
-        // Clicking anywhere on the tab container should activate the tab
         tabBox.setOnMouseClicked(e -> switchTab(tabBar, tabBox, pageBtn, closeBtn));
 
         // ---------- Close tab ----------
@@ -92,42 +117,42 @@ public class linkButton {
         // ---------- Add before + button ----------
         tabBar.getChildren().add(tabBar.getChildren().size() - 1, tabBox);
 
-        // ---------- Activate first tab ----------
+        // ---------- Activate ----------
         switchTab(tabBar, tabBox, pageBtn, closeBtn);
+
+        // ✅ After tab created, load same inner view if this is a sideBarPane tab
+        if (initialInnerFxml != null && controller instanceof IPPSystem.Controllers.sideBarPaneController sb) {
+            sb.openInnerView(initialInnerFxml);
+        }
     }
 
-    // =========================================================
-    // TAB SWITCHING
-    // =========================================================
     private void switchTab(HBox tabBar, HBox tabBox, Button selectedTab, Button closeBtn) {
 
-        // Hide all content
-        linkMap.values().forEach(node -> node.setVisible(false));
+        // Hide all content completely (no layout + no mouse blocking)
+        linkMap.values().forEach(node -> {
+            node.setVisible(false);
+            node.setManaged(false);
+            node.setMouseTransparent(true);
+        });
 
         // Show selected content
         Parent content = linkMap.get(selectedTab);
         if (content != null) {
             content.setVisible(true);
+            content.setManaged(true);
+            content.setMouseTransparent(false);
+            content.toFront(); // ✅ important in StackPane
         }
 
         setActiveTabStyles(tabBox, selectedTab, closeBtn);
-
         updateTabCloseButtons(tabBar);
     }
 
     private void setActiveTabStyles(HBox tabBox, Button pageBtn, Button closeBtn) {
-        // Remove old active style
-        if (activeTab != null) {
-            activeTab.getStyleClass().remove("active-tab");
-        }
-        if (activeCloseBtn != null) {
-            activeCloseBtn.getStyleClass().remove("active-tab");
-        }
-        if (activeTabBox != null) {
-            activeTabBox.getStyleClass().remove("active-tab");
-        }
+        if (activeTab != null) activeTab.getStyleClass().remove("active-tab");
+        if (activeCloseBtn != null) activeCloseBtn.getStyleClass().remove("active-tab");
+        if (activeTabBox != null) activeTabBox.getStyleClass().remove("active-tab");
 
-        // Apply active style to all 3 nodes
         tabBox.getStyleClass().add("active-tab");
         pageBtn.getStyleClass().add("active-tab");
         closeBtn.getStyleClass().add("active-tab");
@@ -137,17 +162,7 @@ public class linkButton {
         activeTabBox = tabBox;
     }
 
-    // =========================================================
-    // TAB CLOSE
-    // =========================================================
-    private void closeTab(
-            HBox tabBar,
-            StackPane loadPane,
-            HBox tabBox,
-            Button pageBtn,
-            Parent content
-    ) {
-
+    private void closeTab(HBox tabBar, StackPane loadPane, HBox tabBox, Button pageBtn, Parent content) {
         int closedIndex = tabBar.getChildren().indexOf(tabBox);
 
         loadPane.getChildren().remove(content);
@@ -167,7 +182,6 @@ public class linkButton {
                 Button nextCloseBtn = (Button) nextTabBox.getChildren().get(1);
                 switchTab(tabBar, nextTabBox, nextPageBtn, nextCloseBtn);
             } else {
-                databaseConnection.closeConnection();
                 System.exit(0);
             }
         } else {
@@ -175,16 +189,11 @@ public class linkButton {
         }
     }
 
-    // =========================================================
-    // CLOSE BUTTON VISIBILITY (SINGLE SOURCE OF TRUTH)
-    // =========================================================
     private void updateTabCloseButtons(HBox tabBar) {
-
         int tabCount = tabBar.getChildren().size() - 1;
         boolean overLimit = tabCount > TAB_LIMIT;
 
         for (Button pageBtn : linkMap.keySet()) {
-
             HBox tabBox = (HBox) pageBtn.getParent();
             Button closeBtn = (Button) tabBox.getChildren().get(1);
 
@@ -199,18 +208,15 @@ public class linkButton {
         }
     }
 
-
     public Button getTabButton() {
         for (Button btn : linkMap.keySet()) {
-            if (btn.getStyleClass().contains("active-tab")) {
-                return btn;
-            }
+            if (btn.getStyleClass().contains("active-tab")) return btn;
         }
         return null;
     }
 
     public void setTabButtonName(String text){
-        getTabButton().setText(text);
+        Button b = getTabButton();
+        if (b != null) b.setText(text);
     }
-    
 }

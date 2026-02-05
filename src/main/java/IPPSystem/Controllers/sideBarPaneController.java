@@ -1,5 +1,6 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -13,8 +14,10 @@ import javafx.animation.TranslateTransition;
 
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -278,10 +281,33 @@ public class sideBarPaneController extends navigationPaneController{
     // Removed userViewImage field as it doesn't exist in FXML
     // Removed imageIconBtn field as it doesn't exist in FXML
 
+
     private users loginUser = user;
 
     protected storage data = storage.getInstance();
 
+    private String currentInnerFxml = "viewProjects.fxml";
+
+    private final HashMap<String, Parent> viewCache = new HashMap<>();
+
+    public void openInnerView(String fxml) {
+        try {
+            Parent view = viewCache.get(fxml);
+
+            if (view == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
+                view = loader.load();
+                viewCache.put(fxml, view);
+            }
+
+            loadPane.getChildren().setAll(view);
+            view.toFront();
+            currentInnerFxml = fxml;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -289,8 +315,25 @@ public class sideBarPaneController extends navigationPaneController{
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
 
-        lightDarkIconChange();
 
+        lightDarkIconChange();
+        circleMove();
+
+        newTabBtn.setOnMouseClicked(e -> {
+            // what is currently open in this tab?
+            String inner = currentInnerFxml;
+
+            // tab title (optional)
+            String title = "New Tab";
+            if (linkButton.getTabButton() != null) {
+                title = linkButton.getTabButton().getText();
+            }
+
+            // ✅ create new tab and load same inner page
+            linkButton.createTabWithInitialInner("sideBarPane.fxml", title, inner);
+        });
+
+        utils.setToolTip(newTabBtn, "Open new tab");
         setIcons();
 
         addNewPane.setVisible(false);
@@ -298,6 +341,8 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
+
+
 
         // Setup button click handlers
         setupNavigationHandlers();
@@ -333,11 +378,14 @@ public class sideBarPaneController extends navigationPaneController{
         reloadBtn.setOnMouseClicked(e->data.reload());
 
         setFirstPage();
+
+//        utils.switchNewScene(logoutIcon,"login.fxml");
+
     }
 
     // ... rest of your methods remain the same
     private void setFirstPage(){
-        utils.openFxml("viewProjects.fxml", loadPane);
+        openInnerView("viewProjects.fxml");
     }
 
     private void setIcons(){
@@ -403,41 +451,49 @@ public class sideBarPaneController extends navigationPaneController{
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("currentProjectDashboard.fxml", loadPane);
-            linkButton.setTabButtonName("Dashboard");
+            utils.openFxml("dashboard.fxml", loadPane);
+            linkButton.setTabButtonName("Dashboard View");
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("dashboard.fxml", loadPane);
+            linkButton.setTabButtonName("Dashboard View");
         });
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
-            linkButton.setTabButtonName("Projects");
+            linkButton.setTabButtonName("Projects View");
         });
         projectIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
+            linkButton.setTabButtonName("Projects View");
         });
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("mgSEListView.fxml",loadPane);
-//            utils.openFxml("mgSEPersonalDetail.fxml",loadPane);
 
-//            utils.openFxml("laborView.fxml",loadPane);
+           if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+           {
+               utils.openFxml("zzzz.fxml",loadPane);
+           }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+               utils.openFxml("laborView.fxml",loadPane);
+           }
+
 
         });
-        userIconBtn.setOnMouseClicked(e -> {
-            System.out.println();
+        userViewBtn.setOnMouseClicked(e -> {
+            openInnerView("mgSEListView.fxml");
         });
 
-        // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
-            System.out.println();
+            openInnerView("report.fxml");
+            linkButton.setTabButtonName("Report");
         });
         reportIconBtn.setOnMouseClicked(e -> {
-            System.out.println();
+            openInnerView("report.fxml");
+            linkButton.setTabButtonName("Report");
         });
+
     }
 
     private void setupSidebarToggleHandlers() {
@@ -488,7 +544,7 @@ public class sideBarPaneController extends navigationPaneController{
         sideBarStackPane.setMaxWidth(width);
     }
 
-    private static void setBoxVisible(VBox box, boolean visible) {
+    public static void setBoxVisible(VBox box, boolean visible) {
         if (box == null) {
             return;
         }
@@ -536,25 +592,45 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Get the CURRENT state BEFORE changing it
         boolean isCurrentlyDarkMode = themeToggle.isDarkMode();
-
         if (isCurrentlyDarkMode) {
             // Currently dark mode, so we're switching to light mode
             moving.setToX(10);
             moving1.setToX(10);
+            darkIcon.setVisible(true);
+            darkSymbolIcon.setVisible(true);
+            lightIcon.setVisible(false);
+            lightSymbolIcon.setVisible(false);
+            toggleSymbolText.setText("Dark Mode");
         } else {
             // Currently light mode, so we're switching to dark mode
             moving.setToX(-10);
             moving1.setToX(-10);
+            darkIcon.setVisible(false);
+            darkSymbolIcon.setVisible(false);
+            lightSymbolIcon.setVisible(true);
+            lightIcon.setVisible(true);
+            toggleSymbolText.setText("Light Mode");
         }
 
         moving.setOnFinished(event -> {
             // Change the theme first
             utils.changeTheme();
-            // Then update the icons based on the NEW theme state
-            lightDarkIconChange();
         });
 
         ParallelTransition run = new ParallelTransition(moving1, moving);
         run.play();
+    }
+
+    private void circleMove(){
+        boolean isCurrentlyDarkMode = themeToggle.isDarkMode();
+        if (isCurrentlyDarkMode) {
+            // Currently dark mode, so we're switching to light mode
+            toggleCircle.setTranslateX(10);
+            settingToggleCircle.setTranslateX(10);
+        } else {
+            // Currently light mode, so we're switching to dark mode
+            toggleCircle.setTranslateX(-10);
+            settingToggleCircle.setTranslateX(-10);
+        }
     }
 }

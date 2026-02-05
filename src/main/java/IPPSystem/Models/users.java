@@ -22,7 +22,12 @@ public class users {
         this.userEndDate = userEndDate;
     }
 
+    public users(int engineerId, String engineerName, String projectName, String status, java.sql.Date startDate, java.sql.Date endDate, String userPhoto) {
+        this.userId = engineerId;
+        this.userName = engineerName;
+//        this.assignedProjectName = projectName;
 
+    }
 
 
     public String getUserAddress() {

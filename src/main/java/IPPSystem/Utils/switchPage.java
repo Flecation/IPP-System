@@ -1,9 +1,6 @@
 package IPPSystem.Utils;
 
-import IPPSystem.Controllers.mgSEPersonalDetailController;
-import IPPSystem.Controllers.projectCardController;
-import IPPSystem.Controllers.viewProjectsController;
-import IPPSystem.Controllers.workItemDetailsController;
+import IPPSystem.Controllers.*;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -29,20 +26,24 @@ import java.util.Stack;
 
 public class switchPage extends utils {
 
-    private static switchPage instance;
+    private static final java.util.IdentityHashMap<StackPane, switchPage> INSTANCES = new java.util.IdentityHashMap<>();
+
 
     protected StackPane loadPane;
 
     private switchPage(){}
 
-    public static switchPage getInstance(StackPane pane){
-        if (instance == null){
-            instance = new switchPage();
-
+    public static switchPage getInstance(StackPane pane) {
+        if (pane == null) {
+            throw new IllegalArgumentException("switchPage.getInstance(...) requires a non-null StackPane.");
         }
-        if (pane != null) instance.loadPane = pane;
-        return instance;
+        return INSTANCES.computeIfAbsent(pane, p -> {
+            switchPage sp = new switchPage();
+            sp.loadPane = p;
+            return sp;
+        });
     }
+
 
     // Dashboard page switch animation
     public void setSwitchPane(
@@ -50,6 +51,7 @@ public class switchPage extends utils {
             String toPane,
             Button titleUrlButton,
             String titleUrlName
+
     ) {
 
         // Loading spinner
@@ -135,14 +137,14 @@ public class switchPage extends utils {
 
     // Simple FXML opener utility
     public void openFxml(String fxmlFile) {
-
         try {
             FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
             Parent newContent = loader.load();
 
-            // Special handling for viewProjects.fxml to pass loadPane to controller
-            if ("viewProjects.fxml".equals(fxmlFile)) {
-                loader.getController();
+            // ✅ Inject this tab's loadPane into the loaded controller (if it supports it)
+            Object controller = loader.getController();
+            if (controller instanceof loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
             }
 
             StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
@@ -181,10 +183,12 @@ public class switchPage extends utils {
             e.printStackTrace();
         }
     }
+
     //from the login controller to the dashboard with animation
-    public void switchScene(Button button, String fxmlPath) {
+    public static  void switchScene(Button button, String fxmlPath) {
 
         String fxml = "/View/" + fxmlPath;
+
 
         String originalText = button.getText();
         Node originalGraphic = button.getGraphic();
@@ -301,17 +305,21 @@ public class switchPage extends utils {
         }
     }
 
-    public void openWorkItemDetails(workItems item){
+    public void openWorkItemDetails(workItems item,projects project){
         if (item == null || loadPane == null) return;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/workItemDetails.fxml"));
             Parent root = loader.load();
             workItemDetailsController controller = loader.getController();
-            controller.setWorkItem(item /*, tasks list if you want later */);
+            controller.setWorkItem(item,project/* tasks list if you want later */);
             loadPane.getChildren().setAll(root);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void OpenLogout(){
+
     }
 
     public void viewUsersInfo(users user){
@@ -330,6 +338,29 @@ public class switchPage extends utils {
             loadPane.getChildren().setAll(page);
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void openProjectDetails(projects project){
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectDetails.fxml"));
+            Parent newContent = loader.load();
+
+            projectDetailsController controller = loader.getController();
+            controller.setProjectData(project);
+
+            if (newContent instanceof Region region) {
+                region.prefWidthProperty().bind(loadPane.widthProperty());
+                region.prefHeightProperty().bind(loadPane.heightProperty());
+                region.setMaxWidth(Double.MAX_VALUE);
+                region.setMaxHeight(Double.MAX_VALUE);
+            }
+
+            loadPane.getChildren().setAll(newContent);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -6,10 +6,10 @@ import IPPSystem.DAO.database;
 import IPPSystem.DAO.databaseConnection;
 import IPPSystem.DAO.userDatabase;
 import IPPSystem.Models.users;
-import IPPSystem.Utils.dateFormatter;
-import IPPSystem.Utils.passwordCrafting;
-import IPPSystem.Utils.session;
-import IPPSystem.Utils.utils;
+import IPPSystem.OTP.EmailService;
+import IPPSystem.OTP.OtpStore;
+import IPPSystem.Utils.*;
+import io.github.cdimascio.dotenv.Dotenv;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -64,12 +64,13 @@ public class  loginController {
     @FXML private Button sentResetCodeBtn, verifyOtpBtn;
     @FXML private TextField otp1, otp2, otp3, otp4, otp5, otp6;
     @FXML private Label openEmailAction,showChangePwLbl;
-    @FXML private BorderPane openwithEmail;
+    @FXML private BorderPane openWithEmail;
     @FXML private HBox backToLoginRow;
     @FXML private Button changePwBtn;
     @FXML private TextField showChangePwTxt;
     @FXML private PasswordField hideChangePwTxt;
     @FXML private CheckBox showChangePwChoiceBox;
+    @FXML private VBox alertPane;
 
     public static session user = session.getInstance();
 
@@ -87,11 +88,12 @@ public class  loginController {
 //        userDatabase.addUser(new users("Zaw Zaw","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
 //        userDatabase.addUser(new users("Hla Hla","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
 //        userDatabase.addUser(new users("Mya Mya","ant@gmail.com","099666",utils.hashPassword("123"), role.SUPERVISOR.toString(), dateFormatter.DOB("2005-09-27"),dateFormatter.today(),""));
+        messageBoxService.init(alertPane);
         loginBox.setVisible(true);
         otpBox.setVisible(false);
         forgetPwBox.setVisible(false);
         changeNewPwBox.setVisible(false);
-        openwithEmail.setVisible(false);
+        openWithEmail.setVisible(false);
         try {
             databaseConnection.getConnection();
         } catch (SQLException e) {
@@ -149,9 +151,10 @@ public class  loginController {
             pwWrongLbl.setVisible(false);
             emailWrongLbl.setVisible(false);
             if (count <= 0) {
-                openwithEmail.toFront();
-                showNode(openwithEmail);
-                utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                openWithEmail.toFront();
+                showNode(openWithEmail);
+//                utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                 return;
             }
 
@@ -177,10 +180,12 @@ public class  loginController {
             if (user == null) {
                 count = Math.max(0, count - 1);
                 if (count == 0) {
-                    openwithEmail.toFront();
-                    showNode(openwithEmail);
-                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                    openWithEmail.toFront();
+                    showNode(openWithEmail);
+//                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                    messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                     return;
+
                 }
                 emailWrongLbl.setVisible(true);
                 emailWrongLbl.setText("Email not found. (" + count + " attempts left)");
@@ -191,9 +196,10 @@ public class  loginController {
             if (!utils.checkPassword(password, user.getUserPassword())) {
                 count = Math.max(0, count - 1);
                 if (count == 0) {
-                    openwithEmail.toFront();
-                    showNode(openwithEmail);
-                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                    openWithEmail.toFront();
+                    showNode(openWithEmail);
+//                    utils.setAlertBox(overlayPane, "Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING, true);
+                    messageBoxService.toast("Too Many Attempts", "Open via email to reset your password.", notificationType.WARNING);
                     return;
                 }
                 pwWrongLbl.setVisible(true);
@@ -224,7 +230,7 @@ public class  loginController {
         verifyOtpBtn.setOnAction(e -> onVerifyOtp());
         // Optional: open email client when "Open Via Email Code" is clicked
         openEmailAction.setOnMouseClicked(e -> {
-            hideNode(openwithEmail, null);
+            hideNode(openWithEmail, null);
             switchPane(loginBox, forgetPwBox);
             backToLoginRow.setVisible(false);
             backToLoginRow.setManaged(false);
@@ -242,75 +248,127 @@ public class  loginController {
     private void clearForgotErrors() {
         // If you add error labels for forgot password, clear them here
     }
+
     private void onSendResetCode() {
         String email = forgetPwEmailTxt.getText().trim();
+
         if (email.isEmpty() || !email.contains("@")) {
-            utils.setAlertBox(overlayPane, "Invalid Email", "Please enter a valid email address.", notificationType.ERROR, true);
+            messageBoxService.toast("Invalid Email", "Please enter a valid email address.", notificationType.ERROR);
             return;
         }
-        // Check if user exists
+
         users user = database.loginUser(email);
         if (user == null) {
-            utils.setAlertBox(overlayPane, "User Not Found", "No account with that email exists.", notificationType.ERROR, true);
+            messageBoxService.toast("User Not Found", "No account with that email exists.", notificationType.ERROR);
             return;
         }
 
         resetEmail = email;
 
-        // Simulate sending code (replace with real email service if you have one)
-        utils.setAlertBox(overlayPane, "Reset Code Sent", "A reset code has been sent to " + email, notificationType.SUCCESS, true);
-        // Show OTP box
-        switchPane(forgetPwBox, otpBox);
-        otpEmailName.setText(email);
-        // Optional: generate a demo OTP and show it (for testing only)
-        String demoOtp = "123456";
-        // In real app, you'd email this OTP; here we just log it
-        System.out.println("DEMO OTP for " + email + ": " + demoOtp);
+        // ✅ 1) store OTP in memory (one-time)
+        String otp = OtpStore.create(email);
 
-        clearOtpInputs();
-        otp1.requestFocus();
+        // ✅ 2) send email on background thread
+        new Thread(() -> {
+            try {
+                Dotenv dotenv = Dotenv.configure()
+                        .directory(System.getProperty("user.dir"))  // ensures it looks in project root
+                        .ignoreIfMissing()
+                        .load();
+
+                String host = dotenv.get("SMTP_HOST");
+                String portStr = dotenv.get("SMTP_PORT");
+                String usern = dotenv.get("SMTP_USER");
+                String pass = dotenv.get("SMTP_PASS");
+                boolean tls = Boolean.parseBoolean(dotenv.get("SMTP_TLS", "true"));
+
+                if (host == null || portStr == null || usern == null || pass == null) {
+                    javafx.application.Platform.runLater(() ->
+                            messageBoxService.toast("SMTP Missing",
+                                    "SMTP_* values not loaded. Check file name is .env and location.",
+                                    notificationType.ERROR)
+                    );
+                    return;
+                }
+
+                int port = Integer.parseInt(portStr.trim());
+
+// Gmail app password should NOT include spaces when used:
+                pass = pass.replace(" ", "");
+
+                EmailService mail = new EmailService(host, port, usern, pass, tls);
+                mail.sendOtp(email, otp);
+
+
+                javafx.application.Platform.runLater(() -> {
+                    messageBoxService.toast("Reset Code Sent", "A reset code has been sent to " + email, notificationType.SUCCESS);
+                    switchPane(forgetPwBox, otpBox);
+                    otpEmailName.setText(email);
+                    clearOtpInputs();
+                    otp1.requestFocus();
+                });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                OtpStore.clear(email);
+
+                javafx.application.Platform.runLater(() ->
+                        messageBoxService.toast("Email Failed", "Could not send OTP email. Try again.", notificationType.ERROR)
+                );
+            }
+        }).start();
     }
 
     private void onVerifyOtp() {
         String entered = otp1.getText() + otp2.getText() + otp3.getText() + otp4.getText() + otp5.getText() + otp6.getText();
         if (entered.length() != 6) {
-            utils.setAlertBox(overlayPane, "Invalid OTP", "Please enter all 6 digits.", notificationType.ERROR, true);
+//            utils.setAlertBox(overlayPane, "Invalid OTP", "Please enter all 6 digits.", notificationType.ERROR, true);
+            messageBoxService.toast("Invalid OTP", "Please enter all 6 digits.", notificationType.ERROR);
             return;
         }
         // For demo, accept 123456; replace with real verification
-        if ("123456".equals(entered)) {
-            utils.setAlertBox(overlayPane, "OTP Verified", "You can now reset your password.", notificationType.SUCCESS, true);
-            switchPane(otpBox, changeNewPwBox);
-            if (showChangePwTxt.isVisible()) {
-                showChangePwTxt.requestFocus();
-            } else {
-                hideChangePwTxt.requestFocus();
-            }
-        } else {
-            utils.setAlertBox(overlayPane, "Wrong OTP", "The code you entered is incorrect.", notificationType.ERROR, true);
+        if (resetEmail == null || resetEmail.isBlank()) {
+            messageBoxService.toast("Missing Email", "Please restart reset password flow.", notificationType.ERROR);
+            return;
         }
+
+        boolean ok = OtpStore.verifyOnce(resetEmail, entered);
+        if (ok) {
+            messageBoxService.toast("OTP Verified", "You can now reset your password.", notificationType.SUCCESS);
+            switchPane(otpBox, changeNewPwBox);
+
+            if (showChangePwTxt.isVisible()) showChangePwTxt.requestFocus();
+            else hideChangePwTxt.requestFocus();
+
+        } else {
+            messageBoxService.toast("Wrong OTP", "The code you entered is incorrect or expired.", notificationType.ERROR);
+        }
+
     }
 
     private void onChangePassword() {
         if (resetEmail == null || resetEmail.isBlank()) {
-            utils.setAlertBox(overlayPane, "Missing Email", "Please restart the reset password flow.", notificationType.ERROR, true);
+            messageBoxService.toast("Missing Email", "Please restart the reset password flow.", notificationType.ERROR);
             return;
         }
 
         String newPw = hideChangePwTxt.isVisible() ? hideChangePwTxt.getText() : showChangePwTxt.getText();
         if (newPw == null || newPw.trim().isEmpty()) {
-            utils.setAlertBox(overlayPane, "Invalid Password", "Please enter a new password.", notificationType.ERROR, true);
+            messageBoxService.toast("Invalid Password", "Please enter a new password.", notificationType.ERROR);
             return;
         }
 
         String hashed = utils.hashPassword(newPw.trim());
         boolean ok = userDatabase.updatePasswordByEmail(resetEmail, hashed);
         if (!ok) {
-            utils.setAlertBox(overlayPane, "Update Failed", "Unable to update password. Please try again.", notificationType.ERROR, true);
+            messageBoxService.toast("Update Failed", "Unable to update password. Please try again.", notificationType.ERROR);
             return;
         }
 
-        utils.setAlertBox(overlayPane, "Password Updated", "You can now log in with your new password.", notificationType.SUCCESS, true);
+        // ✅ cleanup OTP (optional: it’s already removed on verify success, but safe)
+        OtpStore.clear(resetEmail);
+
+        messageBoxService.toast("Password Updated", "You can now log in with your new password.", notificationType.SUCCESS);
 
         // Reset state and go back to login
         resetEmail = null;
@@ -320,7 +378,7 @@ public class  loginController {
         showChangePwTxt.clear();
         hideChangePwTxt.clear();
 
-        hideNode(openwithEmail, null);
+        hideNode(openWithEmail, null);
         hideNode(otpBox, null);
         hideNode(forgetPwBox, null);
         hideNode(changeNewPwBox, null);

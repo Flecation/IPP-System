@@ -10,13 +10,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 
+import java.io.File;
 import java.util.function.Consumer;
 
-public class mgSERowController {
+public class engineerRowController {
 
     @FXML
     private Label mgSEActive;
@@ -25,7 +29,7 @@ public class mgSERowController {
     private Button mgSEDeleteBtn;
 
     @FXML
-    private ImageView mgSEImg;
+    private Circle mgSEImg;
 
     @FXML
     private Label mgSENameTxt;
@@ -33,8 +37,6 @@ public class mgSERowController {
     @FXML
     private Label mgSEProjectTypeTxt;
 
-    @FXML
-    private Label mgSERoleTxt;
 
     @FXML
     private Button mgSEViewBtn;
@@ -42,7 +44,14 @@ public class mgSERowController {
     @FXML
     private HBox ASiteEngineerCtn;
 
-    private  users engineer;
+
+    @FXML
+    private Label EndDate;
+
+    @FXML
+    private Label StartDate;
+
+    private users engineer;
 
 
 
@@ -59,12 +68,26 @@ public class mgSERowController {
         this.engineer = engineer;
 
         mgSENameTxt.setText(engineer.getUserName());
-        mgSERoleTxt.setText(engineer.getUserRole());
-        mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+        if(database.currentAssignProject((engineer.getUserId())) == null){
+            mgSEProjectTypeTxt.setText("-");
+        }else{
+            mgSEProjectTypeTxt.setText(database.currentAssignProject(engineer.getUserId()));
+        }
 
 
         String status = engineer.isActive() ? "Active" : "Inactive";
         mgSEActive.setText(status);
+
+
+        Image img = loadProfileImage(engineer.getUserPhoto());
+        mgSEImg.setFill(new ImagePattern(img));
+
+        String start = engineer.getUserStartDate() != null ? engineer.getUserStartDate().toString() : "N/A";
+        String end = engineer.getUserEndDate() != null ? engineer.getUserEndDate().toString() : "Present";
+
+        StartDate.setText(start);
+        EndDate.setText(end);
+
 
         ASiteEngineerCtn.getStyleClass().removeAll(
                 "managerAccSupervisorCtn",
@@ -80,6 +103,20 @@ public class mgSERowController {
         }
     }
 
+
+    private Image loadProfileImage(String path) {
+
+        if (path != null && !path.isBlank()) {
+            File f = new File(path);
+            if (f.exists()) {
+                return new Image(f.toURI().toString());
+            }
+        }
+
+        return new Image(
+                getClass().getResource("/assets/profile/default.png").toExternalForm()
+        );
+    }
 
 
 

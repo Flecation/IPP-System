@@ -6,8 +6,12 @@ import IPPSystem.Constants.role;
 import IPPSystem.Models.*;
 import javafx.collections.ObservableList;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class database {
 
@@ -25,6 +29,10 @@ public class database {
 
     public static boolean createUser(users users){return userDatabase.addUser(users);}
 
+    public  static int getTotalEngineersCount(){return  calculationDatabase.getTotalEngineersCount();}
+    public  static int getNewEngineersThisMonth(){return  calculationDatabase.getNewEngineersThisMonth();}
+    public  static int getActiveEngineersCount(){return  calculationDatabase.getActiveEngineersCount();}
+    public  static int getResignedEngineersCount(){return  calculationDatabase.getResignedEngineersCount();}
 
 //    For the labors functions
 
@@ -85,6 +93,10 @@ public class database {
 
     public static boolean cancelAssignTask(int assignTaskId){return taskDatabase.deleteTask(assignTaskId);}
 
+    public static void callUpdateProjectBaseline(int projectId, Double cost, LocalDate startDate, LocalDate endDate, Double duration){projectDatabase.callUpdateProjectBaseline(projectId,cost, Date.valueOf(startDate),Date.valueOf(endDate),duration);}
+    public static void callUpdateWorkItemBaseline(int assignWorkItemId, Double cost, Double laborQty, Double duration, LocalDate startDate, LocalDate endDate){
+        workItemDatabase.callUpdateWorkItemBaseline(assignWorkItemId, cost, laborQty, duration, Date.valueOf(startDate), Date.valueOf(endDate));
+    }
 //    For the WorkItems functions
 
     public static ObservableList<workItems> getAllWorkItemsForAutoGeneration(int projectTypeId,int buildingId, int levelId){return workItemDatabase.getAllWorkItemDetails(projectTypeId,buildingId,levelId);}
@@ -135,4 +147,43 @@ public class database {
     public static double getPerformance(int userId) {
         return calculationDatabase.getHistoryPerformance(userId);
     }
+
+    // ======================== NEW METHODS FOR SUPERVISOR REPORT ========================
+
+    // For Supervisor Report Functions
+
+    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getFilteredReports(supervisorId, projectId, startDate, endDate);
+    }
+
+    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
+        return reportDatabase.getProjectsBySupervisorAndStatus(supervisorId, status);
+    }
+
+    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
+        return reportDatabase.getReportStatistics(supervisorId, projectId, startDate, endDate);
+    }
+
+    // Existing report methods
+    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
+        return reportDatabase.getAllReports(supervisorId);
+    }
+
+    public static ArrayList<DailyReport> getAllReportsForManager() {
+        return reportDatabase.getAllReportsForManager();
+    }
+
+    public static DailyReport getReportById(int reportId) {
+        return reportDatabase.getReportById(reportId);
+    }
+
+    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
+        return reportDatabase.getProjectListForSupervisor(supervisorId);
+    }
+
+    public static int getProjectIdByName(String projectName, int supervisorId) {
+        return reportDatabase.getProjectIdByName(projectName, supervisorId);
+    }
+
+    public static int getCompletedDaysByAssignProject(int projectId){return reportDatabase.getCompletedDaysByAssignProject(projectId);}
 }

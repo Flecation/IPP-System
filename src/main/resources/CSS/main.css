@@ -8,6 +8,10 @@
     -success-color : #3FA37A;
     -danger-color : #C44536;
     -info-color : #3A86A8;
+
+      /* aliases used by your messageBox.css */
+        -error-color: #C44536;
+        -wrong-color: #A855F7;
 }
 
 .cardPane {
@@ -84,7 +88,129 @@
     -fx-border-width: 1;
     -fx-background-radius: 2;
 }
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+/* =========================
+   GLOBAL TABLEVIEW THEME
+   ========================= */
 
+/* Apply to any TableView that has styleClass: table-general */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #E6EAF2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 8;
+}
 
+/* Header background */
+.table-view .column-header-background {
+    -fx-background-color: #F6F8FC;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 6 8 6 8;
+}
 
+/* Header cells */
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+    -fx-border-color: transparent transparent #E6EAF2 transparent;
+}
 
+/* Header text centered */
+.table-view .column-header .label {
+    -fx-text-fill: #1F2A44;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+}
+
+/* Table content background */
+.table-view .virtual-flow,
+.table-view .table-row-cell {
+    -fx-background-color: transparent;
+}
+
+/* Rows */
+.table-view .table-row-cell {
+    -fx-cell-size: 44px;
+    -fx-border-color: transparent transparent #F0F2F7 transparent;
+}
+
+/* Alternate row shading */
+.table-view .table-row-cell:odd {
+    -fx-background-color: #FFFFFF;
+}
+.table-view .table-row-cell:even {
+    -fx-background-color: #FBFCFF;
+}
+
+/* Hover row */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #F2F6FF;
+}
+
+/* Selected row */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #DCE9FF;
+}
+
+/* Cells (CENTER text by default) */
+.table-view .table-cell {
+    -fx-alignment: CENTER;      /* ⭐ centers ALL cell content (text) */
+    -fx-padding: 0 10 0 10;
+    -fx-text-fill: #1F2A44;
+    -fx-font-size: 12.5px;
+    -fx-border-color: transparent;
+}
+
+/* Remove default blue focus border */
+.table-view:focused {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+}
+
+/* Scrollbars (simple clean) */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.table-view .scroll-bar .thumb {
+    -fx-background-color: #D7DDEA;
+    -fx-background-radius: 10;
+}
+
+/* =========================
+   ACTION BUTTON STYLE
+   ========================= */
+.table-action-btn {
+    -fx-background-color: #2E6BFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+}
+.table-action-btn:hover {
+    -fx-opacity: 0.9;
+}
+.table-action-btn:pressed {
+    -fx-opacity: 0.8;
+}
+
+/* Optional: secondary action button */
+.table-action-btn-secondary {
+    -fx-background-color: #EEF2FF;
+    -fx-text-fill: #2E6BFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+}
+.table-action-btn-secondary:hover {
+    -fx-opacity: 0.9;
+}
