@@ -1,9 +1,8 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.DAO.database;
-import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.linkButton;
+import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.fxml.FXML;
@@ -16,10 +15,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class navigationPaneController{
     @FXML
@@ -44,6 +39,8 @@ public class navigationPaneController{
     @FXML
     private StackPane modelBox;
 
+    @FXML private VBox alertLayer;
+
 
     protected static users user = session.getInstance().getUser();
 
@@ -55,6 +52,8 @@ public class navigationPaneController{
     private void initialize(){
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
+
+        messageBoxService.init(alertLayer);
 
         linkButton.bindHost(tapBar, loadPane);
         linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");

@@ -61,10 +61,10 @@ public class projectDetailsController  implements loadPaneAware {
 
 
     // floating labels (your note)
-    @FXML private Label editContactLbl;   // Contract Value label (typo in FXML: Contact)
-    @FXML private Label editDurationLbl;  // Duration label
-    @FXML private Label editAddressLbl;   // Address label
-    @FXML private Label levelLbl;         // exists in FXML header row
+//    @FXML private Label editContactLbl;   // Contract Value label (typo in FXML: Contact)
+//    @FXML private Label editDurationLbl;  // Duration label
+//    @FXML private Label editAddressLbl;   // Address label
+//    @FXML private Label levelLbl;         // exists in FXML header row
 
     // ===== CPI / SPI widgets =====
     @FXML private Circle spiProgressCircle;
@@ -93,7 +93,7 @@ public class projectDetailsController  implements loadPaneAware {
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
-    private StackPane loadPane;
+    private StackPane loadPane = utils.findTabLoadPane(viewOnlyProjectInfo);
 
     @Override
     public void setLoadPane(StackPane loadPane) {
@@ -105,27 +105,29 @@ public class projectDetailsController  implements loadPaneAware {
     public void initialize() {
 
         pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
-        pDetailEditBtn.setOnAction(e->{
-            messageBoxService.toast("Not Allow To Edit",
-                    "If you want to edit buy Premium!!",
-                    notificationType.WARNING);});
-        if (backToViewProjectBtn != null) {
-            backToViewProjectBtn.setOnAction(e -> utils.openFxml("viewProjects.fxml", loadPane));
-        }
 
-        // Double-click open work item details
-        if (workItemTable != null) {
-            workItemTable.setRowFactory(tv -> {
-                TableRow<workItems> row = new TableRow<>();
-                row.setOnMouseClicked(e -> {
-                    if (e.getClickCount() == 2 && !row.isEmpty()) {
-                        utils.openWorkItemDetails(row.getItem(),project, null);
-                    }
-                });
-                return row;
+        backToViewProjectBtn.setOnAction(e -> {
+            StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
+            utils.openFxml("viewProjects.fxml", pane);
+        });
+
+        workItemTable.setRowFactory(tv -> {
+            TableRow<workItems> row = new TableRow<>();
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && !row.isEmpty()) {
+                    StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
+                    utils.openWorkItemDetails(row.getItem(), project, pane); // <-- pass pane, not null
+                }
             });
-        }
+            return row;
+        });
+
+        pDetailEditBtn.setOnAction(e -> {
+                messageBoxService.toast("Not Allow TO Edit","This version can't edit Data", notificationType.INFO);
+        });
+
     }
+
 
     public void setProjectData(projects project) {
         this.project = project;
