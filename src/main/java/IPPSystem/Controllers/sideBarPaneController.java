@@ -325,7 +325,6 @@ public class sideBarPaneController extends navigationPaneController{
         utils.setFloatTextFieldStyle(userEmailLbl,userEmailTxtField);
         utils.setFloatTextFieldStyle(userPhoneLbl,userPhoneTxtField);
 
-
         lightDarkIconChange();
         circleMove();
 
@@ -354,6 +353,8 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
+
+
 
         // Setup button click handlers
         setupNavigationHandlers();
@@ -564,7 +565,6 @@ public class sideBarPaneController extends navigationPaneController{
                 utils.openFxml("laborView.fxml",loadPane);
             }
 
-//            utils.openFxml("laborView.fxml",loadPane);
 
         });
         userViewBtn.setOnMouseClicked(e -> {
