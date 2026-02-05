@@ -5,22 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="project database">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/HelloApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/HelloController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/databaseConnection.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/dotenv.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/switchPage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17_[Changes]/titleBar.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_01_02_2026_13_17__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_31_01_2026_22_33_[Changes]/HelloApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_31_01_2026_22_33_[Changes]/Launcher.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_31_01_2026_22_33_[Changes]/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_31_01_2026_22_33_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_31_01_2026_22_33_[Changes]/switchPage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/HelloApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/Launcher.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/switchPage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/HelloApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/HelloController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/Launcher.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/databaseConnection.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/dotenv.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/switchPage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16_[Changes]/titleBar.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_02_2026_13_16__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/Launcher.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/background_update_method.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database_setup.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fix_database.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/original_projects.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/quick_setup.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sample_data_insert.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/simple_test_data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allProjectDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/currentProjectDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Services/DashboardService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/DatabaseTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/CSS/currentProjectDashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/dashboardController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createProject.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createProject.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/HelloController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/dotenv.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/dotenv.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Main/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Main/Launcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/titleBar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/userDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Controllers/LoginController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,26 +155,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;Application.start.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/IPP-System/src/main/resources/View&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Run",
+    "Application.Launcher.executor": "Run",
+    "Application.Unnamed.executor": "Run",
+    "Application.start.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe",
+    "git-widget-placeholder": "Rebasing Ant-Htoo-Aung",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/IPP-System/src/main/resources/View",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "terminal"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\IPP-System\src\main\resources\View" />
@@ -146,7 +187,7 @@
       <recent name="D:\group1\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.start">
+  <component name="RunManager">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="IPPSystem.Main.HelloApplication" />
       <module name="group1" />
