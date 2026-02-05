@@ -339,7 +339,8 @@ public class allProjectDashboardController {
             if (selected == null) return;
 
             if (selected.equals("Active Project")){
-                utils.openFxml("currentProjectDashboard.fxml",null);
+                // Use any node inside the current tab so utils can find the correct per-tab loadPane
+                utils.openFxml("currentProjectDashboard.fxml", comboProjectList);
             }
 
     }

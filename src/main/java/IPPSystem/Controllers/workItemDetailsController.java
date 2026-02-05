@@ -158,7 +158,8 @@ public class workItemDetailsController implements loadPaneAware {
 
         // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
-        backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
+        // Navigate within the same tab (no need to store loadPane)
+        backToProjectDetails.setOnAction(e -> utils.openProjectDetails(project, backToProjectDetails));
 
         workItemTitle.setText(item.getWorkItemName());
         workItemTitleStatus.setText("- "+item.getProjectStatus());

@@ -236,7 +236,8 @@ public class engineerViewController {
 
 
     private void openPersonalInfoPage(users engineer) {
-        utils.viewUserInfo(engineer, loadPane);
+        // No need to keep a loadPane reference; utils resolves the correct per-tab loadPane
+        utils.viewUserInfo(engineer, managerSupervisorListPane);
     }
 
 

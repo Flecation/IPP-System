@@ -93,7 +93,8 @@ public class projectDetailsController  implements loadPaneAware {
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
-    private StackPane loadPane = utils.findTabLoadPane(viewOnlyProjectInfo);
+    // (Optional) injected by sideBarPaneController, but navigation works even without it
+    private StackPane loadPane;
 
     @Override
     public void setLoadPane(StackPane loadPane) {
@@ -107,16 +108,15 @@ public class projectDetailsController  implements loadPaneAware {
         pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
 
         backToViewProjectBtn.setOnAction(e -> {
-            StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-            utils.openFxml("viewProjects.fxml", pane);
+            // Use any node inside this tab; utils will resolve the correct per-tab loadPane
+            utils.openFxml("viewProjects.fxml", backToViewProjectBtn);
         });
 
         workItemTable.setRowFactory(tv -> {
             TableRow<workItems> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2 && !row.isEmpty()) {
-                    StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-                    utils.openWorkItemDetails(row.getItem(), project, pane); // <-- pass pane, not null
+                    utils.openWorkItemDetails(row.getItem(), project, workItemTable);
                 }
             });
             return row;

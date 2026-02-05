@@ -50,8 +50,11 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     }
 
     private sideBarPaneController parent() {
-        if (loadPane == null) return null;
-        Object p = loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        // Resolve per-tab loadPane dynamically so this controller can work without injection
+        javafx.scene.layout.StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(closeBtn);
+        if (lp == null) return null;
+
+        Object p = lp.getProperties().get("SIDEBAR_CONTROLLER");
         return (p instanceof sideBarPaneController) ? (sideBarPaneController) p : null;
     }
 

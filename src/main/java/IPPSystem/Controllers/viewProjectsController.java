@@ -39,17 +39,21 @@ public class viewProjectsController implements loadPaneAware {
         ALL, ACTIVE, COMPLETED, PLANNING
     }
 
+    // Navigation can resolve the correct loadPane from any node inside the tab.
+    // We keep this field for backward compatibility with loadPaneAware injection.
     private StackPane loadPane;
 
     @Override
-    public void setLoadPane(StackPane loadPane) {
-        this.loadPane = loadPane;
-    }
+    public void setLoadPane(StackPane loadPane) { this.loadPane = loadPane; }
 
     @FXML
     private void onAddNewProject() {
+        // Resolve the current tab's loadPane from a node in this view
+        StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(viewProjectPane);
+        if (lp == null) return;
+
         sideBarPaneController parent =
-                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+                (sideBarPaneController) lp.getProperties().get("SIDEBAR_CONTROLLER");
 
         if (parent != null) {
             parent.openAddOverlay("createProject.fxml"); // <-- your add page fxml
@@ -60,8 +64,11 @@ public class viewProjectsController implements loadPaneAware {
 
     @FXML
     private void onClose() {
+        StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(viewProjectPane);
+        if (lp == null) return;
+
         sideBarPaneController parent =
-                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+                (sideBarPaneController) lp.getProperties().get("SIDEBAR_CONTROLLER");
         if (parent != null) parent.closeAddOverlay();
     }
 
@@ -166,7 +173,8 @@ public class viewProjectsController implements loadPaneAware {
             filtered.add(p);
         }
 
-        showProjectCards(filtered, projectContainer, loadPane);
+        // Preferred: derive per-tab loadPane from any node in this view
+        showProjectCards(filtered, projectContainer, viewProjectPane);
 
 
         if (filtered.isEmpty()) {
