@@ -450,39 +450,74 @@ public class sideBarPaneController extends navigationPaneController{
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
+//        dashboardViewBtn.setOnMouseClicked(e -> {
+//            utils.openFxml("dashboard.fxml", loadPane);
+//            linkButton.setTabButtonName("Dashboard View");
+//        });
+//        dashboardIconBtn.setOnMouseClicked(e -> {
+//            utils.openFxml("dashboard.fxml", loadPane);
+//            linkButton.setTabButtonName("Dashboard View");
+//        });
+
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml", loadPane);
+//            utils.openFxml("dashboard.fxml", loadPane);
+            openInnerView("dashboard.fxml");
             linkButton.setTabButtonName("Dashboard View");
+
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml", loadPane);
+//            utils.openFxml("dashboard.fxml", loadPane);
+            openInnerView("dashboard.fxml");
             linkButton.setTabButtonName("Dashboard View");
         });
 
         // Project navigation
+//        projectViewBtn.setOnMouseClicked(e -> {
+//            utils.openFxml("viewProjects.fxml", loadPane);
+//            linkButton.setTabButtonName("Projects View");
+//        });
+//        projectIconBtn.setOnMouseClicked(e -> {
+//            utils.openFxml("viewProjects.fxml", loadPane);
+//            linkButton.setTabButtonName("Projects View");
+//        });
+
         projectViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("viewProjects.fxml", loadPane);
+//            utils.openFxml("viewProjects.fxml", loadPane);
+            openInnerView("viewProjects.fxml");
             linkButton.setTabButtonName("Projects View");
+
+
         });
         projectIconBtn.setOnMouseClicked(e -> {
-            utils.openFxml("viewProjects.fxml", loadPane);
+//            utils.openFxml("viewProjects.fxml", loadPane);
+            openInnerView("viewProjects.fxml");
             linkButton.setTabButtonName("Projects View");
+
         });
 
         // User navigation
+//        userViewBtn.setOnMouseClicked(e -> {
+//
+//           if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+//           {
+//               utils.openFxml("engineerView.fxml",loadPane);
+//           }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+//               utils.openFxml("laborView.fxml",loadPane);
+//           }
+//
+//
+//        });
+
         userViewBtn.setOnMouseClicked(e -> {
 
-           if( loginUser.getUserRole().equals(role.MANAGER.toString()))
-           {
-               utils.openFxml("zzzz.fxml",loadPane);
-           }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
-               utils.openFxml("laborView.fxml",loadPane);
-           }
-
-
-        });
-        userViewBtn.setOnMouseClicked(e -> {
-            openInnerView("mgSEListView.fxml");
+            if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+            {
+                openInnerView("engineerView.fxml");
+                linkButton.setTabButtonName("Engineers");
+            }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+                openInnerView("laborView.fxml");
+                linkButton.setTabButtonName("Labors");
+            }
         });
 
         reportViewBtn.setOnMouseClicked(e -> {

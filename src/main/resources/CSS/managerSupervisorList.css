@@ -226,14 +226,14 @@
 }
 
 .text-color{
-    -fx-text-fill: #75490b;
+    -fx-text-fill: #011121;
 }
 
 .box-qty{
     -fx-text-fill:  #E18600;
 }
 .box-qty-resign{
-    -fx-text-fill : #a1220e;
+    -fx-text-fill : #c44536;
 }
 
 .box-qty-active{

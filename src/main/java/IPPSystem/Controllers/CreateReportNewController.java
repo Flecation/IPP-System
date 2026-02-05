@@ -1,6 +1,8 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Utils.session;
 import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -19,7 +21,7 @@ public class CreateReportNewController {
     private Button addProgressBtn;
 
     @FXML
-    private Button btnAddLabor;
+    private Button btnAddReport;
 
     @FXML
     private TableColumn<?, ?> colHours;
@@ -71,6 +73,10 @@ public class CreateReportNewController {
     private void initialize() {
         // Initialize code here
     }
+
+
+
+
 
     // ========== Progress Description ==========
     @FXML
@@ -137,7 +143,6 @@ public class CreateReportNewController {
         rowContainer.getChildren().addAll(textField, cancelBtn);
         issuesContainer.getChildren().add(rowContainer);
     }
-
 
 
 }

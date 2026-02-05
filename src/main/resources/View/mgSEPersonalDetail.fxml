@@ -13,7 +13,7 @@
 
 <ScrollPane fitToWidth="true" minWidth="-Infinity" pannable="true" prefHeight="1224.0" prefWidth="1222.0" vvalue="1.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.mgSEPersonalDetailController">
     <content>
-        <VBox minWidth="675.0" prefHeight="1000.0" prefWidth="1220.0" style="-fx-background-color: #ffffff;">
+        <VBox minWidth="675.0" prefHeight="1000.0" prefWidth="1220.0" style="-fx-background-color: #ffffff;" stylesheets="@../CSS/managerSupervisorList.css">
             <children>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                     <children>
@@ -22,7 +22,7 @@
                                 <Font name="System Bold" size="25.0" />
                             </font>
                         </Label>
-                        <Region prefHeight="100.0" prefWidth="578.0" HBox.hgrow="ALWAYS" />
+                        <Region prefHeight="48.0" prefWidth="626.0" HBox.hgrow="ALWAYS" />
                         <Label text="Others" HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets />
@@ -32,12 +32,12 @@
                             </font>
                         </Label>
                         <Region minWidth="50.0" prefHeight="48.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
-                        <Circle fx:id="EngineerListToggle" fill="#7fb8b6" radius="24.0" stroke="WHITE" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
+                        <Circle fx:id="EngineerListToggle" fill="#e18600" radius="24.0" stroke="WHITE" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
                 <StackPane prefHeight="200.0" prefWidth="1180.0" VBox.vgrow="NEVER">
                     <children>
-                        <HBox maxHeight="120.0" maxWidth="810.0" minHeight="130.0" minWidth="810.0" prefHeight="100.0" prefWidth="0.0" style="-fx-border-width: 1; -fx-border-color: #7fb8b6; -fx-border-radius: 10;" StackPane.alignment="TOP_LEFT">
+                        <HBox maxHeight="120.0" maxWidth="810.0" minHeight="130.0" minWidth="810.0" prefHeight="100.0" prefWidth="0.0" style="-fx-border-width: 1; -fx-border-color: E18600; -fx-border-radius: 10;" StackPane.alignment="TOP_LEFT">
                             <StackPane.margin>
                                 <Insets bottom="100.0" top="28.0" />
                             </StackPane.margin>
@@ -46,13 +46,13 @@
                                     <children>
                                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                             <children>
-                                                <Label minWidth="150.0" text="Workload" wrapText="true" HBox.hgrow="ALWAYS">
+                                                <Label minWidth="150.0" styleClass="text-color" text="Workload" wrapText="true" HBox.hgrow="ALWAYS">
                                                     <font>
                                                         <Font size="16.0" />
                                                     </font>
                                                 </Label>
                                                 <Region prefHeight="70.0" prefWidth="259.0" HBox.hgrow="ALWAYS" />
-                                                <Label fx:id="workloadPercent" contentDisplay="RIGHT" minWidth="50.0" text="30%" wrapText="true" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="workloadPercent" contentDisplay="RIGHT" minWidth="50.0" styleClass="box-qty-active" text="30%" wrapText="true" HBox.hgrow="ALWAYS">
                                                     <font>
                                                         <Font size="20.0" />
                                                     </font>
@@ -70,13 +70,13 @@
                                     <children>
                                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="400.0">
                                             <children>
-                                                <Label minWidth="150.0" text="Performance" wrapText="true" HBox.hgrow="ALWAYS">
+                                                <Label minWidth="150.0" styleClass="text-color" text="Performance" wrapText="true" HBox.hgrow="ALWAYS">
                                                     <font>
                                                         <Font size="16.0" />
                                                     </font>
                                                 </Label>
                                                 <Region prefHeight="70.0" prefWidth="259.0" HBox.hgrow="ALWAYS" />
-                                                <Label fx:id="performancePercent" contentDisplay="RIGHT" minWidth="50.0" text="30%" textFill="#1f4a47" wrapText="true" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="performancePercent" contentDisplay="RIGHT" minWidth="50.0" styleClass="box-qty-active" text="30%" textFill="#1f4a47" wrapText="true" HBox.hgrow="ALWAYS">
                                                     <font>
                                                         <Font size="20.0" />
                                                     </font>
@@ -94,18 +94,18 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </padding>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" maxHeight="150.0" maxWidth="810.0" minHeight="130.0" prefHeight="100.0" prefWidth="863.0" style="-fx-border-radius: 10; -fx-border-color: #7fb8b6; -fx-border-width: 1;" StackPane.alignment="TOP_LEFT">
+                        <HBox alignment="CENTER_LEFT" maxHeight="150.0" maxWidth="810.0" minHeight="130.0" prefHeight="100.0" prefWidth="863.0" style="-fx-border-radius: 10; -fx-border-color: E18600; -fx-border-width: 1;" StackPane.alignment="TOP_LEFT">
                             <StackPane.margin>
                                 <Insets top="180.0" />
                             </StackPane.margin>
                             <children>
-                                <Circle fill="#7fb8b6" radius="37.0" stroke="#7fb8b6" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
+                                <Circle fill="#e18600" radius="37.0" stroke="WHITE" strokeType="INSIDE" HBox.hgrow="ALWAYS" />
                                 <Region prefHeight="98.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                                 <VBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="232.0" spacing="5.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label fx:id="engineerName1" text="Hsu Myat Rain" wrapText="true">
+                                        <Label fx:id="engineerName1" text="Hsu Myat Rain" textFill="#75490b" wrapText="true">
                                             <font>
-                                                <Font size="16.0" />
+                                                <Font name="System Bold" size="16.0" />
                                             </font>
                                         </Label>
                                         <Label fx:id="role" text="Engineer" wrapText="true">
@@ -116,10 +116,10 @@
                                     </children>
                                 </VBox>
                                 <Region prefHeight="98.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
-                                <Label fx:id="status1" contentDisplay="CENTER" prefHeight="37.0" prefWidth="102.0" style="-fx-background-color: #7fb8b6; -fx-border-radius: 20; -fx-background-radius: 20;" text="Active" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
-                                    <padding>
-                                        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
-                                    </padding>
+                                <Label fx:id="status1" contentDisplay="CENTER" style="-fx-background-color: E18600; -fx-border-radius: 20; -fx-background-radius: 20;" text="Active" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                           </padding>
                                 </Label>
                             </children>
                             <padding>
@@ -143,7 +143,7 @@
                         </VBox>
                     </children>
                 </StackPane>
-                <VBox prefHeight="600.0" prefWidth="1180.0" style="-fx-border-color: #7fb8b6; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+                <VBox prefHeight="600.0" prefWidth="1180.0" style="-fx-border-color: E18600; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets top="32.0" />
                     </VBox.margin>
@@ -161,7 +161,7 @@
                             <children>
                                 <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="400.0" prefHeight="80.0" prefWidth="414.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label lineSpacing="24.0" text="Name">
+                                        <Label lineSpacing="24.0" styleClass="text-color" text="Name">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -179,7 +179,7 @@
                                 <Region minWidth="40.0" prefHeight="80.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
                                 <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label text="Email Address" wrapText="true">
+                                        <Label styleClass="text-color" text="Email Address" wrapText="true">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -197,7 +197,7 @@
                                 <Region prefHeight="80.0" prefWidth="440.0" HBox.hgrow="ALWAYS" />
                                 <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" prefHeight="80.0" prefWidth="331.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label text="Date Of Birth" wrapText="true">
+                                        <Label styleClass="text-color" text="Date Of Birth" wrapText="true">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -221,7 +221,7 @@
                             <children>
                                 <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="78.0" prefHeight="43.0" prefWidth="78.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label lineSpacing="24.0" text="Phone">
+                                        <Label lineSpacing="24.0" styleClass="text-color" text="Phone">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -239,7 +239,7 @@
                                 <Region prefHeight="80.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                                 <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="300.0" prefHeight="80.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label text="Address" wrapText="true">
+                                        <Label styleClass="text-color" text="Address" wrapText="true">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>

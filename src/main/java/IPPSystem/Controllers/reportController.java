@@ -4,6 +4,8 @@ import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.projects;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.databaseConnection;
+import IPPSystem.Utils.session;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -30,6 +32,7 @@ public class reportController extends sideBarPaneController {
     @FXML private Button btnResetFilters;
     @FXML private ScrollPane mainScrollPane;
     @FXML private ScrollPane sidebarScrollPane;
+
 
     // Database connection
     private Connection connection = null;
@@ -167,7 +170,11 @@ public class reportController extends sideBarPaneController {
     }
 
     private void setupButtonActions() {
-        btnAddReport.setOnAction(e -> showNewReportDialog());
+        btnAddReport.setOnAction(e -> {
+            session.getInstance()
+                    .getNavigationController()
+                    .showModal("CreateReportNew.fxml");
+        });
         btnResetFilters.setOnAction(e -> resetAllFilters());
     }
 
@@ -733,5 +740,12 @@ public class reportController extends sideBarPaneController {
         } else {
             showAlert("Connection Error", "Cannot refresh data - no database connection.");
         }
+    }
+
+    @FXML
+    void clickAddReport(ActionEvent event) {
+        session.getInstance()
+                .getNavigationController()
+                .showModal("CreateReportNew.fxml");
     }
 }
