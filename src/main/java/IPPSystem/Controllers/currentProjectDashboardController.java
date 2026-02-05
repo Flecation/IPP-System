@@ -19,8 +19,8 @@ import java.util.Map;
 public class currentProjectDashboardController {
 
     @FXML private ComboBox<String> comboProjectList;
-    @FXML private Label projectName, lblProgressStatus, lbDate;
-    @FXML private Label lbDaysRemaining, lbEarnedValue, lbActualCost;
+    @FXML private Label projectName, lblProgressStatus, lbDate, lbCurrentTask;
+    @FXML private Label lbDaysRemaining, lbEarnedValue, lbActualCost, lbTotalManHour;
     @FXML private Label lbSPIPercentage, lbSPIValue, lbSPIStatus, lbCPIPercentages, lbCPIValue, lbCPIStatus;
     @FXML private Circle circleSPI, circleCPI;
     @FXML private LineChart<String, Number> lcMonthlyProjectPerformance;
@@ -53,15 +53,22 @@ public class currentProjectDashboardController {
 
     private void refreshDashboardData() {
         try (Connection con = databaseConnection.getConnection()) {
-            String query = "SELECT assignProjectId, projectInstanceName, projectOverHeadCost as budget, " +
-                    "actualCost as ac, progress_percentage as prog, targetEndDate " +
-                    "FROM assignprojects WHERE projectStatus = 1 LIMIT 1";
+            // SQL query ပြင်ဆင်ခြင်း: Man-hours ကို SUM ဖြင့် တွက်ထုတ်ထားသည်
+            String query = "SELECT ap.assignProjectId, ap.projectInstanceName, ap.projectOverHeadCost as budget, " +
+                    "ap.actualCost as ac, ap.progress_percentage as prog, ap.targetEndDate, " +
+                    "(SELECT SUM(dl.workHours) FROM dailyreportlabors dl " +
+                    " JOIN dailyreports dr ON dl.dailyReportId = dr.dailyReportId " +
+                    " WHERE dr.assignProjectId = ap.assignProjectId) as totalHrs " +
+                    "FROM assignprojects ap WHERE ap.projectStatus = 1 LIMIT 1";
+
             ResultSet rs = con.prepareStatement(query).executeQuery();
             if (rs.next()) {
                 int pId = rs.getInt("assignProjectId");
                 double budget = rs.getDouble("budget");
                 double ac = rs.getDouble("ac");
                 double progressPercent = rs.getDouble("prog");
+                double totalHrs = rs.getDouble("totalHrs");
+
                 double ev = budget * (progressPercent / 100.0);
                 double spi = progressPercent / 100.0;
                 double cpi = (ac > 0) ? (ev / ac) : 1.0;
@@ -69,6 +76,8 @@ public class currentProjectDashboardController {
                 projectName.setText(rs.getString("projectInstanceName"));
                 lbEarnedValue.setText(String.format("$%,.0f", ev));
                 lbActualCost.setText(String.format("$%,.0f", ac));
+                lbTotalManHour.setText(String.format("%.0f Hours", totalHrs));
+
                 Date target = rs.getDate("targetEndDate");
                 lbDaysRemaining.setText(target != null ? ChronoUnit.DAYS.between(LocalDate.now(), target.toLocalDate()) + " Days" : "0 Days");
 
@@ -83,6 +92,7 @@ public class currentProjectDashboardController {
         XYChart.Series<String, Number> seriesEV = new XYChart.Series<>(); seriesEV.setName("EV");
         XYChart.Series<String, Number> seriesAC = new XYChart.Series<>(); seriesAC.setName("AC");
         XYChart.Series<String, Number> seriesPV = new XYChart.Series<>(); seriesPV.setName("PV");
+
         String sql = "SELECT MONTHNAME(reportDate) as m, SUM(actualCost) as total FROM dailyreports WHERE assignProjectId = ? GROUP BY MONTH(reportDate) ORDER BY MONTH(reportDate)";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setInt(1, pId);
@@ -100,6 +110,7 @@ public class currentProjectDashboardController {
         XYChart.Series<String, Number> seriesLabor = new XYChart.Series<>(); seriesLabor.setName("Labor Hours");
         Map<String, Double> dayMap = new LinkedHashMap<>();
         dayMap.put("Mon", 0.0); dayMap.put("Tue", 0.0); dayMap.put("Wed", 0.0); dayMap.put("Thu", 0.0); dayMap.put("Fri", 0.0); dayMap.put("Sat", 0.0);
+
         String sqlLabor = "SELECT DAYNAME(dr.reportDate) as d, SUM(dl.workHours) as hrs FROM dailyreportlabors dl JOIN dailyreports dr ON dl.dailyReportId = dr.dailyReportId WHERE dr.assignProjectId = ? AND DAYNAME(dr.reportDate) != 'Sunday' GROUP BY DAYNAME(dr.reportDate), DAYOFWEEK(dr.reportDate) ORDER BY DAYOFWEEK(dr.reportDate)";
         PreparedStatement pstmt2 = con.prepareStatement(sqlLabor);
         pstmt2.setInt(1, pId);
@@ -115,15 +126,16 @@ public class currentProjectDashboardController {
     private void updateGaugeUI(double spi, double cpi) {
         drawProgress(circleSPI, spi, lbSPIPercentage, lbSPIValue, lbSPIStatus, true);
         drawProgress(circleCPI, cpi, lbCPIPercentages, lbCPIValue, lbCPIStatus, false);
+
         if (spi >= 1.0 && cpi >= 1.0) {
             lblProgressStatus.setText("Good Progress");
-            lblProgressStatus.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-background-radius: 5;");
+            lblProgressStatus.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 8;");
         } else if (spi < 0.8) {
             lblProgressStatus.setText("Delay");
-            lblProgressStatus.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 5;");
+            lblProgressStatus.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 8;");
         } else {
-            lblProgressStatus.setText("Needs Attention");
-            lblProgressStatus.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-background-radius: 5;");
+            lblProgressStatus.setText("Warning");
+            lblProgressStatus.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 8;");
         }
     }
 
