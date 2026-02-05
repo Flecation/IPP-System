@@ -306,6 +306,7 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
+
     @FXML
     public void initialize() {
 
@@ -353,8 +354,6 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
-
-
 
         // Setup button click handlers
         setupNavigationHandlers();
@@ -539,22 +538,20 @@ public class sideBarPaneController extends navigationPaneController{
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml", loadPane);
-            linkButton.setTabButtonName("Dashboard View");
+            utils.openFxml("currentProjectDashboard.fxml", loadPane);
+            linkButton.setTabButtonName("Dashboard");
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("dashboard.fxml", loadPane);
-            linkButton.setTabButtonName("Dashboard View");
         });
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
-            linkButton.setTabButtonName("Projects View");
+            linkButton.setTabButtonName("Projects");
         });
         projectIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
-            linkButton.setTabButtonName("Projects View");
         });
 
         // User navigation
@@ -567,12 +564,14 @@ public class sideBarPaneController extends navigationPaneController{
                 utils.openFxml("laborView.fxml",loadPane);
             }
 
+//            utils.openFxml("laborView.fxml",loadPane);
 
         });
         userViewBtn.setOnMouseClicked(e -> {
             openInnerView("mgSEListView.fxml");
         });
 
+        // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
             openInnerView("report.fxml");
             linkButton.setTabButtonName("Report");
@@ -581,7 +580,6 @@ public class sideBarPaneController extends navigationPaneController{
             openInnerView("report.fxml");
             linkButton.setTabButtonName("Report");
         });
-
     }
 
     private void setupSidebarToggleHandlers() {
@@ -680,6 +678,7 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Get the CURRENT state BEFORE changing it
         boolean isCurrentlyDarkMode = themeToggle.isDarkMode();
+
         if (isCurrentlyDarkMode) {
             // Currently dark mode, so we're switching to light mode
             moving.setToX(10);
@@ -703,6 +702,8 @@ public class sideBarPaneController extends navigationPaneController{
         moving.setOnFinished(event -> {
             // Change the theme first
             utils.changeTheme();
+            // Then update the icons based on the NEW theme state
+            lightDarkIconChange();
         });
 
         ParallelTransition run = new ParallelTransition(moving1, moving);
