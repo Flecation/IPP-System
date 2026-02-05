@@ -108,8 +108,89 @@ public class calculationDatabase {
         }
         return 0;
     }
+    // Existing methods (getWorkload, getHistoryPerformance, etc.) ...
+
+    // --- REVENUE & EXPENSE METHODS ---
 
 
+    /**
+     * Calculates total expenses by summing projectCost and projectOverheadCost.
+     */
+    public static double getTotalExpenses() {
+        String sql = "SELECT SUM(projectCost + projectOverheadCost) as totalExpense FROM assignProjects";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getDouble("totalExpense");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    // --- CHART DATA METHODS ---
+
+    /**
+     * Compares project end dates with the current date to determine On Time vs. Delayed status.
+     */
+    public static Map<String, Integer> getProjectTimingStatus() {
+        Map<String, Integer> timingData = new HashMap<>();
+        timingData.put("On Time", 0);
+        timingData.put("Delayed", 0);
+
+        String sql = "SELECT " +
+                "SUM(CASE WHEN projectEndDate < CURDATE() AND ps.projectStatusName != 'finished' THEN 1 ELSE 0 END) as delayedCount, " +
+                "SUM(CASE WHEN projectEndDate >= CURDATE() OR ps.projectStatusName = 'finished' THEN 1 ELSE 0 END) as onTimeCount " +
+                "FROM assignProjects ap " +
+                "JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId";
+
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                timingData.put("Delayed", rs.getInt("delayedCount"));
+                timingData.put("On Time", rs.getInt("onTimeCount"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return timingData;
+    }
+
+
+    /**
+     * Retrieves the three projects with the highest costs for the dashboard progress bars.
+     */
+    public static Map<String, Double> getTopThreeMostExpensiveProjects() {
+        Map<String, Double> topProjects = new LinkedHashMap<>();
+        String sql = "SELECT projectInstanceName, projectCost " +
+                "FROM assignProjects " +
+                "ORDER BY projectCost DESC " +
+                "LIMIT 3";
+
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                topProjects.put(rs.getString("projectInstanceName"), rs.getDouble("projectCost"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return topProjects;
+    }
+
+    // Monthly Project Cost Trend (လအလိုက် ကုန်ကျစရိတ်)
+    public static Map<String, Double> getMonthlyCostTrend() {
+        Map<String, Double> data = new LinkedHashMap<>();
+        String sql = "SELECT DATE_FORMAT(startDate, '%b') as month, SUM(projectCost) as total " +
+                "FROM assignProjects " +
+                "WHERE YEAR(startDate) = YEAR(CURDATE()) " +
+                "GROUP BY MONTH(startDate) " +
+                "ORDER BY MONTH(startDate)";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                data.put(rs.getString("month"), rs.getDouble("total"));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return data;
+    }
 
 
     // 1. Total Engineers
@@ -172,21 +253,6 @@ public class calculationDatabase {
         return 0.0;
     }
 
-    /**
-     * Calculates total expenses by summing projectCost and projectOverheadCost.
-     */
-    public static double getTotalExpenses() {
-        String sql = "SELECT SUM(projectCost + projectOverheadCost) as totalExpense FROM assignProjects";
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                return rs.getDouble("totalExpense");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0.0;
-    }
-
     // --- CHART DATA METHODS ---
 
     /**
@@ -221,52 +287,6 @@ public class calculationDatabase {
         }
         return distribution;
     }
-
-    /**
-     * Compares project end dates with the current date to determine On Time vs. Delayed status.
-     */
-    public static Map<String, Integer> getProjectTimingStatus() {
-        Map<String, Integer> timingData = new HashMap<>();
-        timingData.put("On Time", 0);
-        timingData.put("Delayed", 0);
-
-        String sql = "SELECT " +
-                "SUM(CASE WHEN projectEndDate < CURDATE() AND ps.projectStatusName != 'finished' THEN 1 ELSE 0 END) as delayedCount, " +
-                "SUM(CASE WHEN projectEndDate >= CURDATE() OR ps.projectStatusName = 'finished' THEN 1 ELSE 0 END) as onTimeCount " +
-                "FROM assignProjects ap " +
-                "JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId";
-
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                timingData.put("Delayed", rs.getInt("delayedCount"));
-                timingData.put("On Time", rs.getInt("onTimeCount"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return timingData;
-    }
-
-
-    /**
-     * Retrieves the three projects with the highest costs for the dashboard progress bars.
-     */
-    public static Map<String, Double> getTopThreeMostExpensiveProjects() {
-        Map<String, Double> topProjects = new LinkedHashMap<>();
-        String sql = "SELECT projectInstanceName, projectCost " +
-                "FROM assignProjects " +
-                "ORDER BY projectCost DESC " +
-                "LIMIT 3";
-
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                topProjects.put(rs.getString("projectInstanceName"), rs.getDouble("projectCost"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return topProjects;
-    }
 //    Projectt Status
     public static Map<String, Integer> getProjectStatusMetrics() {
         Map<String, Integer> metrics = new HashMap<>();
@@ -292,21 +312,7 @@ public class calculationDatabase {
         }
         return metrics;
     }
-    // Monthly Project Cost Trend (လအလိုက် ကုန်ကျစရိတ်)
-    public static Map<String, Double> getMonthlyCostTrend() {
-        Map<String, Double> data = new LinkedHashMap<>();
-        String sql = "SELECT DATE_FORMAT(startDate, '%b') as month, SUM(projectCost) as total " +
-                "FROM assignProjects " +
-                "WHERE YEAR(startDate) = YEAR(CURDATE()) " +
-                "GROUP BY MONTH(startDate) " +
-                "ORDER BY MONTH(startDate)";
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                data.put(rs.getString("month"), rs.getDouble("total"));
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return data;
-    }
+
 
     // Active Project Trend (လအလိုက် Active ဖြစ်နေသော Project အရေအတွက်)
     public static Map<String, Integer> getActiveProjectTrend() {

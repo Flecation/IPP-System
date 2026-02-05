@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class database {
 
-
 //    for the users database ( manager / supervisors ) of useful get function
 
     public static ObservableList<users> getAllUsers(){return  userDatabase.getAllUser();}
