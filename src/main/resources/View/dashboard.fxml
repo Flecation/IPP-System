@@ -25,7 +25,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.dashboardController">
+<StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <BorderPane fx:id="oneProjectView" maxHeight="750.0" maxWidth="1150.0" minWidth="1150.0" prefHeight="897.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;">
             <center>
@@ -41,11 +41,10 @@
                                         <Font name="Times New Roman Bold" size="25.0" />
                                     </font>
                                 </Label>
-                                <ComboBox fx:id="comboProjectList" maxHeight="27.0" minHeight="27.0" onAction="#clickProjectSelect" prefWidth="190.0" promptText="Office Tower Project" style="-fx-background-color: #bebebe; -fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: white;" VBox.vgrow="NEVER">
-                                    <VBox.margin>
-                                        <Insets left="10.0" />
-                                    </VBox.margin>
-                                </ComboBox>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <ComboBox fx:id="filterComboBox" maxHeight="27.0" minHeight="27.0" prefWidth="120.0" style="-fx-background-color: #bebebe; -fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: white;" />
+                                    <ComboBox fx:id="comboProjectList" maxHeight="27.0" minHeight="27.0" onAction="#clickProjectSelect" prefWidth="200.0" promptText="Select Project" style="-fx-background-color: #bebebe; -fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: white;" />
+                                </HBox>
                                 <Label fx:id="lbLocation" alignment="TOP_LEFT" style="-fx-text-fill: white;" text="Location: Mingaladon Township, Ygn" textFill="#faf7f71a" VBox.vgrow="NEVER">
                                     <VBox.margin>
                                         <Insets left="20.0" top="5.0" />

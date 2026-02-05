@@ -282,6 +282,7 @@ public class sideBarPaneController extends navigationPaneController{
 
     protected storage data = storage.getInstance();
 
+
     @FXML
     public void initialize() {
         // ... rest of your initialize method remains the same
@@ -402,7 +403,7 @@ public class sideBarPaneController extends navigationPaneController{
     private void setupNavigationHandlers() {
         // Dashboard navigation
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml", loadPane);
+            utils.openFxml("currentProjectDashboard.fxml", loadPane);
             linkButton.setTabButtonName("Dashboard");
         });
         dashboardIconBtn.setOnMouseClicked(e -> {

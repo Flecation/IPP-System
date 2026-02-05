@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox prefHeight="675.0" prefWidth="1220.0" spacing="10.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="675.0" prefWidth="1220.0" spacing="10.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.currentProjectDashboardController">
    <children>
       <HBox alignment="CENTER" prefHeight="29.0" prefWidth="1260.0" spacing="10.0">
          <children>
@@ -27,12 +28,12 @@
                               <Font name="Times New Roman Bold" size="25.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblProgressStatus" maxHeight="19.0" minHeight="19.0" prefWidth="56.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 8;" text="Delay">
+                        <Label fx:id="lblProgressStatus" maxHeight="22.0" minHeight="19.0" prefHeight="22.0" prefWidth="83.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 8;" text="Delay">
                            <font>
                               <Font name="Arial" size="14.0" />
                            </font>
                            <padding>
-                              <Insets left="7.0" />
+                              <Insets left="20.0" />
                            </padding>
                         </Label>
                      </children>
@@ -45,7 +46,7 @@
                            </font>
                         </Label>
                         <Region maxWidth="10.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Substructure">
+                        <Label fx:id="lbCurrentTask" text="Substructure">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -56,7 +57,7 @@
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
             <ComboBox fx:id="comboProjectList" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Project Overview" style="-fx-background-color: transparent; -fx-border-color: orange; -fx-border-radius: 10;" />
-            <Label prefHeight="29.0" prefWidth="142.0" text="October 13, 2023">
+            <Label fx:id="lbDate" prefHeight="29.0" prefWidth="142.0" text="October 13, 2023">
                <font>
                   <Font size="16.0" />
                </font>
@@ -82,7 +83,7 @@
                                        </font>
                                     </Label>
                                     <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Label" />
+                                    <FontIcon iconLiteral="fas-calendar-alt" styleClass="dashboard-icon" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -91,7 +92,7 @@
                                     <Insets left="10.0" right="10.0" />
                                  </padding>
                               </HBox>
-                              <Label fx:id="lblDayRemainPercent11" alignment="CENTER" text="30 Days" VBox.vgrow="ALWAYS">
+                              <Label fx:id="lbDaysRemaining" alignment="CENTER" text="30 Days" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Arial Bold" size="24.0" />
                                  </font>
@@ -114,7 +115,7 @@
                                        </font>
                                     </Label>
                                     <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Label" />
+                                    <FontIcon iconLiteral="fas-dollar-sign" styleClass="dashboard-icon" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -123,7 +124,7 @@
                                     <Insets left="10.0" right="10.0" />
                                  </padding>
                               </HBox>
-                              <Label fx:id="lblDayRemainPercent111" alignment="CENTER" text="\$1234" VBox.vgrow="ALWAYS">
+                              <Label fx:id="lbEarnedValue" alignment="CENTER" text="\$1234" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Arial Bold" size="24.0" />
                                  </font>
@@ -150,7 +151,7 @@
                                        </font>
                                     </Label>
                                     <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Label" />
+                                    <FontIcon iconLiteral="fas-user-clock" styleClass="dashboard-icon" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -159,7 +160,7 @@
                                     <Insets left="10.0" right="10.0" />
                                  </padding>
                               </HBox>
-                              <Label fx:id="lblDayRemainPercent1" alignment="CENTER" text="1200 Man-Hours" VBox.vgrow="ALWAYS">
+                              <Label fx:id="lbTotalManHour" alignment="CENTER" text="1200 Man-Hours" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Arial Bold" size="24.0" />
                                  </font>
@@ -182,7 +183,7 @@
                                        </font>
                                     </Label>
                                     <Region prefHeight="26.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Label" />
+                                    <FontIcon iconLiteral="fas-wallet" styleClass="dashboard-icon" />
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -191,7 +192,7 @@
                                     <Insets left="10.0" right="10.0" />
                                  </padding>
                               </HBox>
-                              <Label fx:id="lblDayRemainPercent11" alignment="CENTER" text="\$1234" VBox.vgrow="ALWAYS">
+                              <Label fx:id="lbActualCost" alignment="CENTER" text="\$1234" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Arial Bold" size="24.0" />
                                  </font>
@@ -223,7 +224,7 @@
                               <Insets top="25.0" />
                            </StackPane.margin>
                         </Label>
-                        <Label fx:id="lbCPIValue1" alignment="TOP_CENTER" prefHeight="34.0" prefWidth="98.0" text="70%" StackPane.alignment="CENTER">
+                        <Label fx:id="lbSPIPercentage" alignment="TOP_CENTER" prefHeight="34.0" prefWidth="98.0" text="70%" StackPane.alignment="CENTER">
                            <font>
                               <Font name="Arial Bold" size="20.0" />
                            </font>
@@ -231,12 +232,12 @@
                               <Insets bottom="20.0" />
                            </StackPane.margin>
                         </Label>
-                        <Circle fill="DODGERBLUE" radius="69.0" stroke="#ebebeb" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" StackPane.alignment="CENTER">
+                        <Circle fill="DODGERBLUE" radius="69.0" stroke="#ebebeb" style="-fx-fill: transparent; -fx-stroke-width: 15;" StackPane.alignment="CENTER">
                            <StackPane.margin>
                               <Insets top="10.0" />
                            </StackPane.margin>
                         </Circle>
-                        <Circle fill="#1f93ff00" radius="69.0" stroke="#e8e836" strokeLineCap="ROUND" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;" StackPane.alignment="CENTER">
+                        <Circle fx:id="circleSPI" fill="#1f93ff00" radius="69.0" stroke="#e8e836" strokeLineCap="ROUND" strokeWidth="15.0" StackPane.alignment="CENTER">
                            <StackPane.margin>
                               <Insets top="10.0" />
                            </StackPane.margin>
@@ -256,7 +257,7 @@
                                  </font>
                               </Label>
                               <Region prefHeight="39.0" prefWidth="24.0" />
-                              <Label prefHeight="19.0" prefWidth="141.0" text=":    0.78">
+                              <Label fx:id="lbSPIValue" prefHeight="19.0" prefWidth="141.0" text=":    0.78">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -271,7 +272,7 @@
                                  </font>
                               </Label>
                               <Region prefHeight="39.0" prefWidth="24.0" />
-                              <Label prefHeight="19.0" prefWidth="141.0" text=":    Behind Schedule">
+                              <Label fx:id="lbSPIStatus" prefHeight="19.0" prefWidth="141.0" text=":    Behind Schedule">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -295,7 +296,7 @@
                <children>
                   <StackPane alignment="TOP_CENTER" VBox.vgrow="NEVER">
                      <children>
-                        <Label alignment="TOP_CENTER" text="SPI" StackPane.alignment="CENTER">
+                        <Label alignment="TOP_CENTER" text="CPI" StackPane.alignment="CENTER">
                            <font>
                               <Font name="Arial Bold" size="25.0" />
                            </font>
@@ -303,7 +304,7 @@
                               <Insets top="20.0" />
                            </StackPane.margin>
                         </Label>
-                        <Label fx:id="lbCPIValue11" alignment="TOP_CENTER" prefHeight="34.0" prefWidth="98.0" text="70%" StackPane.alignment="CENTER">
+                        <Label fx:id="lbCPIPercentages" alignment="TOP_CENTER" prefHeight="34.0" prefWidth="98.0" text="70%" StackPane.alignment="CENTER">
                            <font>
                               <Font name="Arial Bold" size="20.0" />
                            </font>
@@ -311,12 +312,12 @@
                               <Insets bottom="25.0" />
                            </StackPane.margin>
                         </Label>
-                        <Circle fill="DODGERBLUE" radius="69.0" stroke="#ebebeb" strokeType="INSIDE" style="-fx-fill: transparent; -fx-stroke-width: 15;" StackPane.alignment="CENTER">
+                        <Circle fill="DODGERBLUE" radius="69.0" stroke="#ebebeb" style="-fx-fill: transparent; -fx-stroke-width: 15;" StackPane.alignment="CENTER">
                            <StackPane.margin>
                               <Insets top="10.0" />
                            </StackPane.margin>
                         </Circle>
-                        <Circle fill="#1f93ff00" radius="69.0" stroke="GREEN" strokeLineCap="ROUND" strokeType="INSIDE" strokeWidth="15.0" style="-fx-stroke-dash-array: 180 150;" StackPane.alignment="CENTER">
+                        <Circle fx:id="circleCPI" fill="#1f93ff00" radius="69.0" stroke="GREEN" strokeLineCap="ROUND" strokeWidth="15.0" StackPane.alignment="CENTER">
                            <StackPane.margin>
                               <Insets top="10.0" />
                            </StackPane.margin>
@@ -330,13 +331,13 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="23.0" prefWidth="310.0">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="43.0" text="SPI">
+                              <Label prefHeight="17.0" prefWidth="43.0" text="CPI">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
                               <Region prefHeight="39.0" prefWidth="24.0" />
-                              <Label prefHeight="19.0" prefWidth="141.0" text=":    0.78">
+                              <Label fx:id="lbCPIValue" prefHeight="19.0" prefWidth="141.0" text=":    0.78">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -351,7 +352,7 @@
                                  </font>
                               </Label>
                               <Region prefHeight="39.0" prefWidth="24.0" />
-                              <Label prefHeight="19.0" prefWidth="141.0" text=":    Behind Schedule">
+                              <Label fx:id="lbCPIStatus" prefHeight="19.0" prefWidth="141.0" text=":    Behind Schedule">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -385,7 +386,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </Label>
-                  <LineChart prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
+                  <LineChart fx:id="lcMonthlyProjectPerformance" prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -405,7 +406,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </Label>
-                  <AreaChart prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
+                  <AreaChart fx:id="acWeeklyResourceUsage" prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
