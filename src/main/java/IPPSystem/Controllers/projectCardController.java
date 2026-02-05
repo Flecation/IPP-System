@@ -62,7 +62,8 @@ public class projectCardController {
         projectStatus.setText(p.getProjectStatus());
         projectType.setText(p.getProjectTypeName());
         projectName.setText(p.getProjectInstanceName());
-        detailsBtn.setOnMouseClicked(event -> utils.openProjectDetails(project,pane));
+        // Use any node inside the current tab so utils can find the correct per-tab loadPane
+        detailsBtn.setOnMouseClicked(event -> utils.openProjectDetails(project, detailsBtn));
         applyStatusStyle(p.getProjectStatus());
     }
 

@@ -150,7 +150,8 @@ public class mgSEPersonalDetailController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectCard.fxml"));
                     Parent card = loader.load();
                     projectCardController controller = loader.getController();
-                    controller.setData(project, loadPane);
+                    // Pass null: projectCardController uses its own node to navigate within the tab
+                    controller.setData(project, null);
                     projectPane.getChildren().add(card);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -149,16 +149,49 @@ public class workItemDetailsController implements loadPaneAware {
                 && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
         this.canEditTasks = !isSupervisor;
 
-        // Load tables
-        if (taskTable != null) taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
-        if (viewSkillTable != null) viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
+        // Load tables (async to avoid UI freeze)
+        final int assignWorkItemId = item.getAssignWorkItemId();
+
+        javafx.concurrent.Task<java.lang.Object[]> loadTablesTask = new javafx.concurrent.Task<>() {
+            @Override
+            protected java.lang.Object[] call() {
+                javafx.collections.ObservableList<IPPSystem.Models.tasks> tasksList =
+                        database.getAllTasksByAssignWorkItem(assignWorkItemId);
+                javafx.collections.ObservableList<IPPSystem.Models.skills> skillsList =
+                        database.getAllSkillByAssignWorkItemDetails(assignWorkItemId);
+                return new java.lang.Object[]{tasksList, skillsList};
+            }
+        };
+
+        loadTablesTask.setOnSucceeded(ev -> {
+            try {
+                if (taskTable != null) taskTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.tasks>) loadTablesTask.getValue()[0]);
+                if (viewSkillTable != null) viewSkillTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.skills>) loadTablesTask.getValue()[1]);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        loadTablesTask.setOnFailed(ev -> {
+            loadTablesTask.getException().printStackTrace();
+            try {
+                IPPSystem.Utils.messageBoxService.toast(
+                        "Failed to load work item details",
+                        String.valueOf(loadTablesTask.getException().getMessage()),
+                        IPPSystem.Constants.notificationType.ERROR
+                );
+            } catch (Exception ignored) {}
+        });
+
+        new Thread(loadTablesTask, "load-workitem-tables").start();
 
         // Load baseline fields
         reloadFieldsFromModel();
 
         // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
-        backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
+        // Navigate within the same tab (no need to store loadPane)
+        backToProjectDetails.setOnAction(e -> utils.openProjectDetails(project, backToProjectDetails));
 
         workItemTitle.setText(item.getWorkItemName());
         workItemTitleStatus.setText("- "+item.getProjectStatus());
@@ -297,7 +330,16 @@ public class workItemDetailsController implements loadPaneAware {
                     messageBoxService.toast("Saved", "Task updated successfully.", notificationType.SUCCESS);
 
                     if (taskTable != null) {
-                        taskTable.setItems(database.getAllTasksByAssignWorkItem(workItem.getAssignWorkItemId()));
+                        javafx.concurrent.Task<javafx.collections.ObservableList<IPPSystem.Models.tasks>> reloadTasksTask =
+                                new javafx.concurrent.Task<>() {
+                                    @Override
+                                    protected javafx.collections.ObservableList<IPPSystem.Models.tasks> call() {
+                                        return database.getAllTasksByAssignWorkItem(workItem.getAssignWorkItemId());
+                                    }
+                                };
+                        reloadTasksTask.setOnSucceeded(ev2 -> taskTable.setItems(reloadTasksTask.getValue()));
+                        reloadTasksTask.setOnFailed(ev2 -> reloadTasksTask.getException().printStackTrace());
+                        new Thread(reloadTasksTask, "reload-tasks").start();
                         taskTable.refresh();
                     }
 

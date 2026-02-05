@@ -93,7 +93,8 @@ public class projectDetailsController  implements loadPaneAware {
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
-    private StackPane loadPane = utils.findTabLoadPane(viewOnlyProjectInfo);
+    // (Optional) injected by sideBarPaneController, but navigation works even without it
+    private StackPane loadPane;
 
     @Override
     public void setLoadPane(StackPane loadPane) {
@@ -107,16 +108,15 @@ public class projectDetailsController  implements loadPaneAware {
         pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
 
         backToViewProjectBtn.setOnAction(e -> {
-            StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-            utils.openFxml("viewProjects.fxml", pane);
+            // Use any node inside this tab; utils will resolve the correct per-tab loadPane
+            utils.openFxml("viewProjects.fxml", backToViewProjectBtn);
         });
 
         workItemTable.setRowFactory(tv -> {
             TableRow<workItems> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2 && !row.isEmpty()) {
-                    StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-                    utils.openWorkItemDetails(row.getItem(), project, pane); // <-- pass pane, not null
+                    utils.openWorkItemDetails(row.getItem(), project, workItemTable);
                 }
             });
             return row;
@@ -239,14 +239,34 @@ public class projectDetailsController  implements loadPaneAware {
     private void refreshWorkItems() {
         if (project == null || workItemTable == null) return;
 
-        Runnable r = () -> {
-            workItemTable.setItems(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
-            workItemTable.refresh();
-        };
+        javafx.concurrent.Task<javafx.collections.ObservableList<IPPSystem.Models.workItems>> task =
+                new javafx.concurrent.Task<>() {
+                    @Override
+                    protected javafx.collections.ObservableList<IPPSystem.Models.workItems> call() {
+                        return database.getAllWorkItemsByAssignProject(project.getAssignProjectId());
+                    }
+                };
 
-        if (Platform.isFxApplicationThread()) r.run();
-        else Platform.runLater(r);
+        task.setOnSucceeded(e -> {
+            workItemTable.setItems(task.getValue());
+            workItemTable.refresh();
+        });
+
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            // Optional toast (won't crash if service isn't initialized)
+            try {
+                IPPSystem.Utils.messageBoxService.toast(
+                        "Failed to load work items",
+                        String.valueOf(task.getException().getMessage()),
+                        IPPSystem.Constants.notificationType.ERROR
+                );
+            } catch (Exception ignored) {}
+        });
+
+        new Thread(task, "load-workitems").start();
     }
+
 
     // ------------------------------
     // UI helpers

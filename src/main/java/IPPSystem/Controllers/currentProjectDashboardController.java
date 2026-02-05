@@ -45,7 +45,8 @@ public class currentProjectDashboardController {
     @FXML
     void clickProjectSelect(ActionEvent event) {
         if ("Project Overview".equals(comboProjectList.getValue())) {
-            utils.openFxml("allProjectDashboard.fxml", null);
+            // Use any node inside the current tab so utils can find the correct per-tab loadPane
+            utils.openFxml("allProjectDashboard.fxml", comboProjectList);
         } else {
             refreshDashboardData();
         }
