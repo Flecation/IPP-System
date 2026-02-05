@@ -72,7 +72,7 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-                userAddress = rs.getString("userAddress");
+              //  userAddress = rs.getString("userAddress");
 
                 users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
                 ls.add(users);
