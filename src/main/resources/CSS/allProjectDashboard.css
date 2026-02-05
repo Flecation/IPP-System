@@ -1,0 +1,16 @@
+/* Box ရဲ့ ပုံမှန် အခြေအနေ */
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-transition-duration: 0.6as;
+}
+
+/* Mouse Hover တင်လိုက်တဲ့ အခြေအနေ */
+.dashboard-card:hover {
+    -fx-cursor: hand; /* Mouse တင်ရင် လက်ညှိုးပုံပြောင်းမယ် */
+    -fx-scale-x: 1.05; /* အလျားလိုက် ၅% ကြီးလာမယ် */
+    -fx-scale-y: 1.05; /* ဒေါင်လိုက် ၅% ကြီးလာမယ် */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 8); /* အရိပ်ကို ပိုနက်စေပြီး ကြွတက်လာသလို ပြမယ် */
+}
