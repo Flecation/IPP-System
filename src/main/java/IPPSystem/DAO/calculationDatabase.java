@@ -105,4 +105,49 @@ public class calculationDatabase {
         }
         return 0;
     }
+
+
+
+
+    // 1. Total Engineers
+    public static int getTotalEngineersCount() {
+        String sql = "SELECT COUNT(*) FROM users WHERE userRole = 'supervisor'";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+
+    // 2. New Engineers This Month
+    public static int getNewEngineersThisMonth() {
+        String sql = "SELECT COUNT(*) FROM users WHERE userRole = 'supervisor' " +
+                "AND YEAR(userStartDate) = YEAR(CURDATE()) " +
+                "AND MONTH(userStartDate) = MONTH(CURDATE())";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+
+    // 3. Active Engineers
+    public static int getActiveEngineersCount() {
+        String sql = "SELECT COUNT(*) FROM users WHERE userRole = 'supervisor' AND isActive = true";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+
+    // 4. Resigned Engineers
+    public static int getResignedEngineersCount() {
+        String sql = "SELECT COUNT(*) FROM users WHERE userRole = 'supervisor' AND isActive = false";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
 }

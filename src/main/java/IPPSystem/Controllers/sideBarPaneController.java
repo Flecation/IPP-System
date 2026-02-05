@@ -280,6 +280,7 @@ public class sideBarPaneController extends navigationPaneController{
     // Removed userViewImage field as it doesn't exist in FXML
     // Removed imageIconBtn field as it doesn't exist in FXML
 
+
     private users loginUser = user;
 
     protected storage data = storage.getInstance();
@@ -430,7 +431,7 @@ public class sideBarPaneController extends navigationPaneController{
 
            if( loginUser.getUserRole().equals(role.MANAGER.toString()))
            {
-               utils.openFxml("mgSEListView.fxml",loadPane);
+               utils.openFxml("zzzz.fxml",loadPane);
            }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
                utils.openFxml("laborView.fxml",loadPane);
            }

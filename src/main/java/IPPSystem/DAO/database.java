@@ -29,6 +29,10 @@ public class database {
 
     public static boolean createUser(users users){return userDatabase.addUser(users);}
 
+    public  static int getTotalEngineersCount(){return  calculationDatabase.getTotalEngineersCount();}
+    public  static int getNewEngineersThisMonth(){return  calculationDatabase.getNewEngineersThisMonth();}
+    public  static int getActiveEngineersCount(){return  calculationDatabase.getActiveEngineersCount();}
+    public  static int getResignedEngineersCount(){return  calculationDatabase.getResignedEngineersCount();}
 
 //    For the labors functions
 

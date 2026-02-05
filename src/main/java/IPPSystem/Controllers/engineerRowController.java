@@ -14,11 +14,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 
 import java.io.File;
 import java.util.function.Consumer;
 
-public class mgSERowController {
+public class engineerRowController {
 
     @FXML
     private Label mgSEActive;
@@ -27,7 +29,7 @@ public class mgSERowController {
     private Button mgSEDeleteBtn;
 
     @FXML
-    private ImageView mgSEImg;
+    private Circle mgSEImg;
 
     @FXML
     private Label mgSENameTxt;
@@ -35,8 +37,6 @@ public class mgSERowController {
     @FXML
     private Label mgSEProjectTypeTxt;
 
-    @FXML
-    private Label mgSERoleTxt;
 
     @FXML
     private Button mgSEViewBtn;
@@ -44,7 +44,14 @@ public class mgSERowController {
     @FXML
     private HBox ASiteEngineerCtn;
 
-    private  users engineer;
+
+    @FXML
+    private Label EndDate;
+
+    @FXML
+    private Label StartDate;
+
+    private users engineer;
 
 
 
@@ -61,7 +68,6 @@ public class mgSERowController {
         this.engineer = engineer;
 
         mgSENameTxt.setText(engineer.getUserName());
-        mgSERoleTxt.setText(engineer.getUserRole());
         if(database.currentAssignProject((engineer.getUserId())) == null){
             mgSEProjectTypeTxt.setText("-");
         }else{
@@ -73,7 +79,14 @@ public class mgSERowController {
         mgSEActive.setText(status);
 
 
-        mgSEImg.setImage(loadProfileImage(engineer.getUserPhoto()));
+        Image img = loadProfileImage(engineer.getUserPhoto());
+        mgSEImg.setFill(new ImagePattern(img));
+
+        String start = engineer.getUserStartDate() != null ? engineer.getUserStartDate().toString() : "N/A";
+        String end = engineer.getUserEndDate() != null ? engineer.getUserEndDate().toString() : "Present";
+
+        StartDate.setText(start);
+        EndDate.setText(end);
 
 
         ASiteEngineerCtn.getStyleClass().removeAll(
@@ -89,6 +102,7 @@ public class mgSERowController {
                     .add("managerAccSupervisorCtn");
         }
     }
+
 
     private Image loadProfileImage(String path) {
 
