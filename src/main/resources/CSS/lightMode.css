@@ -1,32 +1,33 @@
 *{
     /* background colors */
-    -primary-bg-color: #FFFFFF;
-    -secondary-bg-color: #E0E0C5;
+    -primary-bg-color: #EBEBEB;
+    -secondary-bg-color: #BDBDBD;
+    -color: black;
 
-     /* for the text color */
-     -primary-text-color: #233D4D;
-     -secondary-text-color: #5C6F7C;
-     -muted-text-color: #8A9AA6;
+    /* for the text color */
+    -primary-text-color: #212529;
+    -secondary-text-color: #495057;
+    -muted-text-color: #495057;
 
-     /* for the navigation bar */
-     -nav-color: #E7E6CB;
+    /* for the navigation bar */
+    -nav-color: #EBEBEB;
 
-     /* for the underline */
-     -underline-color: #E09F3E;
+    /* for the underline */
+    -underline-color: #FF8C00;
 
-     /* for the border color */
-     -border-color: #D6C7B2;
+    /* for the border color */
+    -border-color: #BDBDBD;
 
-     /* for the hover color */
-     -hover-color: #BAD3E1;
+    /* for the hover color */
+    -hover-color: #BDBDBD;
 
-     /* for the focus color */
-     -focus-color: #faa424;
-
+    /* for the focus color */
+    -focus-color: #FF8C00;
 }
- .miniIcon,.restoreIcon,.exitIcon{
+
+.miniIcon,.restoreIcon,.exitIcon{
     -fx-fill: -secondary-text-color;
- }
+}
 
 .label{
     -fx-text-fill: -primary-text-color;

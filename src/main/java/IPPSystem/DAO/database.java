@@ -184,4 +184,6 @@ public class database {
     public static int getProjectIdByName(String projectName, int supervisorId) {
         return reportDatabase.getProjectIdByName(projectName, supervisorId);
     }
+
+    public static int getCompletedDaysByAssignProject(int projectId){return reportDatabase.getCompletedDaysByAssignProject(projectId);}
 }

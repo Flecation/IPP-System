@@ -1,27 +1,28 @@
 *{
     /* for background color */
-    -primary-bg-color: #233D4D;
-    -secondary-bg-color: #254962;
+    -primary-bg-color: #1D2E4A;
+    -secondary-bg-color: #32548E;
+    -color: white;
 
     /* for the text color */
     -primary-text-color: #F8FAFC;
     -secondary-text-color: #CBD5E1;
-    -muted-text-color: #94A3B8;
+    -muted-text-color: #495057;
 
     /* for the navigation bar */
-    -nav-color: #234256;
+    -nav-color: #1D2E4A;
 
     /* for the underline */
-    -underline-color: #D68C2F;
+    -underline-color: #FF8C00;
 
     /* for the border color */
-    -border-color : #3F6478;
+    -border-color : #32548E;
 
     /* for the focus color */
-    -focus-color: #FF881F;
+    -focus-color: #FF8C00;
 
     /* for the hover color */
-    -hover-color: #5B81A5;
+    -hover-color: #32548E;
 
 
 }

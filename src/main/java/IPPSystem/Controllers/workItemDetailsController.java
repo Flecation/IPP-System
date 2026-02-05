@@ -9,6 +9,7 @@ import IPPSystem.Models.skills;
 import IPPSystem.Models.tasks;
 import IPPSystem.Models.workItems;
 import IPPSystem.Utils.calculationHelper;
+import IPPSystem.Utils.loadPaneAware;
 import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
 import javafx.concurrent.Task;
@@ -18,8 +19,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.util.StringConverter;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -29,8 +33,12 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-public class workItemDetailsController extends viewProjectsController {
+import static IPPSystem.Controllers.dashboardController.loginUser;
 
+public class workItemDetailsController implements loadPaneAware {
+
+//    ==== title ====
+    @FXML private Label workItemTitle,workItemTitleStatus;
     // ===== Top cards =====
     @FXML private Label actualCost;
     @FXML private Label actualCostPercent;
@@ -80,11 +88,20 @@ public class workItemDetailsController extends viewProjectsController {
     // In your FXML: fx:id="backToProjectDetails"
     @FXML private Button backToProjectDetails;
 
+    @FXML private Button wItemEditBtn;
+
     private workItems workItem;
     private final calculationHelper helper = calculationHelper.getInstance();
     private boolean canEditTasks = true;
 
-    private projects project;
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+
     // Flexible date parser: supports "2026-01-14" and "14-JAN-2026"
     private static final DateTimeFormatter FLEX_DATE = new DateTimeFormatterBuilder()
             .parseCaseInsensitive()
@@ -95,6 +112,11 @@ public class workItemDetailsController extends viewProjectsController {
 
     @FXML
     public void initialize() {
+        wItemEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
+        wItemEditBtn.setOnAction(e->{
+            messageBoxService.toast("Not Allow To Edit",
+                    "If you want to edit buy Premium!!",
+                    notificationType.WARNING);});
 
         // ---- Task table mapping ----
         if (taskNameCol != null) taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
@@ -122,7 +144,6 @@ public class workItemDetailsController extends viewProjectsController {
 
     public void setWorkItem(workItems item, projects project) {
         this.workItem = item;
-        this.project = project;
         if (item == null) return;
 
         // Supervisor can't edit (same style as your projectDetailsController)
@@ -139,6 +160,9 @@ public class workItemDetailsController extends viewProjectsController {
         // Load EVM numbers
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
         backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
+
+        workItemTitle.setText(item.getWorkItemName());
+        workItemTitleStatus.setText("- "+item.getProjectStatus());
     }
 
     // ------------------------------------------------------------
@@ -194,16 +218,41 @@ public class workItemDetailsController extends viewProjectsController {
         grid.setPadding(new Insets(10));
 
         TextField durationTxt = new TextField(String.valueOf(task.getProjectDuration()));
-        TextField startTxt = new TextField(task.getStartDate() == null ? "" : task.getStartDate().toString());
-        TextField endTxt = new TextField(task.getEndDate() == null ? "" : task.getEndDate().toString());
+
 
         durationTxt.setPromptText("Duration (days)");
-        startTxt.setPromptText("Start date (yyyy-MM-dd)");
-        endTxt.setPromptText("End date (yyyy-MM-dd)");
+
 
         grid.addRow(0, new Label("Duration"), durationTxt);
-        grid.addRow(1, new Label("Start"), startTxt);
-        grid.addRow(2, new Label("End"), endTxt);
+
+        DatePicker startPicker = new DatePicker(task.getStartDate() == null ? null : task.getStartDate().toLocalDate());
+        DatePicker endPicker   = new DatePicker(task.getEndDate() == null ? null : task.getEndDate().toLocalDate());
+
+// Optional: force a consistent display format (yyyy-MM-dd)
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override public String toString(LocalDate date) {
+                return date == null ? "" : fmt.format(date);
+            }
+            @Override public LocalDate fromString(String s) {
+                return (s == null || s.trim().isEmpty()) ? null : LocalDate.parse(s.trim(), fmt);
+            }
+        };
+        startPicker.setConverter(converter);
+        endPicker.setConverter(converter);
+        startPicker.setPromptText("yyyy-MM-dd");
+        endPicker.setPromptText("yyyy-MM-dd");
+
+// If you want: user must pick from calendar (no manual typing)
+        startPicker.setEditable(false);
+        endPicker.setEditable(false);
+
+        grid.addRow(1, new Label("Start"), startPicker);
+        grid.addRow(2, new Label("End"), endPicker);
+
+
+        LocalDate start = startPicker.getValue();
+        LocalDate end = endPicker.getValue();
 
         dialog.getDialogPane().setContent(grid);
 
@@ -217,23 +266,13 @@ public class workItemDetailsController extends viewProjectsController {
             if (btn != saveBtnType) return;
 
             Double dur = tryParseDouble(durationTxt.getText());
-            LocalDate start = tryParseDate(startTxt.getText());
-            LocalDate end = tryParseDate(endTxt.getText());
+
 
             if (dur == null || dur <= 0) {
                 messageBoxService.toast("Invalid Duration", "Please enter a duration (> 0).", notificationType.WRONG);
                 return;
             }
-            if (start == null || end == null) {
-                messageBoxService.toast("Invalid Date",
-                        "Use yyyy-MM-dd or dd-MMM-yyyy (e.g., 2026-01-14 or 14-JAN-2026).",
-                        notificationType.WRONG);
-                return;
-            }
-            if (end.isBefore(start)) {
-                messageBoxService.toast("Invalid Date Range", "End date cannot be before start date.", notificationType.WRONG);
-                return;
-            }
+
 
             tasks updated = new tasks();
             updated.setAssignTaskId(task.getAssignTaskId());

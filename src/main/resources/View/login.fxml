@@ -1,64 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.CubicCurve?>
-<?import javafx.scene.shape.QuadCurve?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Text?>
 
-<VBox fx:id="root" maxHeight="535.0" maxWidth="900.0" minHeight="535.0" minWidth="900.0" stylesheets="@../CSS/login.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.loginController">
+<VBox fx:id="root" alignment="CENTER" maxHeight="535.0" maxWidth="900.0" minHeight="535.0" minWidth="900.0" prefHeight="535.0" prefWidth="900.0" styleClass="background" stylesheets="@../CSS/login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.loginController">
    <children>
-      <HBox alignment="TOP_RIGHT" maxHeight="35.0" maxWidth="900.0" minHeight="35.0" minWidth="900.0" styleClass="topBar" VBox.vgrow="NEVER">
+      <HBox alignment="TOP_RIGHT" maxWidth="1605.0" minHeight="17.0" minWidth="900.0" prefHeight="46.0" prefWidth="900.0" styleClass="topBar">
          <children>
-            <Button fx:id="minimizeBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
-            <Button fx:id="restoreBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
-            <Button fx:id="exitBtn" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" />
-         </children></HBox>
-      <StackPane fx:id="overlayPane" VBox.vgrow="NEVER">
+            <Button fx:id="minimizeBtn" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" />
+            <Button fx:id="restoreBtn" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" />
+            <Button fx:id="exitBtn" alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" />
+         </children>
+      </HBox>
+      <StackPane fx:id="overlayPane" prefHeight="534.0" prefWidth="900.0">
          <children>
-            <HBox alignment="CENTER_RIGHT" maxHeight="500.0" maxWidth="900.0" minHeight="500.0" minWidth="900.0" StackPane.alignment="CENTER">
+            <HBox alignment="CENTER_RIGHT" maxHeight="523.0" maxWidth="900.0" minHeight="462.0" minWidth="900.0" prefHeight="523.0" prefWidth="900.0" StackPane.alignment="CENTER">
                <children>
-                  <VBox maxHeight="500.0" maxWidth="500.0" minHeight="500.0" minWidth="500.0">
-                     <children>
-                        <StackPane maxHeight="500.0" maxWidth="500.0" minHeight="500.0" minWidth="500.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <ImageView fx:id="imageView" fitHeight="390.0" fitWidth="340.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
-                                 <StackPane.margin>
-                                    <Insets left="15.0" />
-                                 </StackPane.margin></ImageView>
-                           </children>
-                        </StackPane>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-                  <StackPane>
+                  <StackPane alignment="TOP_CENTER" maxHeight="550.0" maxWidth="300.0" minHeight="500.0" minWidth="320.0" prefHeight="550.0" prefWidth="300.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                      <children>
-                        <VBox fx:id="loginBox" alignment="CENTER" maxHeight="500.0" maxWidth="450.0" minHeight="500.0" minWidth="400.0" spacing="5.0" styleClass="rightPane" visible="false">
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="rightBlur" StackPane.alignment="CENTER" />
+                        <VBox fx:id="loginBox" alignment="CENTER" maxHeight="500.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" styleClass="rightPane" visible="false">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Login Account " translateY="-20.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Sign in your Account" translateY="-20.0" />
                               <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
                                  <children>
                                     <TextField fx:id="userEmailTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
                                     <Label fx:id="userEmailLbl" styleClass="info-text" text="User Email" StackPane.alignment="CENTER_LEFT">
                                        <StackPane.margin>
-                                          <Insets left="60.0" />
+                                          <Insets left="50.0" />
                                        </StackPane.margin>
                                     </Label>
                                     <Label fx:id="emailWrongLbl" minWidth="250.0" text="Label" StackPane.alignment="BOTTOM_LEFT">
@@ -77,10 +58,10 @@
                                     <PasswordField fx:id="hidePasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
                                     <Label fx:id="passwordLbl" styleClass="info-text" text="Password" StackPane.alignment="CENTER_LEFT">
                                        <StackPane.margin>
-                                          <Insets left="60.0" />
+                                          <Insets left="50.0" />
                                        </StackPane.margin>
                                     </Label>
-                                    <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="18.0" StackPane.alignment="BOTTOM_LEFT">
+                                    <CheckBox fx:id="showPasswordCheckBox" alignment="TOP_LEFT" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="18.0" StackPane.alignment="BOTTOM_LEFT">
                                        <StackPane.margin>
                                           <Insets left="50.0" />
                                        </StackPane.margin>
@@ -96,19 +77,16 @@
                                  </VBox.margin>
                               </StackPane>
                               <Button fx:id="loginBtn" maxHeight="36.0" maxWidth="250.0" minHeight="36.0" minWidth="250.0" mnemonicParsing="false" text="Login" translateY="5.0" />
-                              <Button fx:id="forgetBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="forget password" translateY="10.0">
+                              <Button fx:id="forgetBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="forget password ?" translateY="10.0">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
                               </Button>
                            </children>
-                           <padding>
-                              <Insets left="60.0" top="10.0" />
-                           </padding>
                         </VBox>
-                        <VBox fx:id="otpBox" alignment="CENTER" maxHeight="500.0" maxWidth="400.0" minHeight="500.0" minWidth="400.0" spacing="5.0" styleClass="rightPane" StackPane.alignment="CENTER">
+                        <VBox fx:id="otpBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
                            <padding>
-                              <Insets left="50.0" right="10.0" top="10.0" />
+                              <Insets top="10.0" />
                            </padding>
                            <children>
                               <Label styleClass="header-text" text="OTP Verification" />
@@ -145,13 +123,24 @@
                               </Button>
                            </children>
                         </VBox>
-                        <VBox fx:id="forgetPwBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="rightPane" visible="false">
+                        <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane">
                            <padding>
-                              <Insets left="50.0" right="10.0" top="10.0" />
+                              <Insets right="10.0" />
                            </padding>
                            <children>
-                              <Label contentDisplay="CENTER" minWidth="300.0" prefHeight="27.0" prefWidth="271.0" styleClass="info-text" text="Forget Password" />
-                              <Label minWidth="300.0" text="Send a code to your email to reset your password" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" minWidth="272.0" prefHeight="27.0" prefWidth="272.0" styleClass="info-text" text="Forgot Password ?" />
+                              <Label alignment="CENTER" minWidth="300.0" prefHeight="22.0" prefWidth="308.0" text="Please type your email to receive the confirmation">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding></Label>
+                              <Label alignment="CENTER" minWidth="300.0" prefHeight="22.0" prefWidth="308.0" text="code to reset a new password.">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets top="-10.0" />
+                                 </VBox.margin>
+                              </Label>
                               <StackPane maxHeight="80.0" minHeight="80.0" prefHeight="150.0" prefWidth="200.0">
                                  <children>
                                     <TextField fx:id="forgetPwEmailTxt" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" StackPane.alignment="CENTER_LEFT">
@@ -173,13 +162,13 @@
                               </Button>
                               <HBox fx:id="backToLoginRow" alignment="CENTER" spacing="10.0">
                                  <children>
-                                    <Label text="Back to" />
+                                    <Label styleClass="backTo" text="Back to" />
                                     <Label fx:id="backToLogin" text="Log in" />
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="changeNewPwBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="rightPane" visible="false">
+                        <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="10.0" styleClass="rightPane" visible="false">
                            <padding>
                               <Insets left="50.0" right="10.0" top="10.0" />
                            </padding>
@@ -212,17 +201,7 @@
                   </StackPane>
                </children>
             </HBox>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="68.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="shape" translateX="181.0" translateY="-216.0" width="265.0" />
-            <QuadCurve controlX="242.0" controlY="-113.0" endX="142.0" endY="-184.0" fill="DODGERBLUE" startX="142.0" startY="-109.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="shape" translateX="338.0" translateY="-220.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rightShape" translateX="160.0" translateY="-220.0" width="295.0" />
-            <QuadCurve controlX="-463.76214599609375" controlY="38.64946746826172" endX="-562.0" endY="-36.67930603027344" fill="DODGERBLUE" rotate="-5.0" startX="-596.0" startY="27.320693969726562" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rightShape" translateX="312.0" translateY="-220.0">
-               <rotationAxis>
-                  <Point3D x="3.0" y="6.0" z="1.0" />
-               </rotationAxis></QuadCurve>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="loginLogoName" text="IPP System" translateX="140.0" translateY="-223.0" />
-            <CubicCurve controlX1="-302.2233581542969" controlX2="-221.40127563476562" controlY1="-740.5310668945312" controlY2="-566.2247924804688" endX="-29.261638641357422" endY="-464.45709228515625" fill="DODGERBLUE" rotate="3.0" startX="-70.67208862304688" startY="-752.32275390625" stroke="TRANSPARENT" styleClass="rightShape" translateX="5.0" translateY="-41.0" />
-            <CubicCurve controlX1="156.20126342773438" controlX2="232.82574462890625" controlY1="-430.53466796875" controlY2="-325.23699951171875" endX="-263.1312255859375" endY="-372.13055419921875" fill="DODGERBLUE" startX="-5.176055908203125" startY="-543.0866088867188" stroke="TRANSPARENT" styleClass="shape" translateX="-31.0" translateY="164.0" />
-            <BorderPane id="openWithEmail" fx:id="openwithEmail" visible="false" StackPane.alignment="CENTER">
+            <BorderPane fx:id="openWithEmail" visible="false" StackPane.alignment="CENTER">
                <center>
                   <Label fx:id="openEmailAction" minHeight="50.0" minWidth="200.0" styleClass="header-text" text="Open Via Email Code" BorderPane.alignment="CENTER" />
                </center>
