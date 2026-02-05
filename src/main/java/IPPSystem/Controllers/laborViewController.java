@@ -60,11 +60,29 @@ public class laborViewController implements Initializable {
 
 
     public void updateLaborStats() {
-        // Ensure data is fresh from database
-        totalLaborQty.setText(String.valueOf(database.getTotalLabors()));
-        newHireQty.setText(String.valueOf(database.getNewHires()));
-        activeLaborQty.setText(String.valueOf(database.getActiveLabors()));
-        resignedQty.setText(String.valueOf(database.getResignedLaborsCount()));
+        javafx.concurrent.Task<int[]> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected int[] call() {
+                return new int[]{
+                        database.getTotalLabors(),
+                        database.getNewHires(),
+                        database.getActiveLabors(),
+                        database.getResignedLaborsCount()
+                };
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            int[] v = task.getValue();
+            totalLaborQty.setText(String.valueOf(v[0]));
+            newHireQty.setText(String.valueOf(v[1]));
+            activeLaborQty.setText(String.valueOf(v[2]));
+            resignedQty.setText(String.valueOf(v[3]));
+        });
+
+        task.setOnFailed(e -> task.getException().printStackTrace());
+
+        new Thread(task, "load-labor-stats").start();
     }
 
 
@@ -83,40 +101,70 @@ public class laborViewController implements Initializable {
         statusFilterCombo.getItems().setAll("All", "Active", "Resigned");
         statusFilterCombo.setValue("All");
 
-        List<String> skills = database.getAllSkills();
-        skillFilterCombo.getItems().setAll("All");
-        skillFilterCombo.getItems().addAll(skills);
-        skillFilterCombo.setValue("Skill");
+        // Load skills async
+        javafx.concurrent.Task<java.util.List<String>> skillTask = new javafx.concurrent.Task<>() {
+            @Override
+            protected java.util.List<String> call() {
+                return database.getAllSkills();
+            }
+        };
+
+        skillTask.setOnSucceeded(e -> {
+            java.util.List<String> skills = skillTask.getValue();
+            skillFilterCombo.getItems().setAll("All");
+            if (skills != null) skillFilterCombo.getItems().addAll(skills);
+            skillFilterCombo.setValue("Skill");
+        });
+
+        skillTask.setOnFailed(e -> skillTask.getException().printStackTrace());
+
+        new Thread(skillTask, "load-skill-filter").start();
     }
 
 
     @FXML
     private void applyFilters() {
 
-        String selectedSkill = skillFilterCombo.getValue();
-        String selectedStatus = statusFilterCombo.getValue();
+        final String selectedSkill = skillFilterCombo.getValue() == null ? "All" : skillFilterCombo.getValue();
+        final String selectedStatus = statusFilterCombo.getValue() == null ? "All" : statusFilterCombo.getValue();
 
-        laborsPane.getChildren().clear();
-
-        List<labors> laborList = database.getAllLaborsSortedByAssignment();
-
-        for (labors labor : laborList) {
-
-            boolean matchesSkill = selectedSkill.equals("All") ||
-                    (labor.getSkillName() != null &&
-                            labor.getSkillName().equalsIgnoreCase(selectedSkill));
-
-            boolean matchesStatus =
-                    selectedStatus.equals("All") ||
-                            (selectedStatus.equals("Active") && labor.isActive()) ||
-                            (selectedStatus.equals("Resigned") && !labor.isActive());
-
-            if (matchesSkill && matchesStatus) {
-                addLaborRow(labor);
+        // Load labor list async (DB can be slow)
+        javafx.concurrent.Task<java.util.List<IPPSystem.Models.labors>> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected java.util.List<IPPSystem.Models.labors> call() {
+                return database.getAllLaborsSortedByAssignment();
             }
-        }
+        };
 
-        updateLaborStats();   // 🔥 stats update after filtering
+        task.setOnSucceeded(e -> {
+            java.util.List<IPPSystem.Models.labors> laborList = task.getValue();
+
+            laborsPane.getChildren().clear();
+
+            if (laborList != null) {
+                for (IPPSystem.Models.labors labor : laborList) {
+
+                    boolean matchesSkill = selectedSkill.equals("All") ||
+                            (labor.getSkillName() != null &&
+                                    labor.getSkillName().equalsIgnoreCase(selectedSkill));
+
+                    boolean matchesStatus =
+                            selectedStatus.equals("All") ||
+                                    (selectedStatus.equals("Active") && labor.isActive()) ||
+                                    (selectedStatus.equals("Resigned") && !labor.isActive());
+
+                    if (matchesSkill && matchesStatus) {
+                        addLaborRow(labor);
+                    }
+                }
+            }
+
+            updateLaborStats(); // async now
+        });
+
+        task.setOnFailed(e -> task.getException().printStackTrace());
+
+        new Thread(task, "load-labors").start();
     }
 
 

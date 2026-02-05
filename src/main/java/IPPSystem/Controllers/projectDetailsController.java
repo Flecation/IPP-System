@@ -239,14 +239,34 @@ public class projectDetailsController  implements loadPaneAware {
     private void refreshWorkItems() {
         if (project == null || workItemTable == null) return;
 
-        Runnable r = () -> {
-            workItemTable.setItems(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
-            workItemTable.refresh();
-        };
+        javafx.concurrent.Task<javafx.collections.ObservableList<IPPSystem.Models.workItems>> task =
+                new javafx.concurrent.Task<>() {
+                    @Override
+                    protected javafx.collections.ObservableList<IPPSystem.Models.workItems> call() {
+                        return database.getAllWorkItemsByAssignProject(project.getAssignProjectId());
+                    }
+                };
 
-        if (Platform.isFxApplicationThread()) r.run();
-        else Platform.runLater(r);
+        task.setOnSucceeded(e -> {
+            workItemTable.setItems(task.getValue());
+            workItemTable.refresh();
+        });
+
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            // Optional toast (won't crash if service isn't initialized)
+            try {
+                IPPSystem.Utils.messageBoxService.toast(
+                        "Failed to load work items",
+                        String.valueOf(task.getException().getMessage()),
+                        IPPSystem.Constants.notificationType.ERROR
+                );
+            } catch (Exception ignored) {}
+        });
+
+        new Thread(task, "load-workitems").start();
     }
+
 
     // ------------------------------
     // UI helpers

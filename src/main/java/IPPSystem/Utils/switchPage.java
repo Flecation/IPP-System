@@ -135,24 +135,47 @@ public class switchPage extends utils {
         blurIn.play();
     }
 
-    // Simple FXML opener utility
+    // Simple FXML opener utility (cached per tab)
+    @SuppressWarnings("unchecked")
     public void openFxml(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
-            Parent newContent = loader.load();
+        if (fxmlFile == null || fxmlFile.isBlank()) return;
 
-            // ✅ Inject this tab's loadPane into the loaded controller (if it supports it)
-            Object controller = loader.getController();
-            if (controller instanceof loadPaneAware aware) {
-                aware.setLoadPane(loadPane);
+        try {
+            // Per-tab cache (each tab has its own loadPane instance)
+            java.util.Map<String, Parent> cache =
+                    (java.util.Map<String, Parent>) loadPane.getProperties()
+                            .computeIfAbsent("FXML_CACHE", k -> new java.util.HashMap<String, Parent>());
+
+            Parent resolved = cache.get(fxmlFile);
+
+            // Load if not cached
+            if (resolved == null) {
+                FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
+                resolved = loader.load();
+
+                // Inject this tab's loadPane into controller (if supported)
+                Object controller = loader.getController();
+                if (controller instanceof loadPaneAware aware) {
+                    aware.setLoadPane(loadPane);
+                }
+
+                cache.put(fxmlFile, resolved);
             }
 
-            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
+            final Parent newContent = resolved;
+
+            StackPane.setAlignment(newContent, Pos.CENTER);
             StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
 
+
             if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
+                // Bind only once (re-using cached nodes)
+                if (!region.prefWidthProperty().isBound()) {
+                    region.prefWidthProperty().bind(loadPane.widthProperty());
+                }
+                if (!region.prefHeightProperty().isBound()) {
+                    region.prefHeightProperty().bind(loadPane.heightProperty());
+                }
                 region.setMaxWidth(Double.MAX_VALUE);
                 region.setMaxHeight(Double.MAX_VALUE);
             }

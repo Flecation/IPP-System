@@ -155,16 +155,30 @@ public class engineerViewController {
 
     private void loadEngineerStats() {
 
-        int total = database.getTotalEngineersCount();
-        int newHire = database.getNewEngineersThisMonth();
-        int active = database.getActiveEngineersCount();
-        int resigned = database.getResignedEngineersCount();
+        javafx.concurrent.Task<int[]> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected int[] call() {
+                int total = database.getTotalEngineersCount();
+                int newHire = database.getNewEngineersThisMonth();
+                int active = database.getActiveEngineersCount();
+                int resigned = database.getResignedEngineersCount();
+                return new int[]{total, newHire, active, resigned};
+            }
+        };
 
-        totalSupervisorQty.setText(String.valueOf(total));
-        newHireQty.setText(String.valueOf(newHire));
-        activeSupervisorQty.setText(String.valueOf(active));
-        resignedQty.setText(String.valueOf(resigned));
+        task.setOnSucceeded(e -> {
+            int[] v = task.getValue();
+            totalSupervisorQty.setText(String.valueOf(v[0]));
+            newHireQty.setText(String.valueOf(v[1]));
+            activeSupervisorQty.setText(String.valueOf(v[2]));
+            resignedQty.setText(String.valueOf(v[3]));
+        });
+
+        task.setOnFailed(e -> task.getException().printStackTrace());
+
+        new Thread(task, "load-engineer-stats").start();
     }
+
 
 
 

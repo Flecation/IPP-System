@@ -18,7 +18,7 @@ public class databaseConnection {
         config.setUsername(dotenv.mysql_username);
         config.setPassword(dotenv.mysql_password);
 
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(100);
         config.setMinimumIdle(2);
 
         dataSource = new HikariDataSource(config);
