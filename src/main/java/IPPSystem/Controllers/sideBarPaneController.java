@@ -538,9 +538,16 @@ public class sideBarPaneController extends navigationPaneController{
 
     private void setupNavigationHandlers() {
         // Dashboard navigation
+        boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
         dashboardViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("currentProjectDashboard.fxml", loadPane);
-            linkButton.setTabButtonName("Dashboard");
+            if (isManager) {
+                utils.openFxml("allProjectDashboard.fxml",loadPane);
+                linkButton.setTabButtonName("Overall Dashboard");
+            }else{
+                utils.openFxml("currentProjectDashboard.fxml", loadPane);
+                linkButton.setTabButtonName("Current Dashboard");
+            }
+
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("dashboard.fxml", loadPane);
@@ -549,20 +556,23 @@ public class sideBarPaneController extends navigationPaneController{
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
-            linkButton.setTabButtonName("Projects");
+            linkButton.setTabButtonName("Projects View");
         });
         projectIconBtn.setOnMouseClicked(e -> {
             utils.openFxml("viewProjects.fxml", loadPane);
+            linkButton.setTabButtonName("Projects View");
         });
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
 
-            if( loginUser.getUserRole().equals(role.MANAGER.toString()))
+            if( isManager)
             {
                 utils.openFxml("mgSEListView.fxml",loadPane);
-            }else if(loginUser.getUserRole().equals(role.SUPERVISOR.toString())){
+                linkButton.setTabButtonName("Supervisors View");
+            }else{
                 utils.openFxml("laborView.fxml",loadPane);
+                linkButton.setTabButtonName("Labors View");
             }
 
 
