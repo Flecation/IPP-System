@@ -2,7 +2,12 @@ package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
 import IPPSystem.Utils.createProjectDraft;
+import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Utils.AddOverlayForm;
+import IPPSystem.Utils.messageBoxService;
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Utils.storage;
+import IPPSystem.Utils.utils;
 import IPPSystem.Models.users;
 
 import javafx.fxml.FXML;
@@ -11,11 +16,15 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class createProjectController extends sideBarPaneController {
+public class createProjectController implements loadPaneAware, AddOverlayForm {
+
+    private javafx.scene.layout.StackPane loadPane;
+
 
     @FXML private Button closeBtn, denyBtn, approveBtn;
 
     @FXML private TextField instanceNameTxt;
+    @FXML private Label instanceNameLbl;
     @FXML private ComboBox<String> siteEngineerBox;
 
     @FXML private ComboBox<String> projectTypeBox;
@@ -23,16 +32,39 @@ public class createProjectController extends sideBarPaneController {
     @FXML private ComboBox<String> levelBox;
 
     @FXML private TextField contractValueTxt;
+    @FXML private Label contractValueLbl;
     @FXML private TextField addressTxt;
+    @FXML private Label addressLbl;
 
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private TextField durationTxt;
+    @FXML private Label durationLbl;
+    @FXML private ComboBox<String> durationUnitCombo;
 
     private final storage data = storage.getInstance();
 
+    @Override
+    public void setLoadPane(javafx.scene.layout.StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+    private sideBarPaneController parent() {
+        if (loadPane == null) return null;
+        Object p = loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return (p instanceof sideBarPaneController) ? (sideBarPaneController) p : null;
+    }
+
+
     @FXML
     public void initialize() {
+        // ===== floating label style (StackPane label + textfield) =====
+        // (your utils method name is setFloatTextFieldStyle)
+        if (instanceNameLbl != null && instanceNameTxt != null) utils.setFloatTextFieldStyle(instanceNameLbl, instanceNameTxt);
+        if (contractValueLbl != null && contractValueTxt != null) utils.setFloatTextFieldStyle(contractValueLbl, contractValueTxt);
+        if (addressLbl != null && addressTxt != null) utils.setFloatTextFieldStyle(addressLbl, addressTxt);
+        if (durationLbl != null && durationTxt != null) utils.setFloatTextFieldStyle(durationLbl, durationTxt);
+
         // 1) supervisors list (your DB has getAllSupervisors)
         siteEngineerBox.getItems().clear();
         for (users u : database.getAllSupervisors()) {
@@ -45,14 +77,31 @@ public class createProjectController extends sideBarPaneController {
             if (t != null) projectTypeBox.getItems().add(t);
         }
 
-        // 3) when project type changes, reload building + level by projectTypeId
-        projectTypeBox.setOnAction(e -> reloadBuildingAndLevel());
-
-        // if you want default select first
-        if (!projectTypeBox.getItems().isEmpty()) {
-            projectTypeBox.getSelectionModel().selectFirst();
-            reloadBuildingAndLevel();
+        // duration unit (Day/Month/Year)
+        if (durationUnitCombo != null) {
+            durationUnitCombo.getItems().setAll("Day", "Month", "Year");
+            durationUnitCombo.getSelectionModel().select("Day");
         }
+
+        // Initially: user must choose project type first
+        buildingBox.getItems().clear();
+        levelBox.getItems().clear();
+        buildingBox.setDisable(true);
+        levelBox.setDisable(true);
+
+        // 3) when project type changes, enable + reload building & level by projectTypeId
+        projectTypeBox.setOnAction(e -> {
+            String v = projectTypeBox.getValue();
+            boolean hasType = v != null && !v.trim().isEmpty();
+            buildingBox.setDisable(!hasType);
+            levelBox.setDisable(!hasType);
+            if (hasType) {
+                reloadBuildingAndLevel();
+            } else {
+                buildingBox.getItems().clear();
+                levelBox.getItems().clear();
+            }
+        });
     }
 
     private void reloadBuildingAndLevel() {
@@ -82,15 +131,19 @@ public class createProjectController extends sideBarPaneController {
 
     @FXML
     private void onClose() {
-        // just go back to projects list
-        openInnerView("viewProjects.fxml");
+        sideBarPaneController p = parent();
+        if (p != null) {
+            p.closeAddOverlay();
+        }
     }
 
     @FXML
     private void onDeny() {
-        // clear and return
         createProjectDraft.getInstance().clear();
-        openInnerView("viewProjects.fxml");
+        sideBarPaneController p = parent();
+        if (p != null) {
+            p.closeAddOverlay();
+        }
     }
 
     @FXML
@@ -113,6 +166,10 @@ public class createProjectController extends sideBarPaneController {
             if (e.isBefore(s)) throw new IllegalArgumentException("End date must be after start date.");
 
             double duration = parseDouble(req(durationTxt.getText(), "Duration"), "Duration");
+            String durationUnit = (durationUnitCombo == null) ? null : durationUnitCombo.getValue();
+            if (durationUnit == null || durationUnit.trim().isEmpty()) {
+                throw new IllegalArgumentException("Duration Unit is required.");
+            }
 
             // store draft
             createProjectDraft d = createProjectDraft.getInstance();
@@ -126,9 +183,14 @@ public class createProjectController extends sideBarPaneController {
             d.startDate = s;
             d.endDate = e;
             d.duration = duration;
+            // NOTE: if your createProjectDraft has a durationUnit field, uncomment and use it.
+            // d.durationUnit = durationUnit;
 
             // go to createViewProject
-            openInnerView("createViewProject.fxml");
+            sideBarPaneController p = parent();
+            if (p != null) {
+                p.openAddOverlay("createViewProject.fxml");
+            }
 
         } catch (Exception ex) {
             showError(ex.getMessage());
@@ -149,5 +211,39 @@ public class createProjectController extends sideBarPaneController {
         Alert a = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
         a.setHeaderText(null);
         a.showAndWait();
+    }
+
+    // ===== AddOverlayForm =====
+    @Override
+    public boolean hasUnsavedChanges() {
+        return (instanceNameTxt != null && instanceNameTxt.getText() != null && !instanceNameTxt.getText().trim().isEmpty())
+                || (siteEngineerBox != null && siteEngineerBox.getValue() != null)
+                || (projectTypeBox != null && projectTypeBox.getValue() != null)
+                || (buildingBox != null && buildingBox.getValue() != null)
+                || (levelBox != null && levelBox.getValue() != null)
+                || (contractValueTxt != null && contractValueTxt.getText() != null && !contractValueTxt.getText().trim().isEmpty())
+                || (addressTxt != null && addressTxt.getText() != null && !addressTxt.getText().trim().isEmpty())
+                || (startDatePicker != null && startDatePicker.getValue() != null)
+                || (endDatePicker != null && endDatePicker.getValue() != null);
+    }
+
+    @Override
+    public boolean isFormValid() {
+        return instanceNameTxt != null && instanceNameTxt.getText() != null && !instanceNameTxt.getText().trim().isEmpty()
+                && siteEngineerBox != null && siteEngineerBox.getValue() != null
+                && projectTypeBox != null && projectTypeBox.getValue() != null
+                && buildingBox != null && buildingBox.getValue() != null
+                && levelBox != null && levelBox.getValue() != null
+                && contractValueTxt != null && contractValueTxt.getText() != null && !contractValueTxt.getText().trim().isEmpty()
+                && addressTxt != null && addressTxt.getText() != null && !addressTxt.getText().trim().isEmpty()
+                && startDatePicker != null && startDatePicker.getValue() != null
+                && endDatePicker != null && endDatePicker.getValue() != null
+                && durationTxt != null && durationTxt.getText() != null && !durationTxt.getText().trim().isEmpty()
+                && durationUnitCombo != null && durationUnitCombo.getValue() != null;
+    }
+
+    @Override
+    public String getValidationMessage() {
+        return "Please fill all required fields before closing (Instance Name, Site Engineer, Type, Building, Level, Contract Value, Address, Start/End Dates, Duration, Duration Unit).";
     }
 }

@@ -46,6 +46,24 @@ public class viewProjectsController implements loadPaneAware {
         this.loadPane = loadPane;
     }
 
+    @FXML
+    private void onAddNewProject() {
+        sideBarPaneController parent =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+
+        if (parent != null) {
+            parent.openAddOverlay("createProject.fxml"); // <-- your add page fxml
+        } else {
+            System.out.println("SIDEBAR_CONTROLLER not found on loadPane.");
+        }
+    }
+
+    @FXML
+    private void onClose() {
+        sideBarPaneController parent =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        if (parent != null) parent.closeAddOverlay();
+    }
 
 
     private StatusFilter statusFilter = StatusFilter.ALL;
@@ -63,6 +81,10 @@ public class viewProjectsController implements loadPaneAware {
             choiceUserLbl.setVisible(true);
             addBtn.setVisible(true);
         }
+
+        addBtn.setOnAction(e->{
+            onAddNewProject();
+        });
 
         setAllDataInChoiceBox();
 

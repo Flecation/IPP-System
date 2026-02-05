@@ -4,14 +4,8 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
-import IPPSystem.Models.projects;
-import IPPSystem.Models.skills;
-import IPPSystem.Models.tasks;
-import IPPSystem.Models.workItems;
-import IPPSystem.Utils.calculationHelper;
-import IPPSystem.Utils.loadPaneAware;
-import IPPSystem.Utils.messageBoxService;
-import IPPSystem.Utils.utils;
+import IPPSystem.Models.*;
+import IPPSystem.Utils.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -33,7 +27,6 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-import static IPPSystem.Controllers.dashboardController.loginUser;
 
 public class workItemDetailsController implements loadPaneAware {
 
@@ -75,6 +68,7 @@ public class workItemDetailsController implements loadPaneAware {
     @FXML private TableColumn<skills, String> viewSkillCol;
     @FXML private TableColumn<skills, Double> viewQtyCol;
 
+    // ===== Task table =====
     @FXML private TableView<tasks> taskTable;
     @FXML private TableColumn<tasks, String> taskNameCol;
     @FXML private TableColumn<tasks, Double> taskDurationCol;
@@ -96,6 +90,8 @@ public class workItemDetailsController implements loadPaneAware {
 
     private StackPane loadPane;
 
+    private users loginUser = session.getInstance().getUser();
+    private projects project;
     @Override
     public void setLoadPane(StackPane loadPane) {
         this.loadPane = loadPane;
@@ -134,6 +130,7 @@ public class workItemDetailsController implements loadPaneAware {
         if (viewSkillCol != null) viewSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
         if (viewQtyCol != null) viewQtyCol.setCellValueFactory(new PropertyValueFactory<>("projectLaborQty"));
 
+        // Nice placeholders
         if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
         if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
 
@@ -144,6 +141,7 @@ public class workItemDetailsController implements loadPaneAware {
 
     public void setWorkItem(workItems item, projects project) {
         this.workItem = item;
+        this.project = project;
         if (item == null) return;
 
         // Supervisor can't edit (same style as your projectDetailsController)
@@ -155,9 +153,10 @@ public class workItemDetailsController implements loadPaneAware {
         if (taskTable != null) taskTable.setItems(database.getAllTasksByAssignWorkItem(item.getAssignWorkItemId()));
         if (viewSkillTable != null) viewSkillTable.setItems(database.getAllSkillByAssignWorkItemDetails(item.getAssignWorkItemId()));
 
+        // Load baseline fields
         reloadFieldsFromModel();
 
-        // Load EVM numbers
+        // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
         backToProjectDetails.setOnAction(e->{utils.openProjectDetails(project,null);});
 
@@ -195,6 +194,10 @@ public class workItemDetailsController implements loadPaneAware {
         });
     }
 
+    // ------------------------------------------------------------
+    // Task action column
+    // ------------------------------------------------------------
+
     private void openEditTaskDialog(tasks task) {
         if (task == null) return;
 
@@ -218,41 +221,16 @@ public class workItemDetailsController implements loadPaneAware {
         grid.setPadding(new Insets(10));
 
         TextField durationTxt = new TextField(String.valueOf(task.getProjectDuration()));
-
+        TextField startTxt = new TextField(task.getStartDate() == null ? "" : task.getStartDate().toString());
+        TextField endTxt = new TextField(task.getEndDate() == null ? "" : task.getEndDate().toString());
 
         durationTxt.setPromptText("Duration (days)");
-
+        startTxt.setPromptText("Start date (yyyy-MM-dd)");
+        endTxt.setPromptText("End date (yyyy-MM-dd)");
 
         grid.addRow(0, new Label("Duration"), durationTxt);
-
-        DatePicker startPicker = new DatePicker(task.getStartDate() == null ? null : task.getStartDate().toLocalDate());
-        DatePicker endPicker   = new DatePicker(task.getEndDate() == null ? null : task.getEndDate().toLocalDate());
-
-// Optional: force a consistent display format (yyyy-MM-dd)
-        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
-        StringConverter<LocalDate> converter = new StringConverter<>() {
-            @Override public String toString(LocalDate date) {
-                return date == null ? "" : fmt.format(date);
-            }
-            @Override public LocalDate fromString(String s) {
-                return (s == null || s.trim().isEmpty()) ? null : LocalDate.parse(s.trim(), fmt);
-            }
-        };
-        startPicker.setConverter(converter);
-        endPicker.setConverter(converter);
-        startPicker.setPromptText("yyyy-MM-dd");
-        endPicker.setPromptText("yyyy-MM-dd");
-
-// If you want: user must pick from calendar (no manual typing)
-        startPicker.setEditable(false);
-        endPicker.setEditable(false);
-
-        grid.addRow(1, new Label("Start"), startPicker);
-        grid.addRow(2, new Label("End"), endPicker);
-
-
-        LocalDate start = startPicker.getValue();
-        LocalDate end = endPicker.getValue();
+        grid.addRow(1, new Label("Start"), startTxt);
+        grid.addRow(2, new Label("End"), endTxt);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -266,23 +244,42 @@ public class workItemDetailsController implements loadPaneAware {
             if (btn != saveBtnType) return;
 
             Double dur = tryParseDouble(durationTxt.getText());
-
+            LocalDate start = tryParseDate(startTxt.getText());
+            LocalDate end = tryParseDate(endTxt.getText());
 
             if (dur == null || dur <= 0) {
                 messageBoxService.toast("Invalid Duration", "Please enter a duration (> 0).", notificationType.WRONG);
                 return;
             }
-
-
-            tasks updated = new tasks();
+            if (start == null || end == null) {
+                messageBoxService.toast("Invalid Date",
+                        "Use yyyy-MM-dd or dd-MMM-yyyy (e.g., 2026-01-14 or 14-JAN-2026).",
+                        notificationType.WRONG);
+                return;
+            }
+            if (end.isBefore(start)) {
+                messageBoxService.toast("Invalid Date Range", "End date cannot be before start date.", notificationType.WRONG);
+                return;
+            }
+// Optional: force a consistent display format (yyyy-MM-dd)
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override public String toString(LocalDate date) {
+                return date == null ? "" : fmt.format(date);
+            }
+            @Override public LocalDate fromString(String s) {
+                return (s == null || s.trim().isEmpty()) ? null : LocalDate.parse(s.trim(), fmt);
+            }
+        };
+         tasks updated = new tasks();
             updated.setAssignTaskId(task.getAssignTaskId());
             updated.setProjectDuration(dur);
             updated.setStartDate(Date.valueOf(start));
             updated.setEndDate(Date.valueOf(end));
-
             saveTaskEditAsync(updated);
         });
     }
+
 
     private void saveTaskEditAsync(tasks updated) {
         if (updated == null || workItem == null) return;
@@ -343,16 +340,19 @@ public class workItemDetailsController implements loadPaneAware {
                 double ev  = d.ev();
                 double ac  = d.ac();
 
+                // ===== Cost card =====
                 safeSet(totalCost, formatMoney(bac));
                 safeSet(actualCost, formatMoney(ac));
                 safeSet(actualCostPercent, formatPercent(ac, bac));
                 if (actualCostProgress != null) actualCostProgress.setProgress(clamp01(bac <= 0 ? 0 : ac / bac));
 
+                // ===== Earned value card =====
                 safeSet(totalEarnValue, formatMoney(bac));
                 safeSet(usedEarnValue, formatMoney(ev));
                 safeSet(earnValuePercent, formatPercent(ev, bac));
                 if (earnValueProgress != null) earnValueProgress.setProgress(clamp01(bac <= 0 ? 0 : ev / bac));
 
+                // ===== SPI / CPI =====
                 safeSet(spiCircleRate, formatIndex(d.spi()));
                 safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
                 applyCircleProgress(spiCircle, d.spi());
@@ -371,6 +371,7 @@ public class workItemDetailsController implements loadPaneAware {
     private void reloadFieldsFromModel() {
         if (workItem == null) return;
 
+        // View-only labels
         safeSet(viewBudget, formatMoney(workItem.getProjectCost()));
         safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
         safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
@@ -455,6 +456,7 @@ public class workItemDetailsController implements loadPaneAware {
 
         circle.getStrokeDashArray().setAll(circumference);
 
+        // 1.0 => full ring, clamp anything above 1 to full ring
         double p = (idx == null) ? 0 : clamp01(idx);
         circle.setStrokeDashOffset(circumference * (1 - p));
     }
