@@ -4,7 +4,7 @@ import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
-import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.storage;
 import IPPSystem.Utils.utils;
@@ -19,7 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import static IPPSystem.Controllers.navigationPaneController.user;
 import static IPPSystem.Utils.utils.showProjectCards;
 
 public class viewProjectsController implements loadPaneAware {

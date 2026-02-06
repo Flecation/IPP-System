@@ -73,13 +73,16 @@ public class engineerViewController {
 
 
     @FXML
-    void addNewEngineer(ActionEvent event) {
+    private void addNewEngineer() {
+        StackPane tabLoadPane = utils.findTabLoadPane(loadPane);
+        sideBarPaneController sb =
+                (sideBarPaneController) tabLoadPane.getProperties().get("SIDEBAR_CONTROLLER");
 
-        session.getInstance()
-                .getNavigationController()
-                .showModal("createSupervisorModal.fxml");
-
+        if (sb != null) {
+            sb.openAddOverlay("createLaborModal.fxml");
+        }
     }
+
 
 
 
@@ -253,11 +256,6 @@ public class engineerViewController {
         // No need to keep a loadPane reference; utils resolves the correct per-tab loadPane
         utils.viewUserInfo(engineer, managerSupervisorListPane);
     }
-
-
-
-
-
 
 
 }
