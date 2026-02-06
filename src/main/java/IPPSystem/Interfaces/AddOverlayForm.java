@@ -1,4 +1,4 @@
-package IPPSystem.Utils;
+package IPPSystem.Interfaces;
 
 public interface AddOverlayForm {
     /** True if required fields are filled and values look valid (basic UI validation). */

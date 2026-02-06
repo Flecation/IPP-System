@@ -1,6 +1,7 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Controllers.*;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -21,8 +22,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Stack;
 
 public class switchPage extends utils {
 

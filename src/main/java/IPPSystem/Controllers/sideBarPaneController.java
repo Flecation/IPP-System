@@ -1,24 +1,22 @@
 package IPPSystem.Controllers;
 
-import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
-import IPPSystem.Models.projects;
+import IPPSystem.Interfaces.AddOverlayForm;
+import IPPSystem.Interfaces.SearchablePage;
+import IPPSystem.Interfaces.SuggestablePage;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.*;
-import com.almasb.fxgl.ui.InGamePanel;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -31,12 +29,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import org.controlsfx.glyphfont.FontAwesome;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class sideBarPaneController extends navigationPaneController{
@@ -267,6 +262,11 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private Label dashboardIcon, projectIcon, userIcon, reportIcon, settingIcon, logoutIcon, changePwIcon, profileIcon;
 
+    private final javafx.stage.Popup suggestionPopup = new javafx.stage.Popup();
+    private final javafx.scene.control.ListView<String> suggestionList = new javafx.scene.control.ListView<>();
+    private java.util.List<String> currentSuggestions = java.util.List.of(); // updated by current page
+
+
     // Removed userViewImage field as it doesn't exist in FXML
     // Removed imageIconBtn field as it doesn't exist in FXML
 
@@ -277,38 +277,89 @@ public class sideBarPaneController extends navigationPaneController{
     private String currentInnerFxml = "viewProjects.fxml";
 
     private final HashMap<String, Parent> viewCache = new HashMap<>();
+    private final HashMap<String, Object> controllerCache = new HashMap<>();
+    private Object currentInnerController;
+
+    private final PauseTransition searchDebounce = new PauseTransition(Duration.millis(250));
+
 
     public void openInnerView(String fxml) {
         try {
             Parent view = viewCache.get(fxml);
+            Object controller = controllerCache.get(fxml);
 
             if (view == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
                 view = loader.load();
+                controller = loader.getController();
 
-                // ✅ Make sure controllers inside this tab can navigate using utils.openFxml(...)
-                // by injecting this tab's loadPane when supported.
-                Object controller = loader.getController();
-                currentAddController = controller;
+                // inject loadPane for inner controllers (your existing logic)
                 if (controller instanceof loadPaneAware aware) {
                     aware.setLoadPane(loadPane);
                 }
 
                 viewCache.put(fxml, view);
+                controllerCache.put(fxml, controller);
             }
 
             loadPane.getChildren().setAll(view);
             view.toFront();
             currentInnerFxml = fxml;
 
+            // ✅ set current controller so search can route to it
+            currentInnerController = controller;
+            bindSearchToCurrentPage();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    private void bindSearchToCurrentPage() {
+        if (searchTextField == null) return;
+
+        boolean canSearch = (currentInnerController instanceof SearchablePage);
+
+        // Optional: disable search if page doesn't support it
+        searchTextField.setDisable(!canSearch);
+
+        if (!canSearch) {
+            searchTextField.clear();
+        } else {
+            // when switching pages, run search again using current text
+            String txt = searchTextField.getText();
+            ((SearchablePage) currentInnerController).onSearch(txt == null ? "" : txt.trim());
+        }
+    }
+
+    private void setupSearchHandlers() {
+
+        // live typing with debounce (Chrome feel)
+        searchTextField.textProperty().addListener((obs, oldV, newV) -> {
+            if (!(currentInnerController instanceof SearchablePage sp)) return;
+
+            searchDebounce.stop();
+            searchDebounce.setOnFinished(e -> sp.onSearch(newV == null ? "" : newV.trim()));
+            searchDebounce.playFromStart();
+        });
+
+        // clear button
+        searchClearBtn.setOnMouseClicked(e -> {
+            searchTextField.clear();
+            if (currentInnerController instanceof SearchablePage sp) {
+                sp.onSearchClear();
+            }
+        });
+
+        // search icon just focuses the field (optional)
+        searchBtn.setOnMouseClicked(e -> searchTextField.requestFocus());
+    }
+
 
     @FXML
     public void initialize() {
+
+        setupSearchHandlers();
 
         // ✅ Let any inner controller access this sideBarPaneController (per-tab safe)
         loadPane.getProperties().put("SIDEBAR_CONTROLLER", this);
@@ -347,13 +398,10 @@ public class sideBarPaneController extends navigationPaneController{
 
         addNewPane.setVisible(false);
         basePane.setVisible(true);
-
-        setupAddOverlayOutsideClick();
         currentAddController = null;
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
-
 
 
         // Setup button click handlers
@@ -392,6 +440,8 @@ public class sideBarPaneController extends navigationPaneController{
         setFirstPage();
 
 //        utils.switchNewScene(logoutIcon,"login.fxml");
+        setupSuggestionPopup();
+        setupLiveSuggestions();
 
     }
 
@@ -408,7 +458,7 @@ public class sideBarPaneController extends navigationPaneController{
 
             if (!addNewPane.isVisible()) return;
 
-            if (currentAddController instanceof IPPSystem.Utils.AddOverlayForm form) {
+            if (currentAddController instanceof AddOverlayForm form) {
 
                 if (form.hasUnsavedChanges() && !form.isFormValid()) {
 //                    messageBoxService.(loadPane, notificationType.WARNING, form.getValidationMessage());
@@ -446,7 +496,7 @@ public class sideBarPaneController extends navigationPaneController{
             // allow the opened add-page controller to navigate too (optional but useful)
             Object controller = loader.getController();
             currentAddController = controller;
-            if (controller instanceof IPPSystem.Utils.loadPaneAware aware) {
+            if (controller instanceof loadPaneAware aware) {
                 aware.setLoadPane(loadPane);
             }
 
@@ -679,6 +729,7 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
+//    For the light and dark mode of circle
     private void translateCircle(Circle circle, Circle circle1) {
         TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
         TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
@@ -729,4 +780,95 @@ public class sideBarPaneController extends navigationPaneController{
             settingToggleCircle.setTranslateX(-10);
         }
     }
+
+//    For the search bar
+    private void setupSuggestionPopup() {
+        suggestionList.setMaxHeight(220);
+        suggestionList.setPrefWidth(320);
+
+        suggestionPopup.setAutoHide(true);
+        suggestionPopup.getContent().add(suggestionList);
+
+        // click suggestion -> put into search field + run search
+        suggestionList.setOnMouseClicked(e -> {
+            String selected = suggestionList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                searchTextField.setText(selected);
+                searchTextField.positionCaret(selected.length());
+                suggestionPopup.hide();
+                forwardSearchToCurrentPage(selected);
+            }
+        });
+
+        // keyboard enter on suggestion
+        suggestionList.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case ENTER -> {
+                    String selected = suggestionList.getSelectionModel().getSelectedItem();
+                    if (selected != null) {
+                        searchTextField.setText(selected);
+                        searchTextField.positionCaret(selected.length());
+                        suggestionPopup.hide();
+                        forwardSearchToCurrentPage(selected);
+                    }
+                }
+                case ESCAPE -> suggestionPopup.hide();
+            }
+        });
+    }
+
+    private void setupLiveSuggestions() {
+        searchTextField.textProperty().addListener((obs, oldV, newV) -> {
+            String q = (newV == null) ? "" : newV.trim();
+
+            // always forward live search to page (your filtering)
+            forwardSearchToCurrentPage(q);
+
+            // show suggestions when >= 1 character
+            if (q.length() < 1) {
+                suggestionPopup.hide();
+                return;
+            }
+
+            if (!(currentInnerController instanceof SuggestablePage sp)) {
+                suggestionPopup.hide();
+                return;
+            }
+
+            // get suggestions from current page
+            java.util.List<String> suggestions = sp.getSuggestions(q);
+
+            if (suggestions == null || suggestions.isEmpty()) {
+                suggestionPopup.hide();
+                return;
+            }
+
+            suggestionList.getItems().setAll(suggestions);
+
+            if (!suggestionPopup.isShowing()) {
+                var p = searchTextField.localToScreen(0, searchTextField.getHeight());
+                suggestionPopup.show(searchTextField, p.getX(), p.getY());
+            }
+        });
+
+        // arrow down goes into list
+        searchTextField.setOnKeyPressed(e -> {
+            if (e.getCode() == javafx.scene.input.KeyCode.DOWN && suggestionPopup.isShowing()) {
+                suggestionList.requestFocus();
+                suggestionList.getSelectionModel().selectFirst();
+            }
+            if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                suggestionPopup.hide();
+            }
+        });
+    }
+
+    private void forwardSearchToCurrentPage(String text) {
+        if (currentInnerController instanceof IPPSystem.Interfaces.SearchablePage sp) {
+            sp.onSearch(text == null ? "" : text.trim());
+        }
+    }
+
+
+
 }
