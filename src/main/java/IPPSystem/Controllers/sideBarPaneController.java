@@ -19,11 +19,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -43,7 +39,6 @@ import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Popup;
@@ -62,6 +57,9 @@ import java.time.LocalDate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javafx.animation.RotateTransition;
+
 
 public class sideBarPaneController extends navigationPaneController{
 
@@ -459,6 +457,19 @@ public class sideBarPaneController extends navigationPaneController{
 
     private final HashMap<String, ViewEntry> viewCache = new HashMap<>();
 
+    private boolean isOverlayFormFxml(String fxml) {
+        if (fxml == null) return false;
+        String s = fxml.toLowerCase();
+
+        // ✅ all create/add pages should NOT be cached
+        // You can tune this list/rule later
+        return s.startsWith("create")
+                || s.startsWith("add")
+                || s.contains("create")
+                || s.contains("add");
+    }
+
+
     //    For the catch the data in the load Pane and if click the open in new Tab btn to be work well
     public void openInnerView(String fxml) {
         openInnerView(fxml, null);
@@ -501,11 +512,32 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
+    private void reloadCurrentPage() {
+        try {
+            // 1) If current page supports custom reload, use it
+            Object ctrl = currentInnerController;
+            if (ctrl instanceof IPPSystem.Interfaces.ReloadablePage rp) {
+                rp.onReload();
+                return;
+            }
+
+            // 2) Otherwise force reload the FXML (clear cache + reload)
+            String fxml = currentInnerFxml;
+            if (fxml == null || fxml.isBlank()) return;
+
+            viewCache.remove(fxml);   // IMPORTANT: force FXMLLoader to run again
+            openInnerView(fxml);      // reload page
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            messageBoxService.toast("Reload failed", "Could not reload this page.", notificationType.ERROR);
+        }
+    }
+
 
 
     @FXML
     public void initialize() {
-
 
 //        ============ search bar action ================
         setupSuggestionPopup();
@@ -607,7 +639,12 @@ public class sideBarPaneController extends navigationPaneController{
         utils.setToolTip(darkIcon,"dark mode");
         utils.setToolTip(lightIcon,"light mode");
 
-        reloadBtn.setOnMouseClicked(e->data.reload());
+        reloadBtn.setOnMouseClicked(e -> {
+            playReloadSpin(reloadBtn);
+            reloadCurrentPage();
+        });
+
+
 
         setFirstPage();
 
@@ -618,14 +655,32 @@ public class sideBarPaneController extends navigationPaneController{
         syncThemeToggleUI();
 
         setupAddOverlayOutsideClick();      // call once here
-
-
-
+        
         setupLogoutHandlers();
     }
 
+    private void playReloadSpin(Node node) {
+        RotateTransition rt = new RotateTransition(Duration.millis(450), node);
+        rt.setByAngle(360);
+        rt.setCycleCount(1);
+        rt.play();
+    }
+
+
     //    For the add pane
     public void openAddOverlay(String fxml) {
+        // always clear overlay content
+        addNew.getChildren().clear();
+        currentAddController = null;
+
+// remove cached view so it never reuses old TextFields
+        viewCache.remove(fxml);
+
+// OPTIONAL: if it uses draft storage, clear it here too
+        if (fxml.equalsIgnoreCase("createProject.fxml")) {
+            createProjectDraft.getInstance().clear();
+        }
+
         try {
             // We reuse openInnerView() (same loader/cache logic + loadPaneAware injection),
             // but we must NOT replace the current center page permanently.
@@ -719,6 +774,9 @@ public class sideBarPaneController extends navigationPaneController{
         basePane.setOpacity(1.0);
 
         currentAddController = null;
+        // prevent stale data if user opens again
+        createProjectDraft.getInstance().clear(); // only if your project uses this draft
+
     }
 
     private void handleOverlayOutsideClick() {
@@ -1084,6 +1142,13 @@ public class sideBarPaneController extends navigationPaneController{
     private static final double LOGIN_W = 900;
     private static final double LOGIN_H = 535;
 
+    // ===== Notification dropdown sizing =====
+    private ScrollPane notiScroll;                 // wrapper around notificationList (created at runtime)
+    private static final double NOTI_EMPTY_H = 70; // when no notifications
+    private static final double NOTI_ITEM_H  = 92; // estimated height per card (tune if you want)
+    private static final double NOTI_MAX_H   = 360;// max dropdown height before scroll
+
+
     private void setupNotificationUI() {
         if (notificationWrap == null || notificationDropdown == null || notificationList == null || notificationDot == null) {
             return; // FXML not updated yet
@@ -1093,6 +1158,23 @@ public class sideBarPaneController extends navigationPaneController{
         notificationDropdown.setVisible(false);
         notificationDropdown.setManaged(false);
         notificationDot.setVisible(false);
+
+// Make the dropdown scroll when there are many notifications (no FXML change needed)
+        // Make the dropdown scroll when there are many notifications (no FXML change needed)
+        try {
+            if (notificationDropdown.getChildren().size() == 1 && notificationDropdown.getChildren().get(0) == notificationList) {
+                notiScroll = new ScrollPane(notificationList);
+                notiScroll.setFitToWidth(true);
+                notiScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                notiScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                notiScroll.getStyleClass().add("noti-scroll");
+
+                notificationDropdown.getChildren().setAll(notiScroll);
+            }
+        } catch (Exception ignored) {
+        }
+
+
 
         // toggle dropdown on bell click
         notificationWrap.setOnMouseClicked(e -> {
@@ -1117,6 +1199,29 @@ public class sideBarPaneController extends navigationPaneController{
             notificationDropdown.setVisible(false);
             notificationDropdown.setManaged(false);
         });
+    }
+
+    private void applyNotificationDropdownSizing(int itemCount) {
+        if (notificationDropdown == null) return;
+
+        double targetH;
+
+        if (itemCount <= 0) {
+            targetH = NOTI_EMPTY_H;
+        } else {
+            targetH = Math.min(NOTI_MAX_H, (itemCount * NOTI_ITEM_H) + 16);
+        }
+
+        notificationDropdown.setPrefHeight(targetH);
+        notificationDropdown.setMaxHeight(targetH);
+        notificationDropdown.setMinHeight(Region.USE_PREF_SIZE);
+
+        // if scroll wrapper exists, also size its viewport
+        if (notiScroll != null) {
+            notiScroll.setPrefViewportHeight(targetH);
+            notiScroll.setPrefHeight(targetH);
+            notiScroll.setMaxHeight(targetH);
+        }
     }
 
     private boolean isDescendantOf(Node node, Node possibleParent) {
@@ -1145,10 +1250,22 @@ public class sideBarPaneController extends navigationPaneController{
 
         task.setOnSucceeded(e -> {
             java.util.List<Node> nodes = task.getValue();
+
+            // Always show "No new notifications" if empty
+            if (nodes == null || nodes.isEmpty()) {
+                notificationList.getChildren().setAll(notificationEmpty("No new notifications"));
+                notificationDot.setVisible(false);
+                applyNotificationDropdownSizing(0);
+                return;
+            }
+
             notificationList.getChildren().setAll(nodes);
 
-            boolean hasNoti = nodes != null && !nodes.isEmpty();
-            notificationDot.setVisible(hasNoti);
+            // red dot if has notifications
+            notificationDot.setVisible(true);
+
+            // dynamic sizing
+            applyNotificationDropdownSizing(nodes.size());
         });
 
         task.setOnFailed(e -> {
@@ -1210,6 +1327,7 @@ public class sideBarPaneController extends navigationPaneController{
     private java.util.List<Node> buildSupervisorNotifications(int supervisorId) {
         java.util.List<Node> list = new java.util.ArrayList<>();
 
+
         // Condition 2: if supervisor has working project (inProgress/delay) -> don't show anything
         String workingSql =
                 "SELECT COUNT(*) AS c " +
@@ -1217,7 +1335,6 @@ public class sideBarPaneController extends navigationPaneController{
                         "JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
                         "WHERE ap.supervisorId = ? AND (ps.projectStatusName = 'inProgress' OR ps.projectStatusName = 'delay')";
         boolean hasWorking = false;
-
         try (Connection con = IPPSystem.DAO.databaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(workingSql)) {
             ps.setInt(1, supervisorId);
@@ -1229,8 +1346,8 @@ public class sideBarPaneController extends navigationPaneController{
         }
 
         if (hasWorking) {
-            // no notification if already working (your requested logic)
-            return java.util.Collections.emptyList();
+            list.add(notificationEmpty("No new notifications"));
+            return list;
         }
 
         // Condition 1: assigned projects in PLANNING for this supervisor

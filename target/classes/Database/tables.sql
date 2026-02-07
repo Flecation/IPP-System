@@ -136,9 +136,6 @@ create table assignProjects (
     projectLocation varchar(255),
     projectOverHeadCost double,
     projectStatus int,
-    actualCost double,
-    progress_percentage DOUBLE,
-    targetEndDate date,
     FOREIGN KEY (projectStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

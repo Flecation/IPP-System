@@ -27,7 +27,7 @@ import java.util.Set;
 import static IPPSystem.Controllers.navigationPaneController.user;
 import static IPPSystem.Utils.utils.showProjectCards;
 
-public class viewProjectsController  implements loadPaneAware, SearchablePage, SuggestablePage{
+public class viewProjectsController  implements loadPaneAware, SearchablePage, SuggestablePage, ReloadablePage {
 
     @FXML private VBox viewProjectPane;
     @FXML private Button activeBtn;
@@ -78,6 +78,25 @@ public class viewProjectsController  implements loadPaneAware, SearchablePage, S
                 (sideBarPaneController) lp.getProperties().get("SIDEBAR_CONTROLLER");
         if (parent != null) parent.closeAddOverlay();
     }
+
+    @Override
+    public void onReload() {
+        try {
+            // 1) Reload data from DB into your storage cache (if your storage reload does that)
+            data.reload();
+
+            // 2) Refresh choice boxes (supervisor list, project types, etc.)
+            // If this method already calls async internally, you can use it directly.
+            setAllDataInChoiceBox();
+
+            // 3) Re-apply all current filters + redraw cards
+            applyFilters();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
 
     private StatusFilter statusFilter = StatusFilter.ALL;

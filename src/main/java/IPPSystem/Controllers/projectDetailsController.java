@@ -24,7 +24,7 @@ import java.util.*;
 
 import static IPPSystem.Controllers.dashboardController.loginUser;
 
-public class projectDetailsController implements loadPaneAware, SearchablePage, SuggestablePage, NavAware, TabStateful {
+public class projectDetailsController implements loadPaneAware, SearchablePage, SuggestablePage, NavAware, TabStateful , ReloadablePage{
 
     @FXML private Label projectName;
     @FXML private Label projectStatus;
@@ -197,6 +197,14 @@ public class projectDetailsController implements loadPaneAware, SearchablePage, 
         if (nav != null) return nav;
         if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
         return nav;
+    }
+
+    @Override
+    public void onReload() {
+        if (project == null) return;
+
+        // Re-run your existing loader (this refreshes header, workItems, dashboard, etc.)
+        setProjectData(project);
     }
 
     @FXML

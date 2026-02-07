@@ -2,6 +2,7 @@ package IPPSystem.Controllers;
 
 import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.projectStatus;
+import IPPSystem.Constants.notificationType;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.skills;
 import IPPSystem.Models.tasks;
@@ -11,11 +12,14 @@ import IPPSystem.Models.users;
 import IPPSystem.Utils.createProjectDraft;
 
 import IPPSystem.Utils.storage;
+import IPPSystem.Utils.messageBoxService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 
 import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Utils.utils;
@@ -60,29 +64,23 @@ public class createViewProjectController implements loadPaneAware {
 
     @FXML private Button projectConfirmBtn;
     @FXML private Button projectCancelBtn;
-    @FXML private Button pRedoBtn;
 
     // ===== Categories =====
     @FXML private TableView<workItems> wItemTable;
     @FXML private TableColumn<workItems, String> wINameCol;
     @FXML private TableColumn<workItems, Void> wIActionCol;
-    @FXML private Button wIRedoBtn;
 
     // ===== Work item details =====
     @FXML private TextField wIBudgetTxt;
     @FXML private TextField wISDateTxt;
     @FXML private TextField wIEDateTxt;
     @FXML private TextField wIDurationTxt; // FIXED: must be TextField in FXML
-    @FXML private TextField wITWorkerTxt;
-    @FXML private Button wIDetailRedoBtn;
 
     // ===== Skills =====
     @FXML private TableView<SkillRow> skillTable;
     @FXML private TableColumn<SkillRow, String> skillNameCol;
     @FXML private TableColumn<SkillRow, Double> skillQtyCol;
     @FXML private TableColumn<SkillRow, Void> skillActionCol;
-    @FXML private Button skillAddBtn;
-    @FXML private Button skillRedoBtn;
 
     // ===== Tasks =====
     @FXML private TableView<TaskRow> taskTable;
@@ -92,9 +90,6 @@ public class createViewProjectController implements loadPaneAware {
     @FXML private TableColumn<TaskRow, String> taskSDateCol;
     @FXML private TableColumn<TaskRow, String> taskEDateCol;
     @FXML private TableColumn<TaskRow, Void> taskActionCol;
-    @FXML private Button taskAddBtn;
-    @FXML private Button taskRedoBtn;
-
     // ===== Local state =====
     private final ObservableList<workItems> categoryList = FXCollections.observableArrayList();
     private final ObservableList<SkillRow> skillList = FXCollections.observableArrayList();
@@ -113,21 +108,25 @@ public class createViewProjectController implements loadPaneAware {
         wINameCol.setCellValueFactory(new PropertyValueFactory<>("workItemName"));
         wItemTable.setItems(categoryList);
 
-        // Action col (remove from list)
+// Action col (Edit/Delete - Premium gated)
         wIActionCol.setCellFactory(col -> new TableCell<>() {
-            private final Button del = new Button("Delete");
+            private final Button edit = makeIconBtn("✎");
+            private final Button del  = makeIconBtn("🗑");
+            private final HBox box = new HBox(8, edit, del);
+
             {
-                del.setOnAction(e -> {
-                    workItems wi = getTableView().getItems().get(getIndex());
-                    removeWorkItemAndChildren(wi);
-                });
+                box.setAlignment(Pos.CENTER);
+                edit.setOnAction(e -> toastNotAllowed());
+                del.setOnAction(e -> toastNotAllowed());
             }
+
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : del);
+                setGraphic(empty ? null : box);
             }
         });
 
+        // selection listener
         // selection listener
         wItemTable.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
             selectedWorkItem = n;
@@ -140,19 +139,25 @@ public class createViewProjectController implements loadPaneAware {
         skillQtyCol.setCellValueFactory(new PropertyValueFactory<>("laborQty"));
         skillTable.setItems(skillList);
         skillActionCol.setCellFactory(col -> new TableCell<>() {
-            private final Button del = new Button("Delete");
+            private final Button edit = makeIconBtn("✎");
+            private final Button del  = makeIconBtn("🗑");
+            private final HBox box = new HBox(8, edit, del);
+
             {
-                del.setOnAction(e -> {
-                    SkillRow row = getTableView().getItems().get(getIndex());
-                    skillList.remove(row);
-                    refreshSkillTaskTables();
-                });
+                box.setAlignment(Pos.CENTER);
+                edit.setOnAction(e -> toastNotAllowed());
+                del.setOnAction(e -> toastNotAllowed());
             }
+
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : del);
+                setGraphic(empty ? null : box);
             }
         });
+
+
+        // Tasks table
+
 
         // Tasks table
         taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
@@ -162,29 +167,42 @@ public class createViewProjectController implements loadPaneAware {
         taskEDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         taskTable.setItems(taskList);
         taskActionCol.setCellFactory(col -> new TableCell<>() {
-            private final Button del = new Button("Delete");
+            private final Button edit = makeIconBtn("✎");
+            private final Button del  = makeIconBtn("🗑");
+            private final HBox box = new HBox(8, edit, del);
+
             {
-                del.setOnAction(e -> {
-                    TaskRow row = getTableView().getItems().get(getIndex());
-                    taskList.remove(row);
-                    refreshSkillTaskTables();
-                });
+                box.setAlignment(Pos.CENTER);
+                edit.setOnAction(e -> toastNotAllowed());
+                del.setOnAction(e -> toastNotAllowed());
             }
+
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : del);
+                setGraphic(empty ? null : box);
             }
         });
 
-        // Button actions
-        wIRedoBtn.setOnAction(e -> loadWorkCategoriesFromTemplate());
-        wIDetailRedoBtn.setOnAction(e -> clearWorkItemForm());
-        pRedoBtn.setOnAction(e -> clearProjectForm());
-        skillRedoBtn.setOnAction(e -> clearSkillForSelected());
-        taskRedoBtn.setOnAction(e -> clearTaskForSelected());
+// ===== Make preview fields read-only + show toast on click =====
+        lockReadOnly(pTypeTxt);
+        lockReadOnly(pManagerTxt);
+        lockReadOnly(pLevelTxt);
+        lockReadOnly(pBuildingTxt);
+        lockReadOnly(pSDateTxt);
+        lockReadOnly(pEDateTxt);
+        lockReadOnly(pContractValueTxt);
+        lockReadOnly(pDurationTxt);
+        lockReadOnly(pAddressTxt);
 
-        skillAddBtn.setOnAction(e -> addSkillForSelected());
-        taskAddBtn.setOnAction(e -> addTaskForSelected());
+        lockReadOnly(wIBudgetTxt);
+        lockReadOnly(wISDateTxt);
+        lockReadOnly(wIEDateTxt);
+        lockReadOnly(wIDurationTxt);
+
+
+
+        // Button actions
+
 
         projectConfirmBtn.setOnAction(e -> onConfirmSave());
         projectCancelBtn.setOnAction(e -> {
@@ -384,7 +402,6 @@ public class createViewProjectController implements loadPaneAware {
         wISDateTxt.setText(b.start == null ? "" : b.start.toString());
         wIEDateTxt.setText(b.end == null ? "" : b.end.toString());
         wIDurationTxt.setText(b.duration == null ? "" : String.valueOf(b.duration));
-        wITWorkerTxt.setText(b.laborQty == null ? "" : String.valueOf(b.laborQty));
     }
 
     private void applyWorkItemFormToBaseline() {
@@ -395,7 +412,6 @@ public class createViewProjectController implements loadPaneAware {
         b.start = parseLocalDateOrNull(wISDateTxt.getText());
         b.end = parseLocalDateOrNull(wIEDateTxt.getText());
         b.duration = parseDoubleOrNull(wIDurationTxt.getText());
-        b.laborQty = parseDoubleOrNull(wITWorkerTxt.getText());
     }
 
     private void clearWorkItemForm() {
@@ -403,7 +419,6 @@ public class createViewProjectController implements loadPaneAware {
         wISDateTxt.clear();
         wIEDateTxt.clear();
         wIDurationTxt.clear();
-        wITWorkerTxt.clear();
     }
 
     private void removeWorkItemAndChildren(workItems wi) {
@@ -840,4 +855,34 @@ public class createViewProjectController implements loadPaneAware {
         public String getStartDate() { return startDate; }
         public String getEndDate() { return endDate; }
     }
+
+
+    // ===== Premium-gated UI helpers =====
+    private void toastNotAllowed() {
+        messageBoxService.toast("Not Allow To Edit", "Buy Premium To Edit!!", notificationType.INFO);
+    }
+
+    private Button makeIconBtn(String iconText) {
+        Button b = new Button(iconText);
+        b.setFocusTraversable(false);
+        b.getStyleClass().add("cp-icon-btn"); // safe even if css doesn't contain it
+        b.setMinWidth(34);
+        b.setPrefWidth(34);
+        b.setMinHeight(30);
+        b.setPrefHeight(30);
+        return b;
+    }
+
+    private void lockReadOnly(TextField tf) {
+        if (tf == null) return;
+        tf.setEditable(false);
+        tf.setFocusTraversable(false);
+        tf.setOnMouseClicked(e -> {
+            toastNotAllowed();
+            e.consume();
+        });
+        tf.setOnKeyTyped(e -> e.consume());
+        tf.setOnKeyPressed(e -> e.consume());
+    }
+
 }
