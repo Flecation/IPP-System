@@ -18,8 +18,8 @@
     -fx-border-color: #E18600;
     -fx-border-radius:10;
     -fx-background-radius:10;
-
 }
+
 .sub-title{
     -fx-text-fill: #011121;
     -fx-font-weight: medium;
@@ -79,4 +79,27 @@
 .status-default {
     -fx-text-fill: black;
     -fx-font-weight: bold;
+}
+
+
+.qty-txt{
+    -fx-text-fill: #E18600;
+}
+
+
+.box-border{
+    -fx-background-color: #fefefefe;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+    -fx-font-size:20;
+}
+
+.box-border:hover{
+    -fx-background-color: none;
+    -fx-border-color: #E18600;
+    -fx-border-width: 0.5;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+        -fx-font-size:20;
+
 }

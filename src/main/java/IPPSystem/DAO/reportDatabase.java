@@ -1,6 +1,7 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.DailyReport;
+import IPPSystem.Models.DailyReportLaborView;
 import IPPSystem.Models.ReportLabor;
 import IPPSystem.Models.projects;
 
@@ -37,25 +38,25 @@ public class reportDatabase {
         return 0;
     }
 
-    public static List<DailyReport> getAllReports(Integer engineerId) {
+    public static List<DailyReport> getAllReports(Integer supervisorId) {
         List<DailyReport> list = new ArrayList<>();
+        String sql = """
+        SELECT dr.dailyReportId, dr.assignProjectId, ap.projectInstanceName, pt.typeName AS projectTypeName,
+               dr.reportDate, dr.issue, u.userName AS supervisorName
+        FROM dailyReports dr
+        JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId
+        LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId
+        LEFT JOIN users u ON dr.supervisorId = u.userId
+    """;
 
-        String sql = "SELECT dr.dailyReportId, dr.assignProjectId, ap.projectInstanceName, dr.reportDate, dr.issue, u.userName AS supervisorName " +
-                "FROM dailyReports dr " +
-                "JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId " +
-                "JOIN users u ON dr.supervisorId = u.userId ";
-
-
-        if (engineerId != null) {
-            sql += "WHERE ap.supervisorId = ? ";
+        if (supervisorId != null) {
+            sql += " WHERE dr.supervisorId = ?";
         }
 
-        sql += "ORDER BY dr.reportDate DESC"; // Most recent first
+        sql += " ORDER BY dr.reportDate DESC";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            if (engineerId != null) {
-                ps.setInt(1, engineerId);
-            }
+            if (supervisorId != null) ps.setInt(1, supervisorId);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -63,21 +64,63 @@ public class reportDatabase {
                         rs.getInt("dailyReportId"),
                         rs.getInt("assignProjectId"),
                         rs.getString("projectInstanceName"),
+                        rs.getString("projectTypeName"),
                         rs.getDate("reportDate").toLocalDate(),
-                        null, null, null,
                         rs.getString("issue"),
+                        null,
                         null,
                         rs.getString("supervisorName")
                 ));
-
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
+
+
+//    public static List<DailyReport> getAllReports(Integer engineerId) {
+//        List<DailyReport> list = new ArrayList<>();
+//
+//        String sql = "SELECT dr.dailyReportId, dr.assignProjectId, ap.projectInstanceName, dr.reportDate, dr.issue, u.userName AS supervisorName " +
+//                "FROM dailyReports dr " +
+//                "JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId " +
+//                "JOIN users u ON dr.supervisorId = u.userId ";
+//
+//
+//        if (engineerId != null) {
+//            sql += "WHERE ap.supervisorId = ? ";
+//        }
+//
+//        sql += "ORDER BY dr.reportDate DESC"; // Most recent first
+//
+//        try (PreparedStatement ps = con.prepareStatement(sql)) {
+//            if (engineerId != null) {
+//                ps.setInt(1, engineerId);
+//            }
+//
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                list.add(new DailyReport(
+//                        rs.getInt("dailyReportId"),
+//                        rs.getInt("assignProjectId"),
+//                        rs.getString("projectInstanceName"),
+//                        rs.getDate("reportDate").toLocalDate(),
+//                        null, null, null,
+//                        rs.getString("issue"),
+//                        null,
+//                        rs.getString("supervisorName")
+//                ));
+//
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return list;
+//    }
 
 
 
@@ -117,6 +160,7 @@ public class reportDatabase {
                 report.setProjectStatus(rs.getString("projectStatus"));
                 report.setSupervisorName(rs.getString("supervisorName"));
 
+
                 reports.add(report);
             }
         } catch (SQLException e) {
@@ -125,5 +169,126 @@ public class reportDatabase {
 
         return reports;
     }
+
+
+
+    public static List<DailyReportLaborView> getDailyReportLabors(int dailyReportId) {
+
+        List<DailyReportLaborView> list = new ArrayList<>();
+
+        String sql = """
+        SELECT 
+            l.laborName,
+            s.skillName,
+            drl.dailyWage,
+            drl.workHours,
+            drl.remark
+        FROM dailyReportLabors drl
+        JOIN labors l ON drl.laborId = l.laborId
+        LEFT JOIN skills s ON l.skillId = s.skillId
+        WHERE drl.dailyReportId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new DailyReportLaborView(
+                        rs.getString("laborName"),
+                        rs.getString("skillName"),
+                        rs.getDouble("dailyWage"),
+                        rs.getDouble("workHours"),
+                        rs.getString("remark")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+
+    public static double getTotalWorkedHours(int dailyReportId) {
+
+        String sql = """
+        SELECT COALESCE(SUM(workHours),0)
+        FROM dailyReportLabors
+        WHERE dailyReportId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public static double getTotalDailyLaborCost(int dailyReportId) {
+
+        String sql = """
+        SELECT COALESCE(SUM(dailyWage),0)
+        FROM dailyReportLabors
+        WHERE dailyReportId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public static double getCompletedQty(int dailyReportId) {
+
+        String sql = """
+        SELECT COALESCE(SUM(completedQty),0)
+        FROM dailyReportTasks
+        WHERE dailyReportId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public static double getRemainQty(int assignWorkItemId) {
+
+        String sql = """
+        SELECT 
+            COALESCE(SUM(at.plannedQty),0) 
+            - COALESCE(SUM(drt.completedQty),0) AS remainQty
+        FROM assignTasks at
+        LEFT JOIN dailyReportTasks drt 
+            ON at.assignTaskId = drt.assignTaskId
+        WHERE at.assignWorkItemId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, assignWorkItemId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble("remainQty");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 }

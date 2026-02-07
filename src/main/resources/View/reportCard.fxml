@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER" minWidth="950.0" prefHeight="90.0" styleClass="report-card" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.reportCardController">
+<HBox fx:id="cardRoot" alignment="CENTER" minWidth="950.0" prefHeight="90.0" styleClass="report-card" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.reportCardController">
    <children>
       <HBox spacing="12.0" HBox.hgrow="ALWAYS">
          <children>

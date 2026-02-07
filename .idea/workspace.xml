@@ -5,45 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="unnessary file delete">
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allReportController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportCardController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2026_12_59_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2026_12_59_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_22_2026_2_20_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_22_2026_2_20_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_29_2026_8_35_AM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_29_2026_8_35_AM__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportViewDetailController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/DailyReportLaborView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/CreateReportNewController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/TableInCardController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/ViewReportController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createLaborController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createLaborController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborRowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allReportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createSupervisorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createSupervisorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/laborDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/projectDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/reportDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/reportDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/skillDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/skillDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/workItemDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/DailyReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/DailyReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/m1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/projects.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/projects.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Models/users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/createrReport.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/createrReport.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/managerSupervisorList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/TableInCard.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/ViewReportNew.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/ViewReportNew.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createLaborModal.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createLaborModal.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/laborRow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/laborRow.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/report.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/report.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/report.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportCard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportCard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportViewDeatail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportViewDetail.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

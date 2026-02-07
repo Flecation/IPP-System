@@ -579,13 +579,25 @@ public class sideBarPaneController extends navigationPaneController{
         });
 
         // Report navigation
+//        reportViewBtn.setOnMouseClicked(e -> {
+//            openInnerView("allReports.fxml");
+//            linkButton.setTabButtonName("Report");
+//        });
+//        reportIconBtn.setOnMouseClicked(e -> {
+//
+//            openInnerView("allReports.fxml");
+//            linkButton.setTabButtonName("Report");
+//        });
+
+
         reportViewBtn.setOnMouseClicked(e -> {
-            openInnerView("allReports.fxml");
-            linkButton.setTabButtonName("Report");
+            openInnerView("reportViewDetail.fxml");
+            linkButton.setTabButtonName("Report View");
         });
         reportIconBtn.setOnMouseClicked(e -> {
-            openInnerView("allReports.fxml");
-            linkButton.setTabButtonName("Report");
+
+            openInnerView("reportViewDetail.fxml");
+            linkButton.setTabButtonName("Report View");
         });
     }
 

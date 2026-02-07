@@ -1,13 +1,20 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.Models.DailyReport;
+import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Utils.session;
+import IPPSystem.Utils.utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
 public class reportCardController {
+
 
     @FXML
     private Label issueOrSolveTxt;
@@ -30,12 +37,23 @@ public class reportCardController {
     @FXML
     private Circle statusCircle;
 
-    @FXML
-    void clickViewDetailBtn(ActionEvent event) {
 
-    }
+    @FXML
+    private HBox cardRoot;
+
+
 
     private DailyReport report;
+
+
+
+    @FXML
+    void clickViewDetailBtn(ActionEvent event) {
+        System.out.println(report.getReportId());
+    }
+
+
+
 
     // Set data to this card
     public void setData(DailyReport report) {

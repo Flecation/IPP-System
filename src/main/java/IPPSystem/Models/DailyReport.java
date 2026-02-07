@@ -8,10 +8,46 @@ public class DailyReport {
     private LocalDate reportDate;
     private String weatherType, workAffect, weatherNote, issues, comments,projectType,projectStatus;
     private int supervisorId;
+    private int assignWorkItemId;
 
     // UI Display အတွက် Field အပိုများ
     private String projectName;
     private String supervisorName;
+    private String projectTypeName; // NEW
+
+
+
+
+    public String getProjectTypeName() {
+        return projectTypeName;
+    }
+
+    public void setProjectTypeName(String projectTypeName) {
+        this.projectTypeName = projectTypeName;
+    }
+
+    public int getAssignWorkItemId() {
+        return assignWorkItemId;
+    }
+
+    public void setAssignWorkItemId(int assignWorkItemId) {
+        this.assignWorkItemId = assignWorkItemId;
+    }
+
+
+    public DailyReport(int reportId, int assignProjectId, String projectName, String projectTypeName,
+                       LocalDate reportDate, String issues, String weatherType,
+                       String comments, String supervisorName) {
+        this.reportId = reportId;
+        this.assignProjectId = assignProjectId;
+        this.projectName = projectName;
+        this.projectTypeName = projectTypeName;
+        this.reportDate = reportDate;
+        this.issues = issues;
+        this.weatherType = weatherType;
+        this.comments = comments;
+        this.supervisorName = supervisorName;
+    }
 
     public String getProjectStatus() {
         return projectStatus;

@@ -58,7 +58,6 @@ public class allReportController {
     private boolean isManager;
 
 
-
     @FXML
     public void initialize() {
         // Load project status filter
