@@ -539,3 +539,50 @@
 .suggestion-list .list-cell:filled:selected {
     -fx-background-color: #e8f0ff;
 }
+
+
+/* ===== Notification dropdown ===== */
+.noti-dropdown {
+    -fx-background-color: -primary-bg-color;
+    -fx-border-color: rgba(0,0,0,0.12);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 16, 0, 0, 6);
+}
+
+.noti-card {
+    -fx-background-color: -secondary-bg-color;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(0,0,0,0.06);
+    -fx-cursor: hand;
+}
+
+.noti-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color;
+}
+
+.noti-body {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color;
+    -fx-opacity: 0.9;
+}
+
+.noti-empty {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color;
+    -fx-opacity: 0.7;
+}
+
+.noti-confirm-btn {
+    -fx-background-color: -btn-bg-color;
+    -fx-text-fill: -button-font-color;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-padding: 6 12;
+}
+.noti-confirm-btn:hover {
+    -fx-opacity: 0.9;
+}

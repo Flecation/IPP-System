@@ -88,6 +88,10 @@ public class linkButton {
             throw new RuntimeException("Failed to load FXML: " + fxmlFile, e);
         }
 
+        // Keep a reference to the controller on the root node, so we can
+        // re-sync per-tab UI state when switching tabs.
+        content.getProperties().put("TAB_CONTROLLER", controller);
+
         content.setVisible(false);
         content.setManaged(false);
         content.setMouseTransparent(true);
@@ -158,6 +162,12 @@ public class linkButton {
             content.setManaged(true);
             content.setMouseTransparent(false);
             content.toFront(); // ✅ important in StackPane
+
+            // ✅ If this tab content is a sidebar, re-sync its toggle UI with the current theme.
+            Object ctrl = content.getProperties().get("TAB_CONTROLLER");
+            if (ctrl instanceof IPPSystem.Controllers.sideBarPaneController sb) {
+                sb.syncThemeToggleUI();
+            }
         }
 
         setActiveTabStyles(tabBox, selectedTab, closeBtn);

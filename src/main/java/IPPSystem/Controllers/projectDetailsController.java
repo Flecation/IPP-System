@@ -88,6 +88,11 @@ public class projectDetailsController implements loadPaneAware, SearchablePage, 
 
     private void applyWorkItemSearchFilter() {
         if (workItemTable == null) return;
+        if (allWorkItems == null) {
+            workItemTable.setItems(FXCollections.observableArrayList());
+            workItemTable.refresh();
+            return;
+        }
 
         String q = (searchQuery == null) ? "" : searchQuery.trim();
         if (q.isEmpty()) {
@@ -120,12 +125,20 @@ public class projectDetailsController implements loadPaneAware, SearchablePage, 
     public List<String> getSuggestions(String query) {
         String q = (query == null) ? "" : query.trim().toLowerCase();
         if (q.isEmpty()) return List.of();
+        if (allWorkItems == null || allWorkItems.isEmpty()) return List.of();
 
         Set<String> out = new LinkedHashSet<>();
         for (workItems wi : allWorkItems) {
             if (wi == null) continue;
+
+            // suggestions from key work-item fields
             addIfMatch(out, wi.getWorkItemName(), q);
             addIfMatch(out, wi.getProjectStatus(), q);
+
+            // if you have more fields in workItems, you can enable these:
+            // addIfMatch(out, wi.getAssignStatus(), q);
+            // addIfMatch(out, wi.getSupervisorName(), q);
+
             if (out.size() >= 8) break;
         }
         return new ArrayList<>(out);

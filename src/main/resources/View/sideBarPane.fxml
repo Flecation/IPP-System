@@ -19,12 +19,12 @@
          <top>
             <HBox maxHeight="60.0" spacing="5.0" styleClass="topBar" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER_LEFT" minWidth="200.0" spacing="10.0" styleClass="otherBox" HBox.hgrow="NEVER">
+                  <HBox alignment="CENTER_RIGHT" minWidth="100.0" spacing="10.0" styleClass="otherBox" HBox.hgrow="NEVER">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                      <HBox.margin>
-                        <Insets left="30.0" top="5.0" />
+                        <Insets />
                      </HBox.margin>
                      <children>
                         <Circle fx:id="logoIcon" fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
@@ -32,30 +32,21 @@
                         <Label fx:id="reloadBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
                      </children>
                   </HBox>
-                  <HBox fx:id="directoryViewBox" alignment="CENTER" maxHeight="45.0" maxWidth="800.0" minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS">
+                  <HBox fx:id="directoryViewBox" alignment="CENTER" maxHeight="45.0" minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <StackPane maxHeight="40.0" minHeight="30.0" styleClass="searchBox" HBox.hgrow="NEVER">
+                  <StackPane styleClass="searchBox" HBox.hgrow="NEVER">
                      <HBox.margin>
-                        <Insets left="30.0" top="5.0" />
+                        <Insets />
                      </HBox.margin>
                      <children>
                         <HBox fx:id="searchViewBox" alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="0.0" minWidth="0.0">
                            <children>
-                              <TextField fx:id="searchTextField" maxHeight="35.0" maxWidth="200.0" minHeight="35.0" minWidth="200.0">
-                                 <padding>
-                                    <Insets left="20.0" />
-                                 </padding></TextField>
-                              <Label fx:id="searchClearBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin></Label>
-                              <Label fx:id="searchBtn" alignment="CENTER" maxHeight="27.0" maxWidth="35.0" minHeight="27.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin></Label>
+                              <TextField fx:id="searchTextField" maxHeight="35.0" maxWidth="200.0" minHeight="35.0" minWidth="200.0" />
+                              <Label fx:id="searchClearBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
+                              <Label fx:id="searchBtn" alignment="CENTER" maxHeight="30.0" maxWidth="35.0" minHeight="30.0" minWidth="35.0" styleClass="icons" HBox.hgrow="NEVER" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -68,10 +59,19 @@
                         <StackPane fx:id="togglePane" maxHeight="45.0" maxWidth="60.0" minHeight="45.0" minWidth="60.0" styleClass="toggleBox">
                            <children>
                               <ToggleButton fx:id="toggleBox" maxHeight="25.0" maxWidth="45.0" minHeight="25.0" minWidth="45.0" mnemonicParsing="false" StackPane.alignment="CENTER" />
-                              <Circle fx:id="toggleCircle" fill="DODGERBLUE" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" translateX="-10.0" StackPane.alignment="CENTER" />
+                              <Circle fx:id="toggleCircle" fill="DODGERBLUE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" translateX="-10.0" StackPane.alignment="CENTER" />
                            </children>
                         </StackPane>
-                        <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" />
+                        <StackPane fx:id="notificationWrap" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0">
+                           <children>
+                              <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" />
+                              <Circle fx:id="notificationDot" radius="4.0" fill="#ff3b30" stroke="TRANSPARENT" StackPane.alignment="TOP_RIGHT">
+                                 <StackPane.margin>
+                                    <Insets top="6.0" right="6.0" />
+                                 </StackPane.margin>
+                              </Circle>
+                           </children>
+                        </StackPane>
                      </children>
                   </HBox>
                </children>
@@ -81,12 +81,12 @@
             </HBox>
          </top>
          <left>
-            <StackPane fx:id="sideBarStackPane" maxWidth="200.0" minWidth="0.0" prefWidth="200.0" styleClass="sideBar" BorderPane.alignment="CENTER">
+            <StackPane fx:id="sideBarStackPane" maxWidth="170.0" minWidth="0.0" styleClass="sideBar" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin>
                <children>
-                  <VBox fx:id="settingBar" alignment="TOP_CENTER" maxWidth="200.0" minWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="200.0" StackPane.alignment="CENTER">
+                  <VBox fx:id="settingBar" alignment="TOP_CENTER" maxWidth="170.0" minWidth="170.0" nodeOrientation="LEFT_TO_RIGHT" StackPane.alignment="CENTER">
                      <children>
                         <Label fx:id="showIconSettingBtn" alignment="CENTER_RIGHT" maxHeight="30.0" maxWidth="170.0" minHeight="30.0" minWidth="170.0" text="◀">
                            <padding>
@@ -119,7 +119,7 @@
                               <Label fx:id="toggleSymbolText" maxWidth="140.0" text="Light Mode" wrapText="true" />
                               <StackPane fx:id="settingTogglePane" maxHeight="25.0">
                                  <children>
-                                    <ToggleButton fx:id="settingToggleBox" maxHeight="20.0" maxWidth="50.0" minHeight="20.0" minWidth="40.0" mnemonicParsing="false" StackPane.alignment="CENTER" />
+                                    <ToggleButton fx:id="settingToggleBox" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" StackPane.alignment="CENTER" />
                                     <Circle fx:id="settingToggleCircle" fill="DODGERBLUE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" translateX="-14.0" StackPane.alignment="CENTER" />
                                  </children>
                               </StackPane>
@@ -143,7 +143,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="sideBar" alignment="CENTER_LEFT" maxWidth="200.0" visible="false" StackPane.alignment="CENTER">
+                  <VBox fx:id="sideBar" alignment="CENTER_LEFT" maxWidth="170.0" minWidth="170.0" visible="false" StackPane.alignment="CENTER">
                      <children>
                         <Label fx:id="showIconSideBtn" alignment="CENTER_RIGHT" maxHeight="30.0" maxWidth="170.0" minHeight="30.0" />
                         <HBox fx:id="userInfoCard" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="170.0" minHeight="60.0" spacing="5.0">
@@ -261,7 +261,7 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox fx:id="profileBox" alignment="TOP_CENTER" maxWidth="200.0" spacing="30.0" visible="false" StackPane.alignment="CENTER_LEFT">
+                  <VBox fx:id="profileBox" alignment="TOP_CENTER" maxWidth="170.0" minWidth="170.0" spacing="30.0" visible="false" StackPane.alignment="CENTER_LEFT">
                      <children>
                         <VBox spacing="10.0" VBox.vgrow="NEVER">
                            <children>
@@ -337,6 +337,18 @@
                </BorderPane.margin></StackPane>
          </center>
       </BorderPane>
+      <!-- ===== Notification dropdown ===== -->
+      <VBox fx:id="notificationDropdown" visible="false" managed="false" styleClass="noti-dropdown" maxWidth="320.0" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets top="62.0" right="14.0" />
+         </StackPane.margin>
+         <children>
+            <VBox fx:id="notificationList" spacing="8.0" />
+         </children>
+         <padding>
+            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
+         </padding>
+      </VBox>
       <StackPane fx:id="addNewPane"
                  visible="false"
                  managed="false"

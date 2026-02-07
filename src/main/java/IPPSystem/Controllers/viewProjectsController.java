@@ -300,7 +300,7 @@ public class viewProjectsController  implements loadPaneAware, SearchablePage, S
         }
     }
 
-//    ====== For the search box ===============
+    //    ====== For the search box ===============
     private String searchQuery = "";
 
     @Override

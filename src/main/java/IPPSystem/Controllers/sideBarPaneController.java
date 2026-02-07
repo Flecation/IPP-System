@@ -18,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -31,6 +32,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
@@ -50,6 +52,12 @@ import javafx.util.Duration;
 import java.util.Collections;
 import java.util.List;
 
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -148,6 +156,11 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private Label notificationBtn;
 
+    // ===== Notification UI (dropdown + red dot) =====
+    @FXML private StackPane notificationWrap; // wrapper around bell icon
+    @FXML private Circle notificationDot;     // small red dot
+    @FXML private VBox notificationDropdown;  // dropdown container
+    @FXML private VBox notificationList;      // list container inside dropdown
     @FXML
     private VBox profileBox;
 
@@ -573,6 +586,10 @@ public class sideBarPaneController extends navigationPaneController{
 
         populateUserInfo();
 
+        // ===== Notifications (dropdown) =====
+        setupNotificationUI();
+        loadNotificationsAsync();
+
         // Set up the icons of the names
         utils.setToolTip(projectIconBtn,"Project View");
         utils.setToolTip(dashboardIconBtn,"DashBoard View");
@@ -597,9 +614,14 @@ public class sideBarPaneController extends navigationPaneController{
 //        utils.switchNewScene(logoutIcon,"login.fxml");
 
 
+        // Ensure theme toggle UI is correct on first load
+        syncThemeToggleUI();
+
         setupAddOverlayOutsideClick();      // call once here
 
 
+
+        setupLogoutHandlers();
     }
 
     //    For the add pane
@@ -827,6 +849,26 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
+    // Re-sync the toggle circle positions + icons based on current theme state.
+// Useful when switching tabs (each tab has its own UI nodes).
+    public void syncThemeToggleUI() {
+        boolean dark = themeToggle.isDarkMode();
+
+        // Keep the SAME convention as translateCircle():
+        // Light mode -> +10, Dark mode -> -10
+        double x = dark ? -10 : 10;
+
+        if (toggleCircle != null) toggleCircle.setTranslateX(x);
+        if (settingToggleCircle != null) settingToggleCircle.setTranslateX(x);
+
+        // Also sync icons/labels if you use them
+        try {
+            lightDarkIconChange();
+        } catch (Exception ignored) {
+        }
+    }
+
+
     private void setupNavigationHandlers() {
         // Dashboard navigation
         boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
@@ -1035,4 +1077,300 @@ public class sideBarPaneController extends navigationPaneController{
             settingToggleCircle.setTranslateX(-10);
         }
     }
+// =====================================================================
+// Notifications (Bell dropdown)
+// =====================================================================
+
+    private static final double LOGIN_W = 900;
+    private static final double LOGIN_H = 535;
+
+    private void setupNotificationUI() {
+        if (notificationWrap == null || notificationDropdown == null || notificationList == null || notificationDot == null) {
+            return; // FXML not updated yet
+        }
+
+        // start hidden
+        notificationDropdown.setVisible(false);
+        notificationDropdown.setManaged(false);
+        notificationDot.setVisible(false);
+
+        // toggle dropdown on bell click
+        notificationWrap.setOnMouseClicked(e -> {
+            boolean show = !notificationDropdown.isVisible();
+            notificationDropdown.setVisible(show);
+            notificationDropdown.setManaged(show);
+
+            // If user opened dropdown, hide dot (basic "seen" behavior)
+            if (show) notificationDot.setVisible(false);
+
+            e.consume();
+        });
+
+        // click outside closes dropdown
+        basePane.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (!notificationDropdown.isVisible()) return;
+
+            Node target = (Node) e.getTarget();
+            if (isDescendantOf(target, notificationDropdown) || isDescendantOf(target, notificationWrap)) {
+                return;
+            }
+            notificationDropdown.setVisible(false);
+            notificationDropdown.setManaged(false);
+        });
+    }
+
+    private boolean isDescendantOf(Node node, Node possibleParent) {
+        Node cur = node;
+        while (cur != null) {
+            if (cur == possibleParent) return true;
+            cur = cur.getParent();
+        }
+        return false;
+    }
+
+    private void loadNotificationsAsync() {
+        if (loginUser == null) return;
+
+        javafx.concurrent.Task<java.util.List<javafx.scene.Node>> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected java.util.List<javafx.scene.Node> call() {
+                String roleStr = loginUser.getUserRole() == null ? "" : loginUser.getUserRole().toLowerCase();
+                if ("manager".equals(roleStr)) {
+                    return buildManagerNotifications();
+                } else {
+                    return buildSupervisorNotifications(loginUser.getUserId());
+                }
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            java.util.List<Node> nodes = task.getValue();
+            notificationList.getChildren().setAll(nodes);
+
+            boolean hasNoti = nodes != null && !nodes.isEmpty();
+            notificationDot.setVisible(hasNoti);
+        });
+
+        task.setOnFailed(e -> {
+            // fail silently but you can toast for debugging
+            // messageBoxService.toast("Notification Error", String.valueOf(task.getException()), notificationType.ERROR);
+        });
+
+        new Thread(task, "load-notifications").start();
+    }
+
+    private java.util.List<Node> buildManagerNotifications() {
+        java.util.List<Node> list = new java.util.ArrayList<>();
+
+        // Manager: supervisors' reports for today
+        String sql =
+                "SELECT DISTINCT ap.assignProjectId, ap.projectInstanceName, u.userName AS supervisorName, dr.reportDate " +
+                        "FROM dailyReports dr " +
+                        "JOIN assignProjects ap ON ap.assignProjectId = dr.assignProjectId " +
+                        "LEFT JOIN users u ON u.userId = dr.supervisorId " +
+                        "WHERE dr.reportDate = CURDATE() " +
+                        "ORDER BY dr.reportDate DESC";
+
+        try (Connection con = IPPSystem.DAO.databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int assignProjectId = rs.getInt("assignProjectId");
+                String projectName = rs.getString("projectInstanceName");
+                String supervisorName = rs.getString("supervisorName");
+                java.sql.Date date = rs.getDate("reportDate");
+
+                VBox card = notificationCardBase(
+                        "Today's Report",
+                        "Project: " + safe(projectName) + "\nSupervisor: " + safe(supervisorName) + "\nDate: " + String.valueOf(date)
+                );
+
+                // system box only (your friend will implement details later)
+                card.setOnMouseClicked(ev -> {
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    alert.setTitle("Report Info");
+                    alert.setHeaderText("Report submitted today");
+                    alert.setContentText("Project: " + safe(projectName) + "\nSupervisor: " + safe(supervisorName) + "\nDate: " + String.valueOf(date));
+                    alert.showAndWait();
+                });
+
+                list.add(card);
+            }
+        } catch (SQLException ex) {
+            // ignore
+        }
+
+        if (list.isEmpty()) {
+            list.add(notificationEmpty("No notifications"));
+        }
+        return list;
+    }
+
+    private java.util.List<Node> buildSupervisorNotifications(int supervisorId) {
+        java.util.List<Node> list = new java.util.ArrayList<>();
+
+        // Condition 2: if supervisor has working project (inProgress/delay) -> don't show anything
+        String workingSql =
+                "SELECT COUNT(*) AS c " +
+                        "FROM assignProjects ap " +
+                        "JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
+                        "WHERE ap.supervisorId = ? AND (ps.projectStatusName = 'inProgress' OR ps.projectStatusName = 'delay')";
+        boolean hasWorking = false;
+
+        try (Connection con = IPPSystem.DAO.databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(workingSql)) {
+            ps.setInt(1, supervisorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) hasWorking = rs.getInt("c") > 0;
+            }
+        } catch (SQLException ex) {
+            // ignore
+        }
+
+        if (hasWorking) {
+            // no notification if already working (your requested logic)
+            return java.util.Collections.emptyList();
+        }
+
+        // Condition 1: assigned projects in PLANNING for this supervisor
+        String planningSql =
+                "SELECT ap.assignProjectId, ap.projectInstanceName, pt.typeName, apd.startDate " +
+                        "FROM assignProjects ap " +
+                        "JOIN projectTypes pt ON pt.projectTypeId = ap.projectTypeId " +
+                        "JOIN assignProjectDetails apd ON apd.assignProjectId = ap.assignProjectId " +
+                        "WHERE ap.supervisorId = ? " +
+                        "  AND ap.projectStatus = (SELECT projectStatusId FROM projectStatus WHERE projectStatusName = 'planning') " +
+                        "  AND apd.assignProjectDetailId = (" +
+                        "      SELECT MAX(apd2.assignProjectDetailId) FROM assignProjectDetails apd2 WHERE apd2.assignProjectId = ap.assignProjectId" +
+                        "  ) " +
+                        "ORDER BY ap.assignProjectId DESC";
+
+        try (Connection con = IPPSystem.DAO.databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(planningSql)) {
+            ps.setInt(1, supervisorId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int assignProjectId = rs.getInt("assignProjectId");
+                    String instance = rs.getString("projectInstanceName");
+                    String typeName = rs.getString("typeName");
+                    java.sql.Date planStart = rs.getDate("startDate");
+
+                    VBox card = notificationCardBase(
+                            "New Planning Project",
+                            "Instance: " + safe(instance) +
+                                    "\nType: " + safe(typeName) +
+                                    "\nPlan Start: " + String.valueOf(planStart)
+                    );
+
+                    Button confirm = new Button("Confirm");
+                    confirm.getStyleClass().add("noti-confirm-btn");
+                    confirm.setOnAction(ev -> {
+                        ev.consume();
+                        boolean ok = setProjectToInProgress(assignProjectId);
+                        if (ok) {
+                            messageBoxService.toast("Confirmed", "Project started.", notificationType.SUCCESS);
+                            // refresh
+                            loadNotificationsAsync();
+                            notificationDropdown.setVisible(false);
+                            notificationDropdown.setManaged(false);
+                        } else {
+                            messageBoxService.toast("Failed", "Could not update status.", notificationType.ERROR);
+                        }
+                    });
+
+                    HBox actions = new HBox(confirm);
+                    actions.setAlignment(Pos.CENTER_RIGHT);
+                    actions.setPadding(new Insets(6,0,0,0));
+                    card.getChildren().add(actions);
+
+                    list.add(card);
+                }
+            }
+        } catch (SQLException ex) {
+            // ignore
+        }
+
+        if (list.isEmpty()) {
+            list.add(notificationEmpty("No notifications"));
+        }
+
+        return list;
+    }
+
+    private boolean setProjectToInProgress(int assignProjectId) {
+        String sql =
+                "UPDATE assignProjects " +
+                        "SET projectStatus = (SELECT projectStatusId FROM projectStatus WHERE projectStatusName = 'inProgress') " +
+                        "WHERE assignProjectId = ?";
+
+        try (Connection con = IPPSystem.DAO.databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, assignProjectId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    private VBox notificationCardBase(String title, String body) {
+        Label t = new Label(title);
+        t.getStyleClass().add("noti-title");
+
+        Label b = new Label(body);
+        b.getStyleClass().add("noti-body");
+        b.setWrapText(true);
+
+        VBox box = new VBox(4, t, b);
+        box.getStyleClass().add("noti-card");
+        box.setPadding(new Insets(10));
+        return box;
+    }
+
+    private VBox notificationEmpty(String text) {
+        Label l = new Label(text);
+        l.getStyleClass().add("noti-empty");
+        VBox box = new VBox(l);
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(12));
+        return box;
+    }
+
+    private String safe(String s) {
+        return s == null ? "-" : s;
+    }
+
+
+    // ===== Logout (show login centered with fixed size) =====
+
+    private void setupLogoutHandlers() {
+        if (logoutBtn != null) logoutBtn.setOnMouseClicked(this::handleLogout);
+        if (logoutIconBtn != null) logoutIconBtn.setOnMouseClicked(this::handleLogout);
+        if (logoutIcon != null) logoutIcon.setOnMouseClicked(this::handleLogout);
+    }
+
+    private void handleLogout(MouseEvent e) {
+        try {
+            Parent loginRoot = FXMLLoader.load(getClass().getResource("/View/login.fxml"));
+
+            // get current stage from any node in this controller
+            Stage stage = (Stage) basePane.getScene().getWindow();
+            stage.setMaximized(false);
+            stage.setResizable(false);
+
+            Scene scene = new Scene(loginRoot);
+            stage.setScene(scene);
+
+            stage.setWidth(LOGIN_W);
+            stage.setHeight(LOGIN_H);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            messageBoxService.toast("Logout failed", "Unable to open login page.", notificationType.ERROR);
+        }
+    }
+
+
 }

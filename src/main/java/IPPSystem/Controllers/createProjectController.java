@@ -14,9 +14,13 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.Map;
 
+import java.time.temporal.ChronoUnit;
+
+
 public class createProjectController implements loadPaneAware, AddOverlayForm {
 
     private javafx.scene.layout.StackPane loadPane;
+    private boolean syncingDates = false;
 
 
     @FXML private Button closeBtn, denyBtn, approveBtn;
@@ -38,7 +42,6 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     @FXML private DatePicker endDatePicker;
     @FXML private TextField durationTxt;
     @FXML private Label durationLbl;
-    @FXML private ComboBox<String> durationUnitCombo;
 
     private final storage data = storage.getInstance();
 
@@ -48,7 +51,6 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     }
 
     private sideBarPaneController parent() {
-        // Resolve per-tab loadPane dynamically so this controller can work without injection
         javafx.scene.layout.StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(closeBtn);
         if (lp == null) return null;
 
@@ -56,53 +58,99 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
         return (p instanceof sideBarPaneController) ? (sideBarPaneController) p : null;
     }
 
-
     @FXML
     public void initialize() {
-        // ===== floating label style (StackPane label + textfield) =====
-        // (your utils method name is setFloatTextFieldStyle)
+        // Integer-only (no decimals, no letters)
+        contractValueTxt.setTextFormatter(new TextFormatter<String>(change -> {
+            String t = change.getControlNewText();
+            return t.matches("\\d*") ? change : null;  // allow empty or digits
+        }));
+
+// Duration days integer-only too
+        durationTxt.setTextFormatter(new TextFormatter<String>(change -> {
+            String t = change.getControlNewText();
+            return t.matches("\\d*") ? change : null;
+        }));
+
         if (instanceNameLbl != null && instanceNameTxt != null) utils.setFloatTextFieldStyle(instanceNameLbl, instanceNameTxt);
         if (contractValueLbl != null && contractValueTxt != null) utils.setFloatTextFieldStyle(contractValueLbl, contractValueTxt);
         if (addressLbl != null && addressTxt != null) utils.setFloatTextFieldStyle(addressLbl, addressTxt);
         if (durationLbl != null && durationTxt != null) utils.setFloatTextFieldStyle(durationLbl, durationTxt);
 
-        // 1) supervisors list (your DB has getAllSupervisors)
+        // supervisors
         siteEngineerBox.getItems().clear();
         for (users u : database.getAllSupervisors()) {
             if (u != null && u.getUserName() != null) siteEngineerBox.getItems().add(u.getUserName());
         }
 
-        // 2) project types
+        // project types
         projectTypeBox.getItems().clear();
         for (String t : data.getProjectTypes().values()) {
             if (t != null) projectTypeBox.getItems().add(t);
         }
 
-        // duration unit (Day/Month/Year)
-        if (durationUnitCombo != null) {
-            durationUnitCombo.getItems().setAll("Day", "Month", "Year");
-            durationUnitCombo.getSelectionModel().select("Day");
-        }
-
-        // Initially: user must choose project type first
         buildingBox.getItems().clear();
         levelBox.getItems().clear();
         buildingBox.setDisable(true);
         levelBox.setDisable(true);
 
-        // 3) when project type changes, enable + reload building & level by projectTypeId
         projectTypeBox.setOnAction(e -> {
             String v = projectTypeBox.getValue();
             boolean hasType = v != null && !v.trim().isEmpty();
             buildingBox.setDisable(!hasType);
             levelBox.setDisable(!hasType);
-            if (hasType) {
-                reloadBuildingAndLevel();
-            } else {
+            if (hasType) reloadBuildingAndLevel();
+            else {
                 buildingBox.getItems().clear();
                 levelBox.getItems().clear();
             }
         });
+
+        // When user changes dates -> duration updates
+        startDatePicker.valueProperty().addListener((obs, oldV, newV) -> {
+            if (syncingDates) return;
+
+            // if end already exists -> just recompute duration
+            if (endDatePicker.getValue() != null) {
+                updateDurationFromDates();
+            } else {
+                // if duration exists -> compute end
+                if (getDurationDaysOrNull() != null) updateEndFromStartAndDuration();
+            }
+        });
+
+        endDatePicker.valueProperty().addListener((obs, oldV, newV) -> {
+            if (syncingDates) return;
+
+            // if start already exists -> recompute duration
+            if (startDatePicker.getValue() != null) {
+                updateDurationFromDates();
+            } else {
+                // if duration exists -> compute start
+                if (getDurationDaysOrNull() != null) updateStartFromEndAndDuration();
+            }
+        });
+
+// When user types duration -> update missing date (or update end using start by default)
+        durationTxt.textProperty().addListener((obs, oldV, newV) -> {
+            if (syncingDates) return;
+            Integer d = getDurationDaysOrNull();
+            if (d == null) return;
+
+            LocalDate s = startDatePicker.getValue();
+            LocalDate e = endDatePicker.getValue();
+
+            // Rules:
+            // - if start exists -> end = start + days
+            // - else if end exists -> start = end - days
+            // - else do nothing
+            if (s != null) {
+                updateEndFromStartAndDuration();
+            } else if (e != null) {
+                updateStartFromEndAndDuration();
+            }
+        });
+
     }
 
     private void reloadBuildingAndLevel() {
@@ -134,7 +182,7 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     private void onClose() {
         sideBarPaneController p = parent();
         if (p != null) {
-            // Using sidebar's openInnerView flow (no add overlay)
+            p.closeAddOverlay();                 // ✅ closes the box if it is overlay
             p.openInnerView("viewProjects.fxml");
         }
     }
@@ -144,7 +192,7 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
         createProjectDraft.getInstance().clear();
         sideBarPaneController p = parent();
         if (p != null) {
-            // Using sidebar's openInnerView flow (no add overlay)
+            p.closeAddOverlay();                 // ✅ closes the box if it is overlay
             p.openInnerView("viewProjects.fxml");
         }
     }
@@ -152,7 +200,6 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     @FXML
     private void onApprove() {
         try {
-            // validate
             String instanceName = req(instanceNameTxt.getText(), "Instance Name");
             String supervisor = req(siteEngineerBox.getValue(), "Site Engineer");
             String type = req(projectTypeBox.getValue(), "Project Type");
@@ -169,12 +216,8 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
             if (e.isBefore(s)) throw new IllegalArgumentException("End date must be after start date.");
 
             double duration = parseDouble(req(durationTxt.getText(), "Duration"), "Duration");
-            String durationUnit = (durationUnitCombo == null) ? null : durationUnitCombo.getValue();
-            if (durationUnit == null || durationUnit.trim().isEmpty()) {
-                throw new IllegalArgumentException("Duration Unit is required.");
-            }
 
-            // store draft
+            // ✅ store draft for createViewProjectController
             createProjectDraft d = createProjectDraft.getInstance();
             d.instanceName = instanceName;
             d.supervisorName = supervisor;
@@ -186,14 +229,12 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
             d.startDate = s;
             d.endDate = e;
             d.duration = duration;
-            // NOTE: if your createProjectDraft has a durationUnit field, uncomment and use it.
-            // d.durationUnit = durationUnit;
 
-            // go to createViewProject
+            // ✅ CLOSE BOX + OPEN createViewProject.fxml
             sideBarPaneController p = parent();
             if (p != null) {
-                // Using sidebar's openInnerView flow (no add overlay)
-                p.openInnerView("createViewProject.fxml");
+                p.closeAddOverlay();                     // ✅ close createProjectBox overlay
+                p.openInnerView("createViewProject.fxml"); // ✅ show createProjectView
             }
 
         } catch (Exception ex) {
@@ -242,12 +283,72 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
                 && addressTxt != null && addressTxt.getText() != null && !addressTxt.getText().trim().isEmpty()
                 && startDatePicker != null && startDatePicker.getValue() != null
                 && endDatePicker != null && endDatePicker.getValue() != null
-                && durationTxt != null && durationTxt.getText() != null && !durationTxt.getText().trim().isEmpty()
-                && durationUnitCombo != null && durationUnitCombo.getValue() != null;
+                && durationTxt != null && durationTxt.getText() != null && !durationTxt.getText().trim().isEmpty();
     }
 
     @Override
     public String getValidationMessage() {
         return "Please fill all required fields before closing (Instance Name, Site Engineer, Type, Building, Level, Contract Value, Address, Start/End Dates, Duration, Duration Unit).";
     }
+
+    private Integer getDurationDaysOrNull() {
+        String t = durationTxt.getText();
+        if (t == null || t.trim().isEmpty()) return null;
+        try {
+            int d = Integer.parseInt(t.trim());
+            return d >= 0 ? d : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void setDurationDays(Integer days) {
+        if (days == null) return;
+        durationTxt.setText(String.valueOf(days));
+    }
+
+    private void updateDurationFromDates() {
+        if (syncingDates) return;
+        LocalDate s = startDatePicker.getValue();
+        LocalDate e = endDatePicker.getValue();
+        if (s == null || e == null) return;
+
+        syncingDates = true;
+        try {
+            long diff = ChronoUnit.DAYS.between(s, e); // end - start (NOT inclusive)
+            if (diff < 0) diff = 0;
+            setDurationDays((int) diff);
+        } finally {
+            syncingDates = false;
+        }
+    }
+
+    private void updateEndFromStartAndDuration() {
+        if (syncingDates) return;
+        LocalDate s = startDatePicker.getValue();
+        Integer d = getDurationDaysOrNull();
+        if (s == null || d == null) return;
+
+        syncingDates = true;
+        try {
+            endDatePicker.setValue(s.plusDays(d));
+        } finally {
+            syncingDates = false;
+        }
+    }
+
+    private void updateStartFromEndAndDuration() {
+        if (syncingDates) return;
+        LocalDate e = endDatePicker.getValue();
+        Integer d = getDurationDaysOrNull();
+        if (e == null || d == null) return;
+
+        syncingDates = true;
+        try {
+            startDatePicker.setValue(e.minusDays(d));
+        } finally {
+            syncingDates = false;
+        }
+    }
+
 }

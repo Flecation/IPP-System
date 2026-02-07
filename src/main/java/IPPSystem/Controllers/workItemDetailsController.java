@@ -40,7 +40,16 @@ import java.util.Map;
 
 
 
-public class workItemDetailsController implements loadPaneAware, NavAware, TabStateful {
+import IPPSystem.Interfaces.SearchablePage;
+import IPPSystem.Interfaces.SuggestablePage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+public class workItemDetailsController implements loadPaneAware, NavAware, TabStateful, SearchablePage, SuggestablePage {
 
     //    ==== title ====
     @FXML private Label workItemTitle,workItemTitleStatus;
@@ -99,6 +108,17 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
     private workItems workItem;
     private final calculationHelper helper = calculationHelper.getInstance();
     private boolean canEditTasks = true;
+
+    // ===== Planning stage flag (used for Actual date display) =====
+    private boolean isPlanningStage = false;
+
+    // ===== Sidebar search support =====
+    private final ObservableList<tasks> allTasks = FXCollections.observableArrayList();
+    private final ObservableList<skills> allSkills = FXCollections.observableArrayList();
+    private final FilteredList<tasks> filteredTasks = new FilteredList<>(allTasks, t -> true);
+    private final FilteredList<skills> filteredSkills = new FilteredList<>(allSkills, s -> true);
+    private String searchQuery = "";
+
 
     private StackPane loadPane;
 
@@ -237,6 +257,29 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
         if (taskActualStartDate != null) taskActualStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskActualEndDateCol != null) taskActualEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
+        // Display rule: if project is in Planning, show "-" for Actual dates
+        if (taskActualStartDate != null) {
+            taskActualStartDate.setCellFactory(col -> new TableCell<tasks, Date>() {
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) { setText(null); return; }
+                    if (isPlanningStage) { setText("-"); return; }
+                    setText(item == null ? "-" : utils.dateFormat(item));
+                }
+            });
+        }
+        if (taskActualEndDateCol != null) {
+            taskActualEndDateCol.setCellFactory(col -> new TableCell<tasks, Date>() {
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) { setText(null); return; }
+                    if (isPlanningStage) { setText("-"); return; }
+                    setText(item == null ? "-" : utils.dateFormat(item));
+                }
+            });
+        }
         if (TaskStatusCol != null) TaskStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
 
         // ---- Skill table ----
@@ -246,6 +289,10 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
         // Nice placeholders
         if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
         if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
+
+        // Bind tables to filtered lists (for sidebar search)
+        if (taskTable != null) taskTable.setItems(filteredTasks);
+        if (viewSkillTable != null) viewSkillTable.setItems(filteredSkills);
 
         // ---- Action column: Edit button ----
         setupTaskActionColumn();
@@ -278,8 +325,12 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
 
         loadTablesTask.setOnSucceeded(ev -> {
             try {
-                if (taskTable != null) taskTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.tasks>) loadTablesTask.getValue()[0]);
-                if (viewSkillTable != null) viewSkillTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.skills>) loadTablesTask.getValue()[1]);
+                javafx.collections.ObservableList<IPPSystem.Models.tasks> tasksList = (javafx.collections.ObservableList<IPPSystem.Models.tasks>) loadTablesTask.getValue()[0];
+                javafx.collections.ObservableList<IPPSystem.Models.skills> skillsList = (javafx.collections.ObservableList<IPPSystem.Models.skills>) loadTablesTask.getValue()[1];
+
+                allTasks.setAll(tasksList);
+                allSkills.setAll(skillsList);
+                applySearchFilters();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -321,6 +372,8 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
         });
         workItemTitle.setText(item.getWorkItemName());
         workItemTitleStatus.setText(item.getProjectStatus()); // no "- " here
+        String _st = (workItemTitleStatus.getText() == null) ? "" : workItemTitleStatus.getText().trim().toLowerCase();
+        isPlanningStage = _st.contains("planning");
         utils.applyStatusPill(workItemTitleStatus, workItemTitleStatus.getText());
 
     }
@@ -462,11 +515,16 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
         safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
         safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
 
-        // If you later add actual dates, replace these:
-        safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
-        safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
-
-        // FIX: duration should be work item duration (not project duration)
+        // Actual date display rule:
+        if (isPlanningStage) {
+            safeSet(viewActualStartDate, "-");
+            safeSet(viewActualEndDate, "-");
+        } else {
+            // Your current model mirrors planned dates into actual labels
+            safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
+            safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
+        }
+// FIX: duration should be work item duration (not project duration)
         double durDays = workItem.getProjectDuration(); // if your model uses this for workItem duration
         safeSet(viewDuration, utils.roundDays(durDays) + " Days");
 
@@ -550,5 +608,68 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
             if (idx >= 0.95) return "On Budget";
             return "Over Budget";
         }
+    }
+    // ------------------------------------------------------------
+// Sidebar Search (same behavior as workItemDetails search bar)
+// ------------------------------------------------------------
+    @Override
+    public void onSearch(String query) {
+        this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
+        applySearchFilters();
+    }
+
+    @Override
+    public List<String> getSuggestions(String query) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        if (q.isBlank()) return java.util.Collections.emptyList();
+
+        Set<String> out = new LinkedHashSet<>();
+
+        for (tasks t : allTasks) {
+            if (t == null) continue;
+            String name = safeLower(t.getTaskName());
+            if (!name.isBlank() && name.contains(q)) out.add(t.getTaskName());
+        }
+        for (skills s : allSkills) {
+            if (s == null) continue;
+            String name = safeLower(s.getSkillName());
+            if (!name.isBlank() && name.contains(q)) out.add(s.getSkillName());
+        }
+        return new ArrayList<>(out);
+    }
+
+    private void applySearchFilters() {
+        final String q = (searchQuery == null) ? "" : searchQuery.trim();
+
+        filteredTasks.setPredicate(t -> {
+            if (t == null) return false;
+            if (q.isBlank()) return true;
+
+            String name = safeLower(t.getTaskName());
+            String status = safeLower(t.getProjectStatus());
+            String dur = String.valueOf(utils.roundDays(t.getProjectDuration()));
+            String ps = (t.getStartDate() == null) ? "" : utils.dateFormat(t.getStartDate()).toLowerCase();
+            String pe = (t.getEndDate() == null) ? "" : utils.dateFormat(t.getEndDate()).toLowerCase();
+
+            return name.contains(q)
+                    || status.contains(q)
+                    || dur.contains(q)
+                    || ps.contains(q)
+                    || pe.contains(q);
+        });
+
+        filteredSkills.setPredicate(s -> {
+            if (s == null) return false;
+            if (q.isBlank()) return true;
+            String name = safeLower(s.getSkillName());
+            return name.contains(q);
+        });
+
+        if (taskTable != null) taskTable.refresh();
+        if (viewSkillTable != null) viewSkillTable.refresh();
+    }
+
+    private static String safeLower(String s) {
+        return s == null ? "" : s.trim().toLowerCase();
     }
 }

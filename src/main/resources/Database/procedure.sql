@@ -135,32 +135,67 @@ DELIMITER ;
 DELIMITER $$
 
 
-CREATE PROCEDURE getAllTasksByAssignWorkItem(
-    IN p_assignWorkItemId INT
-)
-BEGIN
-    SELECT
-        at.assignTaskId,
-        t.projectTaskName AS taskName,
-        at.plannedQty AS plannedQty,
-        at.unitOfMeasure AS unitOfMeasure,
-        ps.projectStatusName AS taskStatus,
-        ast.assignStatusName AS assignStatus,
-        atd.taskDuration AS duration,
-        atd.startDate AS startDate,
-        atd.endDate AS endDate
+DELIMITER $$
 
-    FROM assignTasks at
-    INNER JOIN tasks t
-        ON t.projectTaskId = at.projectTaskId
-    LEFT JOIN projectStatus ps
-        ON ps.projectStatusId = at.taskStatus
-    LEFT JOIN assignTaskDetails atd
-        ON atd.assignTaskId = at.assignTaskId
-    LEFT JOIN assignStatus ast
-        ON ast.assignStatusId = atd.assignStatusId
-    WHERE at.assignWorkItemId = p_assignWorkItemId
-      AND atd.assignTaskDetailId IS NOT NULL;
+CREATE PROCEDURE getAllTasksByAssignWorkItem(IN p_assignWorkItemId INT)
+BEGIN
+SELECT
+    at.assignTaskId,
+    t.projectTaskName AS taskName,
+    at.plannedQty AS plannedQty,
+    at.unitOfMeasure AS unitOfMeasure,
+    ps.projectStatusName AS taskStatus,
+
+    -- Planned (auto/custom/extra)
+    plan_ast.assignStatusName AS plannedAssignStatus,
+    plan_atd.taskDuration     AS plannedDuration,
+    plan_atd.startDate        AS plannedStartDate,
+    plan_atd.endDate          AS plannedEndDate,
+
+    -- Actual (actualResult)
+    act_ast.assignStatusName  AS actualAssignStatus,
+    act_atd.taskDuration      AS actualDuration,
+    act_atd.startDate         AS actualStartDate,
+    act_atd.endDate           AS actualEndDate
+
+FROM assignTasks at
+    JOIN tasks t ON t.projectTaskId = at.projectTaskId
+    LEFT JOIN projectStatus ps ON ps.projectStatusId = at.taskStatus
+
+    -- pick ONE planned detail row per task (latest)
+    LEFT JOIN (
+    SELECT d1.*
+    FROM assignTaskDetails d1
+    JOIN assignStatus s1 ON s1.assignStatusId = d1.assignStatusId
+    WHERE s1.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+    AND d1.assignTaskDetailId = (
+    SELECT MAX(d2.assignTaskDetailId)
+    FROM assignTaskDetails d2
+    JOIN assignStatus s2 ON s2.assignStatusId = d2.assignStatusId
+    WHERE d2.assignTaskId = d1.assignTaskId
+    AND s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+    )
+    ) plan_atd ON plan_atd.assignTaskId = at.assignTaskId
+    LEFT JOIN assignStatus plan_ast ON plan_ast.assignStatusId = plan_atd.assignStatusId
+
+    -- pick ONE actual detail row per task (latest)
+    LEFT JOIN (
+    SELECT d1.*
+    FROM assignTaskDetails d1
+    JOIN assignStatus s1 ON s1.assignStatusId = d1.assignStatusId
+    WHERE s1.assignStatusName = 'actualResult'
+    AND d1.assignTaskDetailId = (
+    SELECT MAX(d2.assignTaskDetailId)
+    FROM assignTaskDetails d2
+    JOIN assignStatus s2 ON s2.assignStatusId = d2.assignStatusId
+    WHERE d2.assignTaskId = d1.assignTaskId
+    AND s2.assignStatusName = 'actualResult'
+    )
+    ) act_atd ON act_atd.assignTaskId = at.assignTaskId
+    LEFT JOIN assignStatus act_ast ON act_ast.assignStatusId = act_atd.assignStatusId
+
+WHERE at.assignWorkItemId = p_assignWorkItemId
+  AND at.isCancel = 0;
 END$$
 
 DELIMITER ;

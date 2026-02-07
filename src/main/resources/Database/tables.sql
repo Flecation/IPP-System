@@ -292,6 +292,16 @@ CREATE TABLE dailyReportLabors (
         REFERENCES labors(laborId) ON DELETE CASCADE
 );
 
+ALTER TABLE workItemRequireSkills
+    ADD CONSTRAINT fk_wrs_workItemDetail
+        FOREIGN KEY (workItemDetailId) REFERENCES workItemDetails(workItemDetailId)
+            ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE workItemRequireSkills
+    ADD CONSTRAINT fk_wrs_skill
+        FOREIGN KEY (skillId) REFERENCES skills(skillId)
+            ON UPDATE CASCADE ON DELETE RESTRICT;
+
 
 -- =====================
 -- adding foreign key
