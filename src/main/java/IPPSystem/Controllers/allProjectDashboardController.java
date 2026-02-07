@@ -43,6 +43,9 @@ import static IPPSystem.Controllers.dashboardController.loginUser;
  */
 public class allProjectDashboardController {
 
+    private static final String OVERALL_LABEL = "Overall Project";
+
+
     @FXML private Label projectName, lblProject, lblRevenue, lblExpense, lblWorkers;
 
     @FXML private ComboBox<String> comboProjectList;
@@ -119,7 +122,7 @@ public class allProjectDashboardController {
                         "SELECT ap.assignProjectId, ap.projectInstanceName " +
                                 "FROM assignProjects ap " +
                                 "WHERE ap.supervisorId = ? AND ap.projectStatus = ? " +
-                                "ORDER BY ap.assignProjectId DESC";
+                                "ORDER BY ap.assignProjectId DESC LIMIT 1";
 
                 Map<String, Integer> out = new LinkedHashMap<>();
 
@@ -149,10 +152,20 @@ public class allProjectDashboardController {
             supervisorInProgressMap.clear();
             supervisorInProgressMap.putAll(t.getValue());
 
-            comboProjectList.getItems().setAll(supervisorInProgressMap.keySet());
-            if (!comboProjectList.getItems().isEmpty()) {
-                comboProjectList.getSelectionModel().select(0);
+            // If supervisor has no in-progress project, behave like manager (disable combo)
+            if (supervisorInProgressMap.isEmpty()) {
+                comboProjectList.getItems().clear();
+                comboProjectList.setOnAction(null);
+                comboProjectList.setDisable(true);
+                comboProjectList.setPromptText("All Projects");
+                return;
             }
+
+            comboProjectList.setDisable(false);
+            comboProjectList.getItems().clear();
+            comboProjectList.getItems().add(OVERALL_LABEL);
+            comboProjectList.getItems().addAll(supervisorInProgressMap.keySet());
+            comboProjectList.getSelectionModel().select(OVERALL_LABEL);
             comboProjectList.setOnAction(this::clickProjectSelect);
         });
 
@@ -173,6 +186,12 @@ public class allProjectDashboardController {
 
         String name = comboProjectList == null ? null : comboProjectList.getValue();
         if (name == null) return;
+
+        // Supervisor chooses overall view (stay on this dashboard)
+        if (OVERALL_LABEL.equals(name)) {
+            loadDashboardAsync();
+            return;
+        }
 
         Integer projectId = supervisorInProgressMap.get(name);
         if (projectId == null) return;
