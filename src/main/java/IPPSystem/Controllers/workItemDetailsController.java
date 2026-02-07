@@ -4,8 +4,7 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
-import IPPSystem.Interfaces.NavAware;
-import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Interfaces.*;
 import IPPSystem.Models.*;
 import IPPSystem.Utils.*;
 import javafx.concurrent.Task;
@@ -33,15 +32,11 @@ import java.util.Locale;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import IPPSystem.Interfaces.TabStateful;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
-
-
-import IPPSystem.Interfaces.SearchablePage;
-import IPPSystem.Interfaces.SuggestablePage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -49,7 +44,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-public class workItemDetailsController implements loadPaneAware, NavAware, TabStateful, SearchablePage, SuggestablePage {
+public class workItemDetailsController implements loadPaneAware, NavAware, TabStateful, SearchablePage, SuggestablePage, ReloadablePage {
 
     //    ==== title ====
     @FXML private Label workItemTitle,workItemTitleStatus;
@@ -214,6 +209,13 @@ public class workItemDetailsController implements loadPaneAware, NavAware, TabSt
         return nav;
     }
 
+    @Override
+    public void onReload() {
+        if (workItem == null) return;
+
+        // Re-run your existing loader (refreshes tables + dashboard + labels)
+        setWorkItem(workItem, project);
+    }
 
 
     users user = session.getInstance().getUser();

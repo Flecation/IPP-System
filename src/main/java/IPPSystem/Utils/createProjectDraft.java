@@ -2,6 +2,7 @@ package IPPSystem.Utils;
 
 import java.time.LocalDate;
 
+
 public class createProjectDraft {
     private static final createProjectDraft instance = new createProjectDraft();
     public static createProjectDraft getInstance() { return instance; }
@@ -17,6 +18,15 @@ public class createProjectDraft {
     public LocalDate startDate;
     public LocalDate endDate;
     public Double duration;
+    public Integer projectTypeId;
+    public Integer buildingId;
+    public Integer levelId;
+    public Double area;
+    public Double units;
+    public Double stories;
+    public Double height;
+
+
 
     public void clear() {
         instanceName = null;
@@ -29,5 +39,10 @@ public class createProjectDraft {
         startDate = null;
         endDate = null;
         duration = null;
+        area = null;
+        units = null;
+        stories = null;
+        height = null;
+
     }
 }

@@ -5,26 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="changes">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/HelloApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/Launcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/LoginController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_31_01_2026_22_36_[Changes]/switchPage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/Launcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/LoginController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_31_01_2026_22_27_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createViewProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createViewProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/loginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createProject.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createProject.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createViewProject.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createViewProject.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/procedure.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/createProjectDraft.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/createProjectDraft.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/session.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,14 +168,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765548299980</updated>
-    </task>
-    <task id="LOCAL-00008" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765801344235</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1765801344235</updated>
     </task>
     <task id="LOCAL-00009" summary="creation of the basic frame">
       <option name="closed" value="true" />
@@ -573,7 +553,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770491002859</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770503535834</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1770503535835</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

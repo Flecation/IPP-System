@@ -69,8 +69,8 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     // Optional numeric fields (won't crash if missing in FXML)
     @FXML private TextField areaTxt;
     @FXML private Label areaLbl;
-    @FXML private TextField unitsTxt;
-    @FXML private Label unitsLbl;
+    @FXML private TextField unitTxt;
+    @FXML private Label unitLbl;
     @FXML private TextField storyTxt;
     @FXML private Label storyLbl;
     @FXML private TextField heightTxt;
@@ -139,15 +139,16 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
         if (durationLbl != null && durationTxt != null) utils.setFloatTextFieldStyle(durationLbl, durationTxt);
 
         if (areaLbl != null && areaTxt != null) utils.setFloatTextFieldStyle(areaLbl, areaTxt);
-        if (unitsLbl != null && unitsTxt != null) utils.setFloatTextFieldStyle(unitsLbl, unitsTxt);
+        if (unitLbl != null && unitTxt != null) utils.setFloatTextFieldStyle(unitLbl, unitTxt);
         if (storyLbl != null && storyTxt != null) utils.setFloatTextFieldStyle(storyLbl, storyTxt);
         if (heightLbl != null && heightTxt != null) utils.setFloatTextFieldStyle(heightLbl, heightTxt);
+
 
         // Digits-only inputs
         applyDigitsOnly(contractValueTxt);
         applyDigitsOnly(durationTxt);
         applyDigitsOnly(areaTxt);
-        applyDigitsOnly(unitsTxt);
+        applyDigitsOnly(unitTxt);
         applyDigitsOnly(storyTxt);
         applyDigitsOnly(heightTxt);
 
@@ -602,6 +603,14 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
             d.startDate = s;
             d.endDate = e;
             d.duration = durationDays;
+            d.projectTypeId = typeId;
+            d.buildingId = buildingId;
+            d.levelId = levelId;
+            d.area = parseOptionalDouble(areaTxt, "Area");
+            d.units = parseOptionalDouble(unitTxt, "Units");
+            d.stories = parseOptionalDouble(storyTxt, "Stories");
+            d.height = parseOptionalDouble(heightTxt, "Height");
+
 
             sideBarPaneController p = parent();
             if (p != null) {
@@ -611,6 +620,18 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
 
         } catch (Exception ex) {
             showError(ex.getMessage());
+        }
+    }
+
+    private Double parseOptionalDouble(TextField tf, String field) {
+        if (tf == null) return null;
+        String t = tf.getText();
+        if (t == null || t.trim().isEmpty()) return null;
+
+        try {
+            return Double.parseDouble(t.trim());
+        } catch (Exception e) {
+            throw new IllegalArgumentException(field + " must be a number.");
         }
     }
 

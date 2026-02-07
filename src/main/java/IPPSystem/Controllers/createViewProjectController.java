@@ -61,6 +61,7 @@ public class createViewProjectController implements loadPaneAware {
     @FXML private TextField pEDateTxt;
     @FXML private TextField pDurationTxt;
     @FXML private TextField pContractValueTxt;
+    @FXML private TextField areaTxt,heightTxt,storyTxt,unitsTxt;
 
     @FXML private Button projectConfirmBtn;
     @FXML private Button projectCancelBtn;
@@ -236,6 +237,11 @@ public class createViewProjectController implements loadPaneAware {
             if (pEDateTxt != null && d.endDate != null) pEDateTxt.setText(d.endDate.toString());
             if (pDurationTxt != null && d.duration != null) pDurationTxt.setText(String.valueOf(d.duration));
             if (pContractValueTxt != null && d.contractValue != null) pContractValueTxt.setText(String.valueOf(d.contractValue));
+            areaTxt.setText(d.area == null ? "" : String.valueOf(d.area));
+            unitsTxt.setText(d.units == null ? "" : String.valueOf(d.units));
+            storyTxt.setText(d.stories == null ? "" : String.valueOf(d.stories));
+            heightTxt.setText(d.height == null ? "" : String.valueOf(d.height));
+
 
             // ----- Auto-generate categories/skills/tasks from template -----
             autoGenerateFromTemplates();

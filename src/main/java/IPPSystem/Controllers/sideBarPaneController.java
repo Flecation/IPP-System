@@ -435,7 +435,7 @@ public class sideBarPaneController extends navigationPaneController{
         // and call triggerSearch("") automatically (if you set it up that way).
     }
 
-    private users loginUser = user;
+    private users loginUser = session.getInstance().getUser();
 
     protected storage data = storage.getInstance();
 
@@ -460,14 +460,9 @@ public class sideBarPaneController extends navigationPaneController{
     private boolean isOverlayFormFxml(String fxml) {
         if (fxml == null) return false;
         String s = fxml.toLowerCase();
-
-        // ✅ all create/add pages should NOT be cached
-        // You can tune this list/rule later
-        return s.startsWith("create")
-                || s.startsWith("add")
-                || s.contains("create")
-                || s.contains("add");
+        return s.startsWith("create") || s.startsWith("add");
     }
+
 
 
     //    For the catch the data in the load Pane and if click the open in new Tab btn to be work well
@@ -478,7 +473,9 @@ public class sideBarPaneController extends navigationPaneController{
     }
     public void openInnerView(String fxml, java.util.function.Consumer<Object> controllerHook) {
         try {
-            ViewEntry entry = viewCache.get(fxml);
+            boolean noCache = isOverlayFormFxml(fxml);
+            ViewEntry entry = noCache ? null : viewCache.get(fxml);
+
 
             if (entry == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
@@ -669,17 +666,18 @@ public class sideBarPaneController extends navigationPaneController{
 
     //    For the add pane
     public void openAddOverlay(String fxml) {
-        // always clear overlay content
+        // always clear old overlay UI
         addNew.getChildren().clear();
         currentAddController = null;
 
-// remove cached view so it never reuses old TextFields
+// remove cached fxml (extra safety)
         viewCache.remove(fxml);
 
-// OPTIONAL: if it uses draft storage, clear it here too
+// clear project draft if opening create project
         if (fxml.equalsIgnoreCase("createProject.fxml")) {
             createProjectDraft.getInstance().clear();
         }
+
 
         try {
             // We reuse openInnerView() (same loader/cache logic + loadPaneAware injection),
@@ -842,9 +840,8 @@ public class sideBarPaneController extends navigationPaneController{
 
     // ... rest of your methods remain the same
     private void setFirstPage(){
-        if(user.getUserRole().equals(role.MANAGER.toString())){
             openInnerView("allProjectDashboard.fxml");
-        }
+
     }
 
     private void setIcons(){
@@ -931,23 +928,14 @@ public class sideBarPaneController extends navigationPaneController{
         // Dashboard navigation
         boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
         dashboardViewBtn.setOnMouseClicked(e -> {
-            if (isManager) {
+
                 openInnerView("allProjectDashboard.fxml");
-                linkButton.setTabButtonName("Overall Dashboard");
-            }else{
-                openInnerView("currentProjectDashboard.fxml");
-                linkButton.setTabButtonName("Current Dashboard");
-            }
 
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
-            if (isManager) {
                 openInnerView("allProjectDashboard.fxml");
                 linkButton.setTabButtonName("Overall Dashboard");
-            }else{
-                openInnerView("currentProjectDashboard.fxml");
-                linkButton.setTabButtonName("Current Dashboard");
-            }
+
         });
 
         // Project navigation
@@ -1319,7 +1307,7 @@ public class sideBarPaneController extends navigationPaneController{
         }
 
         if (list.isEmpty()) {
-            list.add(notificationEmpty("No notifications"));
+            list.add(notificationEmpty("No New Notifications"));
         }
         return list;
     }
@@ -1346,7 +1334,7 @@ public class sideBarPaneController extends navigationPaneController{
         }
 
         if (hasWorking) {
-            list.add(notificationEmpty("No new notifications"));
+            list.add(notificationEmpty("No New Notifications"));
             return list;
         }
 
