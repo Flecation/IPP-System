@@ -20,6 +20,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import IPPSystem.Controllers.sideBarPaneController;
+import IPPSystem.Controllers.projectCardController;
+
 
 import java.io.IOException;
 
@@ -295,6 +298,10 @@ public class switchPage extends utils {
         HBox row = null;
         int count = 0;
 
+        // ✅ get the sidebar controller for THIS TAB
+        sideBarPaneController nav =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+
         for (projects p : projectsList) {
             if (count % 3 == 0) {
                 row = new HBox(20);
@@ -303,29 +310,29 @@ public class switchPage extends utils {
             }
 
             try {
-                FXMLLoader loader = new FXMLLoader(
-                        utils.class.getResource("/View/projectCard.fxml")
-                );
-
+                FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/projectCard.fxml"));
                 Parent card = loader.load();
 
                 projectCardController controller = loader.getController();
-                controller.setData(p,loadPane);
-//                HBox.setHgrow(card, Priority.SOMETIMES);
 
+                // keep your existing pattern
+                controller.setData(p, loadPane);
 
-                if (row != null) {
-                    row.getChildren().add(card);
-//                    row.setSpacing(15);
-//                    row.setAlignment(Pos.CENTER);
+                // ✅ IMPORTANT: inject nav so card can open projectDetails safely
+                if (nav != null) {
+                    controller.setNav(nav);
                 }
+
+                if (row != null) row.getChildren().add(card);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            row.setAlignment(Pos.CENTER_RIGHT);
+
             count++;
         }
     }
+
 
     public void openWorkItemDetails(workItems item,projects project){
         if (item == null || loadPane == null) return;
@@ -365,25 +372,18 @@ public class switchPage extends utils {
     }
 
 
-    public void openProjectDetails(projects project){
+    public void openProjectDetails(projects project) {
+        if (project == null) return;
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectDetails.fxml"));
-            Parent newContent = loader.load();
+        sideBarPaneController nav =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        if (nav == null) return;
 
-            projectDetailsController controller = loader.getController();
-            controller.setProjectData(project);
-
-            if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
+        nav.openInnerView("projectDetails.fxml", ctrl -> {
+            if (ctrl instanceof projectDetailsController c) {
+                c.setProjectData(project);
             }
-
-            loadPane.getChildren().setAll(newContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
+
 }

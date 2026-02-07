@@ -328,22 +328,17 @@
                </BorderPane.margin></StackPane>
          </center>
       </BorderPane>
-      <BorderPane fx:id="addNewPane" prefHeight="200.0" prefWidth="200.0" visible="false">
-         <top>
-            <Region id="addPageRegion" fx:id="topRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </top>
-         <left>
-            <Region id="addPageRegion" fx:id="leftRegion" minHeight="20.0" minWidth="30.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
-         </left>
-         <right>
-            <Region id="addPageRegion" fx:id="rightRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </right>
-         <bottom>
-            <Region id="addPageRegion" fx:id="bottomRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </bottom>
-         <center>
-            <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="520.0" />
-         </center>
-      </BorderPane>
+      <StackPane fx:id="addNewPane"
+                 visible="false"
+                 managed="false"
+                 pickOnBounds="true">
+
+         <!-- Full-screen click catcher + dim background -->
+         <Region fx:id="overlayCatcher" styleClass="overlay-catcher"/>
+
+         <!-- Your centered add form -->
+         <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="520.0" />
+      </StackPane>
+
    </children>
 </StackPane>

@@ -1,22 +1,25 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
-import IPPSystem.Interfaces.AddOverlayForm;
-import IPPSystem.Interfaces.SearchablePage;
-import IPPSystem.Interfaces.SuggestablePage;
 import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Utils.*;
+import com.almasb.fxgl.ui.InGamePanel;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -29,9 +32,27 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import IPPSystem.Interfaces.*;
+import javafx.animation.PauseTransition;
+import javafx.collections.FXCollections;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.stage.Popup;
+import javafx.util.Duration;
+
+import java.util.Collections;
+import java.util.List;
+
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class sideBarPaneController extends navigationPaneController{
@@ -40,17 +61,22 @@ public class sideBarPaneController extends navigationPaneController{
     private Object currentAddController;
 
 
+    /**
+     * addNewPane is an overlay container defined as StackPane in sideBarPane.fxml.
+     * It must match the FXML type to avoid FXMLLoader injection errors.
+     */
     @FXML
-    private BorderPane addNewPane,basePane;
+    private StackPane addNewPane;
+
+    @FXML
+    private BorderPane basePane;
+
 
     @FXML
     private StackPane addNew;
 
     @FXML
     private HBox backBtn;
-
-    @FXML
-    private Region bottomRegion;
 
     @FXML
     private HBox changePasswordBtn;
@@ -94,8 +120,6 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private Circle logoIcon; // Added this field (exists in FXML)
 
-    @FXML
-    private Region leftRegion;
 
     @FXML
     private StackPane light;
@@ -150,9 +174,6 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private Button revertBtn;
-
-    @FXML
-    private Region rightRegion;
 
     @FXML
     private Label roleViewText;
@@ -224,9 +245,6 @@ public class sideBarPaneController extends navigationPaneController{
     private Label toggleSymbolText;
 
     @FXML
-    private Region topRegion;
-
-    @FXML
     private Label userDobLbl;
 
     @FXML
@@ -262,13 +280,149 @@ public class sideBarPaneController extends navigationPaneController{
     @FXML
     private Label dashboardIcon, projectIcon, userIcon, reportIcon, settingIcon, logoutIcon, changePwIcon, profileIcon;
 
-    private final javafx.stage.Popup suggestionPopup = new javafx.stage.Popup();
-    private final javafx.scene.control.ListView<String> suggestionList = new javafx.scene.control.ListView<>();
-    private java.util.List<String> currentSuggestions = java.util.List.of(); // updated by current page
+    @FXML private Region overlayCatcher;
 
 
-    // Removed userViewImage field as it doesn't exist in FXML
-    // Removed imageIconBtn field as it doesn't exist in FXML
+    //    ========== For the Search Bar Text =====================
+    private final Popup suggestionPopup = new Popup();
+    private final ListView<String> suggestionList = new ListView<>();
+    private final PauseTransition debounce = new PauseTransition(Duration.millis(180));
+
+    /** This is the controller of the currently loaded center page (viewProjectsController etc.). */
+    private Object currentInnerController;
+
+    private void setupSuggestionPopup() {
+        suggestionList.getStyleClass().add("suggestion-list");
+        suggestionList.setPrefHeight(220);
+
+        suggestionPopup.setAutoHide(true);
+        suggestionPopup.setHideOnEscape(true);
+        suggestionPopup.getContent().add(suggestionList);
+
+        // Click suggestion = fill + trigger search action
+        suggestionList.setOnMouseClicked(e -> {
+            String sel = suggestionList.getSelectionModel().getSelectedItem();
+            if (sel != null) {
+                searchTextField.setText(sel);
+                searchTextField.positionCaret(sel.length());
+                hideSuggestions();
+                triggerSearch(sel);
+            }
+        });
+
+        // Keyboard selection
+        suggestionList.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                String sel = suggestionList.getSelectionModel().getSelectedItem();
+                if (sel != null) {
+                    searchTextField.setText(sel);
+                    searchTextField.positionCaret(sel.length());
+                    hideSuggestions();
+                    triggerSearch(sel);
+                }
+            } else if (e.getCode() == KeyCode.ESCAPE) {
+                hideSuggestions();
+                searchTextField.requestFocus();
+            }
+        });
+    }
+
+    private void setupLiveSuggestions() {
+        // Debounced typing to avoid spamming suggestions
+        searchTextField.textProperty().addListener((obs, oldVal, newVal) -> {
+            debounce.stop();
+            debounce.setOnFinished(ev -> {
+                String q = newVal == null ? "" : newVal.trim();
+                if (q.isEmpty()) {
+                    hideSuggestions();
+                    triggerSearch("");
+                    return;
+                }
+                updateSuggestions(q);
+                triggerSearch(q);
+            });
+            debounce.playFromStart();
+        });
+
+        // Navigation keys
+        searchTextField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DOWN && suggestionPopup.isShowing()) {
+                suggestionList.requestFocus();
+                suggestionList.getSelectionModel().selectFirst();
+                e.consume();
+            } else if (e.getCode() == KeyCode.ESCAPE) {
+                hideSuggestions();
+            }
+        });
+
+        // If user clicks in field, re-show suggestions (if any)
+        searchTextField.focusedProperty().addListener((obs, was, is) -> {
+            if (!is) hideSuggestions();
+        });
+    }
+
+    private void updateSuggestions(String query) {
+        List<String> suggestions = Collections.emptyList();
+
+        Object ctrl = currentInnerController;
+        if (ctrl instanceof SuggestablePage sp) {
+            try {
+                suggestions = sp.getSuggestions(query);
+            } catch (Exception ignored) {
+                suggestions = Collections.emptyList();
+            }
+        }
+
+        if (suggestions == null || suggestions.isEmpty()) {
+            hideSuggestions();
+            return;
+        }
+
+        suggestionList.setItems(FXCollections.observableArrayList(suggestions));
+        showSuggestionsBelow(searchTextField);
+    }
+
+    private void triggerSearch(String query) {
+        Object ctrl = currentInnerController;
+        if (ctrl instanceof SearchablePage searchable) {
+            searchable.onSearch(query);
+        }
+    }
+
+    private void showSuggestionsBelow(Node anchor) {
+        Bounds b = anchor.localToScreen(anchor.getBoundsInLocal());
+        if (b == null) return;
+
+        // Width matches search field
+        suggestionList.setPrefWidth(Math.max(260, b.getWidth()));
+
+        if (!suggestionPopup.isShowing()) {
+            suggestionPopup.show(anchor, b.getMinX(), b.getMaxY() + 2);
+        } else {
+            suggestionPopup.setX(b.getMinX());
+            suggestionPopup.setY(b.getMaxY() + 2);
+        }
+    }
+
+    private void hideSuggestions() {
+        if (suggestionPopup.isShowing()) suggestionPopup.hide();
+    }
+
+    private void clearSearchTextOnly() {
+        // only clear the text the user typed
+        searchTextField.clear();
+
+        // hide popup if it is open
+        hideSuggestions();
+
+        // optional UX: put focus back to search field
+        searchTextField.requestFocus();
+
+        // IMPORTANT:
+        // Don't reload DB, don't clear cached lists.
+        // Clearing the text will trigger your existing textProperty listener
+        // and call triggerSearch("") automatically (if you set it up that way).
+    }
 
     private users loginUser = user;
 
@@ -276,90 +430,74 @@ public class sideBarPaneController extends navigationPaneController{
 
     private String currentInnerFxml = "viewProjects.fxml";
 
-    private final HashMap<String, Parent> viewCache = new HashMap<>();
-    private final HashMap<String, Object> controllerCache = new HashMap<>();
-    private Object currentInnerController;
-
-    private final PauseTransition searchDebounce = new PauseTransition(Duration.millis(250));
+    public Object getCurrentInnerController() {
+        return currentInnerController;
+    }
 
 
+    private static class ViewEntry {
+        final Parent view;
+        final Object controller;
+        ViewEntry(Parent view, Object controller) {
+            this.view = view;
+            this.controller = controller;
+        }
+    }
+
+    private final HashMap<String, ViewEntry> viewCache = new HashMap<>();
+
+    //    For the catch the data in the load Pane and if click the open in new Tab btn to be work well
     public void openInnerView(String fxml) {
+        openInnerView(fxml, null);
+        //    System.out.println("openInnerView -> " + fxml + " | loadPane=" + System.identityHashCode(loadPane));
+
+    }
+    public void openInnerView(String fxml, java.util.function.Consumer<Object> controllerHook) {
         try {
-            Parent view = viewCache.get(fxml);
-            Object controller = controllerCache.get(fxml);
+            ViewEntry entry = viewCache.get(fxml);
 
-            if (view == null) {
+            if (entry == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
-                view = loader.load();
-                controller = loader.getController();
+                Parent view = loader.load();
+                Object controller = loader.getController();
 
-                // inject loadPane for inner controllers (your existing logic)
+                // ✅ inject loadPane into inner controllers
                 if (controller instanceof loadPaneAware aware) {
                     aware.setLoadPane(loadPane);
                 }
 
-                viewCache.put(fxml, view);
-                controllerCache.put(fxml, controller);
+                entry = new ViewEntry(view, controller);
+                viewCache.put(fxml, entry);
             }
 
-            loadPane.getChildren().setAll(view);
-            view.toFront();
-            currentInnerFxml = fxml;
+            // ✅ ALWAYS update current controller (even when cached)
+            currentInnerController = entry.controller;
+            currentAddController = entry.controller;
 
-            // ✅ set current controller so search can route to it
-            currentInnerController = controller;
-            bindSearchToCurrentPage();
+            // ✅ allow caller to pass projectId etc.
+            if (controllerHook != null) {
+                controllerHook.accept(entry.controller);
+            }
+
+            loadPane.getChildren().setAll(entry.view);
+            entry.view.toFront();
+            currentInnerFxml = fxml;
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void bindSearchToCurrentPage() {
-        if (searchTextField == null) return;
-
-        boolean canSearch = (currentInnerController instanceof SearchablePage);
-
-        // Optional: disable search if page doesn't support it
-        searchTextField.setDisable(!canSearch);
-
-        if (!canSearch) {
-            searchTextField.clear();
-        } else {
-            // when switching pages, run search again using current text
-            String txt = searchTextField.getText();
-            ((SearchablePage) currentInnerController).onSearch(txt == null ? "" : txt.trim());
-        }
-    }
-
-    private void setupSearchHandlers() {
-
-        // live typing with debounce (Chrome feel)
-        searchTextField.textProperty().addListener((obs, oldV, newV) -> {
-            if (!(currentInnerController instanceof SearchablePage sp)) return;
-
-            searchDebounce.stop();
-            searchDebounce.setOnFinished(e -> sp.onSearch(newV == null ? "" : newV.trim()));
-            searchDebounce.playFromStart();
-        });
-
-        // clear button
-        searchClearBtn.setOnMouseClicked(e -> {
-            searchTextField.clear();
-            if (currentInnerController instanceof SearchablePage sp) {
-                sp.onSearchClear();
-            }
-        });
-
-        // search icon just focuses the field (optional)
-        searchBtn.setOnMouseClicked(e -> searchTextField.requestFocus());
-    }
 
 
     @FXML
     public void initialize() {
 
-        setupSearchHandlers();
+
+//        ============ search bar action ================
+        setupSuggestionPopup();
+        setupLiveSuggestions();
+        searchClearBtn.setOnMouseClicked(e->clearSearchTextOnly());
 
         // ✅ Let any inner controller access this sideBarPaneController (per-tab safe)
         loadPane.getProperties().put("SIDEBAR_CONTROLLER", this);
@@ -380,28 +518,45 @@ public class sideBarPaneController extends navigationPaneController{
         circleMove();
 
         newTabBtn.setOnMouseClicked(e -> {
-            // what is currently open in this tab?
+
             String inner = currentInnerFxml;
 
-            // tab title (optional)
+            // 1) export state from current inner controller (if supported)
+            java.util.Map<String, Object> state = java.util.Collections.emptyMap();
+            if (currentInnerController instanceof IPPSystem.Interfaces.TabStateful ts) {
+                state = ts.exportState();
+            }
+
             String title = "New Tab";
             if (linkButton.getTabButton() != null) {
                 title = linkButton.getTabButton().getText();
             }
 
-            // ✅ create new tab and load same inner page
-            linkButton.createTabWithInitialInner("sideBarPane.fxml", title, inner);
+            final java.util.Map<String, Object> finalState = state;
+
+            // 2) create new tab, load same inner, then import state
+            linkButton.createTabWithInitialInner("sideBarPane.fxml", title, inner, newSidebar -> {
+
+                Object newInnerCtrl = newSidebar.getCurrentInnerController();
+                if (newInnerCtrl instanceof IPPSystem.Interfaces.TabStateful ts2) {
+                    ts2.importState(finalState);
+                }
+            });
         });
+
 
         utils.setToolTip(newTabBtn, "Open new tab");
         setIcons();
 
         addNewPane.setVisible(false);
         basePane.setVisible(true);
+
+        setupAddOverlayOutsideClick();
         currentAddController = null;
 
         // Set initial state - show sideBar, hide settingBar and iconSideBar
         showSidebar(sideBar, 200);
+
 
 
         // Setup button click handlers
@@ -440,90 +595,176 @@ public class sideBarPaneController extends navigationPaneController{
         setFirstPage();
 
 //        utils.switchNewScene(logoutIcon,"login.fxml");
-        setupSuggestionPopup();
-        setupLiveSuggestions();
+
+
+        setupAddOverlayOutsideClick();      // call once here
+
 
     }
 
-    private void setupAddOverlayOutsideClick() {
-
-        // make regions clickable even if “transparent”
-        String catcherStyle = "-fx-background-color: rgba(0,0,0,0.001);";
-        topRegion.setStyle(catcherStyle);
-        leftRegion.setStyle(catcherStyle);
-        rightRegion.setStyle(catcherStyle);
-        bottomRegion.setStyle(catcherStyle);
-
-        EventHandler<MouseEvent> handler = e -> {
-
-            if (!addNewPane.isVisible()) return;
-
-            if (currentAddController instanceof AddOverlayForm form) {
-
-                if (form.hasUnsavedChanges() && !form.isFormValid()) {
-//                    messageBoxService.(loadPane, notificationType.WARNING, form.getValidationMessage());
-                    e.consume();
-                    return;
-                }
-
-                if (form.hasUnsavedChanges() && form.isFormValid()) {
-//                    messageBoxService.showToast(loadPane, notificationType.INFO, "Please save or cancel first.");
-                    e.consume();
-                    return;
-                }
-
-                closeAddOverlay();
-                e.consume();
-                return;
-            }
-
-            closeAddOverlay();
-            e.consume();
-        };
-
-        topRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
-        leftRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
-        rightRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
-        bottomRegion.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
-    }
-
-
+    //    For the add pane
     public void openAddOverlay(String fxml) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
-            Parent view = loader.load();
+            // We reuse openInnerView() (same loader/cache logic + loadPaneAware injection),
+            // but we must NOT replace the current center page permanently.
+            //
+            // Flow:
+            // 1) snapshot current center page (loadPane children + currentInner pointers)
+            // 2) call openInnerView(fxml) to load into loadPane using the standard pipeline
+            // 3) move that loaded root into overlay container (addNew)
+            // 4) restore previous center page immediately
+            final String prevFxml = currentInnerFxml;
+            final Object prevController = currentInnerController;
+            final java.util.List<Node> prevCenterChildren = new java.util.ArrayList<>(loadPane.getChildren());
 
-            // allow the opened add-page controller to navigate too (optional but useful)
-            Object controller = loader.getController();
-            currentAddController = controller;
-            if (controller instanceof loadPaneAware aware) {
-                aware.setLoadPane(loadPane);
+            // Load using your standard pipeline; capture controller for later if needed
+            openInnerView(fxml, controller -> currentAddController = controller);
+
+            // Grab the loaded view (openInnerView puts it into loadPane)
+            Parent loadedView = null;
+            if (!loadPane.getChildren().isEmpty() && loadPane.getChildren().get(0) instanceof Parent p) {
+                loadedView = p;
             }
 
-            addNew.getChildren().setAll(view);
-            addNewPane.setVisible(true);
-            basePane.setVisible(false);
+            // Restore previous center page
+            loadPane.getChildren().setAll(prevCenterChildren);
+            currentInnerFxml = prevFxml;
+            currentInnerController = prevController;
 
-            view.toFront();
+            // Put loaded view into overlay content holder
+            addNew.getChildren().clear();
+            if (loadedView != null) {
+                addNew.getChildren().add(loadedView);
+            }
+
+            // Show overlay (and ensure it is on top)
+            addNewPane.setVisible(true);
+            addNewPane.setManaged(true);
+            addNewPane.toFront();
+
+            // Block clicks behind + dim background (keep your existing behavior)
+            if (basePane != null) {
+                basePane.setDisable(true);
+                basePane.setOpacity(0.35);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void setupAddOverlayOutsideClick() {
+
+        overlayCatcher.setOnMouseClicked(e -> {
+            if (!addNewPane.isVisible()) return;
+
+            // If you loaded a form controller that supports AddOverlayForm
+            if (currentAddController instanceof IPPSystem.Interfaces.AddOverlayForm form) {
+
+                // if empty -> close
+                if (!form.hasUnsavedChanges()) {
+                    closeAddOverlay();
+                    e.consume();
+                    return;
+                }
+
+                // if has data -> confirm discard
+                messageBoxService.confirm(
+                        "Discard changes?",
+                        "You didn’t save anything. Do you want to close?",
+                        notificationType.WARNING,
+                        this::closeAddOverlay,
+                        () -> {}
+                );
+
+                e.consume();
+                return;
+            }
+
+            // fallback: just close
+            closeAddOverlay();
+            e.consume();
+        });
+    }
+
+
     public void closeAddOverlay() {
         addNew.getChildren().clear();
         addNewPane.setVisible(false);
-        basePane.setVisible(true);
+        addNewPane.setManaged(false);
 
-        setupAddOverlayOutsideClick();
+        basePane.setDisable(false);
+        basePane.setOpacity(1.0);
+
         currentAddController = null;
+    }
+
+    private void handleOverlayOutsideClick() {
+
+        // If form empty -> close immediately
+        if (isAddFormEmpty()) {
+            closeAddOverlay(); // or close current tab if you have that
+            return;
+        }
+
+        // If user typed something -> ask confirm
+        messageBoxService.confirm(
+                "Discard changes?",
+                "You didn’t save anything. Do you want to close?",
+                notificationType.WARNING,
+                () -> closeAddOverlay(),   // YES
+                () -> {}                   // NO
+        );
+    }
+
+
+    private boolean isAddFormEmpty() {
+        if (addNew == null) return true;
+        return isNodeTreeEmpty(addNew);
+    }
+
+    private boolean isNodeTreeEmpty(javafx.scene.Parent parent) {
+        for (javafx.scene.Node n : parent.getChildrenUnmodifiable()) {
+
+            // TextField
+            if (n instanceof javafx.scene.control.TextField tf) {
+                if (tf.getText() != null && !tf.getText().trim().isEmpty()) return false;
+            }
+
+            // TextArea
+            if (n instanceof javafx.scene.control.TextArea ta) {
+                if (ta.getText() != null && !ta.getText().trim().isEmpty()) return false;
+            }
+
+            // ComboBox
+            if (n instanceof javafx.scene.control.ComboBox<?> cb) {
+                if (cb.getValue() != null) return false;
+            }
+
+            // DatePicker
+            if (n instanceof javafx.scene.control.DatePicker dp) {
+                if (dp.getValue() != null) return false;
+            }
+
+            // CheckBox (optional: if checked counts as input)
+            if (n instanceof javafx.scene.control.CheckBox chk) {
+                if (chk.isSelected()) return false;
+            }
+
+            // Recurse down
+            if (n instanceof javafx.scene.Parent p) {
+                if (!isNodeTreeEmpty(p)) return false;
+            }
+        }
+        return true; // nothing found
     }
 
 
     // ... rest of your methods remain the same
     private void setFirstPage(){
-        openInnerView("viewProjects.fxml");
+        if(user.getUserRole().equals(role.MANAGER.toString())){
+            openInnerView("allProjectDashboard.fxml");
+        }
     }
 
     private void setIcons(){
@@ -591,51 +832,66 @@ public class sideBarPaneController extends navigationPaneController{
         boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
         dashboardViewBtn.setOnMouseClicked(e -> {
             if (isManager) {
-                utils.openFxml("allProjectDashboard.fxml",loadPane);
+                openInnerView("allProjectDashboard.fxml");
                 linkButton.setTabButtonName("Overall Dashboard");
             }else{
-                utils.openFxml("currentProjectDashboard.fxml", loadPane);
+                openInnerView("currentProjectDashboard.fxml");
                 linkButton.setTabButtonName("Current Dashboard");
             }
 
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
-            utils.openFxml("dashboard.fxml", loadPane);
+            if (isManager) {
+                openInnerView("allProjectDashboard.fxml");
+                linkButton.setTabButtonName("Overall Dashboard");
+            }else{
+                openInnerView("currentProjectDashboard.fxml");
+                linkButton.setTabButtonName("Current Dashboard");
+            }
         });
 
         // Project navigation
         projectViewBtn.setOnMouseClicked(e -> {
-            utils.openFxml("viewProjects.fxml", loadPane);
+            openInnerView("viewProjects.fxml");
             linkButton.setTabButtonName("Projects View");
         });
         projectIconBtn.setOnMouseClicked(e -> {
-            utils.openFxml("viewProjects.fxml", loadPane);
+            openInnerView("viewProjects.fxml");
             linkButton.setTabButtonName("Projects View");
         });
 
         // User navigation
         userViewBtn.setOnMouseClicked(e -> {
-
             if( isManager)
             {
-                utils.openFxml("engineerView.fxml",loadPane);
+                openInnerView("engineerView.fxml");
                 linkButton.setTabButtonName("Supervisors View");
             }else{
-                utils.openFxml("laborView.fxml",loadPane);
+                openInnerView("laborView.fxml");
                 linkButton.setTabButtonName("Labors View");
             }
 
 
         });
+        userIconBtn.setOnMouseClicked(e->{
+            if( isManager)
+            {
+                openInnerView("engineerView.fxml");
+                linkButton.setTabButtonName("Supervisors View");
+            }else{
+                openInnerView("laborView.fxml");
+                linkButton.setTabButtonName("Labors View");
+            }
+        });
 
         // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
             openInnerView("report.fxml");
-            linkButton.setTabButtonName("Report");
+            linkButton.setTabButtonName("Report View");
         });
         reportIconBtn.setOnMouseClicked(e -> {
             openInnerView("report.fxml");
-            linkButton.setTabButtonName("Report");
+            linkButton.setTabButtonName("Report View");
         });
     }
 
@@ -729,7 +985,6 @@ public class sideBarPaneController extends navigationPaneController{
         }
     }
 
-//    For the light and dark mode of circle
     private void translateCircle(Circle circle, Circle circle1) {
         TranslateTransition moving = new TranslateTransition(Duration.millis(300), circle);
         TranslateTransition moving1 = new TranslateTransition(Duration.millis(300), circle1);
@@ -780,95 +1035,4 @@ public class sideBarPaneController extends navigationPaneController{
             settingToggleCircle.setTranslateX(-10);
         }
     }
-
-//    For the search bar
-    private void setupSuggestionPopup() {
-        suggestionList.setMaxHeight(220);
-        suggestionList.setPrefWidth(320);
-
-        suggestionPopup.setAutoHide(true);
-        suggestionPopup.getContent().add(suggestionList);
-
-        // click suggestion -> put into search field + run search
-        suggestionList.setOnMouseClicked(e -> {
-            String selected = suggestionList.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                searchTextField.setText(selected);
-                searchTextField.positionCaret(selected.length());
-                suggestionPopup.hide();
-                forwardSearchToCurrentPage(selected);
-            }
-        });
-
-        // keyboard enter on suggestion
-        suggestionList.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case ENTER -> {
-                    String selected = suggestionList.getSelectionModel().getSelectedItem();
-                    if (selected != null) {
-                        searchTextField.setText(selected);
-                        searchTextField.positionCaret(selected.length());
-                        suggestionPopup.hide();
-                        forwardSearchToCurrentPage(selected);
-                    }
-                }
-                case ESCAPE -> suggestionPopup.hide();
-            }
-        });
-    }
-
-    private void setupLiveSuggestions() {
-        searchTextField.textProperty().addListener((obs, oldV, newV) -> {
-            String q = (newV == null) ? "" : newV.trim();
-
-            // always forward live search to page (your filtering)
-            forwardSearchToCurrentPage(q);
-
-            // show suggestions when >= 1 character
-            if (q.length() < 1) {
-                suggestionPopup.hide();
-                return;
-            }
-
-            if (!(currentInnerController instanceof SuggestablePage sp)) {
-                suggestionPopup.hide();
-                return;
-            }
-
-            // get suggestions from current page
-            java.util.List<String> suggestions = sp.getSuggestions(q);
-
-            if (suggestions == null || suggestions.isEmpty()) {
-                suggestionPopup.hide();
-                return;
-            }
-
-            suggestionList.getItems().setAll(suggestions);
-
-            if (!suggestionPopup.isShowing()) {
-                var p = searchTextField.localToScreen(0, searchTextField.getHeight());
-                suggestionPopup.show(searchTextField, p.getX(), p.getY());
-            }
-        });
-
-        // arrow down goes into list
-        searchTextField.setOnKeyPressed(e -> {
-            if (e.getCode() == javafx.scene.input.KeyCode.DOWN && suggestionPopup.isShowing()) {
-                suggestionList.requestFocus();
-                suggestionList.getSelectionModel().selectFirst();
-            }
-            if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
-                suggestionPopup.hide();
-            }
-        });
-    }
-
-    private void forwardSearchToCurrentPage(String text) {
-        if (currentInnerController instanceof IPPSystem.Interfaces.SearchablePage sp) {
-            sp.onSearch(text == null ? "" : text.trim());
-        }
-    }
-
-
-
 }

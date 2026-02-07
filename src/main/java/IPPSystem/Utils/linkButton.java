@@ -43,16 +43,26 @@ public class linkButton {
     }
 
     public void createTab(HBox tabBar, StackPane loadPane, String fxmlFile, String title) {
-        createTabInternal(tabBar, loadPane, fxmlFile, title, null);
-
+        createTabInternal(tabBar, loadPane, fxmlFile, title, null, null);
     }
 
-    // ✅ create new tab and load same inner page (duplicate tab feature)
     public void createTabWithInitialInner(String fxmlFile, String title, String initialInnerFxml) {
+        createTabWithInitialInner(fxmlFile, title, initialInnerFxml, null);
+    }
+
+
+
+    // ✅ create new tab and load same inner page (duplicate tab feature)
+    public void createTabWithInitialInner(
+            String fxmlFile,
+            String title,
+            String initialInnerFxml,
+            java.util.function.Consumer<IPPSystem.Controllers.sideBarPaneController> afterOpen
+    ) {
         if (hostTabBar == null || hostLoadPane == null) {
-            throw new IllegalStateException("Host not bound. Call linkButton.bindHost(tapBar, loadPane) in navigationPaneController.");
+            throw new IllegalStateException("Host not bound. Call bindHost(...) first.");
         }
-        createTabInternal(hostTabBar, hostLoadPane, fxmlFile, title, initialInnerFxml);
+        createTabInternal(hostTabBar, hostLoadPane, fxmlFile, title, initialInnerFxml, afterOpen);
     }
 
     private void createTabInternal(
@@ -60,7 +70,8 @@ public class linkButton {
             StackPane loadPane,
             String fxmlFile,
             String title,
-            String initialInnerFxml
+            String initialInnerFxml,
+            java.util.function.Consumer<IPPSystem.Controllers.sideBarPaneController> afterOpen
     ) {
         if (tabBar == null || loadPane == null) {
             throw new IllegalArgumentException("tabBar/loadPane cannot be null");
@@ -123,7 +134,12 @@ public class linkButton {
         // ✅ After tab created, load same inner view if this is a sideBarPane tab
         if (initialInnerFxml != null && controller instanceof IPPSystem.Controllers.sideBarPaneController sb) {
             sb.openInnerView(initialInnerFxml);
+
+            if (afterOpen != null) {
+                afterOpen.accept(sb); // ✅ give the caller access to the new tab sidebar controller
+            }
         }
+
     }
 
     private void switchTab(HBox tabBar, HBox tabBox, Button selectedTab, Button closeBtn) {

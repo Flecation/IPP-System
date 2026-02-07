@@ -3,7 +3,6 @@ package IPPSystem.Controllers;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.labors;
 import IPPSystem.Utils.session;
-import IPPSystem.Utils.utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.time.LocalDate;
@@ -37,16 +35,26 @@ public class laborViewController implements Initializable {
 
 
     @FXML
-    private void clickAddLabor() {
-        StackPane tabLoadPane = utils.findTabLoadPane(addLaborBtn);
-        sideBarPaneController sb =
-                (sideBarPaneController) tabLoadPane.getProperties().get("SIDEBAR_CONTROLLER");
+    private void clickAddLabor(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/createLaborModal.fxml"));
+            Parent modal = loader.load();
 
-        if (sb != null) {
-            sb.openAddOverlay("createLaborModal.fxml");
+            createLaborController controller = loader.getController();
+
+            // Set callback: after adding a labor, refresh list + stats
+            controller.setOnLaborAdded(() -> {
+                applyFilters();   // rebuild labor rows with current filter
+                updateLaborStats(); // refresh total/new/active/resigned numbers
+            });
+
+            session.getInstance()
+                    .getNavigationController()
+                    .showModal("createLaborModal.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 
 
 

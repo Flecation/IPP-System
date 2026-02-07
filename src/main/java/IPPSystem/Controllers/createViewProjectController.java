@@ -8,19 +8,42 @@ import IPPSystem.Models.tasks;
 import IPPSystem.Models.workItems;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
+import IPPSystem.Utils.createProjectDraft;
 
+import IPPSystem.Utils.storage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Utils.utils;
+
+import javafx.application.Platform;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class createViewProjectController extends sideBarPaneController {
+public class createViewProjectController implements loadPaneAware {
+
+    private javafx.scene.layout.StackPane loadPane;
+
+    @Override
+    public void setLoadPane(javafx.scene.layout.StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+    private sideBarPaneController parent() {
+        // Resolve per-tab loadPane dynamically so this controller can work without injection
+        javafx.scene.layout.StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(projectCancelBtn);
+        if (lp == null) return null;
+
+        Object p = lp.getProperties().get("SIDEBAR_CONTROLLER");
+        return (p instanceof sideBarPaneController) ? (sideBarPaneController) p : null;
+    }
 
     // ===== Project Info =====
     @FXML private Label projectTitle;
@@ -78,6 +101,8 @@ public class createViewProjectController extends sideBarPaneController {
     private final ObservableList<TaskRow> taskList = FXCollections.observableArrayList();
 
     private workItems selectedWorkItem;
+
+    private storage data = storage.getInstance();
 
     // WorkItemId -> Baseline
     private final Map<Integer, WorkItemBaseline> baselineMap = new HashMap<>();
@@ -162,7 +187,164 @@ public class createViewProjectController extends sideBarPaneController {
         taskAddBtn.setOnAction(e -> addTaskForSelected());
 
         projectConfirmBtn.setOnAction(e -> onConfirmSave());
-        projectCancelBtn.setOnAction(e -> openInnerView("viewProjects.fxml")); // go back
+        projectCancelBtn.setOnAction(e -> {
+            sideBarPaneController p = parent();
+            if (p != null) p.openInnerView("viewProjects.fxml");
+        }); // go back
+
+        // If user came from createProject.fxml, auto-fill and auto-generate template data.
+        Platform.runLater(this::loadFromDraftAndAutoGenerate);
+    }
+
+    /**
+     * Called when arriving from createProject.fxml (createProjectController -> createProjectDraft).
+     * Fills project fields, loads categories, and pre-fills skills/tasks using your DB templates.
+     */
+    private void loadFromDraftAndAutoGenerate() {
+        try {
+            createProjectDraft d = createProjectDraft.getInstance();
+            if (d == null || d.instanceName == null || d.instanceName.trim().isEmpty()) {
+                return; // opened directly (not from createProject)
+            }
+
+            // ----- Fill Project Info UI -----
+            if (projectTitle != null) projectTitle.setText(d.instanceName);
+            if (pManagerTxt != null) pManagerTxt.setText(nvlStr(d.supervisorName));
+            if (pTypeTxt != null) pTypeTxt.setText(nvlStr(d.projectTypeName));
+            if (pBuildingTxt != null) pBuildingTxt.setText(nvlStr(d.buildingName));
+            if (pLevelTxt != null) pLevelTxt.setText(nvlStr(d.levelName));
+            if (pAddressTxt != null) pAddressTxt.setText(nvlStr(d.address));
+            if (pSDateTxt != null && d.startDate != null) pSDateTxt.setText(d.startDate.toString());
+            if (pEDateTxt != null && d.endDate != null) pEDateTxt.setText(d.endDate.toString());
+            if (pDurationTxt != null && d.duration != null) pDurationTxt.setText(String.valueOf(d.duration));
+            if (pContractValueTxt != null && d.contractValue != null) pContractValueTxt.setText(String.valueOf(d.contractValue));
+
+            // ----- Auto-generate categories/skills/tasks from template -----
+            autoGenerateFromTemplates();
+
+        } catch (Exception ex) {
+            // keep user on page even if auto-fill fails
+            error(ex.getMessage());
+        }
+    }
+
+    private void autoGenerateFromTemplates() {
+        // Ensure needed fields exist
+        if (pTypeTxt == null || pBuildingTxt == null || pLevelTxt == null) return;
+
+        // 1) categories
+        loadWorkCategoriesFromTemplate();
+        if (categoryList.isEmpty()) return;
+
+        // 2) skills + tasks templates (pre-fill)
+        int typeId = resolveProjectTypeId(pTypeTxt.getText());
+        int buildingId = resolveBuildingId(pBuildingTxt.getText());
+        int levelId = resolveLevelId(pLevelTxt.getText());
+
+        LocalDate projectStart = parseLocalDateOrNull(pSDateTxt == null ? null : pSDateTxt.getText());
+        if (projectStart == null) projectStart = LocalDate.now();
+
+        // Clear any previous
+        skillList.clear();
+        taskList.clear();
+
+        // For each work item, generate:
+        for (workItems wi : categoryList) {
+            if (wi == null) continue;
+
+            // ----- skills template: pick min as default -----
+            ObservableList<skills> skillOptions = database.getSkillDetails(typeId, wi.getWorkItemId());
+            for (skills s : skillOptions) {
+                double laborQty = Math.max(1, s.getMinRequireLabors());
+                double wage = Math.max(0, s.getMinDailyWage());
+                SkillRow row = new SkillRow(wi.getWorkItemId(), s.getSkillId(), s.getSkillName(), laborQty, wage);
+                boolean exist = skillList.stream().anyMatch(x -> x.workItemId == row.workItemId && x.skillId == row.skillId);
+                if (!exist) skillList.add(row);
+            }
+
+            // ----- tasks template: chain by minDuration -----
+            ObservableList<tasks> taskOptions = database.getAllTasksForAutoGeneration(typeId, wi.getWorkItemId(), buildingId, levelId);
+            LocalDate cursor = projectStart;
+            for (tasks t : taskOptions) {
+                double dur = Math.max(1, t.getMinDuration());
+                long durDays = Math.max(1L, Math.round(dur));
+
+                LocalDate s = cursor;
+                LocalDate e = cursor.plusDays(durDays - 1);
+                cursor = e.plusDays(1);
+
+                TaskRow row = new TaskRow(
+                        wi.getWorkItemId(),
+                        t.getTaskId(),
+                        t.getTaskName(),
+                        0,            // plannedQty (user can edit later)
+                        "",           // unit (user can edit later)
+                        durDays,
+                        s.toString(),
+                        e.toString()
+                );
+                boolean exist = taskList.stream().anyMatch(x -> x.workItemId == row.workItemId && x.taskId == row.taskId);
+                if (!exist) taskList.add(row);
+            }
+
+            // ----- baseline from generated skills+tasks -----
+            WorkItemBaseline b = baselineMap.computeIfAbsent(wi.getWorkItemId(), k -> new WorkItemBaseline());
+
+            // duration = sum of task durations for this work item (fallback: project duration)
+            double wDur = taskList.stream()
+                    .filter(x -> x.workItemId == wi.getWorkItemId())
+                    .mapToDouble(x -> x.duration)
+                    .sum();
+
+            if (wDur <= 0) {
+                Double pd = parseDoubleOrNull(pDurationTxt == null ? null : pDurationTxt.getText());
+                wDur = nvlDouble(pd, 1);
+            }
+
+            // start/end from tasks
+            LocalDate wStart = taskList.stream()
+                    .filter(x -> x.workItemId == wi.getWorkItemId())
+                    .map(x -> parseLocalDateOrNull(x.startDate))
+                    .filter(Objects::nonNull)
+                    .min(LocalDate::compareTo)
+                    .orElse(projectStart);
+
+            LocalDate wEnd = taskList.stream()
+                    .filter(x -> x.workItemId == wi.getWorkItemId())
+                    .map(x -> parseLocalDateOrNull(x.endDate))
+                    .filter(Objects::nonNull)
+                    .max(LocalDate::compareTo)
+                    .orElse(wStart.plusDays(Math.max(1L, Math.round(wDur)) - 1));
+
+            // labor = sum of generated skill labors
+            double wLabor = skillList.stream()
+                    .filter(x -> x.workItemId == wi.getWorkItemId())
+                    .mapToDouble(x -> x.laborQty)
+                    .sum();
+
+            // cost estimate = sum(laborQty * wage) * duration
+            double dailyCost = skillList.stream()
+                    .filter(x -> x.workItemId == wi.getWorkItemId())
+                    .mapToDouble(x -> x.laborQty * x.dailyWage)
+                    .sum();
+            double wCost = dailyCost * wDur;
+
+            b.start = wStart;
+            b.end = wEnd;
+            b.duration = wDur;
+            b.laborQty = wLabor;
+            b.cost = wCost;
+        }
+
+        // refresh UI
+        if (!categoryList.isEmpty()) {
+            wItemTable.getSelectionModel().selectFirst();
+        }
+        refreshSkillTaskTables();
+    }
+
+    private String nvlStr(String s) {
+        return s == null ? "" : s;
     }
 
     // ========================= TEMPLATE LOAD =========================
@@ -456,7 +638,8 @@ public class createViewProjectController extends sideBarPaneController {
 
             data.reload(); // refresh storage cache
             info("Project saved successfully.");
-            openInnerView("viewProjects.fxml");
+            sideBarPaneController parent = parent();
+            if (p != null) parent.openInnerView("viewProjects.fxml");
 
         } catch (Exception ex) {
             error(ex.getMessage());

@@ -244,8 +244,6 @@ CREATE TABLE dailyReports (
     assignWorkItemId INT NOT NULL,
     reportDate DATE NOT NULL,
     supervisorId INT,
-    actualCost  DOUBLE,
-    progress_percentage DOUBLE,
     weather VARCHAR(100),
     generalRemark TEXT,
     issue LONGTEXT,

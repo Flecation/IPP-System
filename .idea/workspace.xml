@@ -6,25 +6,49 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/CreateReportNewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/CreateReportNewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allProjectDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/allProjectDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createViewProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createViewProjectController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/currentProjectDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/currentProjectDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/engineerRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/engineerRowController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/engineerViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/engineerViewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/laborViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/mgSEPersonalDetailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/messageBoxController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/navigationPaneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectCardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/projectDetailsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/viewProjectsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/workItemDetailsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/DAO/databaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Main/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Interfaces/SearchablePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Interfaces/SearchablePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Interfaces/SuggestablePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Interfaces/SuggestablePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/durationHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/durationHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/linkButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/linkButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/messageBoxService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/messageBoxService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/storage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/switchPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/IPPSystem/Utils/utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/darkMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/darkMode.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/messageBox.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/messageBox.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/sideBar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/procedure.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Database/tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/CreateReportNew.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/CreateReportNew.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/messageBox.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/navigationPane.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/projectDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/projectDetails.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/View/workItemDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/workItemDetails.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/zzzz.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/profile/default.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Photos/default.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/DAO/databaseConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Database/procedure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/procedure.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Database/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Database/tables.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/IPPSystem/Utils/switchPage.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +61,7 @@
       <list>
         <option value="FxmlFile" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -51,7 +76,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Ant-Htoo-Aung" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -119,26 +144,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.Launcher.executor": "Run",
-    "Application.Unnamed.executor": "Run",
-    "Application.start.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHELLCHECK.PATH": "C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe",
-    "git-widget-placeholder": "Ant-Htoo-Aung",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/IPP-System/src/main/resources/View",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "terminal"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Application.start.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\PC\\AppData\\Roaming\\JetBrains\\IdeaIC2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ant-Htoo-Aung&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Demo&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\IPP-System\src\main\resources\View" />
@@ -147,11 +172,17 @@
       <recent name="D:\group1" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Demo\src\main\resources\Photos" />
       <recent name="D:\group1\src\main\resources\view" />
       <recent name="D:\group1\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="viewProjectDetaiols" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.start">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="IPPSystem.Main.HelloApplication" />
       <module name="group1" />
@@ -167,14 +198,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765548299980</updated>
-    </task>
-    <task id="LOCAL-00004" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765625766600</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1765625766600</updated>
     </task>
     <task id="LOCAL-00005" summary="creation of the basic frame">
       <option name="closed" value="true" />
@@ -560,7 +583,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770302519025</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770363235128</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1770363235130</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -603,6 +634,11 @@
           <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/workItemDatabase.java</url>
           <line>46</line>
           <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/createProjectController.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>
@@ -734,6 +770,12 @@
           <properties class="java.lang.NoSuchMethodError" package="java.lang" />
           <option name="timeStamp" value="23" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/sideBarPaneController.java</url>
+          <line>430</line>
+          <properties field="currentInnerFxml" class="IPPSystem.Controllers.sideBarPaneController" />
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

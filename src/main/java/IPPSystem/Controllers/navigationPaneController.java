@@ -39,7 +39,12 @@ public class navigationPaneController{
     @FXML
     private StackPane modelBox;
 
-    @FXML private VBox alertLayer;
+    // ===== Alert includes (from navigationPane.fxml) =====
+    @FXML private Parent toastInclude;
+    @FXML private toastBoxController toastIncludeController;
+    @FXML private Parent confirmInclude;
+    @FXML private confirmBoxController confirmIncludeController;
+
 
 
     protected static users user = session.getInstance().getUser();
@@ -53,7 +58,9 @@ public class navigationPaneController{
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
 
-        messageBoxService.init(alertLayer);
+        // Bind included toast/confirm so any controller can call messageBoxService.toast/confirm()
+        messageBoxService.bindIncluded(toastInclude, toastIncludeController, confirmInclude, confirmIncludeController);
+
 
         linkButton.bindHost(tapBar, loadPane);
         linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");

@@ -2,6 +2,7 @@ package IPPSystem.Controllers;
 
 import IPPSystem.Constants.enumDuration;
 import IPPSystem.Constants.projectStatus;
+import IPPSystem.Interfaces.NavAware;
 import IPPSystem.Models.projects;
 import IPPSystem.Utils.utils;
 import javafx.event.ActionEvent;
@@ -16,7 +17,14 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class projectCardController {
+public class projectCardController implements NavAware {
+    private sideBarPaneController nav;
+
+    @Override
+    public void setNav(sideBarPaneController nav){
+        this.nav = nav;
+    }
+
 
     @FXML
     private Button detailsBtn;
@@ -63,7 +71,15 @@ public class projectCardController {
         projectType.setText(p.getProjectTypeName());
         projectName.setText(p.getProjectInstanceName());
         // Use any node inside the current tab so utils can find the correct per-tab loadPane
-        detailsBtn.setOnMouseClicked(event -> utils.openProjectDetails(project, detailsBtn));
+        detailsBtn.setOnMouseClicked(event -> {
+            nav.openInnerView("projectDetails.fxml", ctrl -> {
+                if (ctrl instanceof projectDetailsController c) {
+                    c.setProjectData(project);
+                    c.setNav(nav); // ✅ inject directly
+                }
+            });
+
+        });
         applyStatusStyle(p.getProjectStatus());
     }
 

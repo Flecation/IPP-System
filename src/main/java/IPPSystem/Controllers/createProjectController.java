@@ -134,7 +134,8 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
     private void onClose() {
         sideBarPaneController p = parent();
         if (p != null) {
-            p.closeAddOverlay();
+            // Using sidebar's openInnerView flow (no add overlay)
+            p.openInnerView("viewProjects.fxml");
         }
     }
 
@@ -143,7 +144,8 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
         createProjectDraft.getInstance().clear();
         sideBarPaneController p = parent();
         if (p != null) {
-            p.closeAddOverlay();
+            // Using sidebar's openInnerView flow (no add overlay)
+            p.openInnerView("viewProjects.fxml");
         }
     }
 
@@ -190,7 +192,8 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
             // go to createViewProject
             sideBarPaneController p = parent();
             if (p != null) {
-                p.openAddOverlay("createViewProject.fxml");
+                // Using sidebar's openInnerView flow (no add overlay)
+                p.openInnerView("createViewProject.fxml");
             }
 
         } catch (Exception ex) {

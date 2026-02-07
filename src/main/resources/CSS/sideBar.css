@@ -1,18 +1,32 @@
+
 @import url("main.css");
 
 /* ===== Root ===== */
+
 .root {
     -fx-background-color: -primary-bg-color;
 }
-
-/* for all icons symbol fonts style */
-.icons{
-    -fx-font-size: 20px;
+/*icon*/
+.icons {
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-color: -muted-text-color;
+    -fx-text-fill: -color;
+}
+.icon-Style {
+    -fx-icon-size: 18px;
+
+    /* This is the key: FontIcons use icon-color or fill, not text-fill */
+    -fx-icon-color: -color !important;
+    -fx-fill: -color !important;
 }
 
-#newTabBtn,#reloadBtn,#searchClearBtn,#searchBtn,#notificationBtn,#toggleBox,
+/*label color */
+#dashboardIconBtn .label, #projectIconBtn .label, #userIconBtn .label {
+     -fx-text-fill: -button-font-color !important;
+ }
+
+/*button */
+#newTabBtn,#reloadBtn,#notificationBtn,#toggleBox,
 #dashboardViewBtn,#projectViewBtn,#userViewBtn,#reportViewBtn,#settingViewBtn,
 #backBtn,#profileViewBtn,#toggleBtn,#changePasswordBtn,#logoutBtn {
     -fx-background-color: transparent;
@@ -20,101 +34,266 @@
     -fx-cursor: hand;
 }
 
-#newTabBtn:hover ,#reloadBtn:hover ,#searchClearBtn:hover ,
-#searchBtn:hover , #notificationBtn:hover {
-    -fx-background-color: -secondary-bg-color;
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-border-color: rgba(0,0,0,0);
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
-}
-
-
-/* ====== top bar and side bar ====== */
-.topBar{
-    -fx-background-color: -nav-color;
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: -muted-text-color;
-}
-
-.sideBar {
-    -fx-background-color : -nav-color;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 0);
-}
-
-/* for the toggle effect */
-
-#togglePane {
-    -fx-border-width: 1px;
-    -fx-background-color: -primary-bg-color;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
-}
-
-#toggleBox {
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-border-width: 1px;
-    -fx-border-color: -muted-text-color;
-}
-
-#toggleCircle {
-    -fx-fill: -secondary-bg-color;
-}
-
-/* for the search box and directory Box */
-
-.searchBox ,#directoryViewBox {
-    -fx-background-color: -primary-bg-color;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-padding: 0 5px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
-}
-
-#searchTextField {
-    -fx-border-width: 0;
-}
-#searchViewBox {
-    -fx-background-color: transparent;
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: -secondary-text-color;
-    -fx-padding: 0 2px;
-}
-
-#searchViewBox:hover {
-    -fx-border-color: -focus-color;
-}
-
-#searchViewBox .active {
-    -fx-border-color: -focus-color;
-}
-
-/* for the user info view Card */
-#userInfoCard {
-    -fx-cursor: hand;
-}
-
-/* for the view Btn */
 #dashboardViewBtn,#projectViewBtn,#userViewBtn,
 #reportViewBtn,#settingViewBtn,
 #backBtn,#profileViewBtn,#toggleBtn,#changePasswordBtn{
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;
-    -fx-padding: 0 5px;
     -fx-border-color:  -primary-bg-color;
+    -fx-border-width: 0 0 0 0;
+}
+
+#newTabBtn:hover ,#reloadBtn:hover ,#searchClearBtn:hover , #searchBtn:hover,
+ #notificationBtn:hover {
+    -fx-background-color: -search-hover-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: rgba(0,0,0,0);
+
+}
+/* for the logout btn */
+#logoutBtn,#logoutIconBtn {
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 5px;
+    -fx-border-color: -danger-color;
     -fx-border-width: 1 0 1 0;
 }
+#logoutBtn:hover,#logoutIconBtn:hover {
+    -fx-border-color: -primary-bg-color;
+    -fx-background-color:  -danger-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}
+.root .button #imageIconBtn,
+ .root .button #dashboardIconBtn,
+ .root .button #projectIconBtn,
+ .root .button #userIconBtn,
+ .root .button #reportIconBtn,
+ .root .button #settingIconBtn,
+ .root .button #iconBackBtn,
+ .root .button #profileViewIconBtn,
+ .root .button #darkIcon,
+ .root .button #lightIcon,
+ .root .button #changePasswordIconBtn,
+ .root .button #logoutIconBtn {
+     -fx-cursor: hand;
+     -fx-font-size: 30px;
+     -fx-font-weight: bold;
 
-#dashboardViewBtn:hover,#projectViewBtn:hover,
-#userViewBtn:hover,#reportViewBtn:hover,#settingViewBtn:hover,
-#backBtn:hover,#profileViewBtn:hover,#toggleBtn:hover,#changePasswordBtn:hover{
-      -fx-background-color: -primary-bg-color;
-      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+     /* Force the color to use the theme variable */
+     -fx-text-fill: -color !important;
+
+     -fx-border-radius: 6px;
+     -fx-background-radius: 6px;
+     -fx-padding: 0 5px;
+ }
+
+
+/* ====== top bar and side bar ====== */
+
+
+/*background*/
+.topBar{
+    -fx-background-color : -base-color;
+}
+ #basePane {
+    -fx-background-color: -pane-color;
+}
+.sideBar {
+    -fx-background-color : -nav-color;
+    -fx-border-radius : 5px;
+    -fx-background-radius : 5px;
+}
+
+/*  the toggle effect */
+#togglePane {
+    -fx-border-width: 1px;
+    -fx-background-color: -secondary-bg-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 5, 5);
+}
+
+#toggleBox,#settingToggleBox {
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-border-color: -color;
+
 
 }
+
+
+
+#settingToggleCircle {
+        -fx-fill: #F5F5DC;
+        -fx-radius: 8px;
+
+        /* Shadow for the "button" 3D effect from your photo */
+        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2);
+}
+
+
+/*search*/
+#searchTextField {
+    -fx-border-width: 0;
+}
+
+#searchViewBox {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-color: -secondary-text-color;
+    -fx-padding: 0 2px;
+}
+#searchViewBox .active {
+    -fx-border-color: -focus-color;
+}
+
+#searchTextField:focused {
+    -fx-text-fill: #333;
+    -fx-highlight-fill: -focus-color;
+    -fx-highlight-text-fill: white;
+    -fx-caret-color: -focus-color;
+}
+.searchBox {
+    -fx-background-color: -search-box;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 1px;
+    -fx-padding: 4 6;
+}
+
+.searchBox:focused-within {
+    -fx-background-color: #d6d5d4 ; /* SAME as hover */
+        -fx-border-color: -focus-color;
+        -fx-effect: dropshadow(three-pass-box, -focus-color, 6, 0, 0, 0);
+}
+
+.searchBox:hover {
+    -fx-background-color: #d6d5d4;
+}
+
+
+/* for the user info view Card */
+#userInfoCard {
+    -fx-cursor: hand;
+}
+#roleViewText {
+    /* Use a muted text color variable if you have one, or a light grey */
+    -fx-text-fill: #a0a0a0 !important;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+}
+
+/* Optional: Target the Name Label if you want it to stand out more than the role */
+#userNameLbl {
+    -fx-text-fill: -color !important;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}@import url("main.css");
+
+ /* ===== Root & Global ===== */
+ .root { -fx-background-color: -primary-bg-color; }
+
+ .icons {
+     -fx-font-size: 18px;
+     -fx-font-weight: bold;
+     -fx-text-fill: -color;
+ }
+
+ .icon-Style {
+     -fx-icon-size: 18px;
+     -fx-icon-color: -color !important;
+     -fx-fill: -color !important;
+ }
+
+ /* ===== Base Button States ===== */
+ #newTabBtn, #reloadBtn, #notificationBtn, #toggleBox,
+ #dashboardViewBtn, #projectViewBtn, #userViewBtn, #reportViewBtn, #settingViewBtn,
+ #backBtn, #profileViewBtn, #toggleBtn, #changePasswordBtn, #logoutBtn {
+     -fx-background-color: transparent;
+     -fx-border-color: transparent;
+     -fx-cursor: hand;
+ }
+
+ #dashboardViewBtn, #projectViewBtn, #userViewBtn,
+ #reportViewBtn, #settingViewBtn,
+ #backBtn, #profileViewBtn, #toggleBtn, #changePasswordBtn {
+     -fx-border-radius: 6px;
+     -fx-background-radius: 6px;
+     -fx-border-width: 0;
+ }
+
+ /* ===== Sidebar Backgrounds ===== */
+ #settingBar, #sideBar {
+     -fx-background-color: -nav-color;
+     -fx-background-radius: 0 10 10 0;
+     -fx-border-radius: 0 10 10 0;
+
+ }
+
+ /* Default label color for sidebar (Removed !important to allow overrides) */
+ .sideBar .label {
+     -fx-text-fill: -button-font-color;
+ }
+
+ /* ===== USER PROFILE STYLING (The Fix) ===== */
+ /* We use the VBox parent + ID to ensure this is never overwritten */
+ #userInfoCard #userRoleLbl {
+     -fx-text-fill: #919191 !important; /* This makes it lighter */
+     -fx-font-size: 11px;
+ }
+
+ #userInfoCard #nameViewText {
+     -fx-font-weight: bold;
+ }
+
+ /* ===== HOVER LOGIC: EXPANDED BAR ===== */
+ #dashboardViewBtn:hover, #projectViewBtn:hover,
+ #userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover,
+ #backBtn:hover, #profileViewBtn:hover, #toggleBtn:hover, #changePasswordBtn:hover {
+       -fx-background-color: -hover-color;
+       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+ }
+
+ /* Change label color to white on hover, but EXCLUDE userInfoCard */
+ #sideBar HBox:not(#userInfoCard):hover .label,
+ #settingBar HBox:hover .label {
+     -fx-text-fill: white !important;
+ }
+
+ /* ===== HOVER LOGIC: MINIMIZED BAR ===== */
+ /* EXCLUDES showSideBtn and showIconSideBtn arrows */
+ #iconSideBar .label:not(#showSideBtn):not(#showIconSideBtn):hover,
+ #iconSettingBar .label:not(#showSettingBtn):not(#showIconSettingBtn):hover,
+ #iconSettingBar #toggleIconBtn:hover {
+     -fx-background-color: -hover-color;
+     -fx-text-fill: white !important;
+     -fx-background-radius: 8px;
+     -fx-cursor: hand;
+ }
+
+ /* ===== SHOW/TOGGLE BUTTONS (No Hover Effect) ===== */
+ #showSideBtn:hover, #showIconSideBtn:hover,
+ #showSettingBtn:hover, #showIconSettingBtn:hover {
+     -fx-background-color: transparent !important;
+     -fx-text-fill: -color !important;
+     -fx-effect: none !important;
+ }
+
+ /* Logout Styling */
+ #logoutBtn:hover, #logoutIconBtn:hover {
+     -fx-background-color: -danger-color !important;
+     -fx-text-fill: white !important;
+ }
+
+ /* Existing Search & Toggle Pill Styles */
+ .searchBox:hover { -fx-background-color: #d6d5d4; }
+ #toggleBox { -fx-background-color: -primary-bg-color; -fx-background-radius: 30px; }
+ #toggleCircle { -fx-fill: #F5F5DC; -fx-radius: 8px; }
+
 
 .btnActive {
      -fx-background-color: -primary-bg-color;
@@ -122,54 +301,241 @@
 
 }
 
-/* for the logout btn */
-#logoutBtn,#logoutIconBtn{
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-padding: 0 5px;
-    -fx-border-color: -danger-color;
-    -fx-border-width: 1 0 1 0;
-}
-#logoutBtn:hover,#logoutIconBtn:hover{
-    -fx-border-color: -primary-bg-color;
-    -fx-background-color:  -danger-color;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+#togglePane {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-effect: none !important; /* Removes the shadow from the container */
 }
 
-/* for the icon btn */
-#imageIconBtn,#dashboardIconBtn,
-#projectIconBtn,#userIconBtn,#reportIconBtn,#settingIconBtn,
-#iconBackBtn,#profileViewIconBtn,#darkIcon,#lightIcon,#changePasswordIconBtn,#logoutIconBtn{
-    -fx-cursor: hand;
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -muted-text-color;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-padding: 0 5px;
-}
-
-#imageIconBtn:hover,#dashboardIconBtn:hover,
-#projectIconBtn:hover,#userIconBtn:hover,#reportIconBtn:hover,
-#settingIconBtn:hover,#iconBackBtn:hover,
-#profileViewIconBtn:hover,#darkIcon:hover,#lightIcon:hover,
-#changePasswordIconBtn:hover {
-    -fx-font-size: 35px;
+#toggleBox {
+    /* This variable from main.css flips between white (Light) and black (Dark) */
     -fx-background-color: -primary-bg-color;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
-}
 
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
 
-/* to change from the icon view to the full name btn */
-#showSettingBtn,#showIconSettingBtn,#showIconSideBtn , #showSideBtn{
+    /* Adds a subtle border so the white pill is visible on white sidebars */
+    -fx-border-color: -muted-text-color;
+    -fx-border-width: 1px;
+
+    -fx-min-width: 45px;
+    -fx-max-width: 45px;
+    -fx-min-height: 25px;
+    -fx-max-height: 25px;
+
     -fx-cursor: hand;
-    -fx-font-size: 20px;
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: -primary-bg-color;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 3 0 3;
+    -fx-effect: dropshadow(three-pass-box, -muted-text-color, 5, 0, 0, 2);
 }
 
-#showSettingBtn:hover, #showIconSettingBtn:hover,
-#showIconSideBtn:hover,#showSideBtn:hover {
-    -fx-background-color: -primary-bg-color;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+/* The Circle (The Thumb) - Keeps the "OFF" look from the photo */
+#toggleCircle {
+    /* Off-white/cream color as seen in your photo */
+    -fx-fill: #F5F5DC;
+    -fx-radius: 8px;
+
+    /* Shadow for the "button" 3D effect from your photo */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2);
+}
+
+/*label in side bar*/
+.sideBar, .sideBar .label {
+    -fx-text-fill: -color !important;
+}
+#settingBar, #sideBar{
+        -fx-background-color: -nav-color;
+        -fx-background-radius: 0 10 10 0;
+        -fx-border-radius: 0 10 10 0;
+
+        /* Optional: If you have a border color, ensure it's set */
+        -fx-border-color: transparent;
+        -fx-border-width: 1px;
+        /*-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 5, 0);*/
+}
+
+#dashboardViewBtn:hover, #projectViewBtn:hover,
+#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover,
+#backBtn:hover, #profileViewBtn:hover, #toggleBtn:hover, #changePasswordBtn:hover {
+
+      /* 1. Set the background to Orange */
+      -fx-background-color: -hover-color;
+
+      /* 2. REMOVE ALL BORDERS (This stops the bottom line appearing) */
+      -fx-border-color: transparent;
+      -fx-border-width: 0;
+
+      /* 3. Set text and icons to White */
+      -fx-text-fill: white;
+
+      /* 4. Soft shadow to make the orange pop */
+      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* Ensure the icons inside the button also turn white on hover */
+#dashboardViewBtn:hover .icon-Style,
+#projectViewBtn:hover .icon-Style,
+#userViewBtn:hover .icon-Style,
+#reportViewBtn:hover .icon-Style,
+#settingViewBtn:hover .icon-Style {
+    -fx-icon-color: #ffffff !important;
+    -fx-fill: #ffffff !important;
+}
+
+.sideBar .icon-Style {
+    -fx-icon-size: 18px;
+
+    /* FontIcons use icon-color and fill, not text-fill */
+    -fx-icon-color: black !important;
+    -fx-fill: white !important;
+}
+
+#directoryViewBox{
+    -fx-background-color : -base-color;
+
+}
+
+
+/* 1. Target the side bar containers to be transparent when minimized */
+#sideBarVBox, #symbolSideBarVBox {
+    /* If you are toggling visibility/width, ensure the background is clear */
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-effect: none !important;
+}
+
+/* 2. Style the buttons inside the minimized sidebar */
+/* We target buttons that are inside the 'symbol' container or the sidebar */
+#symbolSideBarVBox .button, #sideBarVBox .button {
+    /* Subtle background so you can see the rounded shape */
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+
+    /* The "little radius" (10px is standard for a clean look) */
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+
+    /* Ensure they are square/consistent when minimized */
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-alignment: CENTER;
+}
+
+/* 3. Hover state: Orange background and White font */
+#symbolSideBarVBox .button:hover, #sideBarVBox .button:hover {
+    -fx-background-color: #FFA500 !important;
+    -fx-text-fill: white !important;
+}
+
+/* 4. Ensure icons also turn white on hover */
+#symbolSideBarVBox .button:hover .icon-Style,
+#sideBarVBox .button:hover .icon-Style {
+    -fx-icon-color: white !important;
+    -fx-fill: white !important;
+}
+
+#iconSideBar .label:hover,
+#iconSettingBar .label:hover,
+#iconSettingBar #toggleIconBtn:hover {
+    -fx-background-color: -hover-color;
+    -fx-text-fill: white !important;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* Ensure the StackPane container for the toggle also rounds its background */
+#iconSettingBar #toggleIconBtn {
+    -fx-background-radius: 8px;
+}
+
+
+#sideBar HBox:not(#userInfoCard):hover .label {
+    /* Changes text and icon color to white */
+    -fx-text-fill: white !important;
+}
+
+/* Specifically ensure the icons inside these buttons also turn white */
+#sideBar HBox:not(#userInfoCard):hover .icons {
+    -fx-text-fill: white !important;
+}
+
+#dashboardViewBtn:hover .label,
+#projectViewBtn:hover .label,
+#userViewBtn:hover .label,
+#reportViewBtn:hover .label,
+#settingViewBtn:hover .label {
+    -fx-text-fill: white !important;
+}
+
+#showSideBtn:hover{
+ -fx-background-color : transparent;
+}
+
+.profileLbl {
+    -fx-font-size: 10px;
+    -fx-padding : 0 0 0 10 ;
+}
+.emailLbl,.phoneLbl{
+    -fx-font-size : 10px;
+    -fx-padding : 0 0 0 20;
+}
+#userPhoneTxtField,#userEmailTxtField{
+    -fx-font-size :15px;
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: grey;
+    -fx-background-radius: 0;
+    -fx-padding : 0 0 0 10 ;
+
+
+}
+#userDobLbl{
+    -fx-font-size : 15px;
+    -fx-padding : 0 0 0 10 ;
+}
+
+/* Add this to sideBar.css */
+.btnActive {
+    -fx-background-color: #FFA500 !important; /* Orange */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* Ensure text and icons inside the active button turn white */
+.btnActive .label, .btnActive .icon-Style, .btnActive .icons {
+    -fx-text-fill: white !important;
+    -fx-icon-color: white !important;
+    -fx-fill: white !important;
+}
+
+#revertBtn, #confirmBtn {
+        -fx-background-color: #FFA500;
+            -fx-border-radius: 5px;
+            -fx-background-radius: 5px;
+            -fx-text-fill: -color;
+            -fx-font-weight: bold;
+            -fx-font-family: "Poppins";
+
+}
+/* ========= For the search bar style ================== */
+.suggestion-list {
+    -fx-background-color: white;
+    -fx-border-color: #d9dde6;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 6;
+}
+
+.suggestion-list .list-cell {
+    -fx-padding: 10 12;
+    -fx-background-color: transparent;
+    -fx-font-size: 13;
+}
+
+.suggestion-list .list-cell:hover {
+    -fx-background-color: #f3f6fb;
+}
+
+.suggestion-list .list-cell:filled:selected {
+    -fx-background-color: #e8f0ff;
 }

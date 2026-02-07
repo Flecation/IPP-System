@@ -1,9 +1,11 @@
 package IPPSystem.Interfaces;
 
 public interface SearchablePage {
-    void onSearch(String keyword);
+    /** Called whenever the sidebar search text changes (or user selects a suggestion). */
+    void onSearch(String query);
 
-    default void onSearchClear() {
+    /** Optional: called when user clears the search */
+    default void onSearchCleared() {
         onSearch("");
     }
 }

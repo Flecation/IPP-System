@@ -73,16 +73,13 @@ public class engineerViewController {
 
 
     @FXML
-    private void addNewEngineer() {
-        StackPane tabLoadPane = utils.findTabLoadPane(loadPane);
-        sideBarPaneController sb =
-                (sideBarPaneController) tabLoadPane.getProperties().get("SIDEBAR_CONTROLLER");
+    void addNewEngineer(ActionEvent event) {
 
-        if (sb != null) {
-            sb.openAddOverlay("createLaborModal.fxml");
-        }
+        session.getInstance()
+                .getNavigationController()
+                .showModal("createSupervisorModal.fxml");
+
     }
-
 
 
 

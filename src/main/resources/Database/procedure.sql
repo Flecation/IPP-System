@@ -1064,7 +1064,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS getProjectDashboard $$
@@ -1083,10 +1082,17 @@ BEGIN
     DECLARE v_start DATE;
     DECLARE v_end   DATE;
     DECLARE v_totalDays INT DEFAULT 0;
+
+    /* TIME-BASED elapsed days (calendar days passed since baseline start, capped by totalDays) */
     DECLARE v_elapsedDays INT DEFAULT 0;
+
+    /* how many distinct report days exist up to asOfDate */
     DECLARE v_reportedDays INT DEFAULT 0;
 
-    -- FIX: this should be DATE (not INT)
+    /* how many distinct days have completedQty > 0 up to asOfDate (production days) */
+    DECLARE v_completedDays INT DEFAULT 0;
+
+    /* Latest report date (DATE) */
     DECLARE v_latestReportDate DATE DEFAULT NULL;
 
     DECLARE v_totalWorkItems INT DEFAULT 0;
@@ -1095,71 +1101,76 @@ BEGIN
 
     IF p_asOfDate IS NULL THEN
         SET p_asOfDate = CURDATE();
-    END IF;
+END IF;
 
     /* Latest project baseline (BAC + dates) */
-    SELECT
-        IFNULL(apd.projectCost, 0),
-        apd.startDate,
-        apd.endDate
-    INTO BAC, v_start, v_end
-    FROM assignProjectDetails apd
-    JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
-    WHERE apd.assignProjectId = p_assignProjectId
-      AND s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
-    ORDER BY apd.assignProjectDetailId DESC
+SELECT
+    IFNULL(apd.projectCost, 0),
+    apd.startDate,
+    apd.endDate
+INTO BAC, v_start, v_end
+FROM assignProjectDetails apd
+         JOIN assignStatus s ON apd.assignStatusId = s.assignStatusId
+WHERE apd.assignProjectId = p_assignProjectId
+  AND s.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+ORDER BY apd.assignProjectDetailId DESC
     LIMIT 1;
 
-   /* Days */
-   IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
-       SET v_totalDays = 0;
-       SET v_elapsedDays = 0;
-   ELSE
-       SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
+/* Days */
+IF v_start IS NULL OR v_end IS NULL OR v_end < v_start THEN
+        SET v_totalDays = 0;
+        SET v_elapsedDays = 0;
+ELSE
+        SET v_totalDays = DATEDIFF(v_end, v_start) + 1;
 
-       /* elapsedDays = number of days that actually have completed tasks in reports */
-       SELECT COUNT(DISTINCT dr.reportDate)
-       INTO v_elapsedDays
-       FROM dailyReports dr
-       JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
-       WHERE dr.assignProjectId = p_assignProjectId
-         AND dr.reportDate <= p_asOfDate
-         AND IFNULL(drt.completedQty, 0) > 0;
+        /* elapsedDays = calendar days passed since baseline start (time-based) */
+        SET v_elapsedDays = LEAST(
+            v_totalDays,
+            GREATEST(0, DATEDIFF(p_asOfDate, v_start) + 1)
+        );
+END IF;
 
-       /* safety cap (don’t exceed baseline totalDays) */
-       SET v_elapsedDays = LEAST(v_totalDays, v_elapsedDays);
-   END IF;
+    /* completedDays = number of distinct days with any completedQty > 0 (work-done days) */
+SELECT COUNT(DISTINCT dr.reportDate)
+INTO v_completedDays
+FROM dailyReports dr
+         JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+WHERE dr.assignProjectId = p_assignProjectId
+  AND dr.reportDate <= p_asOfDate
+  AND IFNULL(drt.completedQty, 0) > 0;
+
+SET v_completedDays = LEAST(v_totalDays, v_completedDays);
 
     /* Latest report date (optional) */
-    SELECT MAX(reportDate)
-    INTO v_latestReportDate
-    FROM dailyReports
-    WHERE assignProjectId = p_assignProjectId;
+SELECT MAX(reportDate)
+INTO v_latestReportDate
+FROM dailyReports
+WHERE assignProjectId = p_assignProjectId;
 
-    /* PV to date = BAC * (elapsed/total) */
-    SET PV = IF(v_totalDays = 0, 0, BAC * (v_elapsedDays / v_totalDays));
+/* PV to date = BAC * (elapsed/total) */
+SET PV = IF(v_totalDays = 0, 0, BAC * (v_elapsedDays / v_totalDays));
 
-    /* Reported days */
-    SELECT COUNT(DISTINCT reportDate)
-    INTO v_reportedDays
-    FROM dailyReports
-    WHERE assignProjectId = p_assignProjectId
-      AND reportDate <= p_asOfDate;
+    /* Reported days (any report rows) */
+SELECT COUNT(DISTINCT reportDate)
+INTO v_reportedDays
+FROM dailyReports
+WHERE assignProjectId = p_assignProjectId
+  AND reportDate <= p_asOfDate;
 
-    /* Work item counts */
-    SELECT COUNT(*)
-    INTO v_totalWorkItems
-    FROM assignWorkItems
-    WHERE assignProjectId = p_assignProjectId;
+/* Work item counts */
+SELECT COUNT(*)
+INTO v_totalWorkItems
+FROM assignWorkItems
+WHERE assignProjectId = p_assignProjectId;
 
-    SELECT IFNULL(SUM(CASE WHEN ps.projectStatusName = 'finished' THEN 1 ELSE 0 END),0)
-    INTO v_completedWorkItems
-    FROM assignWorkItems awi
-    LEFT JOIN projectStatus ps ON awi.workItemStatus = ps.projectStatusId
-    WHERE awi.assignProjectId = p_assignProjectId;
+SELECT IFNULL(SUM(CASE WHEN ps.projectStatusName = 'finished' THEN 1 ELSE 0 END),0)
+INTO v_completedWorkItems
+FROM assignWorkItems awi
+         LEFT JOIN projectStatus ps ON awi.workItemStatus = ps.projectStatusId
+WHERE awi.assignProjectId = p_assignProjectId;
 
-    /* AC to date = tasks + labors (separate sums to avoid double count) */
-    SET AC =
+/* AC to date = tasks + labors (separate sums to avoid double count) */
+SET AC =
         (SELECT IFNULL(SUM(drt.dailyCost),0)
          FROM dailyReports dr
          JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
@@ -1172,72 +1183,80 @@ BEGIN
            AND dr.reportDate <= p_asOfDate);
 
     /* EV = SUM(workItem BAC * workItem progress) */
-    SELECT
-        IFNULL(SUM(wiBac.workItemCost * wiProg.progressRatio), 0)
-    INTO EV
-    FROM
+SELECT
+    IFNULL(SUM(wiBac.workItemCost * wiProg.progressRatio), 0)
+INTO EV
+FROM
     (
         /* latest BAC per work item for this project */
         SELECT awid1.assignWorkItemId, awid1.workItemCost
         FROM assignWorkItemDetails awid1
-        JOIN assignStatus s1 ON awid1.assignStatusId = s1.assignStatusId
-        JOIN assignWorkItems awi ON awid1.assignWorkItemId = awi.assignWorkItemId
+                 JOIN assignStatus s1 ON awid1.assignStatusId = s1.assignStatusId
+                 JOIN assignWorkItems awi ON awid1.assignWorkItemId = awi.assignWorkItemId
         WHERE awi.assignProjectId = p_assignProjectId
           AND s1.assignStatusName IN ('autoAssign','customAssign','extraAssign')
           AND awid1.assignWorkItemDetailId = (
-              SELECT MAX(awid2.assignWorkItemDetailId)
-              FROM assignWorkItemDetails awid2
-              JOIN assignStatus s2 ON awid2.assignStatusId = s2.assignStatusId
-              WHERE awid2.assignWorkItemId = awid1.assignWorkItemId
-                AND s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
-          )
+            SELECT MAX(awid2.assignWorkItemDetailId)
+            FROM assignWorkItemDetails awid2
+                     JOIN assignStatus s2 ON awid2.assignStatusId = s2.assignStatusId
+            WHERE awid2.assignWorkItemId = awid1.assignWorkItemId
+              AND s2.assignStatusName IN ('autoAssign','customAssign','extraAssign')
+        )
     ) wiBac
-    JOIN
+        JOIN
     (
         /* progress per work item from completedQty / plannedQty */
         SELECT
             at.assignWorkItemId,
-            LEAST(1,
-                IF(SUM(at.plannedQty)=0, 0, SUM(IFNULL(done.completedQty,0)) / SUM(at.plannedQty))
+            LEAST(
+                    1,
+                    IF(
+                            SUM(at.plannedQty) = 0,
+                            0,
+                            SUM(IFNULL(done.completedQty,0)) / SUM(at.plannedQty)
+                    )
             ) AS progressRatio
         FROM assignTasks at
         JOIN assignWorkItems awi ON at.assignWorkItemId = awi.assignWorkItemId
-        LEFT JOIN (
+            LEFT JOIN (
             SELECT
-                drt.assignTaskId,
-                SUM(drt.completedQty) AS completedQty
+            drt.assignTaskId,
+            SUM(drt.completedQty) AS completedQty
             FROM dailyReports dr
             JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
             WHERE dr.assignProjectId = p_assignProjectId
-              AND dr.reportDate <= p_asOfDate
+            AND dr.reportDate <= p_asOfDate
             GROUP BY drt.assignTaskId
-        ) done ON done.assignTaskId = at.assignTaskId
+            ) done ON done.assignTaskId = at.assignTaskId
         WHERE awi.assignProjectId = p_assignProjectId
           AND at.isCancel = 0
         GROUP BY at.assignWorkItemId
     ) wiProg ON wiProg.assignWorkItemId = wiBac.assignWorkItemId;
 
-    SET v_progress = IF(BAC = 0, 0, EV / BAC);
+/* overall progress = EV/BAC */
+SET v_progress = IF(BAC = 0, 0, EV / BAC);
 
+    /* indices */
     SET CPI = IF(AC = 0, NULL, EV / AC);
     SET SPI = IF(PV = 0, NULL, EV / PV);
 
-    -- FIX: elapsedDays must be v_elapsedDays (not latestReportDate)
-    SELECT
-        BAC, PV, EV, AC, CPI, SPI,
-        v_progress AS progressRatio,
-        v_start AS baselineStart,
-        v_end AS baselineEnd,
-        v_elapsedDays AS elapsedDays,
-        v_totalDays AS totalDays,
-        v_reportedDays AS reportedDays,
-        v_latestReportDate AS latestReportDate,
-        v_completedWorkItems AS completedWorkItems,
-        v_totalWorkItems AS totalWorkItems,
-        p_asOfDate AS asOfDate;
+SELECT
+    BAC, PV, EV, AC, CPI, SPI,
+    v_progress AS progressRatio,
+    v_start AS baselineStart,
+    v_end AS baselineEnd,
+    v_elapsedDays AS elapsedDays,          -- time-based
+    v_totalDays AS totalDays,
+    v_reportedDays AS reportedDays,
+    v_completedDays AS completedDays,      -- work-done days
+    v_latestReportDate AS latestReportDate,
+    v_completedWorkItems AS completedWorkItems,
+    v_totalWorkItems AS totalWorkItems,
+    p_asOfDate AS asOfDate;
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 

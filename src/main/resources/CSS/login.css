@@ -1,7 +1,7 @@
 @import url("main.css");
 
 .background{
-  -fx-background-image: url("/Photos/logInImage1.png");
+  -fx-background-image: url("/Photos/loginPhoto.png");
   -fx-background-repeat: no-repeat;
   -fx-background-size: cover;
   -fx-background-position: center;
@@ -16,34 +16,39 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
+/* ===== GLASS LOGIN CARD (matches screenshot) ===== */
 
 .rightPane {
-    /* Semi-transparent white background */
-    -fx-background-color: rgba(255,255,255, 0.7) ;
+    /* main glass */
+    -fx-background-color: rgba(255,255,255, 0.55);
 
-    /* Rounded corners to match the glass look */
-    -fx-background-radius: 70 0 0 70;
-    -fx-border-radius: 70 0 0 70;
+    /* rounded rectangle on ALL corners */
+    -fx-background-radius: 45;
+    -fx-border-radius: 45;
 
-    /* A thin, subtle white border creates the "edge" of the glass */
-    -fx-border-color: rgba(255, 255, 255, 0.3);
-    -fx-border-width: 1px;
+    /* bright white edge line like screenshot */
+    -fx-border-color: rgba(255,255,255,0.75);
+    -fx-border-width: 2.0;
 
-    /* This adds the inner glow/blur effect */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
-
+    /* soft shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.25, 0, 8);
 }
-.rightBlur{
-        -fx-background-color: rgba(255,255,255, 0.35);
 
-        -fx-background-radius: 70 0 0 70;
-        -fx-border-radius: 70 0 0 70;
+.rightBlur {
+    /* blur layer behind (slightly stronger) */
+    -fx-background-color: rgba(255,255,255, 0.28);
 
-        -fx-border-color: rgba(255, 255, 255, 0.4);
-        -fx-border-width: 1px;
+    -fx-background-radius: 45;
+    -fx-border-radius: 45;
 
-        /* REAL blur effect on this node */
-        -fx-effect: gaussian-blur(200);
+    /* subtle border */
+    -fx-border-color: rgba(255,255,255,0.45);
+    -fx-border-width: 1.0;
+
+    /* blur */
+    /* JavaFX CSS does not support gaussian-blur(...). Use a soft dropshadow instead. */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 30, 0.18, 0, 0);
+
 }
 
 .loginTitle {
@@ -180,10 +185,11 @@
 .password-field:focused .text {
     -fx-fill: black !important;
 }
-
 #forgetBtn{
-    -fx-font-weight: regular;
+    /* valid values: normal, bold, or numeric 100..900 */
+    -fx-font-weight: normal;
 }
+
 .label .backTo{
     -fx-text-fill: grey;
 }
@@ -200,4 +206,60 @@
     -fx-text-fill: grey !important;
     -fx-font-family: "Poppins";
     -fx-font-size: 12px;
+}
+
+
+/* =========================
+   Added for new layout (top + hero)
+   ========================= */
+
+.topBar {
+    /* keep subtle top strip so background image still visible */
+    -fx-background-color: rgba(0,0,0,0.12);
+}
+
+.appName {
+    -fx-text-fill: rgba(255,255,255,0.92);
+    -fx-font-family: "Poppins";
+    -fx-font-weight: 900;
+    -fx-font-size: 13px;
+    -fx-letter-spacing: 1px;
+}
+
+.overlay {
+    -fx-background-color: rgba(0,0,0,0.20);
+}
+
+.leftHero { }
+
+.heroOutline {
+    -fx-fill: transparent;
+    -fx-stroke: rgba(255,255,255,0.85);
+    -fx-stroke-width: 2.2px;
+    -fx-font-size: 58px;
+    -fx-font-family: "Poppins";
+    -fx-font-weight: 900;
+}
+
+.heroBold {
+    -fx-fill: white;
+    -fx-font-size: 44px;
+    -fx-font-family: "Poppins";
+    -fx-font-weight: 900;
+}
+
+.heroSub {
+    -fx-text-fill: rgba(255,255,255,0.82);
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+    -fx-font-weight: 600;
+}
+
+.chip {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-radius: 999;
+    -fx-padding: 6 14 6 14;
+    -fx-border-color: rgba(255,255,255,0.18);
+    -fx-border-radius: 999;
 }

@@ -4,7 +4,7 @@ import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
-import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Interfaces.*;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.storage;
 import IPPSystem.Utils.utils;
@@ -19,9 +19,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import static IPPSystem.Controllers.navigationPaneController.user;
 import static IPPSystem.Utils.utils.showProjectCards;
 
-public class viewProjectsController implements loadPaneAware {
+public class viewProjectsController  implements loadPaneAware, SearchablePage, SuggestablePage{
 
     @FXML private VBox viewProjectPane;
     @FXML private Button activeBtn;
@@ -78,10 +84,7 @@ public class viewProjectsController implements loadPaneAware {
 
     @FXML
     public void initialize() {
-
-        boolean isSupervisor = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
-
-        if (isSupervisor) {
+        if (loginUser.getUserRole().equals(role.SUPERVISOR.toString())) {
             choiceUsersBox.setDisable(true);
             choiceUsersBox.setVisible(false);
             addBtn.setVisible(false);
@@ -93,22 +96,38 @@ public class viewProjectsController implements loadPaneAware {
             addBtn.setVisible(true);
         }
 
-        addBtn.setOnAction(e -> onAddNewProject());
+        addBtn.setOnAction(e->{
+            onAddNewProject();
+        });
 
-        // status filter handlers
-        allBtn.setOnAction(e -> { statusFilter = StatusFilter.ALL; applyFilters(); });
-        activeBtn.setOnAction(e -> { statusFilter = StatusFilter.ACTIVE; applyFilters(); });
-        completedBtn.setOnAction(e -> { statusFilter = StatusFilter.COMPLETED; applyFilters(); });
-        planningBtn.setOnAction(e -> { statusFilter = StatusFilter.PLANNING; applyFilters(); });
+        setAllDataInChoiceBox();
+
+        allBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ALL;
+            applyFilters();
+        });
+
+        activeBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.ACTIVE;
+            applyFilters();
+        });
+
+        completedBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.COMPLETED;
+            applyFilters();
+        });
+
+        planningBtn.setOnAction(e -> {
+            statusFilter = StatusFilter.PLANNING;
+            applyFilters();
+        });
 
         choiceUsersBox.setOnAction(e -> applyFilters());
         choiceProjectTypesBox.setOnAction(e -> applyFilters());
 
-
-        // load dropdown data first, then auto "click" All on first open
         setAllDataInChoiceBoxAsync(() -> Platform.runLater(() -> allBtn.fire()));
-    }
 
+    }
 
     private void applyFilters() {
         ObservableList<projects> source = FXCollections.observableArrayList();
@@ -129,6 +148,20 @@ public class viewProjectsController implements loadPaneAware {
 
         for (projects p : source) {
             if (p == null) continue;
+
+//            ==== for the search box  ======
+            // ===== sidebar search filter =====
+            if (searchQuery != null && !searchQuery.isBlank()) {
+                String name = p.getProjectInstanceName() == null ? "" : p.getProjectInstanceName().toLowerCase();
+                String sup  = p.getUserName() == null ? "" : p.getUserName().toLowerCase();
+                String type = p.getProjectTypeName() == null ? "" : p.getProjectTypeName().toLowerCase();
+                String st   = p.getProjectStatus() == null ? "" : p.getProjectStatus().toLowerCase();
+
+                if (!(name.contains(searchQuery) || sup.contains(searchQuery) || type.contains(searchQuery) || st.contains(searchQuery))) {
+                    continue;
+                }
+            }
+
 
             // ✅ FIXED: status filter using ProjectStatus enum
             if (statusFilter != StatusFilter.ALL) {
@@ -172,6 +205,28 @@ public class viewProjectsController implements loadPaneAware {
         } else {
             noProjectLbl.setVisible(false);
         }
+    }
+
+    private void setAllDataInChoiceBox() {
+        choiceUsersBox.getItems().clear();
+        choiceProjectTypesBox.getItems().clear();
+
+        choiceUsersBox.getItems().add("All");
+        choiceProjectTypesBox.getItems().add("All");
+
+        for (String type : data.getProjectTypes().values()) {
+            if (type != null) choiceProjectTypesBox.getItems().add(type);
+        }
+
+        for (users u : data.getAllUsers()) {
+            if (u != null && u.getUserRole() != null
+                    && u.getUserRole().equals(role.SUPERVISOR.toString())) {
+                choiceUsersBox.getItems().add(u.getUserName());
+            }
+        }
+
+        choiceProjectTypesBox.getSelectionModel().selectFirst();
+        choiceUsersBox.getSelectionModel().selectFirst();
     }
 
     private void setAllDataInChoiceBoxAsync(Runnable onDoneUi) {
@@ -243,6 +298,50 @@ public class viewProjectsController implements loadPaneAware {
             this.userNames = userNames;
             this.types = types;
         }
+    }
+
+//    ====== For the search box ===============
+    private String searchQuery = "";
+
+    @Override
+    public void onSearch(String query) {
+        this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
+        applyFilters(); // reuse your existing filter flow
+    }
+
+    @Override
+    public List<String> getSuggestions(String query) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        if (q.isEmpty()) return List.of();
+
+        boolean isSupervisor = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
+
+        ObservableList<projects> source = FXCollections.observableArrayList();
+        if (isSupervisor) source.setAll(data.getProjectsByUserId(loginUser.getUserId()));
+        else source.setAll(data.getAllProjects());
+
+        Set<String> out = new LinkedHashSet<>();
+
+        for (projects p : source) {
+            if (p == null) continue;
+
+            // suggestions from multiple fields
+            addIfMatch(out,p.getProjectInstanceName(),q);
+            addIfMatch(out, p.getUserName(), q);          // supervisor name
+            addIfMatch(out, p.getProjectTypeName(), q);   // type
+            addIfMatch(out, p.getProjectStatus(), q);     // status text
+
+            if (out.size() >= 8) break;
+        }
+
+        return new ArrayList<>(out);
+    }
+
+    private void addIfMatch(Set<String> out, String value, String q) {
+        if (value == null) return;
+        String v = value.trim();
+        if (v.isEmpty()) return;
+        if (v.toLowerCase().contains(q)) out.add(v);
     }
 
 

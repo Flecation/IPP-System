@@ -2,6 +2,8 @@ package IPPSystem.Utils;
 
 import IPPSystem.Constants.enumDuration;
 import IPPSystem.Constants.notificationType;
+import IPPSystem.Controllers.sideBarPaneController;
+import IPPSystem.Interfaces.NavAware;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
 import IPPSystem.Models.workItems;
@@ -198,16 +200,6 @@ public class utils {
         switchPage.getInstance(a).openProjectDetails(project);
     }
 
-    public static void openProjectDetails(projects project, Node anyNodeInThatTab){
-        StackPane lp = findTabLoadPane(anyNodeInThatTab);
-        if (lp == null) return;
-        switchPage.getInstance(lp).openProjectDetails(project);
-    }
-
-    public static void openWorkItemDetails(workItems items,projects project, StackPane a){
-        if (a == null) return;
-        switchPage.getInstance(a).openWorkItemDetails(items,project);
-    }
 
     public static void openWorkItemDetails(workItems items, projects project, Node anyNodeInThatTab){
         StackPane lp = findTabLoadPane(anyNodeInThatTab);
@@ -242,7 +234,7 @@ public class utils {
         return result;
     }
 
-    public static void durationShowHelper(projects project,ComboBox<enumDuration> durationBox,TextField durationTxt){
+    public static void durationShowHelper(Double project,ComboBox<enumDuration> durationBox,TextField durationTxt){
         durationHelper.durationAssignHelper(project,durationBox,durationTxt);
     }
 
@@ -263,7 +255,78 @@ public class utils {
         return icon;
     }
 
+    // ==============================
+    // Compact number / money format
+    // Examples: 999 -> 999 MMK, 1_000 -> 1K MMK, 1_000_000 -> 1M MMK
+    // Rounding rule: 10.0 -> 10, 10.9 -> 11
+    // ==============================
+    public static String formatCompactMoneyMMK(double value) {
+        return formatCompactMoney(value, "MMK");
+    }
 
+    public static String formatCompactMoney(double value, String unit) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) return "-";
+        if (value <= 0) return "-";
+
+        double abs = Math.abs(value);
+        double scaled = value;
+        String suffix = "";
+
+        if (abs >= 1_000_000_000d) {
+            scaled = value / 1_000_000_000d;
+            suffix = "B";
+        } else if (abs >= 1_000_000d) {
+            scaled = value / 1_000_000d;
+            suffix = "M";
+        } else if (abs >= 1_000d) {
+            scaled = value / 1_000d;
+            suffix = "K";
+        }
+
+        long rounded = Math.round(scaled);
+        String core = rounded + suffix;
+
+        if (unit == null || unit.isBlank()) return core;
+        return core + " " + unit;
+    }
+
+    // ==============================
+// Duration rounding (days)
+// Examples: 10.09 -> 10, 10.6 -> 11
+// ==============================
+    public static long roundDays(double days) {
+        if (Double.isNaN(days) || Double.isInfinite(days)) return 0;
+        return Math.round(days);
+    }
+
+
+    public static void applyStatusPill(Label lbl, String statusRaw) {
+        if (lbl == null) return;
+
+        // remove old status classes (keeps your other classes if any)
+        lbl.getStyleClass().removeAll(
+                "status-pill", "status-pill-default",
+                "status-pill-active", "status-pill-pending",
+                "status-pill-completed", "status-pill-cancelled"
+        );
+
+        lbl.getStyleClass().add("status-pill");
+
+        String s = (statusRaw == null) ? "" : statusRaw.trim().toLowerCase();
+
+        // map your status text -> css class
+        if (s.contains("active") || s.contains("in progress") || s.contains("ongoing")) {
+            lbl.getStyleClass().add("status-pill-active");
+        } else if (s.contains("pending") || s.contains("hold") || s.contains("waiting")) {
+            lbl.getStyleClass().add("status-pill-pending");
+        } else if (s.contains("complete") || s.contains("done") || s.contains("finished")) {
+            lbl.getStyleClass().add("status-pill-completed");
+        } else if (s.contains("cancel") || s.contains("reject") || s.contains("fail")) {
+            lbl.getStyleClass().add("status-pill-cancelled");
+        } else {
+            lbl.getStyleClass().add("status-pill-default");
+        }
+    }
 
 
 }
