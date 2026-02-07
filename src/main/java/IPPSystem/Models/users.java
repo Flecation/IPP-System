@@ -181,4 +181,7 @@ public class users {
     public void setProjectTypeName(String typeName) {
 
     }
+
+    public boolean isManager() { return "manager".equalsIgnoreCase(userRole); }
+    public boolean isSupervisor() { return "supervisor".equalsIgnoreCase(userRole); }
 }

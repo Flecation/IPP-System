@@ -6,12 +6,28 @@ public class DailyReport {
     private int reportId; // ID လိုလာပြီ
     private int assignProjectId;
     private LocalDate reportDate;
-    private String weatherType, workAffect, weatherNote, issues, comments;
+    private String weatherType, workAffect, weatherNote, issues, comments,projectType,projectStatus;
     private int supervisorId;
 
     // UI Display အတွက် Field အပိုများ
     private String projectName;
     private String supervisorName;
+
+    public String getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(String projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
 
     // ==== No-arg constructor ထပ်ထည့်မယ် ====
     public DailyReport() {
@@ -84,3 +100,4 @@ public class DailyReport {
         return reportDate.format(java.time.format.DateTimeFormatter.ofPattern(pattern));
     }
 }
+

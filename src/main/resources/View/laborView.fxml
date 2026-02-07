@@ -133,7 +133,7 @@
                               <Image url="@../icons/active.png" />
                            </image>
                         </ImageView>
-                        <Label stylesheets="@../CSS/managerSupervisorList.css" text="RESIGNED">
+                        <Label stylesheets="@../CSS/managerSupervisorList.css" text="Kicked">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -155,7 +155,7 @@
             <Insets top="32.0" />
          </VBox.margin>
       </HBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+      <VBox minWidth="1050.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
@@ -223,9 +223,9 @@
                   <Insets top="16.0" />
                </VBox.margin>
             </HBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="378.0" prefWidth="1077.0" style="-fx-background-radius: 0 0 10 10; -fx-border-width: 0; -fx-background-color: none;" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="370.0" prefWidth="1040.0" style="-fx-background-radius: 0 0 10 10; -fx-border-width: 0; -fx-background-color: none;" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="laborsPane" alignment="CENTER" prefHeight="341.0" prefWidth="1038.0" spacing="5.0" style="-fx-background-radius: 0 0 10 10;" />
+                  <VBox fx:id="laborsPane" alignment="TOP_CENTER" prefHeight="0.0" prefWidth="1038.0" spacing="5.0" style="-fx-background-radius: 0 0 10 10;" />
                </content>
             </ScrollPane>
          </children>

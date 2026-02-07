@@ -42,7 +42,7 @@ public class database {
 
     public static boolean createLabor(labors labor){return laborDatabase.addLabor(labor);}
 
-    public static boolean deleteLabor(int laborId){return laborDatabase.deleteLabor(laborId);}
+//    public static boolean deleteLabor(int laborId){return laborDatabase.deleteLabor(laborId);}
 
     public static ObservableList<labors> getAllLaborsBySkillId(int skillId){return laborDatabase.getAllLaborsBySkill(skillId);}
 
@@ -181,38 +181,40 @@ public class database {
 
     // For Supervisor Report Functions
 
-    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
-        return reportDatabase.getFilteredReports(supervisorId, projectId, startDate, endDate);
-    }
+//    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
+//        return reportDatabase.getFilteredReports(supervisorId, projectId, startDate, endDate);
+//    }
+//
+//    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
+//        return reportDatabase.getProjectsBySupervisorAndStatus(supervisorId, status);
+//    }
+//
+//    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
+//        return reportDatabase.getReportStatistics(supervisorId, projectId, startDate, endDate);
+//    }
+//
+//    // Existing report methods
+//    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
+//        return reportDatabase.getAllReports(supervisorId);
+//    }
+//
+//    public static ArrayList<DailyReport> getAllReportsForManager() {
+//        return reportDatabase.getAllReportsForManager();
+//    }
+//
+//    public static DailyReport getReportById(int reportId) {
+//        return reportDatabase.getReportById(reportId);
+//    }
+//
+//    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
+//        return reportDatabase.getProjectListForSupervisor(supervisorId);
+//    }
+//
+//    public static int getProjectIdByName(String projectName, int supervisorId) {
+//        return reportDatabase.getProjectIdByName(projectName, supervisorId);
+//    }
 
-    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
-        return reportDatabase.getProjectsBySupervisorAndStatus(supervisorId, status);
-    }
 
-    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
-        return reportDatabase.getReportStatistics(supervisorId, projectId, startDate, endDate);
-    }
-
-    // Existing report methods
-    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
-        return reportDatabase.getAllReports(supervisorId);
-    }
-
-    public static ArrayList<DailyReport> getAllReportsForManager() {
-        return reportDatabase.getAllReportsForManager();
-    }
-
-    public static DailyReport getReportById(int reportId) {
-        return reportDatabase.getReportById(reportId);
-    }
-
-    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
-        return reportDatabase.getProjectListForSupervisor(supervisorId);
-    }
-
-    public static int getProjectIdByName(String projectName, int supervisorId) {
-        return reportDatabase.getProjectIdByName(projectName, supervisorId);
-    }
 
     public static int getCompletedDaysByAssignProject(int projectId){return reportDatabase.getCompletedDaysByAssignProject(projectId);}
 }

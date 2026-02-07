@@ -42,7 +42,7 @@
                            <VBox.margin>
                               <Insets bottom="6.0" />
                            </VBox.margin></Label>
-                        <TextField fx:id="laborPhone" prefHeight="35.0" prefWidth="571.0" promptText="123456789" styleClass="input-field">
+                        <TextField fx:id="laborPhone" prefHeight="35.0" prefWidth="571.0" promptText="09123456789" styleClass="input-field">
                            <font>
                               <Font size="5.0" />
                            </font></TextField>
@@ -90,7 +90,7 @@
                               <Insets bottom="3.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="laborNRC" prefHeight="45.0" prefWidth="409.0" promptText="12/kakana/123456" styleClass="input-field">
+                        <TextField fx:id="laborNRC" prefHeight="45.0" prefWidth="409.0" promptText="12/AAB(N)/123456" styleClass="input-field">
                            <font>
                               <Font size="8.0" />
                            </font>

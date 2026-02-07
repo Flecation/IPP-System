@@ -196,4 +196,27 @@ public class workItemDatabase {
         return msg;
     }
 
+
+
+    public static Double getDailyWageBySkill(int workItemId, int skillId) {
+
+        String sql = """
+            SELECT dailyWage
+            FROM assignworkitemskilldetails
+            WHERE workItemId = ? AND skillId = ?
+        """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, workItemId);
+            ps.setInt(2, skillId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("dailyWage");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // not found
+    }
 }

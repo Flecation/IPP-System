@@ -1,6 +1,7 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.database;
+import IPPSystem.DAO.laborDatabase;
 import IPPSystem.Models.labors;
 import IPPSystem.Utils.session;
 import javafx.event.ActionEvent;
@@ -80,10 +81,10 @@ public class laborViewController implements Initializable {
 
     private void loadFilterOptions() {
 
-        statusFilterCombo.getItems().setAll("All", "Active", "Resigned");
+        statusFilterCombo.getItems().setAll("All", "Active", "Inactive");
         statusFilterCombo.setValue("All");
 
-        List<String> skills = database.getAllSkills();
+        List<String> skills = laborDatabase.getAllSkillNames();
         skillFilterCombo.getItems().setAll("All");
         skillFilterCombo.getItems().addAll(skills);
         skillFilterCombo.setValue("Skill");
@@ -109,7 +110,7 @@ public class laborViewController implements Initializable {
             boolean matchesStatus =
                     selectedStatus.equals("All") ||
                             (selectedStatus.equals("Active") && labor.isActive()) ||
-                            (selectedStatus.equals("Resigned") && !labor.isActive());
+                            (selectedStatus.equals("Inactive") && !labor.isActive());
 
             if (matchesSkill && matchesStatus) {
                 addLaborRow(labor);

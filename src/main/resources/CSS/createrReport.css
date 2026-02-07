@@ -1,0 +1,82 @@
+
+.filter-box{
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+    -fx-background-color:#ffffff;
+    -fx-border-color: #E18600;
+}
+
+.projects-cards{
+    -fx-background-color: #fefefefe;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+
+}
+
+.projects-cards:hover{
+    -fx-background-color: none;
+    -fx-border-color: #E18600;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+
+}
+.sub-title{
+    -fx-text-fill: #011121;
+    -fx-font-weight: medium;
+}
+
+.date-picker{
+    -fx-border-color: #E18600;
+    -fx-background-color: none;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+}
+
+.report-card{
+    -fx-background-color: #fefefefe;
+    -fx-border-color: #fefefefe;
+    -fx-border-width: 0.5;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+}
+
+
+
+
+/* Project name */
+.project-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Project status pills */
+.status-planning {
+    -fx-text-fill: #FFA500; /* Orange */
+    -fx-font-weight: bold;
+}
+
+.status-in-progress {
+    -fx-text-fill: #1E90FF; /* Blue */
+    -fx-font-weight: bold;
+}
+
+.status-finished {
+    -fx-text-fill: #28A745; /* Green */
+    -fx-font-weight: bold;
+}
+
+.status-delayed,
+.status-risk {
+    -fx-text-fill: #DC3545; /* Red */
+    -fx-font-weight: bold;
+}
+
+.status-cancelled {
+    -fx-text-fill: #6C757D; /* Gray */
+    -fx-font-weight: bold;
+}
+
+.status-default {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}

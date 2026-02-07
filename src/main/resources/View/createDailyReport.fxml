@@ -11,13 +11,12 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="mainScrollPane" fitToWidth="true" minWidth="722.0" prefHeight="2381.0" prefWidth="722.0" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.CreateReportNewController">
+<ScrollPane fx:id="mainScrollPane" fitToWidth="true" minWidth="722.0" prefHeight="2511.0" prefWidth="745.0" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.createReportController">
    <content>
       <VBox maxWidth="708.0" prefWidth="900.0" spacing="15" style="-fx-background-color: #ffffff;" stylesheets="@../CSS/managerSupervisorList.css">
          <padding>
@@ -34,20 +33,20 @@
                   <Separator prefWidth="200.0" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <HBox prefHeight="0.0" prefWidth="668.0" VBox.vgrow="NEVER">
                <children>
-                  <HBox prefHeight="0.0" prefWidth="668.0" VBox.vgrow="NEVER">
-                     <children>
-                        <Label text="Project Information" HBox.hgrow="NEVER">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="16.0" />
-                     </VBox.margin>
-                  </HBox>
+                  <Label text="Project Information" HBox.hgrow="NEVER">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="16.0" />
+               </VBox.margin>
+            </HBox>
+            <VBox spacing="12.0" style="-fx-background-color: #f2f2f2f2;" styleClass="input-field">
+               <children>
                   <HBox>
                      <children>
                         <VBox prefHeight="26.0" prefWidth="668.0" spacing="8.0">
@@ -57,7 +56,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label styleClass="text-color" text="Current Project Name">
+                              <Label fx:id="currentAssignedProjectName" styleClass="text-color" text="Current Project Name">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -100,15 +99,15 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <DatePicker fx:id="reportDatePicker" minWidth="200.0" prefHeight="50.0" prefWidth="200.0" styleClass="datePicker" />
+                              <DatePicker fx:id="todayReportDate" minWidth="200.0" prefHeight="50.0" prefWidth="200.0" styleClass="datePicker" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
                </children>
-               <VBox.margin>
-                  <Insets top="16.0" />
-               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
@@ -124,40 +123,60 @@
                         <Insets bottom="16.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox />
-                  <HBox>
+                  <VBox style="-fx-background-color: f2f2f2f2;" styleClass="input-field">
                      <children>
-                        <VBox prefHeight="43.0" prefWidth="216.0" spacing="8.0" HBox.hgrow="ALWAYS">
+                        <HBox>
                            <children>
-                              <Label text="Today Weather">
+                              <VBox prefHeight="43.0" prefWidth="216.0" spacing="8.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Today Weather">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="weatherConditionBox" minWidth="668.0" prefHeight="48.0" prefWidth="720.0" promptText="Choose Weather" styleClass="input-field" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label text="Weather Notes">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="weatherConditionBox" minWidth="668.0" prefHeight="48.0" prefWidth="720.0" promptText="Choose Weather" styleClass="input-field" VBox.vgrow="ALWAYS" />
+                              <TextArea fx:id="otherWeatherCondition" minHeight="100.0" prefHeight="80.0" promptText="Additional weather observations..." wrapText="true" />
                            </children>
                         </VBox>
                      </children>
-                  </HBox>
-                  <VBox spacing="5.0">
-                     <children>
-                        <Label text="Weather Notes">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <TextArea fx:id="otherWeatherCondition" minHeight="100.0" prefHeight="80.0" promptText="Additional weather observations..." wrapText="true" />
-                     </children>
                   </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="32.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="16.0" stylesheets="@../CSS/managerSupervisorList.css">
+               <children>
+                  <Label text="Labor Information">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
                   <VBox prefHeight="200.0" prefWidth="668.0" spacing="10.0">
                      <children>
                         <HBox prefHeight="0.0" prefWidth="668.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label text="Labor Information" HBox.hgrow="NEVER">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
+                              <VBox prefHeight="43.0" prefWidth="216.0" spacing="8.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Skill">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="laborSkillCombo" minWidth="690.0" promptText="Choose Skill" styleClass="input-field" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
                            </children>
                            <VBox.margin>
                               <Insets bottom="16.0" />
@@ -173,20 +192,7 @@
                               <TextField fx:id="laborName" styleClass="input-field" />
                            </children>
                         </VBox>
-                        <HBox>
-                           <children>
-                              <VBox prefHeight="43.0" prefWidth="216.0" spacing="8.0" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label text="Skill">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <ComboBox fx:id="laborSkillCombo" minWidth="668.0" prefHeight="48.0" prefWidth="188.0" promptText="Choose Skill" styleClass="input-field" VBox.vgrow="ALWAYS" />
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
+                        <HBox />
                         <HBox>
                            <children>
                               <VBox minWidth="200.0" prefHeight="43.0" prefWidth="216.0" spacing="8.0" HBox.hgrow="ALWAYS">
@@ -196,7 +202,7 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="dailyWadge" minWidth="250.0" styleClass="input-field" />
+                                    <TextField fx:id="laborDailyWadgePerDay" minWidth="250.0" styleClass="input-field" />
                                  </children>
                               </VBox>
                               <Region maxWidth="10.0" prefHeight="73.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
@@ -207,7 +213,7 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="workingHour" prefHeight="45.0" prefWidth="302.0" styleClass="input-field" />
+                                    <TextField fx:id="laborWorkHourPerDay" prefHeight="45.0" prefWidth="302.0" styleClass="input-field" />
                                  </children>
                               </VBox>
                            </children>
@@ -219,15 +225,15 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <TextArea fx:id="remarkTextarea" minHeight="100.0" prefHeight="80.0" promptText="comment for labor" wrapText="true" />
+                              <TextArea fx:id="remarkForLabor" minHeight="100.0" prefHeight="80.0" promptText="comment for labor" wrapText="true" />
                            </children>
                         </VBox>
+                        <Button fx:id="addAssignedLaborBtn" onAction="#addAssignedLabor" prefHeight="27.0" prefWidth="96.0" styleClass="createBtn" text="Add Labor" />
                      </children>
                      <VBox.margin>
                         <Insets top="32.0" />
                      </VBox.margin>
                   </VBox>
-                  <Button fx:id="btnAddLabor" prefHeight="27.0" prefWidth="96.0" styleClass="createBtn" text="Add Labor" />
                   <TableView fx:id="todayLaborTable" minHeight="300.0" prefHeight="144.0" prefWidth="668.0">
                     <columns>
                       <TableColumn fx:id="laborNameCol" prefWidth="134.98640632629395" text="Name" />
@@ -235,12 +241,12 @@
                         <TableColumn fx:id="dailyWadgeCol" prefWidth="111.87803649902344" text="Daily Wage" />
                         <TableColumn fx:id="workHourCol" prefWidth="113.95779418945312" text="Work Hour" />
                         <TableColumn fx:id="remarkCol" prefWidth="100.89511108398438" text="Remark" />
-                        <TableColumn fx:id="actionCol" prefWidth="68.68658447265625" text="Action" />
+                        <TableColumn fx:id="actionCol" prefWidth="98.16546630859375" text="Action" />
                     </columns>
                   </TableView>
                </children>
                <VBox.margin>
-                  <Insets top="32.0" />
+                  <Insets top="12.0" />
                </VBox.margin>
             </VBox>
             <VBox prefHeight="115.0" prefWidth="668.0" spacing="10.0">
@@ -266,7 +272,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <TextField styleClass="input-field" />
+                              <TextField fx:id="materialCostField" maxWidth="690.0" minWidth="690.0" styleClass="input-field" />
                            </children>
                            <HBox.margin>
                               <Insets bottom="8.0" />
@@ -275,51 +281,91 @@
                      </children>
                   </HBox>
                </children>
+               <VBox.margin>
+                  <Insets top="32.0" />
+               </VBox.margin>
             </VBox>
-            <TitledPane maxWidth="Infinity" text="Project Progress">
-               <content>
-                  <VBox spacing="15.0">
-                     <padding>
-                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                     </padding>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="16.0">
+               <children>
+                  <HBox prefHeight="0.0" prefWidth="668.0" VBox.vgrow="NEVER">
                      <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <Label text="Project Progress">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="264.0" prefWidth="668.0">
+                     <children>
+                        <VBox minWidth="300.0" spacing="16.0" styleClass="input-field" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label minWidth="120.0" text="Remain Quantity" />
-                              <Label text="Label" />
+                              <HBox prefHeight="58.0" prefWidth="668.0" spacing="10.0">
+                                 <children>
+                                    <VBox spacing="8.0">
+                                       <children>
+                                          <Label text="Remain Task">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="remainTask" editable="false" styleClass="input-field" />
+                                       </children>
+                                    </VBox>
+                                    <Region prefHeight="72.0" prefWidth="47.0" />
+                                    <VBox spacing="8.0">
+                                       <children>
+                                          <Label text="Completed Task">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="completedTask" styleClass="input-field" />
+                                       </children>
+                                    </VBox>
+                                    <Region prefHeight="72.0" prefWidth="37.0" />
+                                    <VBox spacing="8.0">
+                                       <children>
+                                          <Label text="Worked Hour">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="progressWorkHour" styleClass="input-field" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <VBox minWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Progress Remark">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox fx:id="progressContainer" minHeight="100.0" spacing="10.0" VBox.vgrow="ALWAYS" />
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="76.0" prefWidth="668.0">
+                                       <children>
+                                          <Button fx:id="addProgressBtn" onAction="#handleAddProgress" prefHeight="88.0" prefWidth="136.0" styleClass="account-create-btn" text="Add" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <Label minWidth="120.0" text="Completed Quantity" />
-                              <TextField />
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <Label minWidth="120.0" text="Worked Hour" />
-                              <TextField fx:id="projectNameField1" />
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <Label text="Progress Description" />
-                        <VBox fx:id="progressContainer" spacing="10.0" />
-                        <HBox alignment="CENTER_RIGHT">
-                           <children>
-                              <Button fx:id="addProgressBtn" onAction="#handleAddProgress" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20;" text="Add" />
-                           </children>
-                        </HBox>
+                        </VBox>
                      </children>
                   </VBox>
-               </content>
-            </TitledPane>
+               </children>
+               <VBox.margin>
+                  <Insets top="32.0" />
+               </VBox.margin>
+            </VBox>
             <VBox spacing="20.0">
                <children>
                   <VBox prefWidth="300.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 1);">
                      <children>
-                        <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 14px;" text="📝 General Comments" />
-                        <Separator style="-fx-padding: 10 0;" />
-                        <TextArea prefHeight="89.6" prefWidth="200.0" promptText="loading......." style="-fx-background-color: transparent;" />
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 14px;" text="General Comments" />
+                        <TextArea fx:id="generalRemark" prefHeight="125.0" prefWidth="628.0" promptText="loading......." style="-fx-background-color: transparent;" />
                      </children>
                   </VBox>
                   <VBox prefWidth="668.0" spacing="10.0" style="-fx-background-color: #fff5f5; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #ffcccc; -fx-border-radius: 8;">
@@ -337,27 +383,9 @@
             </VBox>
             <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
                <children>
-                  <Button fx:id="submitReportBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25;" text="Submit Report" />
+                  <Button fx:id="submitReportBtn" onAction="#submitReportBtn" prefHeight="44.0" prefWidth="103.0" styleClass="account-create-btn" text="Submit Report" />
                </children>
             </HBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <HBox prefHeight="0.0" prefWidth="668.0" VBox.vgrow="NEVER">
-                     <children>
-                        <Label text="Project Progress">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <HBox spacing="10.0" />
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
          </children>
       </VBox>
    </content>

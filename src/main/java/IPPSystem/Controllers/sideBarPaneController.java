@@ -580,11 +580,11 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
-            openInnerView("report.fxml");
+            openInnerView("allReports.fxml");
             linkButton.setTabButtonName("Report");
         });
         reportIconBtn.setOnMouseClicked(e -> {
-            openInnerView("report.fxml");
+            openInnerView("allReports.fxml");
             linkButton.setTabButtonName("Report");
         });
     }
@@ -620,7 +620,7 @@ public class sideBarPaneController extends navigationPaneController{
 
         if (confirmBtn != null) {
             confirmBtn.setOnMouseClicked(e -> {
-                showSidebar(sideBar, 200);
+                showSidebar(sideBar, 300);
             });
         }
     }

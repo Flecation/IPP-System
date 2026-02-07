@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="675.0" prefWidth="1120.0" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="300.0" style="-fx-background-color: #ffffff;" HBox.hgrow="ALWAYS">
+         <children>
+            <VBox minHeight="150.0" prefHeight="139.0" prefWidth="300.0" spacing="12.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="40.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Sunrise Building Project">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="select a report to see details...">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <VBox alignment="CENTER" prefHeight="34.0" prefWidth="300.0">
+                     <children>
+                        <ComboBox prefHeight="34.0" prefWidth="264.0" promptText="Filter by project status" styleClass="filter-box">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1000.0" minViewportHeight="1000.0" style="-fx-border-color: none; -fx-background-color: none;" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox cacheShape="false" centerShape="false" fillWidth="false" prefWidth="300.0" scaleShape="false" spacing="5.0" style="-fx-border-color: none;">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="313.0" style="-fx-background-color: #f2f2f2f2;" styleClass="projects-cards">
+                           <children>
+                              <Label styleClass="sub-title" text="Sunrise Building">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="294.0">
+                                 <children>
+                                    <Label prefHeight="13.0" prefWidth="68.0" text="Building Type -">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Region prefHeight="37.0" prefWidth="0.0" />
+                                    <Label text="In Progress">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="313.0" style="-fx-background-color: #f2f2f2f2;" styleClass="projects-cards">
+                           <children>
+                              <Label styleClass="sub-title" text="Sunrise Building">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="294.0">
+                                 <children>
+                                    <Label prefHeight="13.0" prefWidth="68.0" text="Building Type -">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Region prefHeight="37.0" prefWidth="0.0" />
+                                    <Label text="In Progress">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+         <content>
+            <VBox alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="82.0" prefWidth="820.0" spacing="10.0" style="-fx-background-color: #f2f2f2f2;" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="335.0" spacing="6.0">
+                           <children>
+                              <Label prefHeight="30.0" prefWidth="203.0" styleClass="sub-title" text="#12" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <HBox>
+                                 <children>
+                                    <Label prefHeight="17.0" prefWidth="183.0" text="01/02/26        By Aung Aung" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Button minWidth="100.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="146.0" styleClass="managerAccSpBtnView" stylesheets="@../CSS/managerSupervisorList.css" text="Back" HBox.hgrow="ALWAYS" />
+                        <Region prefHeight="82.0" prefWidth="37.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="804.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label styleClass="sub-title" text="Labors In Day">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <TableView fx:id="todayLaborTable" minHeight="300.0" prefHeight="144.0" prefWidth="668.0">
+                           <columns>
+                              <TableColumn fx:id="laborNameCol" prefWidth="134.98640632629395" text="Name" />
+                              <TableColumn fx:id="laborSkillCol" prefWidth="148.96905517578125" text="Skill" />
+                              <TableColumn fx:id="dailyWadgeCol" prefWidth="104.29473876953125" text="Daily Wage" />
+                              <TableColumn fx:id="workHourCol" prefWidth="120.4886474609375" text="Work Hour" />
+                              <TableColumn fx:id="remarkCol" prefWidth="296.01141357421875" text="Remark" />
+                           </columns>
+                        </TableView>
+                        <HBox>
+                           <children>
+                              <VBox prefHeight="133.0" prefWidth="409.0">
+                                 <children>
+                                    <Label text="Remain Qty" />
+                                    <HBox maxWidth="200.0" prefHeight="116.0" prefWidth="100.0" style="-fx-background-color: pink;" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="133.0" prefWidth="409.0">
+                                 <children>
+                                    <Label text="Completed Qty" />
+                                    <HBox maxWidth="200.0" prefHeight="116.0" prefWidth="100.0" style="-fx-background-color: pink;" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="133.0" prefWidth="409.0">
+                                 <children>
+                                    <Label text="Worked Hour " />
+                                    <HBox maxWidth="200.0" prefHeight="116.0" prefWidth="100.0" style="-fx-background-color: pink;" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="133.0" prefWidth="409.0">
+                                 <children>
+                                    <Label text="Matrial Cost" />
+                                    <HBox maxWidth="200.0" prefHeight="116.0" prefWidth="100.0" style="-fx-background-color: pink;" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</HBox>

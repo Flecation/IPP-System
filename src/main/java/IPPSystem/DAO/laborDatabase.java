@@ -63,17 +63,17 @@ public class laborDatabase {
         }
     }
 
-    public static Boolean deleteLabor(int laborId)  {
-        String sql = "UPDATE labors SET isActive = false," +
-                "laborEndDate = ?  WHERE laborId = ? ";
-        try(PreparedStatement ps = con.prepareCall(sql)){
-            ps.setDate(1, dateFormatter.today());
-            ps.setInt(2,laborId);
-            return ps.execute();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
+//    public static Boolean deleteLabor(int laborId)  {
+//        String sql = "UPDATE labors SET isActive = false," +
+//                "laborEndDate = ?  WHERE laborId = ? ";
+//        try(PreparedStatement ps = con.prepareCall(sql)){
+//            ps.setDate(1, dateFormatter.today());
+//            ps.setInt(2,laborId);
+//            return ps.execute();
+//        } catch (SQLException e) {
+//            return false;
+//        }
+//    }
 
     public static ObservableList<labors> getAllLaborsWithinProject(int assignProjectId){
         ObservableList<labors> labors = FXCollections.observableArrayList();
@@ -165,6 +165,51 @@ public class laborDatabase {
         }
         return -1;
     }
+public static List<String> getAllSkillNames() {
+    List<String> list = new ArrayList<>();
+    String sql = "SELECT skillName FROM skills ORDER BY skillName";
+
+    try (Connection con = databaseConnection.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            list.add(rs.getString("skillName"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
+    public static boolean deleteLabor(int laborId) {
+
+        // Prevent delete if assigned
+        String checkSql = "SELECT 1 FROM project_labors WHERE laborId = ?";
+        String deleteSql = "DELETE FROM labors WHERE laborId = ?";
+
+        try (Connection con = databaseConnection.getConnection()) {
+
+            PreparedStatement check = con.prepareStatement(checkSql);
+            check.setInt(1, laborId);
+            ResultSet rs = check.executeQuery();
+
+            if (rs.next()) {
+                return false; // assigned → block delete
+            }
+
+            PreparedStatement ps = con.prepareStatement(deleteSql);
+            ps.setInt(1, laborId);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 //    public static List<labors> getAllLaborsSortedByAssignment() {
 //        List<labors> list = new ArrayList<>();
@@ -235,6 +280,8 @@ public class laborDatabase {
         return list;
     }
 
+
+
     public static List<labors> getAllLaborsSortedByAssignment() {
         List<labors> list = new ArrayList<>();
         String sql = "SELECT l.*, s.skillName, ap.projectInstanceName " +
@@ -294,6 +341,111 @@ public class laborDatabase {
 //        }
 //        return list;
 //    }
+
+
+
+//    public static List<labors> searchActiveLaborsByNameAndSkill(String keyword, Integer skillId) {
+//        List<labors> list = new ArrayList<>();
+//        String sql = "SELECT l.laborId, l.laborName " +
+//                "FROM labors l " +
+//                "WHERE l.isActive = 1 AND l.laborName LIKE ? ";
+//
+//        if (skillId != null) {
+//            sql += " AND l.skillId = ?";
+//        }
+//
+//        try (PreparedStatement ps = con.prepareStatement(sql)) {
+//            ps.setString(1, "%" + keyword + "%");
+//            if (skillId != null) ps.setInt(2, skillId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                list.add(new labors(
+//                        rs.getInt("laborId"),
+//                        null,
+//                        rs.getString("laborName"),
+//                        null,
+//                        null,
+//                        null,
+//                        null
+//                ));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+
+//
+//    public static List<labors> searchActiveLaborsByNameAndSkill(String keyword, Integer skillId) {
+//        List<labors> list = new ArrayList<>();
+//        String sql = "SELECT * FROM labors WHERE isActive = 1 AND laborName LIKE ?";
+//        if (skillId != null) sql += " AND skillId = ?";
+//
+//        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+//            stmt.setString(1, keyword + "%");
+//            if (skillId != null) stmt.setInt(2, skillId);
+//
+//            ResultSet rs = stmt.executeQuery();
+//            while (rs.next()) {
+//                labors l = new labors();
+//                l.setLaborId(rs.getInt("laborId"));
+//                l.setLaborName(rs.getString("laborName"));
+//                l.setSkillId(rs.getInt("skillId"));
+//                list.add(l);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return list;
+//    }
+
+
+
+
+
+
+    // FREE = not assigned to any active (planning/inProgress/delay) project (and not cancelled)
+    public static List<labors> searchFreeActiveLaborsByNameAndSkill(String keyword, int skillId) {
+        List<labors> list = new ArrayList<>();
+
+        String sql = """
+            SELECT l.laborId, l.laborName
+            FROM labors l
+            WHERE l.isActive = 1
+              AND l.skillId = ?
+              AND l.laborName LIKE CONCAT('%', ?, '%')
+              AND l.laborId NOT IN (
+                  SELECT aw.workerId
+                  FROM assignWorkers aw
+                  JOIN assignProjects ap ON ap.assignProjectId = aw.assignProjectId
+                  JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus
+                  WHERE aw.isCancel = 0
+                    AND ps.projectStatusName IN ('planning','inProgress','delay')
+              )
+            ORDER BY l.laborName
+            LIMIT 20
+        """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, skillId);
+            ps.setString(2, keyword);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    labors l = new labors();
+                    l.setLaborId(rs.getInt("laborId"));
+                    l.setLaborName(rs.getString("laborName"));
+                    list.add(l);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
 
 }
