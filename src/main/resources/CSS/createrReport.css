@@ -109,25 +109,20 @@
 
 
 .qty-txt{
-    -fx-text-fill: #E18600;
+    -fx-text-fill: #ffffff;
 }
 
 
 .box-border{
-    -fx-background-color: #fefefefe;
+    -fx-background-color: #CFD6E0;
     -fx-border-radius:10;
-    -fx-border-color: #E18600;
     -fx-background-radius:10;
     -fx-font-size:20;
 }
 
 .box-border:hover{
-    -fx-background-color: none;
-    -fx-border-color: #E18600;
-    -fx-border-width: 0.5;
-    -fx-border-radius:10;
-    -fx-background-radius:10;
-    -fx-font-size:20;
+    -fx-background-color: #CFD6E0;
+
 
 }
 
@@ -143,7 +138,7 @@
 
 /* Set header style */
 .table-view .column-header {
-    -fx-background-color: #E18600;
+    -fx-background-color: #CFD6E0;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-alignment: CENTER;
@@ -179,24 +174,26 @@
 
 
 .issue-textarea{
-    -fx-background-color: transparent;
+    -fx-text-fill:#c44536;
 }
 
 /* Base style for TextArea */
 .text-area {
     -fx-background-color: #c44536; /* light cream */
-    -fx-border-color: #E18600; /* orange border */
+    -fx-border-color: #E6CDCE; /* orange border */
     -fx-border-width: 0.5;
     -fx-border-radius: 5; /* rounded corners */
     -fx-background-radius: 5; /* match border radius */
-    -fx-padding: 0; /* inner padding */
     -fx-font-size: 14px;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #333333; /* text color */
+
 }
 
 /* Placeholder text style (if using promptText) */
 .text-area .text {
+    -fx-padding:10;
+
     -fx-fill: #c44536;
 }
 

@@ -64,7 +64,7 @@
                               <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <VBox fx:id="reportProjectScrollPane" cacheShape="false" centerShape="false" fillWidth="false" scaleShape="false" spacing="10.0" style="-fx-border-color: none;" VBox.vgrow="ALWAYS">
+                        <VBox fx:id="reportProjectScrollPane" alignment="CENTER" cacheShape="false" centerShape="false" fillWidth="false" scaleShape="false" spacing="10.0" style="-fx-border-color: none;" VBox.vgrow="ALWAYS">
                            <padding>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
                            </padding>
@@ -112,12 +112,15 @@
                            <children>
                               <HBox prefHeight="17.0" prefWidth="294.0">
                                  <children>
-                                    <Label text="Project Progress">
+                                    <Label styleClass="sub-title" text="Project Progress">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
                                  </children>
+                                 <padding>
+                                    <Insets bottom="20.0" />
+                                 </padding>
                               </HBox>
                               <HBox prefHeight="68.0" prefWidth="804.0">
                                  <children>
@@ -125,12 +128,12 @@
                                        <children>
                                           <Label styleClass="sub-title" text="Remain Qty">
                                              <font>
-                                                <Font size="16.0" />
+                                                <Font size="14.0" />
                                              </font>
                                           </Label>
                                           <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <Label fx:id="remainQty" styleClass="qty-txt" text="10">
+                                                <Label fx:id="remainQty" styleClass="qty-txt" text="10" textFill="WHITE">
                                                    <font>
                                                       <Font size="25.0" />
                                                    </font>
@@ -144,7 +147,7 @@
                                        <children>
                                           <Label styleClass="sub-title" text="Completed Qty">
                                              <font>
-                                                <Font size="16.0" />
+                                                <Font size="14.0" />
                                              </font>
                                           </Label>
                                           <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
@@ -163,7 +166,7 @@
                                        <children>
                                           <Label styleClass="sub-title" text="Worked Hour ">
                                              <font>
-                                                <Font size="16.0" />
+                                                <Font size="14.0" />
                                              </font>
                                           </Label>
                                           <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
@@ -182,7 +185,7 @@
                                        <children>
                                           <Label styleClass="sub-title" text="Daily Cost">
                                              <font>
-                                                <Font size="16.0" />
+                                                <Font size="14.0" />
                                              </font>
                                           </Label>
                                           <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
@@ -213,6 +216,9 @@
                                        </font>
                                     </Label>
                                  </children>
+                                 <padding>
+                                    <Insets bottom="20.0" />
+                                 </padding>
                               </VBox>
                               <TableView fx:id="todayLaborTable" minHeight="300.0" prefHeight="144.0" VBox.vgrow="ALWAYS">
                                  <columns>
@@ -235,7 +241,7 @@
                            <children>
                               <HBox prefHeight="17.0" prefWidth="294.0">
                                  <children>
-                                    <Label text="All About Issues" textFill="#e10f0f">
+                                    <Label styleClass="issue-textarea" text="All About Issues" textFill="#e10f0f">
                                        <font>
                                           <Font size="20.0" />
                                        </font>

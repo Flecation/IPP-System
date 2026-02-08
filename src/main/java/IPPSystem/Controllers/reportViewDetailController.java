@@ -59,18 +59,11 @@ public class reportViewDetailController {
     @FXML
     private ComboBox<String> filterBySupervisor;
 
-
-
     @FXML
     private DatePicker endDate;
 
-
-
-
-
     @FXML
     private Label remainQty;
-
 
     @FXML
     private Label reportDate;
@@ -89,7 +82,6 @@ public class reportViewDetailController {
     @FXML
     private Label workedHourQty;
 
-
     @FXML
     private Label generalCommentLabel;
 
@@ -98,31 +90,14 @@ public class reportViewDetailController {
 
     @FXML
     private TextArea issuesLabel;
-
-
-
     @FXML
     private VBox reportProjectScrollPane;
     private List<DailyReport> allReports; // store all reports
 
 
-    //    @FXML
-    //    private Label reportCountLabel;
-
     @FXML
     void clickBack(ActionEvent event) {
-//        try {
-//            Parent root = FXMLLoader.load(
-//                    getClass().getResource("/View/allReports.fxml")
-//            );
-//
-//            Stage stage = (Stage) backBtn.getScene().getWindow();
-//            stage.setScene(new Scene(root));
-//            stage.show();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
     }
 
 
@@ -251,16 +226,6 @@ public class reportViewDetailController {
                             )
                     );
 
-//                    // -------- Totals --------
-//                    double workedHours = reportDatabase.getTotalWorkedHours(report.getReportId());
-//                    double dailyCost = reportDatabase.getTotalDailyLaborCost(report.getReportId());
-//                    double completedQty = reportDatabase.getCompletedQty(report.getReportId());
-//                    double remainQtyVal = reportDatabase.getRemainQty(report.getAssignWorkItemId());
-//
-//                    workedHourQty.setText(String.format("%.1f hrs", workedHours));
-//                    dailyCostQty.setText(String.format("%.2f", dailyCost));
-//                    completeQty.setText(String.format("%.2f", completedQty));
-//                    remainQty.setText(String.format("%.2f", remainQtyVal));
 
                     // ---- TOTALS ----
                     workedHourQty.setText(
@@ -282,6 +247,8 @@ public class reportViewDetailController {
                             String.format("%.2f",
                                     reportDatabase.getRemainQty(report.getAssignWorkItemId()))
                     );
+                    System.out.println("AssignWorkItemId = " + report.getAssignWorkItemId());
+
 
                     // ---- GENERAL COMMENT ----
                     generalCommentLabel.setText(

@@ -40,9 +40,17 @@ public class reportDatabase {
 
     public static List<DailyReport> getAllReports(Integer supervisorId) {
         List<DailyReport> list = new ArrayList<>();
+
         String sql = """
-        SELECT dr.dailyReportId, dr.assignProjectId, ap.projectInstanceName, pt.typeName AS projectTypeName,
-               dr.reportDate, dr.issue, u.userName AS supervisorName
+        SELECT 
+            dr.dailyReportId,
+            dr.assignProjectId,
+            dr.assignWorkItemId,      -- ⭐ FIX
+            ap.projectInstanceName,
+            pt.typeName AS projectTypeName,
+            dr.reportDate,
+            dr.issue,
+            u.userName AS supervisorName
         FROM dailyReports dr
         JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId
         LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId
@@ -56,11 +64,15 @@ public class reportDatabase {
         sql += " ORDER BY dr.reportDate DESC";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            if (supervisorId != null) ps.setInt(1, supervisorId);
+
+            if (supervisorId != null) {
+                ps.setInt(1, supervisorId);
+            }
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new DailyReport(
+
+                DailyReport report = new DailyReport(
                         rs.getInt("dailyReportId"),
                         rs.getInt("assignProjectId"),
                         rs.getString("projectInstanceName"),
@@ -70,14 +82,21 @@ public class reportDatabase {
                         null,
                         null,
                         rs.getString("supervisorName")
-                ));
+                );
+
+                // ⭐⭐ CRITICAL LINE
+                report.setAssignWorkItemId(rs.getInt("assignWorkItemId"));
+
+                list.add(report);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return list;
     }
+
 
 
 //    public static List<DailyReport> getAllReports(Integer engineerId) {
@@ -123,35 +142,41 @@ public class reportDatabase {
 //    }
 
 
-
     public static List<DailyReport> getReportsByProjectId(int assignProjectId) {
+
         List<DailyReport> reports = new ArrayList<>();
+
         String sql = """
-            SELECT 
-                dr.dailyReportId AS reportId,
-                dr.assignProjectId,
-                dr.reportDate,
-                dr.issue,
-                dr.weather AS weatherType,
-                dr.generalRemark AS comments,
-                p.projectInstanceName AS projectName,
-                ps.projectStatusName AS projectStatus,
-                u.userName AS supervisorName
-            FROM dailyReports dr
-            JOIN assignProjects p ON dr.assignProjectId = p.assignProjectId
-            LEFT JOIN users u ON dr.supervisorId = u.userId
-            LEFT JOIN projectStatus ps ON p.projectStatus = ps.projectStatusId
-            WHERE dr.assignProjectId = ?
-            ORDER BY dr.reportDate DESC
-        """;
+        SELECT 
+            dr.dailyReportId AS reportId,
+            dr.assignProjectId,
+            dr.assignWorkItemId,
+            dr.reportDate,
+            dr.issue,
+            dr.weather AS weatherType,
+            dr.generalRemark AS comments,
+            p.projectInstanceName AS projectName,
+            ps.projectStatusName AS projectStatus,
+            u.userName AS supervisorName
+        FROM dailyReports dr
+        JOIN assignProjects p ON dr.assignProjectId = p.assignProjectId
+        LEFT JOIN users u ON dr.supervisorId = u.userId
+        LEFT JOIN projectStatus ps ON p.projectStatus = ps.projectStatusId
+        WHERE dr.assignProjectId = ?
+        ORDER BY dr.reportDate DESC
+    """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, assignProjectId);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 DailyReport report = new DailyReport();
+
                 report.setReportId(rs.getInt("reportId"));
                 report.setAssignProjectId(rs.getInt("assignProjectId"));
+                report.setAssignWorkItemId(rs.getInt("assignWorkItemId")); // ⭐
                 report.setReportDate(rs.getDate("reportDate").toLocalDate());
                 report.setIssues(rs.getString("issue"));
                 report.setWeatherType(rs.getString("weatherType"));
@@ -160,15 +185,65 @@ public class reportDatabase {
                 report.setProjectStatus(rs.getString("projectStatus"));
                 report.setSupervisorName(rs.getString("supervisorName"));
 
-
                 reports.add(report);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return reports;
     }
+
+
+
+//    public static List<DailyReport> getReportsByProjectId(int assignProjectId) {
+//        List<DailyReport> reports = new ArrayList<>();
+//        String sql = """
+//            SELECT
+//                dr.dailyReportId AS reportId,
+//                dr.assignProjectId,
+//                dr.assignWorkItemId,
+//                dr.reportDate,
+//                dr.issue,
+//                dr.weather AS weatherType,
+//                dr.generalRemark AS comments,
+//                p.projectInstanceName AS projectName,
+//                ps.projectStatusName AS projectStatus,
+//                u.userName AS supervisorName
+//            FROM dailyReports dr
+//            JOIN assignProjects p ON dr.assignProjectId = p.assignProjectId
+//            LEFT JOIN users u ON dr.supervisorId = u.userId
+//            LEFT JOIN projectStatus ps ON p.projectStatus = ps.projectStatusId
+//            WHERE dr.assignProjectId = ?
+//            ORDER BY dr.reportDate DESC
+//        """;
+//
+//        try (PreparedStatement ps = con.prepareStatement(sql)) {
+//            ps.setInt(1, assignProjectId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                DailyReport report = new DailyReport();
+//                report.setReportId(rs.getInt("reportId"));
+//                report.setAssignProjectId(rs.getInt("assignProjectId"));
+//                report.setReportDate(rs.getDate("reportDate").toLocalDate());
+//                report.setIssues(rs.getString("issue"));
+//                report.setWeatherType(rs.getString("weatherType"));
+//                report.setComments(rs.getString("comments"));
+//                report.setProjectName(rs.getString("projectName"));
+//                report.setProjectStatus(rs.getString("projectStatus"));
+//                report.setSupervisorName(rs.getString("supervisorName"));
+//                report.setAssignWorkItemId(rs.getInt("assignWorkItemId"));
+//
+//
+//                reports.add(report);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return reports;
+//    }
 
 
 
