@@ -606,10 +606,14 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
             d.projectTypeId = typeId;
             d.buildingId = buildingId;
             d.levelId = levelId;
-            d.area = parseOptionalDouble(areaTxt, "Area");
-            d.units = parseOptionalDouble(unitTxt, "Units");
-            d.stories = parseOptionalDouble(storyTxt, "Stories");
-            d.height = parseOptionalDouble(heightTxt, "Height");
+            // IMPORTANT:
+            // In createViewProject we show these numeric fields directly.
+            // If the user leaves them empty, storing NULL causes "null" / blank displays.
+            // So we store 0.0 as a safe default.
+            d.area = parseOptionalDoubleOrZero(areaTxt, "Area");
+            d.units = parseOptionalDoubleOrZero(unitTxt, "Units");
+            d.stories = parseOptionalDoubleOrZero(storyTxt, "Stories");
+            d.height = parseOptionalDoubleOrZero(heightTxt, "Height");
 
 
             sideBarPaneController p = parent();
@@ -633,6 +637,11 @@ public class createProjectController implements loadPaneAware, AddOverlayForm {
         } catch (Exception e) {
             throw new IllegalArgumentException(field + " must be a number.");
         }
+    }
+
+    private Double parseOptionalDoubleOrZero(TextField tf, String field) {
+        Double v = parseOptionalDouble(tf, field);
+        return v == null ? 0.0 : v;
     }
 
     private static String textOf(TextField tf) { return tf == null ? null : tf.getText(); }

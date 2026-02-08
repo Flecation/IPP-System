@@ -20,13 +20,13 @@
 
 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="0.0" prefHeight="675.0" prefWidth="1220.0" stylesheets="@../CSS/projectDetails.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.projectDetailsController">
     <content>
-        <VBox alignment="CENTER" prefHeight="675.0" prefWidth="1200.0" style="-fx-background-color: #f5f7fa;">
-         <HBox alignment="CENTER">
+        <VBox alignment="CENTER" prefHeight="675.0" prefWidth="1200.0" spacing="15.0" styleClass="root">
+         <HBox alignment="CENTER" styleClass="titlePane">
             <VBox.margin>
-               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               <Insets />
             </VBox.margin>
             <children>
-               <VBox alignment="CENTER_LEFT">
+               <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                   <children>
                          <HBox alignment="CENTER_LEFT" spacing="15">
                              <Label fx:id="projectName" text="Central Office Tower" textFill="NAVY">
@@ -56,11 +56,14 @@
                <Region maxWidth="760.0" prefHeight="200.0" HBox.hgrow="ALWAYS" />
                <Button fx:id="backToViewProjectBtn" mnemonicParsing="false" text="Back" />
             </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
          </HBox>
 
               <!-- Top Metrics Cards -->
-              <HBox alignment="CENTER" maxHeight="150.0" minHeight="150.0" spacing="100.0">
-                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10.0" HBox.hgrow="NEVER">
+              <HBox alignment="CENTER" maxHeight="150.0" minHeight="150.0" spacing="10.0">
+                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                        <Label alignment="CENTER" text="Completed Days" textFill="GREY" wrapText="true">
                            <font>
                                <Font size="21.0" />
@@ -89,11 +92,8 @@
                                <ColorAdjust brightness="-0.38" contrast="1.0" />
                            </effect>
                        </ProgressBar>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
                    </VBox>
-                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10">
+                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10" styleClass="cardPane" HBox.hgrow="ALWAYS">
                        <Label alignment="CENTER" text="Completed Work Items" textFill="GREY" wrapText="true">
                            <font>
                                <Font size="21.0" />
@@ -122,11 +122,8 @@
                                <ColorAdjust brightness="-0.38" contrast="1.0" />
                            </effect>
                        </ProgressBar>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
                    </VBox>
-                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10">
+                   <VBox alignment="CENTER" prefHeight="135.0" prefWidth="300.0" spacing="10" styleClass="cardPane" HBox.hgrow="ALWAYS">
                        <Label alignment="CENTER" text="Earned Value" textFill="GREY" wrapText="true">
                            <font>
                                <Font size="21.0" />
@@ -155,20 +152,17 @@
                                <ColorAdjust brightness="-0.38" contrast="1.0" />
                            </effect>
                        </ProgressBar>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
                    </VBox>
                   <VBox.margin>
-                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      <Insets />
                   </VBox.margin>
               </HBox>
 
               <!-- Middle Section: Project Info + SPI/CPI -->
-              <HBox alignment="CENTER" maxHeight="320.0" spacing="100.0">
+              <HBox alignment="CENTER" maxHeight="320.0" spacing="10.0" VBox.vgrow="ALWAYS">
                   <StackPane maxWidth="500.0" minWidth="500.0" HBox.hgrow="ALWAYS">
                       <children>
-                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;">
+                          <VBox fx:id="viewOnlyProjectInfo" maxWidth="500.0" minWidth="500.0" spacing="30.0" style="-fx-background-color: white; -fx-background-radius: 12;" styleClass="cardPane" StackPane.alignment="CENTER">
                               <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="500.0">
                            <VBox.margin>
@@ -260,7 +254,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                   </StackPane>
-                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                   <VBox alignment="CENTER" minWidth="220.0" spacing="10.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                        <StackPane VBox.vgrow="NEVER">
                   <Circle fill="#1f93ff00" radius="75.0" stroke="#d6d6d6" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                            <Circle fx:id="spiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" smooth="false" stroke="#4176f2" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
@@ -281,49 +275,40 @@
                      </StackPane.margin>
                             </Label>
                        </StackPane>
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="Status    " wrapText="true" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="70.0" minWidth="70.0" text="Status    ">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="spiStatusLbl" alignment="CENTER" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="PV ">
+                              <Label maxWidth="70.0" minWidth="70.0" text="PV ">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="spiPvLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="EV">
+                              <Label maxWidth="70.0" minWidth="70.0" text="EV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="spiEvLbl" alignment="CENTER" text="Label" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                    </VBox>
-                   <VBox alignment="CENTER" maxWidth="220.0" minWidth="220.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                   <VBox alignment="CENTER" minWidth="220.0" spacing="10.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                        <StackPane VBox.vgrow="NEVER">
                   <Circle fill="#97979700" radius="75.0" stroke="#d6d6d6" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
                            <Circle fx:id="cpiProgressCircle" fill="transparent" radius="75.0" rotate="-90.0" stroke="GREEN" strokeType="INSIDE" strokeWidth="15.0" StackPane.alignment="CENTER" />
@@ -344,55 +329,46 @@
                      </StackPane.margin>
                             </Label>
                        </StackPane>
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="Status" wrapText="true">
+                              <Label maxWidth="70.0" minWidth="70.0" text="Status">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="cpiStatusLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="PV">
+                              <Label maxWidth="70.0" minWidth="70.0" text="PV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="cpiPvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                         <Line endX="200" startX="0" stroke="#e0e0e0" strokeWidth="0.5" />
-               <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox alignment="CENTER" spacing="5.0">
                   <children>
-                              <Label maxWidth="65.0" minWidth="65.0" text="EV">
+                              <Label maxWidth="70.0" minWidth="70.0" text="EV">
                                   <font>
                                       <Font size="17.0" />
                                   </font>
                               </Label>
                      <Label fx:id="cpiEvLbl" text="Label" wrapText="true" HBox.hgrow="ALWAYS" />
                   </children>
-                  <padding>
-                     <Insets left="35.0" />
-                  </padding>
                </HBox>
                    </VBox>
                   <VBox.margin>
-                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      <Insets />
                   </VBox.margin>
               </HBox>
-                  <VBox alignment="CENTER" spacing="20.0">
+                  <VBox alignment="CENTER" spacing="10.0" styleClass="box">
                       <children>
-               <HBox alignment="CENTER_LEFT" maxWidth="1180.0">
+               <HBox alignment="CENTER_LEFT" maxWidth="1180.0" styleClass="boxTItle">
                   <children>
                                 <Label text="📋 Project Categories" textFill="#2c3e50">
                                     <font>
@@ -401,7 +377,7 @@
                                 </Label>
                   </children>
                </HBox>
-                          <TableView fx:id="workItemTable" maxWidth="1180.0" minHeight="300.0" prefHeight="0.0" VBox.vgrow="ALWAYS">
+                          <TableView fx:id="workItemTable" minHeight="300.0" prefHeight="0.0" VBox.vgrow="ALWAYS">
                               <columns>
                                   <TableColumn fx:id="workItemNameCol" editable="false" prefWidth="250" text="Work Item">
                                       <cellValueFactory>
@@ -446,9 +422,15 @@
                           </TableView>
                       </children>
             <VBox.margin>
-               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               <Insets />
             </VBox.margin>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
                   </VBox>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
         </VBox>
     </content>
 </ScrollPane>

@@ -3,7 +3,7 @@
 USE IPPSystem;
 
 -- ===== Project 01 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 01', 7, 19, 3500, 45, 1, 20, 3, 'Mandalay', 15, 4, 5642.09, 100, '2025-11-26');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 01', 7, 18, 3500, 45, 1, 20, 3, 'Mandalay', 15, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 2143.62, 131.66, 3, '2025-05-27', '2025-08-11');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -145,7 +145,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 3.09, 37.79, 418.9, 0);
 
 -- ===== Project 02 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 02', 3, 13, 18000, 0, 20, 40, 4, 'Yangon, Hlaing', 12, 1, NULL, 0, '2025-11-20');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 02', 3, 13, 18000, 0, 20, 40, 4, 'Yangon, Hlaing', 12, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 19801.07, 125.36, 3, '2025-04-13', '2025-06-17');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -207,7 +207,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 20, '2025-05-25', '2025-06-14');
 
 -- ===== Project 03 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 03', 5, 2, 5000, 0, 8, 2, 2, 'Mandalay', 15, 2, 10022.11, 50, '2025-10-09');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 03', 5, 2, 5000, 0, 8, 2, 2, 'Mandalay', 15, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3116.58, 127.88, 3, '2025-04-26', '2025-07-14');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -311,7 +311,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 2.44, 46.51, 467.67, 0);
 
 -- ===== Project 04 (delay) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (4, 'Demo Project 04', 4, 15, 40000, 0, 2, 2, 3, 'Yangon, Sanchaung', 18, 3, 70800.27, 80, '2025-12-16');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (4, 'Demo Project 04', 4, 15, 40000, 0, 2, 2, 3, 'Yangon, Sanchaung', 18, 3);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 32577.49, 157.4, 3, '2025-05-09', '2025-07-20');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 3);
@@ -441,7 +441,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 2.31, 7.12, 412.91, 0);
 
 -- ===== Project 05 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 05', 9, 12, 5000, 45, 8, 5, 3, 'Bago', 10, 1, NULL, 0, '2025-06-29');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 05', 9, 12, 5000, 45, 8, 5, 3, 'Bago', 10, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3620.47, 148.74, 3, '2025-04-18', '2025-07-04');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -515,7 +515,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 6, '2025-06-01', '2025-06-07');
 
 -- ===== Project 06 (delay) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 06', 8, 12, 18000, 0, 2, 5, 6, 'Pathein', 15, 3, 64457.94, 80, '2025-12-29');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 06', 8, 12, 18000, 0, 2, 5, 6, 'Pathein', 15, 3);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 12834.26, 68.4, 3, '2025-09-21', '2025-12-09');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 3);
@@ -653,7 +653,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 6.28, 7.82, 432.25, 0);
 
 -- ===== Project 07 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 07', 9, 14, 25000, 0, 3, 40, 4, 'Yangon, Hlaing', 15, 2, 40048.92, 5, '2026-01-31');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 07', 9, 14, 25000, 0, 3, 40, 4, 'Yangon, Hlaing', 15, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 18572.27, 150.92, 3, '2025-11-20', '2026-02-04');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -788,7 +788,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 5.73, 32.55, 410.87, 0);
 
 -- ===== Project 08 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 08', 3, 1, 18000, 60, 12, 2, 5, 'Naypyitaw', 20, 1, NULL, 0, '2026-04-10');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 08', 3, 1, 18000, 60, 12, 2, 5, 'Naypyitaw', 20, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 16841.36, 106.88, 3, '2025-09-23', '2025-12-15');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -868,7 +868,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 4, '2025-11-06', '2025-11-10');
 
 -- ===== Project 09 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 09', 5, 2, 40000, 0, 20, 1, 2, 'Yangon, Sanchaung', 12, 2, 85746.28, 50, '2025-06-20');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 09', 5, 2, 40000, 0, 20, 1, 2, 'Yangon, Sanchaung', 12, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 31390.26, 98.22, 3, '2025-03-17', '2025-05-29');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -996,7 +996,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 6.07, 46.7, 237.54, 0);
 
 -- ===== Project 10 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 10', 10, 7, 18000, 0, 5, 60, 6, 'Yangon, Hlaing', 20, 2, 33495.37, 20, '2026-03-06');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 10', 10, 7, 18000, 0, 5, 60, 6, 'Yangon, Hlaing', 20, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 10473.41, 122.61, 3, '2025-11-13', '2026-02-04');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -1097,7 +1097,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 4.26, 47.92, 143.63, 0);
 
 -- ===== Project 11 (delay) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 11', 4, 7, 40000, 80, 3, 40, 4, 'Bago', 15, 3, 83700.05, 90, '2025-12-27');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 11', 4, 7, 40000, 80, 3, 40, 4, 'Bago', 15, 3);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 28083.41, 109.55, 2, '2026-01-09', '2026-03-05');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 3);
@@ -1205,7 +1205,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 2.48, 34.4, 123.64, 0);
 
 -- ===== Project 12 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (4, 'Demo Project 12', 1, 3, 40000, 0, 20, 10, 3, 'Yangon, Sanchaung', 20, 4, 58305.53, 100, '2025-11-05');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (4, 'Demo Project 12', 1, 3, 40000, 0, 20, 10, 3, 'Yangon, Sanchaung', 20, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 29054.2, 141.2, 3, '2025-09-21', '2025-11-22');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -1332,7 +1332,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 3.93, 43.39, 62.19, 0);
 
 -- ===== Project 13 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 13', 3, 11, 3500, 80, 1, 1, 6, 'Mandalay', 15, 4, 10823.51, 100, '2026-01-23');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 13', 3, 11, 3500, 80, 1, 1, 6, 'Mandalay', 15, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 4299.14, 90.04, 2, '2025-10-05', '2025-11-28');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -1469,7 +1469,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 4.31, 28.94, 466.17, 1);
 
 -- ===== Project 14 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (5, 'Demo Project 14', 2, 12, 25000, 45, 8, 60, 2, 'Yangon, Hlaing', 15, 2, 46588.49, 90, '2026-02-17');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (5, 'Demo Project 14', 2, 12, 25000, 45, 8, 60, 2, 'Yangon, Hlaing', 15, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 28153.57, 141.08, 3, '2025-09-25', '2025-12-08');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -1562,7 +1562,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 4.0, 22.48, 161.33, 0);
 
 -- ===== Project 15 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 15', 5, 4, 40000, 0, 2, 40, 6, 'Naypyitaw', 8, 4, 112735.22, 100, '2026-03-05');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 15', 5, 4, 40000, 0, 2, 40, 6, 'Naypyitaw', 8, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 29692.31, 113.86, 3, '2025-12-22', '2026-02-26');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -1670,7 +1670,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 4.89, 0.35, 471.45, 0);
 
 -- ===== Project 16 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 16', 10, 19, 18000, 0, 1, 10, 3, 'Pathein', 18, 4, 49903.45, 100, '2026-02-26');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 16', 10, 18, 18000, 0, 1, 10, 3, 'Pathein', 18, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 15532.83, 125.92, 3, '2025-08-05', '2025-10-05');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -1837,7 +1837,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 6.81, 2.74, 328.42, 0);
 
 -- ===== Project 17 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 17', 5, 5, 40000, 0, 5, 60, 4, 'Yangon, Hlaing', 12, 2, 76344.29, 20, '2025-12-04');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 17', 5, 5, 40000, 0, 5, 60, 4, 'Yangon, Hlaing', 12, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 40844.52, 96.03, 3, '2025-09-26', '2025-12-09');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -1955,7 +1955,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 5.41, 38.5, 157.29, 0);
 
 -- ===== Project 18 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 18', 10, 9, 12000, 0, 20, 20, 6, 'Pathein', 15, 1, NULL, 0, '2025-09-12');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 18', 10, 9, 12000, 0, 20, 20, 6, 'Pathein', 15, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 8069.18, 148.47, 3, '2025-05-24', '2025-07-24');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -2020,7 +2020,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 18, '2025-07-07', '2025-07-25');
 
 -- ===== Project 19 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (4, 'Demo Project 19', 10, 11, 18000, 0, 8, 5, 5, 'Mandalay', 10, 2, 41081.75, 5, '2026-06-26');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (4, 'Demo Project 19', 10, 11, 18000, 0, 8, 5, 5, 'Mandalay', 10, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 13034.51, 91.37, 2, '2025-11-16', '2026-01-13');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -2138,7 +2138,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 7.14, 47.73, 442.91, 0);
 
 -- ===== Project 20 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 20', 8, 18, 8000, 0, 20, 60, 5, 'Pathein', 10, 4, 14790.56, 100, '2026-01-20');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 20', 8, 18, 8000, 0, 20, 60, 5, 'Pathein', 10, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 6479.54, 139.56, 3, '2025-09-05', '2025-11-19');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -2277,7 +2277,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 3.61, 45.19, 406.49, 0);
 
 -- ===== Project 21 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 21', 6, 19, 8000, 0, 5, 60, 6, 'Mandalay', 10, 2, 21786.31, 85, '2026-07-05');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 21', 6, 18, 8000, 0, 5, 60, 6, 'Mandalay', 10, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 9987.33, 131.67, 3, '2026-01-02', '2026-03-19');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -2389,7 +2389,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 4.54, 15.43, 280.47, 0);
 
 -- ===== Project 22 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (2, 'Demo Project 22', 3, 5, 8000, 0, 12, 5, 2, 'Pathein', 18, 2, 15971.36, 5, '2026-01-15');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (2, 'Demo Project 22', 3, 5, 8000, 0, 12, 5, 2, 'Pathein', 18, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 6042.35, 135.7, 3, '2025-10-20', '2025-12-20');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -2504,7 +2504,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 7.87, 37.94, 386.58, 0);
 
 -- ===== Project 23 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 23', 8, 10, 40000, 0, 4, 40, 2, 'Yangon, Hlaing', 8, 1, NULL, 0, '2025-07-31');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 23', 8, 10, 40000, 0, 4, 40, 2, 'Yangon, Hlaing', 8, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 31294.53, 97.14, 2, '2025-04-30', '2025-06-25');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -2584,7 +2584,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 7, '2025-06-11', '2025-06-18');
 
 -- ===== Project 24 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 24', 2, 3, 3500, 0, 2, 1, 3, 'Pathein', 12, 2, 9072.37, 12, '2025-12-03');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 24', 2, 3, 3500, 0, 2, 1, 3, 'Pathein', 12, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3363.88, 153.09, 3, '2025-08-04', '2025-10-12');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -2707,7 +2707,7 @@ SET @drId = LAST_INSERT_ID();
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 2.6, 3.2, 362.1, 0);
 
 -- ===== Project 25 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 25', 5, 16, 5000, 0, 12, 1, 4, 'Naypyitaw', 18, 1, NULL, 0, '2025-12-27');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 25', 5, 16, 5000, 0, 12, 1, 4, 'Naypyitaw', 18, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3208.77, 137.76, 3, '2025-08-28', '2025-11-08');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -2772,7 +2772,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 12, '2025-10-09', '2025-10-21');
 
 -- ===== Project 26 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (1, 'Demo Project 26', 4, 9, 12000, 0, 1, 10, 3, 'Naypyitaw', 15, 1, NULL, 0, '2025-08-25');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (1, 'Demo Project 26', 4, 9, 12000, 0, 1, 10, 3, 'Naypyitaw', 15, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 10938.48, 114.97, 2, '2025-03-21', '2025-05-13');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -2831,7 +2831,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 4, '2025-05-04', '2025-05-08');
 
 -- ===== Project 27 (finished) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (4, 'Demo Project 27', 6, 8, 8000, 0, 20, 10, 5, 'Yangon, Hlaing', 20, 4, 15851.38, 100, '2026-01-14');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (4, 'Demo Project 27', 6, 8, 8000, 0, 20, 10, 5, 'Yangon, Hlaing', 20, 4);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 6953.96, 139.03, 2, '2025-11-28', '2026-01-22');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 4);
@@ -2992,7 +2992,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 3.16, 7.34, 236.27, 0);
 
 -- ===== Project 28 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 28', 3, 19, 3500, 0, 5, 5, 6, 'Naypyitaw', 12, 2, 6124.2, 90, '2026-02-27');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 28', 3, 18, 3500, 0, 5, 5, 6, 'Naypyitaw', 12, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3323.58, 148.65, 2, '2025-11-02', '2025-12-31');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);
@@ -3129,7 +3129,7 @@ INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, w
 INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) VALUES (@drId, (SELECT at.assignTaskId FROM assignTasks at  JOIN assignWorkItems aw ON aw.assignWorkItemId=at.assignWorkItemId  WHERE aw.assignProjectId=@projId  ORDER BY RAND() LIMIT 1), 'Worked on task', 6.96, 32.23, 129.34, 0);
 
 -- ===== Project 29 (planning) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 29', 7, 7, 8000, 0, 3, 2, 4, 'Pathein', 15, 1, NULL, 0, '2026-05-30');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 29', 7, 7, 8000, 0, 3, 2, 4, 'Pathein', 15, 1);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 5609.96, 104.38, 3, '2025-12-02', '2026-02-25');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 1);
@@ -3194,7 +3194,7 @@ SET @taskId = LAST_INSERT_ID();
 INSERT INTO assignTaskDetails(assignTaskId, assignStatusId, taskDuration, startDate, endDate) VALUES (@taskId, 1, 7, '2026-01-15', '2026-01-22');
 
 -- ===== Project 30 (inProgress) =====
-INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus, actualCost, progress_percentage, targetEndDate) VALUES (3, 'Demo Project 30', 3, 11, 5000, 0, 20, 2, 5, 'Naypyitaw', 10, 2, 7084.16, 75, '2025-09-17');
+INSERT INTO assignProjects(projectTypeId, projectInstanceName, projectLevelId, projectBuildingId, projectArea, projectHeight, totalStories, totalUnits, supervisorId, projectLocation, projectOverHeadCost, projectStatus) VALUES (3, 'Demo Project 30', 3, 11, 5000, 0, 20, 2, 5, 'Naypyitaw', 10, 2);
 SET @projId = LAST_INSERT_ID();
 INSERT INTO assignProjectDetails(assignProjectId, assignStatusId, projectCost, projectLaborQty, projectDuration, startDate, endDate) VALUES (@projId, 1, 3815.79, 121.91, 2, '2025-05-18', '2025-07-12');
 INSERT INTO assignWorkItems(assignProjectId, projectWorkItemId, workItemStatus) VALUES (@projId, 1, 2);

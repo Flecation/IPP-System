@@ -61,7 +61,7 @@ public class createViewProjectController implements loadPaneAware {
     @FXML private TextField pEDateTxt;
     @FXML private TextField pDurationTxt;
     @FXML private TextField pContractValueTxt;
-    @FXML private TextField areaTxt,heightTxt,storyTxt,unitsTxt,unitTxt;
+    @FXML private TextField areaTxt,heightTxt,storyTxt,unitTxt;
 
     @FXML private Button projectConfirmBtn;
     @FXML private Button projectCancelBtn;
@@ -76,6 +76,8 @@ public class createViewProjectController implements loadPaneAware {
     @FXML private TextField wISDateTxt;
     @FXML private TextField wIEDateTxt;
     @FXML private TextField wIDurationTxt; // FIXED: must be TextField in FXML
+    @FXML private TextField wITWorkerTxt; // Total workers for selected work item
+
 
     // ===== Skills =====
     @FXML private TableView<SkillRow> skillTable;
@@ -199,6 +201,7 @@ public class createViewProjectController implements loadPaneAware {
         lockReadOnly(wISDateTxt);
         lockReadOnly(wIEDateTxt);
         lockReadOnly(wIDurationTxt);
+        lockReadOnly(wITWorkerTxt);
 
 
 
@@ -237,11 +240,10 @@ public class createViewProjectController implements loadPaneAware {
             if (pEDateTxt != null && d.endDate != null) pEDateTxt.setText(d.endDate.toString());
             if (pDurationTxt != null && d.duration != null) pDurationTxt.setText(String.valueOf(d.duration));
             if (pContractValueTxt != null && d.contractValue != null) pContractValueTxt.setText(String.valueOf(d.contractValue));
-            safeSetNumber(areaTxt, d.area);
-            if (unitsTxt != null) safeSetNumber(unitsTxt, d.units);
-            if (unitTxt != null) safeSetNumber(unitTxt, d.units);
-            safeSetNumber(storyTxt, d.stories);
-            safeSetNumber(heightTxt, d.height);
+            areaTxt.setText(d.area == null ? "" : String.valueOf(d.area));
+            unitTxt.setText(d.units == null ? "" : String.valueOf(d.units));
+            storyTxt.setText(d.stories == null ? "" : String.valueOf(d.stories));
+            heightTxt.setText(d.height == null ? "" : String.valueOf(d.height));
 
 
             // ----- Auto-generate categories/skills/tasks from template -----
@@ -262,9 +264,9 @@ public class createViewProjectController implements loadPaneAware {
         if (categoryList.isEmpty()) return;
 
         // 2) skills + tasks templates (pre-fill)
-        int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
-        int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
-        int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
+        int typeId = resolveProjectTypeId(pTypeTxt.getText());
+        int buildingId = resolveBuildingId(pBuildingTxt.getText());
+        int levelId = resolveLevelId(pLevelTxt.getText());
 
         LocalDate projectStart = parseLocalDateOrNull(pSDateTxt == null ? null : pSDateTxt.getText());
         if (projectStart == null) projectStart = LocalDate.now();
@@ -368,26 +370,25 @@ public class createViewProjectController implements loadPaneAware {
         refreshSkillTaskTables();
     }
 
-
-    private void safeSetText(TextField tf, String val) {
-        if (tf != null) tf.setText(val == null ? "" : val);
-    }
-
-    private void safeSetNumber(TextField tf, Double val) {
-        if (tf != null) tf.setText(val == null ? "" : String.valueOf(val));
-    }
-
     private String nvlStr(String s) {
         return s == null ? "" : s;
+    }
+
+    // Sum of labor quantities (workers) for a work item
+    private double calcWorkersForWorkItem(int workItemId) {
+        return skillList.stream()
+                .filter(s -> s.workItemId == workItemId)
+                .mapToDouble(s -> s.laborQty)
+                .sum();
     }
 
     // ========================= TEMPLATE LOAD =========================
 
     private void loadWorkCategoriesFromTemplate() {
         try {
-            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
-            int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
-            int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
+            int typeId = resolveProjectTypeId(pTypeTxt.getText());
+            int buildingId = resolveBuildingId(pBuildingTxt.getText());
+            int levelId = resolveLevelId(pLevelTxt.getText());
 
             ObservableList<workItems> fromDb = database.getAllWorkItemsForAutoGeneration(typeId, buildingId, levelId);
             categoryList.setAll(fromDb);
@@ -418,6 +419,12 @@ public class createViewProjectController implements loadPaneAware {
         wISDateTxt.setText(b.start == null ? "" : b.start.toString());
         wIEDateTxt.setText(b.end == null ? "" : b.end.toString());
         wIDurationTxt.setText(b.duration == null ? "" : String.valueOf(b.duration));
+
+        // Total workers = sum of skill quantities for this work item
+        if (wITWorkerTxt != null) {
+            double workers = calcWorkersForWorkItem(selectedWorkItem.getWorkItemId());
+            wITWorkerTxt.setText(String.valueOf(workers));
+        }
     }
 
     private void applyWorkItemFormToBaseline() {
@@ -435,6 +442,7 @@ public class createViewProjectController implements loadPaneAware {
         wISDateTxt.clear();
         wIEDateTxt.clear();
         wIDurationTxt.clear();
+        if (wITWorkerTxt != null) wITWorkerTxt.clear();
     }
 
     private void removeWorkItemAndChildren(workItems wi) {
@@ -449,6 +457,7 @@ public class createViewProjectController implements loadPaneAware {
             clearWorkItemForm();
         }
         refreshSkillTaskTables();
+        loadSelectedWorkItemToForm();
     }
 
     // ========================= SKILLS =========================
@@ -457,7 +466,7 @@ public class createViewProjectController implements loadPaneAware {
         try {
             if (selectedWorkItem == null) { error("Select a Work Category first."); return; }
 
-            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
+            int typeId = resolveProjectTypeId(pTypeTxt.getText());
             ObservableList<skills> skillOptions = database.getSkillDetails(typeId, selectedWorkItem.getWorkItemId());
             if (skillOptions.isEmpty()) { error("No skill template found for this work item."); return; }
 
@@ -481,6 +490,7 @@ public class createViewProjectController implements loadPaneAware {
 
             skillList.add(row);
             refreshSkillTaskTables();
+            loadSelectedWorkItemToForm();
 
         } catch (Exception ex) {
             error(ex.getMessage());
@@ -491,6 +501,7 @@ public class createViewProjectController implements loadPaneAware {
         if (selectedWorkItem == null) return;
         skillList.removeIf(s -> s.workItemId == selectedWorkItem.getWorkItemId());
         refreshSkillTaskTables();
+        loadSelectedWorkItemToForm();
     }
 
     // ========================= TASKS =========================
@@ -499,9 +510,9 @@ public class createViewProjectController implements loadPaneAware {
         try {
             if (selectedWorkItem == null) { error("Select a Work Category first."); return; }
 
-            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
-            int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
-            int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
+            int typeId = resolveProjectTypeId(pTypeTxt.getText());
+            int buildingId = resolveBuildingId(pBuildingTxt.getText());
+            int levelId = resolveLevelId(pLevelTxt.getText());
 
             ObservableList<tasks> taskOptions = database.getAllTasksForAutoGeneration(
                     typeId, selectedWorkItem.getWorkItemId(), buildingId, levelId
@@ -559,10 +570,7 @@ public class createViewProjectController implements loadPaneAware {
 
     private void onConfirmSave() {
         try {
-            // apply current work item form
-            applyWorkItemFormToBaseline();
-
-            // validate project fields
+            // validate + get ids (you already do this)
             String typeName = req(pTypeTxt.getText(), "Type");
             String managerName = req(pManagerTxt.getText(), "Manager");
             String buildingName = req(pBuildingTxt.getText(), "Building");
@@ -580,102 +588,46 @@ public class createViewProjectController implements loadPaneAware {
             int levelId = resolveLevelId(levelName);
             int managerId = resolveManagerId(managerName);
 
-            if (categoryList.isEmpty()) {
-                error("Load or add at least one Work Category first (click Categories -> Redo).");
+            // ✅ build projects model for the stored procedure
+            projects p = new projects();
+            p.setProjectTypeId(projectTypeId);
+            p.setProjectInstanceName(projectTitle.getText());
+            p.setProjectBuildingId(buildingId);
+            p.setProjectLevelId(levelId);
+
+            p.setProjectArea(parseDoubleOrNull(areaTxt.getText()) == null ? 0 : parseDoubleOrNull(areaTxt.getText()));
+            p.setProjectHeight(parseDoubleOrNull(heightTxt.getText()) == null ? 0 : parseDoubleOrNull(heightTxt.getText()));
+            p.setTotalStories(parseDoubleOrNull(storyTxt.getText()) == null ? 0 : parseDoubleOrNull(storyTxt.getText()));
+            p.setTotalUnits(parseDoubleOrNull(unitTxt.getText()) == null ? 0 : parseDoubleOrNull(unitTxt.getText()));
+
+            p.setUserId(managerId);
+            p.setProjectLocation(address);
+
+            p.setProjectCost(contractValue);              // constructorCost input
+            p.setProjectDuration(duration);               // durationDays input
+            p.setStartDate(Date.valueOf(ps));
+            p.setEndDate(Date.valueOf(pe));
+
+            Integer assignProjectId = database.assignFullProjectAuto(p);
+            if (assignProjectId == null || assignProjectId <= 0) {
+                error("Auto Assign failed. Procedure returned no assignProjectId.");
                 return;
             }
 
-            // 1) create/assign project
-            projects p = new projects(
-                    projectTypeId,
-                    projectTitle.getText(),
-                    buildingId,
-                    levelId,
-                    0,0,0,0,
-                    managerId,
-                    address,
-                    0,                 // overhead
-                    contractValue,     // cost
-                    0,                 // labor qty (we will update later)
-                    duration,
-                    Date.valueOf(ps),
-                    Date.valueOf(pe)
-            );
+            storage.getInstance().reload();
+            messageBoxService.toast("Created", "Project auto-assigned successfully (ID: " + assignProjectId + ")", notificationType.SUCCESS);
 
-            boolean ok = database.setAssignProject(p, projectStatus.PLANNING, assignStatus.CUSTOM);
-            if (!ok) { error("Project create failed (assignFullProject returned false)."); return; }
+            // clear draft so next create is clean
+            createProjectDraft.getInstance().clear();
 
-            // IMPORTANT: your DAO doesn't return new assignProjectId.
-            // We get it by searching latest project with same name (best practical way with current DAO).
-            int assignProjectId = findLatestAssignProjectId(projectTitle.getText());
-            if (assignProjectId <= 0) { error("Project created but cannot find assignProjectId."); return; }
-
-            // 2) assign work items
-            for (workItems wi : categoryList) {
-                WorkItemBaseline b = baselineMap.get(wi.getWorkItemId());
-                if (b == null) b = new WorkItemBaseline();
-
-                workItems assignWi = new workItems(assignProjectId, wi.getWorkItemId(),
-                        Date.valueOf(nvlDate(b.start, ps)),
-                        Date.valueOf(nvlDate(b.end, pe)),
-                        nvlDouble(b.duration, duration)
-                );
-
-                assignWi.setProjectCost(nvlDouble(b.cost, 0));
-                assignWi.setProjectLaborQty(nvlDouble(b.laborQty, 0));
-
-                database.setAssignWorkItems(assignWi, projectStatus.PLANNING, assignStatus.CUSTOM);
-            }
-
-            // 3) after assigning work items, load assignedWorkItemId by name (because SP does not return workItemId)
-            Map<String, Integer> assignWorkItemIdByName = database.getAllWorkItemsByAssignProject(assignProjectId)
-                    .stream()
-                    .collect(Collectors.toMap(
-                            workItems::getWorkItemName,
-                            workItems::getAssignWorkItemId,
-                            (a,b) -> a
-                    ));
-
-            // 4) add skills (needs assignWorkItemId)
-            for (SkillRow s : skillList) {
-                String workItemName = findWorkItemNameById(s.workItemId);
-                Integer assignWorkItemId = assignWorkItemIdByName.get(workItemName);
-                if (assignWorkItemId == null) continue;
-
-                skills sk = new skills(assignWorkItemId, s.skillId, s.laborQty, s.dailyWage);
-                database.setSkillsToWorkItem(sk, assignStatus.CUSTOM);
-            }
-
-            // 5) assign tasks (needs assignProjectId + workItemId)
-            for (TaskRow t : taskList) {
-                tasks tk = new tasks(
-                        assignProjectId,
-                        t.workItemId,
-                        t.taskId,
-                        Date.valueOf(parseDate(t.startDate)),
-                        Date.valueOf(parseDate(t.endDate)),
-                        t.duration,
-                        t.plannedQty,
-                        t.unit
-                );
-                database.setAssignTaskToWorkItem(tk, projectStatus.PLANNING, assignStatus.CUSTOM);
-            }
-
-            // 6) update project baseline totals (optional but good)
-            double totalLabor = baselineMap.values().stream().mapToDouble(b -> nvlDouble(b.laborQty, 0)).sum();
-            projects update = new projects(assignProjectId, duration, contractValue, totalLabor,
-                    Date.valueOf(ps), Date.valueOf(pe));
-            database.updateAssignProject(update, assignStatus.CUSTOM);
-
-            data.reload(); // refresh storage cache
-            info("Project saved successfully.");
-            sideBarPaneController parent = parent();
-            if (p != null) parent.openInnerView("viewProjects.fxml");
+            sideBarPaneController sb = parent();
+            if (sb != null) sb.openInnerView("viewProjects.fxml");
 
         } catch (Exception ex) {
             error(ex.getMessage());
         }
     }
+
 
     private int findLatestAssignProjectId(String projectName) {
         int id = -1;
@@ -688,23 +640,6 @@ public class createViewProjectController implements loadPaneAware {
     }
 
     // ========================= ID RESOLVERS =========================
-
-
-    private int getDraftOrResolveTypeId(String typeName) {
-        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().projectTypeId;
-        if (id != null) return id;
-        return resolveProjectTypeId(typeName);
-    }
-    private int getDraftOrResolveBuildingId(String buildingName) {
-        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().buildingId;
-        if (id != null) return id;
-        return resolveBuildingId(buildingName);
-    }
-    private int getDraftOrResolveLevelId(String levelName) {
-        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().levelId;
-        if (id != null) return id;
-        return resolveLevelId(levelName);
-    }
 
     private int resolveProjectTypeId(String typeName) {
         Map<Integer,String> map = database.getAllProjectTypes();

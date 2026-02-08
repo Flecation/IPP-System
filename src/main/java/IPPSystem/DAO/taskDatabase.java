@@ -20,34 +20,41 @@ public class taskDatabase {
         }
     }
 
-    //get all task by the assign project of work item
+    //get all task by the assign work item (uses stored procedure getAllTasksByAssignWorkItem)
+//NOTE: procedure returns planned/actual columns; UI in workItemDetails shows planned columns.
     public static ObservableList<tasks> getAllTasksByAssignWorkItem(int assignWorkItemId){
         ObservableList<tasks> ls = FXCollections.observableArrayList();
 
-        try {
-            CallableStatement cstmt = con.prepareCall("{CALL getAllTasksByAssignWorkItem(?)}");
-            cstmt.setInt(1,assignWorkItemId);
-            ResultSet rs = cstmt.executeQuery();
-            while (rs.next()){
+        try (CallableStatement cstmt = con.prepareCall("{CALL getAllTasksByAssignWorkItem(?)}")) {
+            cstmt.setInt(1, assignWorkItemId);
+            try (ResultSet rs = cstmt.executeQuery()) {
+                while (rs.next()){
+                    // Stored procedure columns (procedure.sql):
+                    // assignTaskId, taskName, taskStatus,
+                    // plannedDuration, plannedStartDate, plannedEndDate,
+                    // actualDuration, actualStartDate, actualEndDate,
+                    // plannedQty, unitOfMeasure
+                    double plannedDur = rs.getDouble("plannedDuration");
+                    Date plannedStart = rs.getDate("plannedStartDate");
+                    Date plannedEnd   = rs.getDate("plannedEndDate");
 
-                ls.add(new tasks(
-                        rs.getInt("assignTaskId"),
-                        rs.getString("taskName"),
-                        rs.getString("taskStatus"),
-                        rs.getString("assignStatus"),
-                        rs.getDouble("duration"),
-                        rs.getDate("startDate"),
-                        rs.getDate("endDate"),
-                        rs.getDouble("plannedQty"),
-                        rs.getString("unitOfMeasure")
-                ));
-
+                    ls.add(new tasks(
+                            rs.getInt("assignTaskId"),
+                            rs.getString("taskName"),
+                            rs.getString("taskStatus"),
+                            "autoAssign",          // not returned by SP; keep stable value
+                            plannedDur,
+                            plannedStart,
+                            plannedEnd,
+                            rs.getDouble("plannedQty"),
+                            rs.getString("unitOfMeasure")
+                    ));
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return ls;
-
     }
 
     //get all task details by project of work item

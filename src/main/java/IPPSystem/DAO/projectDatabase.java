@@ -62,6 +62,50 @@ public class projectDatabase {
         return ls;
     }
 
+    public static Integer assignFullProjectAuto(projects p) {
+
+        String sql = "{ CALL assignFullProjectAuto(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }";
+
+        try (var cs = con.prepareCall(sql)) {
+
+            cs.setInt(1, p.getProjectTypeId());
+            cs.setString(2, p.getProjectInstanceName());
+            cs.setInt(3, p.getProjectBuildingId());
+            cs.setInt(4, p.getProjectLevelId());
+
+            cs.setDouble(5, p.getProjectArea());
+            cs.setDouble(6, p.getProjectHeight());
+            cs.setDouble(7, p.getTotalStories());
+            cs.setDouble(8, p.getTotalUnits());
+
+            cs.setInt(9, p.getUserId());
+            cs.setString(10, p.getProjectLocation());
+
+            cs.setDouble(11, p.getProjectCost());          // constructorCost
+            cs.setDouble(12, p.getProjectDuration());      // durationDays
+            cs.setString(13, projectStatus.PLANNING.toString()); // "planning"
+
+            cs.setDate(14, p.getStartDate());
+            cs.setDate(15, p.getEndDate());
+
+            boolean hasRs = cs.execute();
+            if (!hasRs) return null;
+
+            try (var rs = cs.getResultSet()) {
+                if (!rs.next()) return null;
+
+                boolean success = rs.getBoolean("success");
+                int assignProjectId = rs.getInt("assignProjectId");
+
+                return success ? assignProjectId : null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //for the projects details
     public static ObservableList<projects> getProjectDetails(int projectTypeId){
         ObservableList<projects> projects = FXCollections.observableArrayList();
