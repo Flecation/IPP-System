@@ -4,7 +4,7 @@ import IPPSystem.Constants.assignStatus;
 import IPPSystem.Constants.notificationType;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
-import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Interfaces.*;
 import IPPSystem.Models.*;
 import IPPSystem.Utils.*;
 import javafx.concurrent.Task;
@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -28,10 +29,24 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+import javafx.scene.control.DatePicker;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
-public class workItemDetailsController implements loadPaneAware {
+import java.util.HashMap;
+import java.util.Map;
 
-//    ==== title ====
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+public class workItemDetailsController implements loadPaneAware, NavAware, TabStateful, SearchablePage, SuggestablePage, ReloadablePage {
+
+    //    ==== title ====
     @FXML private Label workItemTitle,workItemTitleStatus;
     // ===== Top cards =====
     @FXML private Label actualCost;
@@ -89,6 +104,17 @@ public class workItemDetailsController implements loadPaneAware {
     private final calculationHelper helper = calculationHelper.getInstance();
     private boolean canEditTasks = true;
 
+    // ===== Planning stage flag (used for Actual date display) =====
+    private boolean isPlanningStage = false;
+
+    // ===== Sidebar search support =====
+    private final ObservableList<tasks> allTasks = FXCollections.observableArrayList();
+    private final ObservableList<skills> allSkills = FXCollections.observableArrayList();
+    private final FilteredList<tasks> filteredTasks = new FilteredList<>(allTasks, t -> true);
+    private final FilteredList<skills> filteredSkills = new FilteredList<>(allSkills, s -> true);
+    private String searchQuery = "";
+
+
     private StackPane loadPane;
 
     private users loginUser = session.getInstance().getUser();
@@ -107,17 +133,125 @@ public class workItemDetailsController implements loadPaneAware {
             .appendOptional(DateTimeFormatter.ofPattern("dd-MMM-uuuu", Locale.ENGLISH))
             .toFormatter(Locale.ENGLISH);
 
+
+    private sideBarPaneController nav;
+
+    @Override
+    public void setNav(sideBarPaneController nav){
+        this.nav = nav;
+    }
+
+    @Override
+    public Map<String, Object> exportState() {
+        Map<String, Object> s = new HashMap<>();
+
+        if (workItem != null) {
+            s.put("assignWorkItemId", workItem.getAssignWorkItemId());
+        }
+        if (project != null) {
+            s.put("assignProjectId", project.getAssignProjectId());
+        }
+        return s;
+    }
+
+    @Override
+    public void importState(Map<String, Object> state) {
+        if (state == null) return;
+
+        Object wiObj = state.get("assignWorkItemId");
+        Object pjObj = state.get("assignProjectId");
+        if (!(wiObj instanceof Integer assignWorkItemId)) return;
+        if (!(pjObj instanceof Integer assignProjectId)) return;
+
+        // 1) Re-find the project (for labels/back navigation)
+        projects foundProject = null;
+        try {
+            for (projects p : storage.getInstance().getAllProjects()) {
+                if (p != null && p.getAssignProjectId() == assignProjectId) {
+                    foundProject = p;
+                    break;
+                }
+            }
+        } catch (Exception ignored) {}
+
+        // 2) Re-find the work item from DB by project
+        workItems foundItem = null;
+        try {
+            var list = database.getAllWorkItemsByAssignProject(assignProjectId);
+            for (workItems wi : list) {
+                if (wi != null && wi.getAssignWorkItemId() == assignWorkItemId) {
+                    foundItem = wi;
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if (foundItem != null) {
+            this.project = foundProject;         // ✅ keep it in the controller field
+            setWorkItem(foundItem, foundProject);
+        }
+
+    }
+
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+
+        if (loadPane != null) {
+            nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        }
+
+        if (nav == null) {
+            System.out.println("[workItemDetailsController] nav is NULL. loadPane="
+                    + (loadPane == null ? "NULL" : System.identityHashCode(loadPane)));
+        }
+        return nav;
+    }
+
+    @Override
+    public void onReload() {
+        if (workItem == null) return;
+
+        // Re-run your existing loader (refreshes tables + dashboard + labels)
+        setWorkItem(workItem, project);
+    }
+
+
+    users user = session.getInstance().getUser();
     @FXML
     public void initialize() {
+        if(user.getUserRole().equals(role.MANAGER.toString())){
+            taskActionCol.setVisible(true);
+        }else {
+            taskActionCol.setVisible(false);
+        }
         wItemEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
         wItemEditBtn.setOnAction(e->{
             messageBoxService.toast("Not Allow To Edit",
-                    "If you want to edit buy Premium!!",
+                    "Buy Premium To Edit!!",
                     notificationType.WARNING);});
 
         // ---- Task table mapping ----
         if (taskNameCol != null) taskNameCol.setCellValueFactory(new PropertyValueFactory<>("taskName"));
         if (taskDurationCol != null) taskDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
+        if (taskDurationCol != null) {
+            taskDurationCol.setCellValueFactory(new PropertyValueFactory<>("projectDuration"));
+
+            taskDurationCol.setCellFactory(col -> new TableCell<tasks, Double>() {
+                @Override
+                protected void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(String.valueOf(utils.roundDays(item)));
+                    }
+                }
+            });
+        }
+
+
         if (taskPlanStartDateCol != null) taskPlanStartDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskPlanEndDateCol != null) taskPlanEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
@@ -125,6 +259,29 @@ public class workItemDetailsController implements loadPaneAware {
         if (taskActualStartDate != null) taskActualStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         if (taskActualEndDateCol != null) taskActualEndDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
+        // Display rule: if project is in Planning, show "-" for Actual dates
+        if (taskActualStartDate != null) {
+            taskActualStartDate.setCellFactory(col -> new TableCell<tasks, Date>() {
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) { setText(null); return; }
+                    if (isPlanningStage) { setText("-"); return; }
+                    setText(item == null ? "-" : utils.dateFormat(item));
+                }
+            });
+        }
+        if (taskActualEndDateCol != null) {
+            taskActualEndDateCol.setCellFactory(col -> new TableCell<tasks, Date>() {
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) { setText(null); return; }
+                    if (isPlanningStage) { setText("-"); return; }
+                    setText(item == null ? "-" : utils.dateFormat(item));
+                }
+            });
+        }
         if (TaskStatusCol != null) TaskStatusCol.setCellValueFactory(new PropertyValueFactory<>("projectStatus"));
 
         // ---- Skill table ----
@@ -134,6 +291,10 @@ public class workItemDetailsController implements loadPaneAware {
         // Nice placeholders
         if (taskTable != null) taskTable.setPlaceholder(new Label("No tasks to show."));
         if (viewSkillTable != null) viewSkillTable.setPlaceholder(new Label("No skills assigned."));
+
+        // Bind tables to filtered lists (for sidebar search)
+        if (taskTable != null) taskTable.setItems(filteredTasks);
+        if (viewSkillTable != null) viewSkillTable.setItems(filteredSkills);
 
         // ---- Action column: Edit button ----
         setupTaskActionColumn();
@@ -166,8 +327,12 @@ public class workItemDetailsController implements loadPaneAware {
 
         loadTablesTask.setOnSucceeded(ev -> {
             try {
-                if (taskTable != null) taskTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.tasks>) loadTablesTask.getValue()[0]);
-                if (viewSkillTable != null) viewSkillTable.setItems((javafx.collections.ObservableList<IPPSystem.Models.skills>) loadTablesTask.getValue()[1]);
+                javafx.collections.ObservableList<IPPSystem.Models.tasks> tasksList = (javafx.collections.ObservableList<IPPSystem.Models.tasks>) loadTablesTask.getValue()[0];
+                javafx.collections.ObservableList<IPPSystem.Models.skills> skillsList = (javafx.collections.ObservableList<IPPSystem.Models.skills>) loadTablesTask.getValue()[1];
+
+                allTasks.setAll(tasksList);
+                allSkills.setAll(skillsList);
+                applySearchFilters();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -192,10 +357,27 @@ public class workItemDetailsController implements loadPaneAware {
         // Load EVM numbers (BAC/PV/EV/AC/CPI/SPI) from calculation helper
         loadDashboardAsync(item.getAssignWorkItemId(), LocalDate.now());
         // Navigate within the same tab (no need to store loadPane)
-        backToProjectDetails.setOnAction(e -> utils.openProjectDetails(project, backToProjectDetails));
+        backToProjectDetails.setOnAction(e -> {
+            sideBarPaneController n = requireNav();
+            if (n == null) return;
 
+            n.openInnerView("projectDetails.fxml", ctrl -> {
+                if (ctrl instanceof projectDetailsController c) {
+                    // If project is null (new tab case), use foundProject from importState
+                    if (this.project != null) c.setProjectData(this.project);
+                }
+            });
+
+            if (this.project != null) {
+                linkButton.getInstance().setTabButtonName(this.project.getProjectInstanceName() + " View");
+            }
+        });
         workItemTitle.setText(item.getWorkItemName());
-        workItemTitleStatus.setText("- "+item.getProjectStatus());
+        workItemTitleStatus.setText(item.getProjectStatus()); // no "- " here
+        String _st = (workItemTitleStatus.getText() == null) ? "" : workItemTitleStatus.getText().trim().toLowerCase();
+        isPlanningStage = _st.contains("planning");
+        utils.applyStatusPill(workItemTitleStatus, workItemTitleStatus.getText());
+
     }
 
     // ------------------------------------------------------------
@@ -206,12 +388,14 @@ public class workItemDetailsController implements loadPaneAware {
 
         taskActionCol.setCellFactory(col -> new TableCell<>() {
             private final Button editBtn = new Button("Edit");
-
             {
+                if(loginUser.getUserRole().equals(role.SUPERVISOR.toString()))editBtn.setDisable(true);
+                editBtn.getStyleClass().add("task-action-button");
                 editBtn.setStyle("-fx-background-color:#4176f2; -fx-text-fill:white; -fx-background-radius:8; -fx-padding:4 10 4 10;");
                 editBtn.setOnAction(e -> {
-                    tasks t = getTableView().getItems().get(getIndex());
-                    openEditTaskDialog(t);
+                    messageBoxService.toast("Not Allow To Edit",
+                            "Buy Premium To Edit!!",
+                            notificationType.WARNING);
                 });
             }
 
@@ -227,93 +411,6 @@ public class workItemDetailsController implements loadPaneAware {
             }
         });
     }
-
-    // ------------------------------------------------------------
-    // Task action column
-    // ------------------------------------------------------------
-
-    private void openEditTaskDialog(tasks task) {
-        if (task == null) return;
-
-        if (!canEditTasks) {
-            messageBoxService.toast("No Permission",
-                    "Supervisor role cannot edit tasks.",
-                    notificationType.WRONG);
-            return;
-        }
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Edit Task");
-        dialog.setHeaderText(task.getTaskName());
-
-        ButtonType saveBtnType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveBtnType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(10));
-
-        TextField durationTxt = new TextField(String.valueOf(task.getProjectDuration()));
-        TextField startTxt = new TextField(task.getStartDate() == null ? "" : task.getStartDate().toString());
-        TextField endTxt = new TextField(task.getEndDate() == null ? "" : task.getEndDate().toString());
-
-        durationTxt.setPromptText("Duration (days)");
-        startTxt.setPromptText("Start date (yyyy-MM-dd)");
-        endTxt.setPromptText("End date (yyyy-MM-dd)");
-
-        grid.addRow(0, new Label("Duration"), durationTxt);
-        grid.addRow(1, new Label("Start"), startTxt);
-        grid.addRow(2, new Label("End"), endTxt);
-
-        dialog.getDialogPane().setContent(grid);
-
-        Node saveBtn = dialog.getDialogPane().lookupButton(saveBtnType);
-        if (saveBtn != null) {
-            saveBtn.setDisable(false);
-            durationTxt.textProperty().addListener((obs, o, n) -> saveBtn.setDisable(tryParseDouble(n) == null));
-        }
-
-        dialog.showAndWait().ifPresent(btn -> {
-            if (btn != saveBtnType) return;
-
-            Double dur = tryParseDouble(durationTxt.getText());
-            LocalDate start = tryParseDate(startTxt.getText());
-            LocalDate end = tryParseDate(endTxt.getText());
-
-            if (dur == null || dur <= 0) {
-                messageBoxService.toast("Invalid Duration", "Please enter a duration (> 0).", notificationType.WRONG);
-                return;
-            }
-            if (start == null || end == null) {
-                messageBoxService.toast("Invalid Date",
-                        "Use yyyy-MM-dd or dd-MMM-yyyy (e.g., 2026-01-14 or 14-JAN-2026).",
-                        notificationType.WRONG);
-                return;
-            }
-            if (end.isBefore(start)) {
-                messageBoxService.toast("Invalid Date Range", "End date cannot be before start date.", notificationType.WRONG);
-                return;
-            }
-// Optional: force a consistent display format (yyyy-MM-dd)
-        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
-        StringConverter<LocalDate> converter = new StringConverter<>() {
-            @Override public String toString(LocalDate date) {
-                return date == null ? "" : fmt.format(date);
-            }
-            @Override public LocalDate fromString(String s) {
-                return (s == null || s.trim().isEmpty()) ? null : LocalDate.parse(s.trim(), fmt);
-            }
-        };
-         tasks updated = new tasks();
-            updated.setAssignTaskId(task.getAssignTaskId());
-            updated.setProjectDuration(dur);
-            updated.setStartDate(Date.valueOf(start));
-            updated.setEndDate(Date.valueOf(end));
-            saveTaskEditAsync(updated);
-        });
-    }
-
 
     private void saveTaskEditAsync(tasks updated) {
         if (updated == null || workItem == null) return;
@@ -411,20 +508,44 @@ public class workItemDetailsController implements loadPaneAware {
         t.start();
     }
 
+    // ONLY paste these edited parts into your existing file:
+
     private void reloadFieldsFromModel() {
         if (workItem == null) return;
 
-        // View-only labels
         safeSet(viewBudget, formatMoney(workItem.getProjectCost()));
         safeSet(viewPlanStartDate, utils.dateFormat(workItem.getStartDate()));
         safeSet(viewPlanEndDate, utils.dateFormat(workItem.getEndDate()));
 
-        safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
-        safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
+        // Actual date display rule:
+        if (isPlanningStage) {
+            safeSet(viewActualStartDate, "-");
+            safeSet(viewActualEndDate, "-");
+        } else {
+            // Your current model mirrors planned dates into actual labels
+            safeSet(viewActualStartDate, utils.dateFormat(workItem.getStartDate()));
+            safeSet(viewActualEndDate, utils.dateFormat(workItem.getEndDate()));
+        }
+// FIX: duration should be work item duration (not project duration)
+        double durDays = workItem.getProjectDuration(); // if your model uses this for workItem duration
+        safeSet(viewDuration, utils.roundDays(durDays) + " Days");
 
-        safeSet(viewDuration, formatNumber(workItem.getProjectDuration()));
         safeSet(viewTotalLabors, formatQty(workItem.getProjectLaborQty()));
     }
+
+    private void applyCircleProgress(Circle circle, Double idx) {
+        if (circle == null) return;
+
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+
+        circle.getStrokeDashArray().setAll(circumference);
+
+        // optional scale improvement: show 0..2.0 range
+        double p = (idx == null) ? 0 : clamp01(idx / 2.0);
+        circle.setStrokeDashOffset(circumference * (1 - p));
+    }
+
 
     // ------------------------------------------------------------
     // Helpers
@@ -490,17 +611,67 @@ public class workItemDetailsController implements loadPaneAware {
             return "Over Budget";
         }
     }
+    // ------------------------------------------------------------
+// Sidebar Search (same behavior as workItemDetails search bar)
+// ------------------------------------------------------------
+    @Override
+    public void onSearch(String query) {
+        this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
+        applySearchFilters();
+    }
 
-    private void applyCircleProgress(Circle circle, Double idx) {
-        if (circle == null) return;
+    @Override
+    public List<String> getSuggestions(String query) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        if (q.isBlank()) return java.util.Collections.emptyList();
 
-        double radius = circle.getRadius();
-        double circumference = 2 * Math.PI * radius;
+        Set<String> out = new LinkedHashSet<>();
 
-        circle.getStrokeDashArray().setAll(circumference);
+        for (tasks t : allTasks) {
+            if (t == null) continue;
+            String name = safeLower(t.getTaskName());
+            if (!name.isBlank() && name.contains(q)) out.add(t.getTaskName());
+        }
+        for (skills s : allSkills) {
+            if (s == null) continue;
+            String name = safeLower(s.getSkillName());
+            if (!name.isBlank() && name.contains(q)) out.add(s.getSkillName());
+        }
+        return new ArrayList<>(out);
+    }
 
-        // 1.0 => full ring, clamp anything above 1 to full ring
-        double p = (idx == null) ? 0 : clamp01(idx);
-        circle.setStrokeDashOffset(circumference * (1 - p));
+    private void applySearchFilters() {
+        final String q = (searchQuery == null) ? "" : searchQuery.trim();
+
+        filteredTasks.setPredicate(t -> {
+            if (t == null) return false;
+            if (q.isBlank()) return true;
+
+            String name = safeLower(t.getTaskName());
+            String status = safeLower(t.getProjectStatus());
+            String dur = String.valueOf(utils.roundDays(t.getProjectDuration()));
+            String ps = (t.getStartDate() == null) ? "" : utils.dateFormat(t.getStartDate()).toLowerCase();
+            String pe = (t.getEndDate() == null) ? "" : utils.dateFormat(t.getEndDate()).toLowerCase();
+
+            return name.contains(q)
+                    || status.contains(q)
+                    || dur.contains(q)
+                    || ps.contains(q)
+                    || pe.contains(q);
+        });
+
+        filteredSkills.setPredicate(s -> {
+            if (s == null) return false;
+            if (q.isBlank()) return true;
+            String name = safeLower(s.getSkillName());
+            return name.contains(q);
+        });
+
+        if (taskTable != null) taskTable.refresh();
+        if (viewSkillTable != null) viewSkillTable.refresh();
+    }
+
+    private static String safeLower(String s) {
+        return s == null ? "" : s.trim().toLowerCase();
     }
 }

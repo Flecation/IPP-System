@@ -62,7 +62,16 @@
                               <Circle fx:id="toggleCircle" fill="DODGERBLUE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" translateX="-10.0" StackPane.alignment="CENTER" />
                            </children>
                         </StackPane>
-                        <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" />
+                        <StackPane fx:id="notificationWrap" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0">
+                           <children>
+                              <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" />
+                              <Circle fx:id="notificationDot" radius="4.0" fill="#ff3b30" stroke="TRANSPARENT" StackPane.alignment="TOP_RIGHT">
+                                 <StackPane.margin>
+                                    <Insets top="6.0" right="6.0" />
+                                 </StackPane.margin>
+                              </Circle>
+                           </children>
+                        </StackPane>
                      </children>
                   </HBox>
                </children>
@@ -328,22 +337,29 @@
                </BorderPane.margin></StackPane>
          </center>
       </BorderPane>
-      <BorderPane fx:id="addNewPane" prefHeight="200.0" prefWidth="200.0" visible="false">
-         <top>
-            <Region id="addPageRegion" fx:id="topRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </top>
-         <left>
-            <Region id="addPageRegion" fx:id="leftRegion" minHeight="20.0" minWidth="30.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
-         </left>
-         <right>
-            <Region id="addPageRegion" fx:id="rightRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </right>
-         <bottom>
-            <Region id="addPageRegion" fx:id="bottomRegion" minHeight="20.0" minWidth="30.0" BorderPane.alignment="CENTER" />
-         </bottom>
-         <center>
-            <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="520.0" />
-         </center>
-      </BorderPane>
+      <!-- ===== Notification dropdown ===== -->
+      <VBox fx:id="notificationDropdown" visible="false" managed="false" styleClass="noti-dropdown" maxWidth="320.0" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets top="62.0" right="14.0" />
+         </StackPane.margin>
+         <children>
+            <VBox fx:id="notificationList" spacing="8.0" />
+         </children>
+         <padding>
+            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
+         </padding>
+      </VBox>
+      <StackPane fx:id="addNewPane"
+                 visible="false"
+                 managed="false"
+                 pickOnBounds="true">
+
+         <!-- Full-screen click catcher + dim background -->
+         <Region fx:id="overlayCatcher" styleClass="overlay-catcher"/>
+
+         <!-- Your centered add form -->
+         <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="520.0" />
+      </StackPane>
+
    </children>
 </StackPane>

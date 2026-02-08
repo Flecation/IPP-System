@@ -9,7 +9,7 @@ public class session {
 
         private static session instance;
 
-        private users userLogin;
+        private users userLogin = new users();
 
         private session(){}
 

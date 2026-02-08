@@ -10,10 +10,13 @@
     -muted-text-color: #495057;
 
     /* for the navigation bar */
-    -nav-color: #1D2E4A;
-
+    -nav-color: #011347;
+    -pane-color :#010b29;
+    -base-color :  #011347;
+    -search-box : #707173;
     /* for the underline */
     -underline-color: #FF8C00;
+    -search-hover-color :#7f8082;
 
     /* for the border color */
     -border-color : #32548E;
@@ -61,6 +64,53 @@
 .check-box:selected .box {
     -fx-background-color: -info-color;
     -fx-border-color: -info-color;
+}
+
+#dashboardViewBtn:hover, #projectViewBtn:hover,
+#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover,
+#backBtn:hover, #profileViewBtn:hover, #toggleBtn:hover, #changePasswordBtn:hover {
+
+      /* 1. Set the background to Orange */
+      -fx-background-color: #FFA500;
+
+      /* 2. REMOVE ALL BORDERS (This stops the bottom line appearing) */
+      -fx-border-color: transparent;
+      -fx-border-width: 0;
+
+      /* 3. Set text and icons to White */
+      -fx-text-fill: white;
+
+      /* 4. Soft shadow to make the orange pop */
+      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+
+
+/* Ensure icons inside these white buttons are black for contrast */
+#dashboardViewBtn .icon-Style,
+#projectViewBtn .icon-Style,
+#userViewBtn .icon-Style,
+#reportViewBtn .icon-Style,
+#settingViewBtn .icon-Style {
+    -fx-icon-color: white !important;
+    -fx-fill: white !important;
+}
+
+/* Maintain your Orange Hover effect */
+#dashboardViewBtn:hover, #projectViewBtn:hover,
+#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover {
+    -fx-background-color: #FFA500 !important; /* Stays orange on hover */
+    -fx-text-fill: white !important;
+}
+
+/* Ensure icons turn white again when hovering over the orange background */
+#dashboardViewBtn:hover .icon-Style,
+#projectViewBtn:hover .icon-Style,
+#userViewBtn:hover .icon-Style,
+#reportViewBtn:hover .icon-Style,
+#settingViewBtn:hover .icon-Style {
+    -fx-icon-color: white !important;
+    -fx-fill: white !important;
 }
 
 

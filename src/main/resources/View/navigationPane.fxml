@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<StackPane fx:id="rootStack" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.navigationPaneController">
+<StackPane fx:id="rootStack" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.navigationPaneController">
    <children>
       <VBox fx:id="root" prefHeight="202.0" prefWidth="199.0" stylesheets="@../CSS/navigationPane.css">
          <children>
@@ -45,7 +44,6 @@
             </HBox>
             <StackPane fx:id="loadPane" VBox.vgrow="ALWAYS">
                <children>
-                   <VBox fx:id="alertLayer" StackPane.alignment="CENTER" alignment="CENTER" managed="false" mouseTransparent="true" />
                   <AnchorPane fx:id="modalLayer" style="-fx-background-color: rgba(0,0,0,0.3);" visible="false" StackPane.alignment="CENTER">
                      <children>
                         <StackPane fx:id="modelBox" pickOnBounds="false" prefHeight="164.0" prefWidth="199.0" />
@@ -55,5 +53,23 @@
             </StackPane>
          </children>
       </VBox>
+      <!-- ===== Toast overlay (TOP-LEFT, does NOT block clicks) ===== -->
+      <StackPane fx:id="toastLayer" pickOnBounds="false" mouseTransparent="true" StackPane.alignment="TOP_LEFT">
+         <children>
+            <fx:include fx:id="toastInclude" source="toastBox.fxml">
+               <StackPane.alignment>TOP_LEFT</StackPane.alignment>
+               <StackPane.margin>
+                  <Insets top="16.0" left="16.0" />
+               </StackPane.margin>
+            </fx:include>
+         </children>
+      </StackPane>
+
+      <!-- ===== Confirm overlay (CENTER, blocks everything until Confirm/Cancel) ===== -->
+      <fx:include fx:id="confirmInclude" source="confirmBox.fxml">
+         <StackPane.alignment>CENTER</StackPane.alignment>
+      </fx:include>
+      <!-- Overlay host for toast/confirm message box (must be managed to render). -->
+      <VBox fx:id="alertLayer"  focusTraversable="false" managed="true" mouseTransparent="false" pickOnBounds="false" StackPane.alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308" />
    </children>
 </StackPane>

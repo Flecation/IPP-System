@@ -72,7 +72,7 @@ public class  loginController {
     @FXML private CheckBox showChangePwChoiceBox;
     @FXML private VBox alertPane;
 
-    public static session user = session.getInstance();
+    public static session loginUser = session.getInstance();
 
     private static int count = 5;
 
@@ -210,7 +210,7 @@ public class  loginController {
             }
 
             // Success
-            this.user.setUser(user);
+            loginUser.setUser(user);
             utils.switchNewScene(loginBtn, "navigationPane.fxml");
         });
         forgetBtn.setOnAction(e -> {

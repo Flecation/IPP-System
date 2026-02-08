@@ -1,11 +1,16 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.projects;
 import IPPSystem.Constants.role;
 import IPPSystem.DAO.databaseConnection;
+import IPPSystem.Models.users;
+import IPPSystem.Utils.session;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,7 +22,16 @@ import java.time.format.DateTimeFormatter;
 import java.sql.*;
 import java.util.*;
 
-public class reportController extends sideBarPaneController {
+public class reportController extends sideBarPaneController implements loadPaneAware {
+
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
+    private final users user = session.getInstance() != null ? session.getInstance().getUser() : null;
 
     // FXML Components
     @FXML private VBox reportContainer;
@@ -168,6 +182,15 @@ public class reportController extends sideBarPaneController {
 
     private void setupButtonActions() {
         btnAddReport.setOnAction(e -> showNewReportDialog());
+
+        // Disable Add Report if supervisor has no in-progress project
+        if (user != null && user.getUserRole().equals(role.SUPERVISOR.toString())) {
+            String current = IPPSystem.DAO.database.currentAssignProject(user.getUserId());
+            boolean has = current != null && !current.trim().isEmpty();
+            btnAddReport.setDisable(!has);
+            btnAddReport.setVisible(has);
+            btnAddReport.setManaged(has);
+        }
         btnResetFilters.setOnAction(e -> resetAllFilters());
     }
 
@@ -775,9 +798,37 @@ public class reportController extends sideBarPaneController {
             return;
         }
 
-        showAlert("New Report", "Report creation feature will be implemented here.\n" +
-                "Will connect to database to save new daily reports.");
+        String current = IPPSystem.DAO.database.currentAssignProject(user.getUserId());
+        if (current == null || current.trim().isEmpty()) {
+            showAlert("No Current Project", "You don't have an in-progress project, so you can't create a daily report.");
+            return;
+        }
+
+        openInLoadPane("CreateReportNew.fxml");
     }
+    private void openInLoadPane(String fxml) {
+        if (loadPane == null) {
+            showAlert("Navigation Error", "Cannot open page because loadPane is not available.");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
+            Parent view = loader.load();
+            Object controller = loader.getController();
+
+            if (controller instanceof loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
+            }
+
+            loadPane.getChildren().setAll(view);
+            view.toFront();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Navigation Error", "Failed to open: " + fxml + "\n" + ex.getMessage());
+        }
+    }
+
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

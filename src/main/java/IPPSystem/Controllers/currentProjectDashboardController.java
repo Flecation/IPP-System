@@ -1,162 +1,744 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.projectStatus;
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.databaseConnection;
+import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Utils.session;
 import IPPSystem.Utils.utils;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.*;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class currentProjectDashboardController {
+import java.sql.*;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+public class currentProjectDashboardController implements loadPaneAware {
+
+    // ====== FXML (must match currentProjectDashboard.fxml) ======
+    @FXML private Label projectName;
+    @FXML private Label lblProgressStatus;
+    @FXML private Label lbCurrentTask;
 
     @FXML private ComboBox<String> comboProjectList;
-    @FXML private Label projectName, lblProgressStatus, lbDate, lbCurrentTask;
-    @FXML private Label lbDaysRemaining, lbEarnedValue, lbActualCost, lbTotalManHour;
-    @FXML private Label lbSPIPercentage, lbSPIValue, lbSPIStatus, lbCPIPercentages, lbCPIValue, lbCPIStatus;
-    @FXML private Circle circleSPI, circleCPI;
+    @FXML private Label lbDate;
+
+    @FXML private Label lbDaysRemaining;
+    @FXML private Label lbEarnedValue;
+    @FXML private Label lbTotalManHour;
+    @FXML private Label lbActualCost;
+
+    @FXML private Circle circleSPI;
+    @FXML private Label lbSPIPercentage;
+    @FXML private Label lbSPIValue;
+    @FXML private Label lbSPIStatus;
+
+    @FXML private Circle circleCPI;
+    @FXML private Label lbCPIPercentages;
+    @FXML private Label lbCPIValue;
+    @FXML private Label lbCPIStatus;
+
     @FXML private LineChart<String, Number> lcMonthlyProjectPerformance;
     @FXML private AreaChart<String, Number> acWeeklyResourceUsage;
 
-    @FXML
-    public void initialize() {
-        lbDate.setText(LocalDate.now().toString());
-        comboProjectList.getItems().setAll("Project Overview", "Active Project");
-        comboProjectList.getSelectionModel().select("Active Project");
-        initGauge(circleSPI);
-        initGauge(circleCPI);
-        refreshDashboardData();
+    // ====== loadPaneAware ======
+    private StackPane loadPane;
+    @Override public void setLoadPane(StackPane loadPane) { this.loadPane = loadPane; }
+
+    // ====== state ======
+    private Integer assignProjectId;
+    private String projectInstanceName;
+
+    private Integer currentAssignWorkItemId;
+    private String currentWorkItemName;
+    private String currentTaskName;
+
+    // ====== format ======
+    private final DecimalFormat moneyFmt = new DecimalFormat("#,##0.00");
+    private final DateTimeFormatter uiDateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private sideBarPaneController nav;
+
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+        if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return nav;
     }
 
-    private void initGauge(Circle circle) {
-        circle.setStrokeType(javafx.scene.shape.StrokeType.CENTERED);
-        circle.setRotate(-90);
-        circle.getStrokeDashArray().clear();
+    public void setAssignProject(Integer assignProjectId, String projectInstanceName) {
+        this.assignProjectId = assignProjectId;
+        this.projectInstanceName = projectInstanceName;
+    }
+
+
+
+    @FXML
+    public void initialize() {
+        // supervisor only (as you requested)
+        if (session.getInstance().getUser() == null ||
+                !role.SUPERVISOR.toString().equalsIgnoreCase(session.getInstance().getUser().getUserRole())) {
+            Platform.runLater(() -> utils.openFxml("allProjectDashboard.fxml", comboProjectList));
+            return;
+        }
+
+        if (lbDate != null) lbDate.setText(LocalDate.now().format(uiDateFmt));
+
+        initGauge(circleSPI);
+        initGauge(circleCPI);
+        clearAllUI();
+
+        Task<Void> t = new Task<>() {
+            @Override
+            protected Void call() {
+                if (assignProjectId == null) {
+                    loadCurrentInProgressProjectForSupervisor();
+                }
+                loadCurrentInProgressWorkItemAndTask();
+
+                return null;
+            }
+        };
+
+        t.setOnSucceeded(e -> Platform.runLater(() -> {
+            setupComboTwoItems();
+            if (assignProjectId == null) {
+                setNoProjectUI();
+                return;
+            }
+            renderHeaderBase();
+            refreshDashboardAll();
+        }));
+
+        t.setOnFailed(e -> {
+            if (t.getException() != null) t.getException().printStackTrace();
+            Platform.runLater(this::setNoProjectUI);
+        });
+
+        Thread th = new Thread(t, "load-current-project-dashboard");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    // =========================================================
+    // Combo behavior: only 2 items
+    // =========================================================
+    private void setupComboTwoItems() {
+        if (comboProjectList == null) return;
+
+        comboProjectList.getItems().clear();
+        comboProjectList.getItems().add("Overall Project");
+
+        if (projectInstanceName != null && !projectInstanceName.isBlank()) {
+            comboProjectList.getItems().add(projectInstanceName);
+            comboProjectList.getSelectionModel().select(projectInstanceName);
+        } else {
+            comboProjectList.getSelectionModel().select("Overall Project");
+        }
     }
 
     @FXML
     void clickProjectSelect(ActionEvent event) {
-        if ("Project Overview".equals(comboProjectList.getValue())) {
-            // Use any node inside the current tab so utils can find the correct per-tab loadPane
-            utils.openFxml("allProjectDashboard.fxml", comboProjectList);
-        } else {
-            refreshDashboardData();
-        }
-    }
+        if (comboProjectList == null) return;
 
-    private void refreshDashboardData() {
-        try (Connection con = databaseConnection.getConnection()) {
-            // SQL query ပြင်ဆင်ခြင်း: Man-hours ကို SUM ဖြင့် တွက်ထုတ်ထားသည်
-            String query = "SELECT ap.assignProjectId, ap.projectInstanceName, ap.projectOverHeadCost as budget, " +
-                    "ap.actualCost as ac, ap.progress_percentage as prog, ap.targetEndDate, " +
-                    "(SELECT SUM(dl.workHours) FROM dailyreportlabors dl " +
-                    " JOIN dailyreports dr ON dl.dailyReportId = dr.dailyReportId " +
-                    " WHERE dr.assignProjectId = ap.assignProjectId) as totalHrs " +
-                    "FROM assignprojects ap WHERE ap.projectStatus = 1 LIMIT 1";
+        String v = comboProjectList.getValue();
+        if (v == null) return;
 
-            ResultSet rs = con.prepareStatement(query).executeQuery();
-            if (rs.next()) {
-                int pId = rs.getInt("assignProjectId");
-                double budget = rs.getDouble("budget");
-                double ac = rs.getDouble("ac");
-                double progressPercent = rs.getDouble("prog");
-                double totalHrs = rs.getDouble("totalHrs");
-
-                double ev = budget * (progressPercent / 100.0);
-                double spi = progressPercent / 100.0;
-                double cpi = (ac > 0) ? (ev / ac) : 1.0;
-
-                projectName.setText(rs.getString("projectInstanceName"));
-                lbEarnedValue.setText(String.format("$%,.0f", ev));
-                lbActualCost.setText(String.format("$%,.0f", ac));
-                lbTotalManHour.setText(String.format("%.0f Hours", totalHrs));
-
-                Date target = rs.getDate("targetEndDate");
-                lbDaysRemaining.setText(target != null ? ChronoUnit.DAYS.between(LocalDate.now(), target.toLocalDate()) + " Days" : "0 Days");
-
-                loadCharts(con, pId);
-                updateGaugeUI(spi, cpi);
+        if ("Overall Project".equals(v)) {
+            sideBarPaneController n = requireNav();
+            if (n != null) {
+                n.openInnerView("allProjectDashboard.fxml", ctrl -> {});
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+
+            return;
+        }
+
+        // current project selected: reload dashboard
+        if (assignProjectId != null) refreshDashboardAll();
     }
 
-    private void loadCharts(Connection con, int pId) throws SQLException {
-        lcMonthlyProjectPerformance.getData().clear();
-        XYChart.Series<String, Number> seriesEV = new XYChart.Series<>(); seriesEV.setName("EV");
-        XYChart.Series<String, Number> seriesAC = new XYChart.Series<>(); seriesAC.setName("AC");
-        XYChart.Series<String, Number> seriesPV = new XYChart.Series<>(); seriesPV.setName("PV");
-
-        String sql = "SELECT MONTHNAME(reportDate) as m, SUM(actualCost) as total FROM dailyreports WHERE assignProjectId = ? GROUP BY MONTH(reportDate) ORDER BY MONTH(reportDate)";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, pId);
-        ResultSet rs = pstmt.executeQuery();
-        while(rs.next()) {
-            String month = rs.getString("m").substring(0, 3);
-            double valAC = rs.getDouble("total");
-            seriesAC.getData().add(new XYChart.Data<>(month, valAC));
-            seriesPV.getData().add(new XYChart.Data<>(month, valAC * 0.95));
-            seriesEV.getData().add(new XYChart.Data<>(month, valAC * 1.05));
-        }
-        lcMonthlyProjectPerformance.getData().addAll(seriesEV, seriesPV, seriesAC);
-
-        acWeeklyResourceUsage.getData().clear();
-        XYChart.Series<String, Number> seriesLabor = new XYChart.Series<>(); seriesLabor.setName("Labor Hours");
-        Map<String, Double> dayMap = new LinkedHashMap<>();
-        dayMap.put("Mon", 0.0); dayMap.put("Tue", 0.0); dayMap.put("Wed", 0.0); dayMap.put("Thu", 0.0); dayMap.put("Fri", 0.0); dayMap.put("Sat", 0.0);
-
-        String sqlLabor = "SELECT DAYNAME(dr.reportDate) as d, SUM(dl.workHours) as hrs FROM dailyreportlabors dl JOIN dailyreports dr ON dl.dailyReportId = dr.dailyReportId WHERE dr.assignProjectId = ? AND DAYNAME(dr.reportDate) != 'Sunday' GROUP BY DAYNAME(dr.reportDate), DAYOFWEEK(dr.reportDate) ORDER BY DAYOFWEEK(dr.reportDate)";
-        PreparedStatement pstmt2 = con.prepareStatement(sqlLabor);
-        pstmt2.setInt(1, pId);
-        ResultSet rs2 = pstmt2.executeQuery();
-        while(rs2.next()) {
-            String dayKey = rs2.getString("d").substring(0, 3);
-            if (dayMap.containsKey(dayKey)) dayMap.put(dayKey, rs2.getDouble("hrs"));
-        }
-        for (Map.Entry<String, Double> entry : dayMap.entrySet()) seriesLabor.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-        acWeeklyResourceUsage.getData().add(seriesLabor);
+    private void refreshDashboardAll() {
+        loadProjectCardsAndStatus();        // daysRemaining, EV, AC, manhour, inTime/delay
+        loadWorkItemCpiSpi();               // CPI/SPI from getWorkItemDashboard
+        loadMonthlyPerformance();           // monthly EV/AC using calculateCpiSpi
+        loadWeeklyResourceUsage();          // weekly cost (dailyReportTasks+dailyReportLabors)
     }
 
-    private void updateGaugeUI(double spi, double cpi) {
-        drawProgress(circleSPI, spi, lbSPIPercentage, lbSPIValue, lbSPIStatus, true);
-        drawProgress(circleCPI, cpi, lbCPIPercentages, lbCPIValue, lbCPIStatus, false);
+    // =========================================================
+    // Load current in-progress project for THIS supervisor
+    // =========================================================
+    private void loadCurrentInProgressProjectForSupervisor() {
+        assignProjectId = null;
+        projectInstanceName = null;
 
-        if (spi >= 1.0 && cpi >= 1.0) {
-            lblProgressStatus.setText("Good Progress");
-            lblProgressStatus.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 8;");
-        } else if (spi < 0.8) {
-            lblProgressStatus.setText("Delay");
-            lblProgressStatus.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 8;");
-        } else {
-            lblProgressStatus.setText("Warning");
-            lblProgressStatus.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: white; -fx-background-radius: 8;");
-        }
-    }
+        final int IN_PROGRESS = 2;
+        final int DELAY = 3;
 
-    private void drawProgress(Circle circle, double value, Label lbPercent, Label lbVal, Label lbStat, boolean isSPI) {
-        double circumference = 2 * Math.PI * circle.getRadius();
-        double clampedValue = Math.max(0, Math.min(value, 1.0));
-        Platform.runLater(() -> {
-            circle.getStrokeDashArray().setAll(clampedValue * circumference, circumference);
-            lbPercent.setText(String.format("%.0f%%", value * 100));
-            lbVal.setText(String.format("%.2f", value));
-            if (value >= 1.0) {
-                circle.setStroke(Color.LIMEGREEN);
-                lbStat.setText(isSPI ? "On Track" : "Under Budget");
-            } else if (value >= 0.85) {
-                circle.setStroke(Color.GOLD);
-                lbStat.setText(isSPI ? "Warning" : "Budget Alert");
-            } else {
-                circle.setStroke(Color.RED);
-                lbStat.setText(isSPI ? "Behind Schedule" : "Over Budget");
+        String sql =
+                "SELECT ap.assignProjectId, ap.projectInstanceName " +
+                        "FROM assignProjects ap " +
+                        "WHERE ap.supervisorId = ? AND ap.projectStatus IN (?, ?) " +
+                        "ORDER BY ap.assignProjectId DESC " +
+                        "LIMIT 1";
+
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, session.getInstance().getUser().getUserId());
+            ps.setInt(2, IN_PROGRESS);
+            ps.setInt(3, DELAY);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    assignProjectId = rs.getInt("assignProjectId");
+                    projectInstanceName = rs.getString("projectInstanceName");
+                }
             }
-        });
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // =========================================================
+    // Load current in-progress WorkItem + Task name
+    // =========================================================
+    private void loadCurrentInProgressWorkItemAndTask() {
+        currentAssignWorkItemId = null;
+        currentWorkItemName = null;
+        currentTaskName = null;
+
+        if (assignProjectId == null) return;
+
+        final int IN_PROGRESS = 2;
+        final int DELAY = 3;
+
+        String sqlWorkItem =
+                "SELECT aw.assignWorkItemId, wi.projectWorkItemName " +
+                        "FROM assignWorkItems aw " +
+                        "JOIN workItems wi ON wi.projectWorkItemId = aw.projectWorkItemId " +
+                        "WHERE aw.assignProjectId = ? AND aw.workItemStatus IN (?, ?) " +
+                        "ORDER BY aw.assignWorkItemId ASC " +
+                        "LIMIT 1";
+
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlWorkItem)) {
+
+            ps.setInt(1, assignProjectId);
+            ps.setInt(2, IN_PROGRESS);
+            ps.setInt(3, DELAY);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    currentAssignWorkItemId = rs.getInt("assignWorkItemId");
+                    currentWorkItemName = rs.getString("projectWorkItemName");
+                }
+            }
+
+            if (currentAssignWorkItemId != null) {
+                String sqlTask =
+                        "SELECT t.projectTaskName " +
+                                "FROM assignTasks at " +
+                                "JOIN tasks t ON t.projectTaskId = at.projectTaskId " +
+                                "WHERE at.assignWorkItemId = ? AND at.isCancel = 0 " +
+                                "  AND at.taskStatus IN (?, ?) " +
+                                "ORDER BY at.assignTaskId ASC " +
+                                "LIMIT 1";
+
+                try (PreparedStatement ps2 = con.prepareStatement(sqlTask)) {
+                    ps2.setInt(1, currentAssignWorkItemId);
+                    ps2.setInt(2, IN_PROGRESS);
+                    ps2.setInt(3, DELAY);
+
+                    try (ResultSet rs2 = ps2.executeQuery()) {
+                        if (rs2.next()) currentTaskName = rs2.getString("projectTaskName");
+                    }
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // =========================================================
+    // Header base
+    // =========================================================
+    private void renderHeaderBase() {
+        if (projectName != null) projectName.setText(projectInstanceName == null ? "" : projectInstanceName);
+
+        String taskText = "-";
+        if (currentWorkItemName != null && currentTaskName != null) {
+            taskText = currentWorkItemName + " - " + currentTaskName;
+        } else if (currentWorkItemName != null) {
+            taskText = currentWorkItemName;
+        }
+        if (lbCurrentTask != null) lbCurrentTask.setText(taskText);
+    }
+
+    // =========================================================
+    // Project cards (EV/AC) and Status (In Time / Delay)
+    // Uses your procedure: getProjectDashboard(assignProjectId, asOfDate)
+    // =========================================================
+    private void loadProjectCardsAndStatus() {
+        if (assignProjectId == null) {
+            setNoProjectUI();
+            return;
+        }
+
+        Task<Void> t = new Task<>() {
+            double ev = 0;
+            double ac = 0;
+            LocalDate baselineStart = null;
+            LocalDate baselineEnd = null;
+
+            double manHour = 0;
+            boolean delay = false;
+
+            @Override
+            protected Void call() {
+
+                // (1) Get dashboard numbers from your procedure
+                String call = "{CALL getProjectDashboard(?, ?)}";
+                try (Connection con = databaseConnection.getConnection();
+                     CallableStatement cs = con.prepareCall(call)) {
+
+                    cs.setInt(1, assignProjectId);
+                    cs.setDate(2, Date.valueOf(LocalDate.now()));
+
+                    try (ResultSet rs = cs.executeQuery()) {
+                        if (rs.next()) {
+                            ev = rs.getDouble("EV");
+                            ac = rs.getDouble("AC");
+
+                            Date bs = rs.getDate("baselineStart");
+                            Date be = rs.getDate("baselineEnd");
+                            if (bs != null) baselineStart = bs.toLocalDate();
+                            if (be != null) baselineEnd = be.toLocalDate();
+                        }
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                // (2) Total man-hour from start to today (tasks hours + labors hours)
+                String sqlMH =
+                        "SELECT IFNULL(SUM(drt.workHours),0) + IFNULL(SUM(drl.workHours),0) AS totalHours " +
+                                "FROM dailyReports dr " +
+                                "LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId " +
+                                "LEFT JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId " +
+                                "WHERE dr.assignProjectId = ? AND dr.reportDate <= CURDATE()";
+
+                try (Connection con = databaseConnection.getConnection();
+                     PreparedStatement ps = con.prepareStatement(sqlMH)) {
+
+                    ps.setInt(1, assignProjectId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) manHour = rs.getDouble("totalHours");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                // (3) Delay logic:
+                // - if DB status is delay OR today > baselineEnd
+                String sqlStatus =
+                        "SELECT ap.projectStatus, ps.projectStatusName " +
+                                "FROM assignProjects ap " +
+                                "JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
+                                "WHERE ap.assignProjectId = ? LIMIT 1";
+
+                try (Connection con = databaseConnection.getConnection();
+                     PreparedStatement ps = con.prepareStatement(sqlStatus)) {
+
+                    ps.setInt(1, assignProjectId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            String name = rs.getString("projectStatusName");
+                            projectStatus st = projectStatus.fromString(name);
+                            delay = (st == projectStatus.DELAY);
+                        }
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (baselineEnd != null && LocalDate.now().isAfter(baselineEnd)) delay = true;
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> {
+                    if (lbEarnedValue != null) lbEarnedValue.setText(moneyFmt.format(ev));
+                    if (lbActualCost != null) lbActualCost.setText(moneyFmt.format(ac));
+                    if (lbTotalManHour != null) lbTotalManHour.setText(moneyFmt.format(manHour));
+
+                    if (baselineEnd != null) {
+                        long remaining = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), baselineEnd);
+                        if (lbDaysRemaining != null) lbDaysRemaining.setText(remaining + " Days");
+                    } else {
+                        if (lbDaysRemaining != null) lbDaysRemaining.setText("-");
+                    }
+
+                    // you asked:
+                    // In Time - skyBlue, Delay - purple
+                    if (lblProgressStatus != null) {
+                        if (delay) {
+                            lblProgressStatus.setText("Delay");
+                            lblProgressStatus.setStyle("-fx-text-fill: #7E57C2;");
+                        } else {
+                            lblProgressStatus.setText("In Time");
+                            lblProgressStatus.setStyle("-fx-text-fill: #4FC3F7;");
+                        }
+                    }
+                });
+            }
+        };
+
+        Thread th = new Thread(t, "load-project-cards-status");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    // =========================================================
+    // WorkItem CPI/SPI (current work item)
+    // Uses your procedure: getWorkItemDashboard(assignWorkItemId, asOfDate)
+    // =========================================================
+    private void loadWorkItemCpiSpi() {
+        if (currentAssignWorkItemId == null) {
+            setGaugeNoData();
+            return;
+        }
+
+        Task<Void> t = new Task<>() {
+            Double cpi = null, spi = null;
+            String cpiStatus = "No Data", spiStatus = "No Data";
+
+            @Override
+            protected Void call() {
+                String call = "{CALL getWorkItemDashboard(?, ?)}";
+
+                try (Connection con = databaseConnection.getConnection();
+                     CallableStatement cs = con.prepareCall(call)) {
+
+                    cs.setInt(1, currentAssignWorkItemId);
+                    cs.setDate(2, Date.valueOf(LocalDate.now()));
+
+                    try (ResultSet rs = cs.executeQuery()) {
+                        if (rs.next()) {
+                            double cpiVal = rs.getDouble("CPI");
+                            double spiVal = rs.getDouble("SPI");
+
+                            // CPI/SPI can be NULL in procedure; rs.getDouble -> 0.0 so check wasNull
+                            cpi = rs.getObject("CPI") == null ? null : cpiVal;
+                            spi = rs.getObject("SPI") == null ? null : spiVal;
+                        }
+                    }
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                // status text (same rule as your procedure calculateCpiSpi)
+                cpiStatus = statusTextForCpi(cpi);
+                spiStatus = statusTextForSpi(spi);
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> {
+                    if (lbCPIValue != null) lbCPIValue.setText(cpi == null ? "-" : String.format("%.2f", cpi));
+                    if (lbCPIStatus != null) lbCPIStatus.setText(cpiStatus);
+                    if (lbCPIPercentages != null) lbCPIPercentages.setText(cpi == null ? "-" : String.format("%.0f%%", cpi * 100));
+
+                    if (lbSPIValue != null) lbSPIValue.setText(spi == null ? "-" : String.format("%.2f", spi));
+                    if (lbSPIStatus != null) lbSPIStatus.setText(spiStatus);
+                    if (lbSPIPercentage != null) lbSPIPercentage.setText(spi == null ? "-" : String.format("%.0f%%", spi * 100));
+
+                    setGauge(circleCPI, cpi);
+                    setGauge(circleSPI, spi);
+                });
+            }
+        };
+
+        Thread th = new Thread(t, "load-workitem-cpi-spi");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    private String statusTextForCpi(Double cpi) {
+        if (cpi == null) return "No Data";
+        if (cpi >= 1.05) return "Under Budget";
+        if (cpi >= 0.95) return "On Budget";
+        return "Over Budget";
+    }
+
+    private String statusTextForSpi(Double spi) {
+        if (spi == null) return "No Data";
+        if (spi >= 1.05) return "Ahead of Schedule";
+        if (spi >= 0.95) return "On Schedule";
+        return "Behind Schedule";
+    }
+
+    // =========================================================
+    // Monthly chart (project start -> current month): EV & AC
+    // Uses your procedure calculateCpiSpi(assignProjectId, asOfDate)
+    // =========================================================
+    private void loadMonthlyPerformance() {
+        if (assignProjectId == null || lcMonthlyProjectPerformance == null) return;
+
+        Task<Void> t = new Task<>() {
+            final List<XYChart.Data<String, Number>> evPoints = new ArrayList<>();
+            final List<XYChart.Data<String, Number>> acPoints = new ArrayList<>();
+
+            @Override
+            protected Void call() {
+                LocalDate baselineStart = fetchBaselineStart();
+                if (baselineStart == null) return null;
+
+                LocalDate today = LocalDate.now();
+                YearMonth ymStart = YearMonth.from(baselineStart);
+                YearMonth ymEnd = YearMonth.from(today);
+
+                YearMonth ym = ymStart;
+                while (!ym.isAfter(ymEnd)) {
+                    LocalDate asOf = ym.equals(ymEnd) ? today : ym.atEndOfMonth();
+
+                    double ev = 0;
+                    double ac = 0;
+
+                    String call = "{CALL calculateCpiSpi(?, ?)}";
+                    try (Connection con = databaseConnection.getConnection();
+                         CallableStatement cs = con.prepareCall(call)) {
+
+                        cs.setInt(1, assignProjectId);
+                        cs.setDate(2, Date.valueOf(asOf));
+
+                        try (ResultSet rs = cs.executeQuery()) {
+                            if (rs.next()) {
+                                ev = rs.getDouble("EV");
+                                ac = rs.getDouble("AC");
+                            }
+                        }
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    String label = ym.toString(); // yyyy-MM
+                    evPoints.add(new XYChart.Data<>(label, ev));
+                    acPoints.add(new XYChart.Data<>(label, ac));
+
+                    ym = ym.plusMonths(1);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> {
+                    lcMonthlyProjectPerformance.getData().clear();
+
+                    XYChart.Series<String, Number> sEv = new XYChart.Series<>();
+                    sEv.setName("EV");
+                    sEv.getData().addAll(evPoints);
+
+                    XYChart.Series<String, Number> sAc = new XYChart.Series<>();
+                    sAc.setName("AC");
+                    sAc.getData().addAll(acPoints);
+
+                    lcMonthlyProjectPerformance.getData().addAll(sEv, sAc);
+                });
+            }
+        };
+
+        Thread th = new Thread(t, "load-monthly-performance");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    private LocalDate fetchBaselineStart() {
+        if (assignProjectId == null) return null;
+
+        // use getProjectDashboard because it returns baselineStart/baselineEnd correctly
+        String call = "{CALL getProjectDashboard(?, ?)}";
+        try (Connection con = databaseConnection.getConnection();
+             CallableStatement cs = con.prepareCall(call)) {
+
+            cs.setInt(1, assignProjectId);
+            cs.setDate(2, Date.valueOf(LocalDate.now()));
+
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    Date d = rs.getDate("baselineStart");
+                    return d == null ? null : d.toLocalDate();
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    // =========================================================
+    // Weekly resource usage (current week): dailyCost + dailyWage
+    // =========================================================
+    private void loadWeeklyResourceUsage() {
+        if (assignProjectId == null || acWeeklyResourceUsage == null) return;
+
+        Task<Void> t = new Task<>() {
+            final List<XYChart.Data<String, Number>> points = new ArrayList<>();
+
+            @Override
+            protected Void call() {
+                LocalDate today = LocalDate.now();
+                LocalDate weekStart = today.with(DayOfWeek.MONDAY);
+                LocalDate weekEnd = weekStart.plusDays(6);
+
+                Map<LocalDate, Double> dayCost = new LinkedHashMap<>();
+                for (int i = 0; i < 7; i++) dayCost.put(weekStart.plusDays(i), 0.0);
+
+                String sql =
+                        "SELECT dr.reportDate, " +
+                                "       IFNULL(SUM(drt.dailyCost),0) + IFNULL(SUM(drl.dailyWage),0) AS cost " +
+                                "FROM dailyReports dr " +
+                                "LEFT JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId " +
+                                "LEFT JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId " +
+                                "WHERE dr.assignProjectId = ? " +
+                                "  AND dr.reportDate BETWEEN ? AND ? " +
+                                "GROUP BY dr.reportDate " +
+                                "ORDER BY dr.reportDate";
+
+                try (Connection con = databaseConnection.getConnection();
+                     PreparedStatement ps = con.prepareStatement(sql)) {
+
+                    ps.setInt(1, assignProjectId);
+                    ps.setDate(2, Date.valueOf(weekStart));
+                    ps.setDate(3, Date.valueOf(weekEnd));
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            Date d = rs.getDate("reportDate");
+                            double c = rs.getDouble("cost");
+                            if (d != null) dayCost.put(d.toLocalDate(), c);
+                        }
+                    }
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                for (Map.Entry<LocalDate, Double> e : dayCost.entrySet()) {
+                    String label = e.getKey().getDayOfWeek().toString().substring(0, 3); // MON/TUE...
+                    points.add(new XYChart.Data<>(label, e.getValue()));
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> {
+                    acWeeklyResourceUsage.getData().clear();
+                    XYChart.Series<String, Number> s = new XYChart.Series<>();
+                    s.setName("Weekly Cost");
+                    s.getData().addAll(points);
+                    acWeeklyResourceUsage.getData().add(s);
+                });
+            }
+        };
+
+        Thread th = new Thread(t, "load-weekly-resource-usage");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    // =========================================================
+    // UI helpers
+    // =========================================================
+    private void clearAllUI() {
+        if (projectName != null) projectName.setText("");
+        if (lblProgressStatus != null) { lblProgressStatus.setText(""); lblProgressStatus.setStyle(""); }
+        if (lbCurrentTask != null) lbCurrentTask.setText("");
+
+        if (lbDaysRemaining != null) lbDaysRemaining.setText("-");
+        if (lbEarnedValue != null) lbEarnedValue.setText("-");
+        if (lbTotalManHour != null) lbTotalManHour.setText("-");
+        if (lbActualCost != null) lbActualCost.setText("-");
+
+        setGaugeNoData();
+        if (lcMonthlyProjectPerformance != null) lcMonthlyProjectPerformance.getData().clear();
+        if (acWeeklyResourceUsage != null) acWeeklyResourceUsage.getData().clear();
+    }
+
+    private void setNoProjectUI() {
+        if (projectName != null) projectName.setText("No Current Project");
+        if (lblProgressStatus != null) { lblProgressStatus.setText("No Data"); lblProgressStatus.setStyle(""); }
+        if (lbCurrentTask != null) lbCurrentTask.setText("-");
+
+        if (lbDaysRemaining != null) lbDaysRemaining.setText("0 Days");
+        if (lbEarnedValue != null) lbEarnedValue.setText("0.00");
+        if (lbTotalManHour != null) lbTotalManHour.setText("0");
+        if (lbActualCost != null) lbActualCost.setText("0.00");
+
+        setGaugeNoData();
+        if (lcMonthlyProjectPerformance != null) lcMonthlyProjectPerformance.getData().clear();
+        if (acWeeklyResourceUsage != null) acWeeklyResourceUsage.getData().clear();
+    }
+
+    private void initGauge(Circle circle) {
+        if (circle == null) return;
+        double r = circle.getRadius();
+        double c = 2 * Math.PI * r;
+        circle.getStrokeDashArray().setAll(c);
+        circle.setStrokeDashOffset(c);
+    }
+
+    private void setGaugeNoData() {
+        if (lbCPIValue != null) lbCPIValue.setText("-");
+        if (lbCPIStatus != null) lbCPIStatus.setText("No Data");
+        if (lbCPIPercentages != null) lbCPIPercentages.setText("-");
+
+        if (lbSPIValue != null) lbSPIValue.setText("-");
+        if (lbSPIStatus != null) lbSPIStatus.setText("No Data");
+        if (lbSPIPercentage != null) lbSPIPercentage.setText("-");
+
+        setGauge(circleCPI, null);
+        setGauge(circleSPI, null);
+    }
+
+    // Map CPI/SPI ratio to gauge percent:
+    // clamp 0..2 => 0..100%
+    private void setGauge(Circle circle, Double ratio) {
+        if (circle == null) return;
+        double r = circle.getRadius();
+        double c = 2 * Math.PI * r;
+
+        double pct;
+        if (ratio == null || Double.isNaN(ratio) || Double.isInfinite(ratio)) {
+            pct = 0;
+        } else {
+            pct = Math.max(0, Math.min(2.0, ratio)) / 2.0;
+        }
+
+        circle.setStrokeDashOffset(c * (1 - pct));
     }
 }

@@ -136,9 +136,6 @@ create table assignProjects (
     projectLocation varchar(255),
     projectOverHeadCost double,
     projectStatus int,
-    actualCost double,
-    progress_percentage DOUBLE,
-    targetEndDate date,
     FOREIGN KEY (projectStatus) REFERENCES projectStatus(projectStatusId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -244,8 +241,6 @@ CREATE TABLE dailyReports (
     assignWorkItemId INT NOT NULL,
     reportDate DATE NOT NULL,
     supervisorId INT,
-    actualCost  DOUBLE,
-    progress_percentage DOUBLE,
     weather VARCHAR(100),
     generalRemark TEXT,
     issue LONGTEXT,
@@ -293,6 +288,16 @@ CREATE TABLE dailyReportLabors (
     FOREIGN KEY (laborId)
         REFERENCES labors(laborId) ON DELETE CASCADE
 );
+
+ALTER TABLE workItemRequireSkills
+    ADD CONSTRAINT fk_wrs_workItemDetail
+        FOREIGN KEY (workItemDetailId) REFERENCES workItemDetails(workItemDetailId)
+            ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE workItemRequireSkills
+    ADD CONSTRAINT fk_wrs_skill
+        FOREIGN KEY (skillId) REFERENCES skills(skillId)
+            ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 -- =====================

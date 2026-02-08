@@ -1,348 +1,819 @@
 package IPPSystem.Controllers;
 
+import IPPSystem.Constants.role;
 import IPPSystem.DAO.databaseConnection;
+import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Models.users;
+import IPPSystem.Utils.linkButton;
+import IPPSystem.Utils.session;
+import IPPSystem.Utils.switchPage;
 import IPPSystem.Utils.utils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 
-import java.io.IOException;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Month;
+import java.time.Year;
+import java.time.format.TextStyle;
+import java.util.*;
 
-import static IPPSystem.DAO.database.getProjectTimingStatus;
+/**
+ * allProjectDashboardController
+ *
+ * FXML handlers:
+ *  - onAction="#clickYearAction"       (Year ComboBox)
+ *  - onAction="#clickProjectSelect"    (Project ComboBox)
+ *
+ * IMPORTANT (matches your zip schema):
+ *  - startDate is in assignProjectDetails (NOT in assignProjects)
+ *  - table names are: assignProjects, assignProjectDetails, dailyReports, dailyReportTasks, dailyReportLabors, projectStatus
+ */
+public class allProjectDashboardController implements loadPaneAware {
 
+    // ======= FXML: combos =======
+    @FXML private ComboBox<String> comboProjectList;   // Overall / Current Project
+    @FXML private ComboBox<Integer> comboYearList;     // 2020..current
 
-public class allProjectDashboardController {
+    // ======= FXML: cards =======
+    @FXML private Label lblProject;
+    @FXML private Label lblRevenue;
+    @FXML private Label lblExpense;
+    @FXML private Label lblWorkers;
 
-    @FXML
-    private Label projectName, lblProject, lblRevenue, lblExpense, lblWorkers;
-    @FXML
-    private ComboBox<String> comboProjectList, comboProjectList1, comboProjectList2;
-    @FXML
-    private PieChart pieProjectStatus, pieSchedule;
+    // ======= FXML: charts =======
+    @FXML private PieChart pieProjectStatus;
+    @FXML private PieChart pieSchedule;
+    @FXML private LineChart<String, Number> linechartMonthlyCost;
+    @FXML private LineChart<String, Number> linechartActiveProject;
 
-    @FXML
-    private VBox vboxTtlProject, vboxTtlRevenue, vboxTtlExpense, vboxTtlWorkers, vboxProjectStatusDistribution, vboxSchedulePerformance, vboxTop3Intensive, vboxMonthlyProject, vboxActiveProject;
-    @FXML
-    private LineChart<String, Number> linechartMonthlyCost, linechartActiveProject;
+    // ======= FXML: top3 intensive =======
+    @FXML private Label progressCostTyp1, progressCostTyp2, progressCostTyp3;
+    @FXML private Label progressCost1, progressCost2, progressCost3;
+    @FXML private ProgressBar progressbarTyp1, progressbarTyp2, progressbarTyp3;
 
-    @FXML
-    private Label progressCostTyp1, progressCost1, progressCostTyp2, progressCost2, progressCostTyp3, progressCost3;
-    @FXML
-    private ProgressBar progressbarTyp1, progressbarTyp2, progressbarTyp3;
+    private static final String OVERALL_LABEL = "Overall Project";
 
-    private Connection con;
+    // supervisor: current project mapping (instanceName -> assignProjectId)
+    private final LinkedHashMap<String, Integer> currentInProgressMap = new LinkedHashMap<>();
+
+    private final users loginUser = session.getInstance().getUser();
+
+    private StackPane loadPane;
+    private sideBarPaneController nav;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+        if (this.loadPane != null) {
+            this.nav = (sideBarPaneController) this.loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        }
+    }
+
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+        if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return nav;
+    }
+
 
     @FXML
     public void initialize() {
-        try {
-            con = databaseConnection.getConnection();
-            if (con == null) {
-                System.out.println("Database Connection Failed!");
-                return;
-            }
-            loadDashboardData();
-            setupFilters();
-            addHoverEffect(vboxTtlProject);
-            addHoverEffect(vboxTtlExpense);
-            addHoverEffect(vboxTtlRevenue);
-            addHoverEffect(vboxTtlWorkers);
-//            addHoverEffect(vboxProjectStatusDistribution);
-//            addHoverEffect(vboxSchedulePerformance);
-//            addHoverEffect(vboxTop3Intensive);
-//            addHoverEffect(vboxMonthlyProject);
-//            addHoverEffect(vboxActiveProject);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
+        setupYearCombo();        // fixed: selects latest year with data
+        setupProjectCombo();     // fixed: uses correct table names
+        loadDashboardAsync();
     }
 
-    //  >>>>>>>>>>>>>>>>>>>>>
-//    Design
-//    >>>>>>>>>>>>>>>>>>
-    private void addHoverEffect(VBox box) {
-        box.setOnMouseEntered(e -> {
-            box.setScaleX(1.05);
-            box.setScaleY(1.05);
-            box.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 8;");
-        });
+    // ======= FXML handlers =======
 
-        box.setOnMouseExited(e -> {
-            box.setScaleX(1.0);
-            box.setScaleY(1.0);
-            box.setStyle("-fx-background-color: white; -fx-background-radius: 8;");
-        });
-    }
-// addHoverEffect(vboxTotalProject);
-
-    private void loadDashboardData() {
-        // IFNULL(..., 0) ထည့်လိုက်ခြင်းဖြင့် Null Pointer Error မှ ကာကွယ်နိုင်ပါသည်
-        double revenue = fetchSingleValue("SELECT IFNULL(SUM(projectCost), 0) FROM assignprojectdetails");
-        double overhead = fetchSingleValue("SELECT IFNULL(SUM(projectOverHeadCost), 0) FROM assignprojects");
-
-        // ကျန်တဲ့ data ယူနစ်များ
-        int workers = (int) fetchSingleValue("SELECT COUNT(*) FROM labors");
-        int projects = (int) fetchSingleValue("SELECT COUNT(*) FROM assignprojects");
-
-        // UI ပေါ်တင်ခြင်း
-        lblRevenue.setText(String.format("$%,.2f", revenue));
-        lblExpense.setText(String.format("$%,.2f", revenue + overhead));
-        lblWorkers.setText(String.valueOf(workers));
-        lblProject.setText(String.valueOf(projects));
-
-        // ကျန်သည့် Chart updates များ
-        updatePieChart();
-        updatePieChart1();
-        updateLineCharts();
-        setupMostCostProjects();
-        applyCustomColors();
-
-    }
-
-    private double fetchSingleValue(String sql) {
-        // IFNULL သုံးခြင်းဖြင့် data မရှိပါက 0 ပြန်ပေးမည်
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-        } catch (Exception e) {
-            System.err.println("Database Error on Query: " + sql + " | Message: " + e.getMessage());
-        }
-        return 0;
-    }
-
-    private void updatePieChart() {
-        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
-        String sql = "SELECT ps.projectStatusName, COUNT(ap.assignProjectId) \n" +
-                "FROM projectstatus ps\n" +
-                "LEFT JOIN assignprojects ap ON ps.projectStatusId = ap.projectStatus\n" +
-                "WHERE ps.projectStatusName IN ('In Progress', 'Finished', 'Delay')\n" +
-                "GROUP BY ps.projectStatusName;";
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                data.add(new PieChart.Data(
-                        rs.getString(1),
-                        rs.getInt(2)
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (pieProjectStatus != null) {
-            pieProjectStatus.setData(data);
-
-            // >>> Percentage ထည့်သွင်းပေးမည့်အပိုင်း <<<
-            // ၁။ စုစုပေါင်း Value ကို အရင်တွက်မည်
-            double total = data.stream()
-                    .mapToDouble(PieChart.Data::getPieValue)
-                    .sum();
-
-            // ၂။ Data တစ်ခုချင်းစီကို loop ပတ်ပြီး Name ကို Percentage နှင့်တွဲမည်
-            for (PieChart.Data d : data) {
-                if (total > 0) {
-                    double percentage = (d.getPieValue() / total) * 100;
-                    // နာမည်ကို "Finished (45.5%)" ပုံစံမျိုး ပြောင်းလဲပေးမည်
-                    d.setName(String.format("%s (%.1f%%)", d.getName(), percentage));
-                }
-            }
-        }
-    }
-
-    public Map<String, Integer> getProjectTimingStatus() {
-        Map<String, Integer> timingData = new HashMap<>();
-
-        // Default values
-        timingData.put("On Time", 0);
-        timingData.put("Delayed", 0);
-
-        // Query ရှင်းလင်းချက်-
-        // ၁။ သတ်မှတ်ရက်ကျော်ပြီး Finished မဖြစ်သေးရင် = Delayed
-        // ၂။ သတ်မှတ်ရက် မကျော်သေးရင် သို့မဟုတ် Finished ဖြစ်သွားရင် = On Time
-        String sql = "SELECT " +
-                "SUM(CASE WHEN apd.endDate < CURDATE() AND ps.projectStatusName != 'Finished' THEN 1 ELSE 0 END) as delayedCount, " +
-                "SUM(CASE WHEN apd.endDate >= CURDATE() OR ps.projectStatusName = 'Finished' THEN 1 ELSE 0 END) as onTimeCount " +
-                "FROM assignprojects ap " +
-                "JOIN projectstatus ps ON ap.projectStatus = ps.projectStatusId " +
-                "JOIN assignprojectdetails apd ON ap.assignProjectId = apd.assignProjectId";
-
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                timingData.put("Delayed", rs.getInt("delayedCount"));
-                timingData.put("On Time", rs.getInt("onTimeCount"));
-            }
-        } catch (SQLException e) {
-            System.out.println("Timing Query Error: " + e.getMessage());
-        }
-        return timingData;
-    }
-
-    private void updatePieChart1() {
-        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-
-        // Map ထဲက Data တွေကို ဆွဲယူမယ်
-        Map<String, Integer> timingStatus = getProjectTimingStatus();
-
-        // Map ထဲမှာရှိတဲ့ "On Time" နဲ့ "Delayed" ကို loop ပတ်ပြီး Chart ထဲထည့်မယ်
-        timingStatus.forEach((status, count) -> {
-            if (count >= 0) { // ဒေတာရှိမှ ထည့်မယ်
-                pieData.add(new PieChart.Data(status + " (" + count + ")", count));
-            }
-        });
-
-        if (pieSchedule != null) {
-            pieSchedule.setData(pieData);
-
-            // အရောင်သတ်မှတ်ခြင်း (On Time = အစိမ်း၊ Delayed = အနီ)
-            for (PieChart.Data data : pieSchedule.getData()) {
-                if (data.getName().contains("On Time")) {
-                    data.getNode().setStyle("-fx-pie-color: #06bf00;"); // Green
-                } else if (data.getName().contains("Delayed")) {
-                    data.getNode().setStyle("-fx-pie-color: #db361a;"); // Red
-                }
-            }
-        }
-    }
-
-    // Status အလိုက် သတ်မှတ်အရောင်များ ပေါ်စေရန်
-    private void applyCustomColors() {
-        for (PieChart.Data data : pieProjectStatus.getData()) {
-            if (data.getName().contains("In Progress")) {
-                data.getNode().setStyle("-fx-pie-color: red;"); // အနီရောင် (FXML အရ)
-            } else if (data.getName().contains("Finished")) {
-                data.getNode().setStyle("-fx-pie-color: blue;"); // အပြာရောင်
-            } else if (data.getName().contains("Delay")) {
-                data.getNode().setStyle("-fx-pie-color: yellow;"); // အဝါရောင်
-            }
-        }
-    }
-
-    //    Top3 Rank Cost
-    private void setupMostCostProjects() {
-        // အကုန်အကျအများဆုံး ၃ ခုကို ကြီးစဉ်ငယ်လိုက် ဆွဲထုတ်သည့် Query
-        String sql = "SELECT ap.projectInstanceName, apd.projectCost " +
-                "FROM assignprojects ap " +
-                "JOIN assignprojectdetails apd ON ap.assignProjectId = apd.assignProjectId " +
-                "ORDER BY apd.projectCost DESC LIMIT 3";
-
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            int i = 1;
-            while (rs.next()) {
-                String projectName = rs.getString("projectInstanceName");
-                double cost = rs.getDouble("projectCost");
-
-                // UI Labels များထဲသို့ ထည့်ခြင်း
-                if (i == 1) {
-                    progressCostTyp1.setText(projectName); // ဘယ်ဘက် Label (နာမည်)
-                    progressCost1.setText(String.format("$%,.0f", cost)); // ညာဘက် Label (ဈေးနှုန်း)
-                    progressbarTyp1.setProgress(1.0); // ပထမဆုံးတစ်ခုကို အပြည့်ထားပါ
-                    progressbarTyp1.setStyle("-fx-accent: #02006b;");
-                } else if (i == 2) {
-                    progressCostTyp2.setText(projectName);
-                    progressCost2.setText(String.format("$%,.0f", cost));
-                    progressbarTyp2.setProgress(0.7); // နှိုင်းယှဉ်ချက်အရ လျှော့ပြပါ
-                    progressbarTyp2.setStyle("-fx-accent: #02006b;");
-                } else if (i == 3) {
-                    progressCostTyp3.setText(projectName);
-                    progressCost3.setText(String.format("$%,.0f", cost));
-                    progressbarTyp3.setProgress(0.4);
-                    progressbarTyp3.setStyle("-fx-accent: #02006b;");
-                }
-                i++;
-            }
-        } catch (SQLException e) {
-            System.out.println("Cost Progress Bar Error: " + e.getMessage());
-        }
-
-    }
-
-    private void updateLineCharts() {
-        XYChart.Series<String, Number> costSeries = new XYChart.Series<>();
-        XYChart.Series<String, Number> projSeries = new XYChart.Series<>();
-
-        // DATE_FORMAT တွင် စာလုံးအကြီးအသေး သတိထားရန်
-        String sql = "SELECT DATE_FORMAT(startDate, '%b') as month, SUM(projectCost) as cost, COUNT(*) as qty " +
-                "FROM assignprojectdetails GROUP BY MONTH(startDate) ORDER BY MONTH(startDate)";
-
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                String m = rs.getString("month");
-                costSeries.getData().add(new XYChart.Data<>(m, rs.getDouble("cost")));
-                projSeries.getData().add(new XYChart.Data<>(m, rs.getInt("qty")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (linechartMonthlyCost != null) {
-            linechartMonthlyCost.getData().clear();
-            linechartMonthlyCost.getData().add(costSeries);
-        }
-        if (linechartActiveProject != null) {
-            linechartActiveProject.getData().clear();
-            linechartActiveProject.getData().add(projSeries);
-        }
-    }
-
-    private void updateProgressBars() {
-        String sql = "SELECT ap.projectInstanceName, apd.projectCost FROM assignprojects ap " +
-                "JOIN assignprojectdetails apd ON ap.assignProjectId = apd.assignProjectId " +
-                "ORDER BY apd.projectCost DESC LIMIT 3";
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                progressCostTyp1.setText(rs.getString(1));
-                progressCost1.setText("$" + rs.getInt(2));
-                progressbarTyp1.setProgress(1.0);
-            }
-            if (rs.next()) {
-                progressCostTyp2.setText(rs.getString(1));
-                progressCost2.setText("$" + rs.getInt(2));
-                progressbarTyp2.setProgress(0.7);
-            }
-            if (rs.next()) {
-                progressCostTyp3.setText(rs.getString(1));
-                progressCost3.setText("$" + rs.getInt(2));
-                progressbarTyp3.setProgress(0.4);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    private void setupFilters() {
-        comboProjectList.setItems(FXCollections.observableArrayList("All Projects", "Active Project"));
-        comboProjectList1.setItems(FXCollections.observableArrayList("2025", "2026"));
-        comboProjectList2.setItems(FXCollections.observableArrayList("Jan", "Feb", "Mar"));
+    @FXML
+    public void clickYearAction(ActionEvent event) {
+        loadDashboardAsync();
     }
 
     @FXML
-    void clickProjectSelect(ActionEvent event) {
+    public void clickProjectSelect(ActionEvent event) {
+        if (comboProjectList == null) return;
 
-            String selected = comboProjectList.getSelectionModel().getSelectedItem();
-            if (selected == null) return;
+        Integer supervisorId = supervisorIdOrNull();
+        if (supervisorId == null) return; // only supervisor can open current project dashboard
 
-            if (selected.equals("Active Project")){
-                // Use any node inside the current tab so utils can find the correct per-tab loadPane
-                utils.openFxml("currentProjectDashboard.fxml", comboProjectList);
+        String selected = comboProjectList.getValue();
+        if (selected == null) return;
+
+        sideBarPaneController n = requireNav();
+        if (n == null) return;
+
+        if (OVERALL_LABEL.equals(selected)) {
+            // stay / reload this page
+            n.openInnerView("allProjectDashboard.fxml", ctrl -> {});
+            linkButton.getInstance().setTabButtonName("All Dashboard");
+            return;
+        }
+
+        Integer projectId = currentInProgressMap.get(selected);
+        if (projectId == null) return;
+
+        n.openInnerView("currentProjectDashboard.fxml", ctrl -> {
+            if (ctrl instanceof currentProjectDashboardController c) {
+                c.setAssignProject(projectId, selected); // <-- add this setter in currentProjectDashboardController
+            }
+        });
+
+        linkButton.getInstance().setTabButtonName(selected + " Dashboard");
+    }
+
+    // ======= setup =======
+
+    private void setupYearCombo() {
+        if (comboYearList == null) return;
+
+        int start = 2023;
+        int current = Year.now().getValue();
+
+        ObservableList<Integer> years = FXCollections.observableArrayList();
+        for (int y = start; y <= current; y++) years.add(y);
+        comboYearList.setItems(years);
+
+        // FIX: select latest year that exists in DB (so dashboard shows data)
+        comboYearList.setValue(detectLatestYearWithData(current));
+    }
+
+    private int detectLatestYearWithData(int fallbackYear) {
+        try (Connection con = databaseConnection.getConnection()) {
+
+            // 1) dailyReports year
+            try (PreparedStatement ps = con.prepareStatement("SELECT MAX(YEAR(reportDate)) AS y FROM dailyReports");
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int y = rs.getInt("y");
+                    if (!rs.wasNull() && y > 0) return y;
+                }
             }
 
+            // 2) assignProjectDetails.startDate year
+            try (PreparedStatement ps = con.prepareStatement("SELECT MAX(YEAR(startDate)) AS y FROM assignProjectDetails WHERE startDate IS NOT NULL");
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int y = rs.getInt("y");
+                    if (!rs.wasNull() && y > 0) return y;
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return fallbackYear;
+    }
+
+    private void setupProjectCombo() {
+        if (comboProjectList == null) return;
+
+        comboProjectList.getItems().clear();
+
+        if (isManager()) {
+            comboProjectList.setDisable(true);
+            comboProjectList.setPromptText("All Projects");
+            return;
+        }
+
+        Integer supervisorId = supervisorIdOrNull();
+        if (supervisorId == null) {
+            comboProjectList.setDisable(true);
+            return;
+        }
+
+        comboProjectList.setDisable(false);
+        loadSupervisorComboAsync(supervisorId);
+    }
+
+    private void loadSupervisorComboAsync(int supervisorId) {
+        Task<LinkedHashMap<String, Integer>> t = new Task<>() {
+            @Override
+            protected LinkedHashMap<String, Integer> call() {
+                LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
+                // FIX: correct table names + safer matching for in-progress
+                String sql =
+                        "SELECT ap.assignProjectId, ap.projectInstanceName " +
+                                "FROM assignProjects ap " +
+                                "JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
+                                "WHERE ap.supervisorId = ? " +
+                                "  AND (LOWER(ps.projectStatusName) LIKE '%progress%' OR LOWER(ps.projectStatusName) LIKE '%ongo%') " +
+                                "ORDER BY ap.assignProjectId DESC LIMIT 1";
+
+                try (Connection con = databaseConnection.getConnection();
+                     PreparedStatement ps = con.prepareStatement(sql)) {
+
+                    ps.setInt(1, supervisorId);
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            int id = rs.getInt("assignProjectId");
+                            String name = rs.getString("projectInstanceName");
+                            if (name == null || name.isBlank()) name = "Project #" + id;
+                            map.put(name, id);
+                        }
+                    }
+                } catch (SQLException ex) {
+                    // Fallback: if your status ids are numeric and you use 2 = inProgress
+                    try (Connection con = databaseConnection.getConnection();
+                         PreparedStatement ps = con.prepareStatement(
+                                 "SELECT ap.assignProjectId, ap.projectInstanceName " +
+                                         "FROM assignProjects ap " +
+                                         "WHERE ap.supervisorId = ? AND ap.projectStatus = 2 " +
+                                         "ORDER BY ap.assignProjectId DESC LIMIT 1"
+                         )) {
+                        ps.setInt(1, supervisorId);
+                        try (ResultSet rs = ps.executeQuery()) {
+                            while (rs.next()) {
+                                int id = rs.getInt("assignProjectId");
+                                String name = rs.getString("projectInstanceName");
+                                if (name == null || name.isBlank()) name = "Project #" + id;
+                                map.put(name, id);
+                            }
+                        }
+                    } catch (SQLException ex2) {
+                        ex2.printStackTrace();
+                    }
+                }
+
+                return map;
+            }
+        };
+
+        t.setOnSucceeded(e -> {
+            currentInProgressMap.clear();
+            currentInProgressMap.putAll(t.getValue());
+
+            comboProjectList.getItems().clear();
+
+            if (currentInProgressMap.isEmpty()) {
+                // your requested behavior: if no current -> disable like manager
+                comboProjectList.setDisable(true);
+                comboProjectList.setPromptText("All Projects");
+                return;
+            }
+
+            comboProjectList.setDisable(false);
+            comboProjectList.getItems().add(OVERALL_LABEL);
+            comboProjectList.getItems().addAll(currentInProgressMap.keySet());
+            comboProjectList.getSelectionModel().select(OVERALL_LABEL);
+        });
+
+        t.setOnFailed(e -> {
+            if (t.getException() != null) t.getException().printStackTrace();
+            comboProjectList.setDisable(true);
+        });
+
+        Thread th = new Thread(t, "load-supervisor-current-project");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    // ======= main load =======
+
+    private void loadDashboardAsync() {
+        final Integer supervisorId = supervisorIdOrNull(); // null => manager
+        final int year = (comboYearList != null && comboYearList.getValue() != null)
+                ? comboYearList.getValue()
+                : Year.now().getValue();
+
+        Task<DashboardData> t = new Task<>() {
+            @Override
+            protected DashboardData call() {
+                return fetchDashboardData(supervisorId, year);
+            }
+        };
+
+        t.setOnSucceeded(e -> applyDashboardData(t.getValue()));
+        t.setOnFailed(e -> {
+            if (t.getException() != null) t.getException().printStackTrace();
+        });
+
+        Thread th = new Thread(t, "load-allProjectDashboard");
+        th.setDaemon(true);
+        th.start();
+    }
+
+    // ======= data model =======
+
+    private static class DashboardData {
+        int projectCount;
+        double revenue;
+        double overhead;
+        int workers;
+        double expense;
+
+        Map<String, Integer> statusCounts = new LinkedHashMap<>();
+        int scheduleOnTime;
+        int scheduleDelay;
+
+        List<TopCostRow> top3 = new ArrayList<>();
+
+        Map<String, Double> monthlyCost = new LinkedHashMap<>();
+        Map<String, Integer> activeProjects = new LinkedHashMap<>();
+    }
+
+    private static class TopCostRow {
+        String projectName;
+        double usedCost;
+        double totalCost;
+
+        TopCostRow(String projectName, double usedCost, double totalCost) {
+            this.projectName = projectName;
+            this.usedCost = usedCost;
+            this.totalCost = totalCost;
+        }
+    }
+
+    // ======= SQL fetching =======
+
+    private DashboardData fetchDashboardData(Integer supervisorIdOrNull, int year) {
+        DashboardData d = new DashboardData();
+
+        try (Connection con = databaseConnection.getConnection()) {
+
+            d.projectCount = queryProjectCount(con, supervisorIdOrNull, year);
+            d.revenue      = queryRevenue(con, supervisorIdOrNull, year);
+            d.expense = queryExpense(con, supervisorIdOrNull, year);
+            d.workers      = queryWorkers(con, supervisorIdOrNull, year);
+
+// If you still want overhead, you can ADD it, but overhead is not per-year in your DB.
+// Best: show Expense = real daily cost only
+            d.overhead = 0;
+            d.statusCounts = queryStatusCounts(con, supervisorIdOrNull);
+
+            // FIX: schedule counts use assignProjectDetails.startDate + year filter + CASE WHEN (no syntax error)
+            int[] sch = queryScheduleCounts(con, supervisorIdOrNull, year);
+            d.scheduleOnTime = sch[0];
+            d.scheduleDelay = sch[1];
+
+            d.top3 = queryTop3UsedCost(con, supervisorIdOrNull, year);
+            d.monthlyCost = queryMonthlyCost(con, supervisorIdOrNull, year);
+            d.activeProjects = queryActiveProjects(con, supervisorIdOrNull, year);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return d;
+    }
+
+    private int queryProjectCount(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT COUNT(*) AS c " +
+                        "FROM assignProjects ap " +
+                        "JOIN assignProjectDetails apd ON apd.assignProjectId = ap.assignProjectId " +
+                        "WHERE apd.assignProjectDetailId = ( " +
+                        "   SELECT MAX(apd2.assignProjectDetailId) " +
+                        "   FROM assignProjectDetails apd2 " +
+                        "   WHERE apd2.assignProjectId = ap.assignProjectId " +
+                        ") " +
+                        "AND apd.startDate IS NOT NULL " +
+                        "AND YEAR(apd.startDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ");
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("c") : 0;
+            }
+        }
+    }
+
+    private double queryOverhead(Connection con, Integer supervisorIdOrNull) throws SQLException {
+        String sql = "SELECT IFNULL(SUM(ap.projectOverHeadCost),0) AS s FROM assignProjects ap " +
+                (supervisorIdOrNull == null ? "" : "WHERE ap.supervisorId = ? ");
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            if (supervisorIdOrNull != null) ps.setInt(1, supervisorIdOrNull);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("s") : 0.0;
+            }
+        }
+    }
+
+    private double queryRevenue(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        // revenue = total projectCost for projects that have any daily report in that year
+        String sql =
+                "SELECT IFNULL(SUM(apd.projectCost),0) AS revenue " +
+                        "FROM assignProjects ap " +
+                        "JOIN (" +
+                        "   SELECT DISTINCT assignProjectId " +
+                        "   FROM dailyReports " +
+                        "   WHERE YEAR(reportDate) = ? " +
+                        ") drp ON drp.assignProjectId = ap.assignProjectId " +
+                        "JOIN assignProjectDetails apd ON apd.assignProjectId = ap.assignProjectId " +
+                        "WHERE apd.assignProjectDetailId = (" +
+                        "   SELECT MAX(apd2.assignProjectDetailId) " +
+                        "   FROM assignProjectDetails apd2 " +
+                        "   WHERE apd2.assignProjectId = ap.assignProjectId" +
+                        ") " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ");
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("revenue") : 0.0;
+            }
+        }
+    }
+
+
+    private double queryExpense(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT IFNULL(SUM(drt.dailyCost),0) AS expense " +
+                        "FROM dailyReports dr " +
+                        "JOIN dailyReportTasks drt ON drt.dailyReportId = dr.dailyReportId " +
+                        "JOIN assignProjects ap ON ap.assignProjectId = dr.assignProjectId " +
+                        "WHERE YEAR(dr.reportDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ");
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("expense") : 0.0;
+            }
+        }
+    }
+
+    private int queryWorkers(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT COUNT(DISTINCT drl.laborId) AS c " +
+                        "FROM dailyReports dr " +
+                        "JOIN dailyReportLabors drl ON drl.dailyReportId = dr.dailyReportId " +
+                        "JOIN assignProjects ap ON ap.assignProjectId = dr.assignProjectId " +
+                        "WHERE YEAR(dr.reportDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ");
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("c") : 0;
+            }
+        }
+    }
+
+    private LinkedHashMap<String, Integer> queryStatusCounts(Connection con, Integer supervisorIdOrNull) throws SQLException {
+        String sql =
+                "SELECT ps.projectStatusName AS name, COUNT(*) AS c " +
+                        "FROM assignProjects ap " +
+                        "JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
+                        "WHERE 1=1 " +
+                        (supervisorIdOrNull == null ? "" : " AND ap.supervisorId = ? ") +
+                        "GROUP BY ps.projectStatusName";
+
+        List<String> wanted = (supervisorIdOrNull == null)
+                ? Arrays.asList("planning", "inprogress", "delay", "finished")
+                : Arrays.asList("delay", "finished");
+
+        LinkedHashMap<String, Integer> out = new LinkedHashMap<>();
+        for (String w : wanted) out.put(w, 0);
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            if (supervisorIdOrNull != null) ps.setInt(1, supervisorIdOrNull);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    int c = rs.getInt("c");
+                    String key = normalizeStatus(name);
+                    if (out.containsKey(key)) out.put(key, c);
+                }
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     * FIXED (your error happened here):
+     * - uses CASE WHEN (no missing bracket)
+     * - filters by YEAR(assignProjectDetails.startDate)
+     * - startDate is in assignProjectDetails (your schema)
+     */
+    private int[] queryScheduleCounts(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+
+        String sql =
+                "SELECT " +
+                        "  SUM(CASE WHEN LOWER(ps.projectStatusName) = 'delay' THEN 1 ELSE 0 END) AS delayedCount, " +
+                        "  SUM(CASE WHEN LOWER(ps.projectStatusName) <> 'delay' " +
+                        "            AND LOWER(ps.projectStatusName) <> 'cancel' THEN 1 ELSE 0 END) AS onTime " +
+                        "FROM assignProjects ap " +
+                        "JOIN assignProjectDetails apd ON apd.assignProjectId = ap.assignProjectId " +
+                        "LEFT JOIN projectStatus ps ON ps.projectStatusId = ap.projectStatus " +
+                        "WHERE apd.assignProjectDetailId = ( " +
+                        "  SELECT MAX(apd2.assignProjectDetailId) " +
+                        "  FROM assignProjectDetails apd2 " +
+                        "  WHERE apd2.assignProjectId = ap.assignProjectId " +
+                        ") " +
+                        "AND apd.startDate IS NOT NULL " +
+                        "AND YEAR(apd.startDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ");
+
+
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return new int[]{0, 0};
+                int delayed = rs.getInt("delayedCount");
+                int onTime  = rs.getInt("onTime");
+                return new int[]{onTime, delayed};
+            }
+        }
+    }
+
+    private List<TopCostRow> queryTop3UsedCost(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT ap.assignProjectId, ap.projectInstanceName, " +
+                        "IFNULL(used.usedCost,0) AS usedCost, IFNULL(total.totalCost,0) AS totalCost " +
+                        "FROM assignProjects ap " +
+                        "LEFT JOIN ( " +
+                        "   SELECT dr.assignProjectId, SUM(drt.dailyCost) AS usedCost " +
+                        "   FROM dailyReports dr " +
+                        "   JOIN dailyReportTasks drt ON drt.dailyReportId = dr.dailyReportId " +
+                        "   WHERE YEAR(dr.reportDate) = ? " +
+                        "   GROUP BY dr.assignProjectId " +
+                        ") used ON used.assignProjectId = ap.assignProjectId " +
+                        "LEFT JOIN ( " +
+                        "   SELECT apd.assignProjectId, apd.projectCost AS totalCost " +
+                        "   FROM assignProjectDetails apd " +
+                        "   WHERE apd.assignProjectDetailId = ( " +
+                        "      SELECT MAX(apd2.assignProjectDetailId) " +
+                        "      FROM assignProjectDetails apd2 " +
+                        "      WHERE apd2.assignProjectId = apd.assignProjectId " +
+                        "   ) " +
+                        ") total ON total.assignProjectId = ap.assignProjectId " +
+                        (supervisorIdOrNull == null ? "" : "WHERE ap.supervisorId = ? ") +
+                        "ORDER BY IFNULL(used.usedCost,0) DESC " +
+                        "LIMIT 3";
+
+        List<TopCostRow> list = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("projectInstanceName");
+                    double usedCost = rs.getDouble("usedCost");
+                    double totalCost = rs.getDouble("totalCost");
+                    if (name == null || name.isBlank()) name = "Project #" + rs.getInt("assignProjectId");
+                    list.add(new TopCostRow(name, usedCost, totalCost));
+                }
+            }
+        }
+        return list;
+    }
+
+    private LinkedHashMap<String, Double> queryMonthlyCost(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT MONTH(dr.reportDate) AS m, IFNULL(SUM(drt.dailyCost),0) AS cost " +
+                        "FROM dailyReports dr " +
+                        "JOIN dailyReportTasks drt ON drt.dailyReportId = dr.dailyReportId " +
+                        "JOIN assignProjects ap ON ap.assignProjectId = dr.assignProjectId " +
+                        "WHERE YEAR(dr.reportDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ") +
+                        "GROUP BY MONTH(dr.reportDate) " +
+                        "ORDER BY MONTH(dr.reportDate)";
+
+        Map<Integer, Double> temp = new HashMap<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) temp.put(rs.getInt("m"), rs.getDouble("cost"));
+            }
+        }
+
+        LinkedHashMap<String, Double> out = new LinkedHashMap<>();
+        for (int m = 1; m <= 12; m++) {
+            String label = Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            out.put(label, temp.getOrDefault(m, 0.0));
+        }
+        return out;
+    }
+
+    private LinkedHashMap<String, Integer> queryActiveProjects(Connection con, Integer supervisorIdOrNull, int year) throws SQLException {
+        String sql =
+                "SELECT MONTH(apd.startDate) AS m, COUNT(DISTINCT apd.assignProjectId) AS c " +
+                        "FROM assignProjectDetails apd " +
+                        "JOIN assignProjects ap ON ap.assignProjectId = apd.assignProjectId " +
+                        "WHERE apd.assignProjectDetailId = ( " +
+                        "  SELECT MAX(apd2.assignProjectDetailId) FROM assignProjectDetails apd2 " +
+                        "  WHERE apd2.assignProjectId = apd.assignProjectId " +
+                        ") " +
+                        "AND apd.startDate IS NOT NULL AND YEAR(apd.startDate) = ? " +
+                        (supervisorIdOrNull == null ? "" : "AND ap.supervisorId = ? ") +
+                        "GROUP BY MONTH(apd.startDate) " +
+                        "ORDER BY MONTH(apd.startDate)";
+
+        Map<Integer, Integer> temp = new HashMap<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            if (supervisorIdOrNull != null) ps.setInt(2, supervisorIdOrNull);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) temp.put(rs.getInt("m"), rs.getInt("c"));
+            }
+        }
+
+        LinkedHashMap<String, Integer> out = new LinkedHashMap<>();
+        for (int m = 1; m <= 12; m++) {
+            String label = Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            out.put(label, temp.getOrDefault(m, 0));
+        }
+        return out;
+    }
+
+    // ======= UI apply =======
+
+    private void applyDashboardData(DashboardData d) {
+        Platform.runLater(() -> {
+            if (lblProject != null) lblProject.setText(String.valueOf(d.projectCount));
+            if (lblRevenue != null) lblRevenue.setText(formatMoney(d.revenue));
+            if (lblExpense != null) lblExpense.setText(formatMoney(d.expense)); // year-based expense
+            if (lblWorkers != null) lblWorkers.setText(String.valueOf(d.workers));
+
+            updatePieProjectStatus(d.statusCounts);
+            updatePieSchedule(d.scheduleOnTime, d.scheduleDelay);
+            updateTop3(d.top3);
+            updateLineMonthlyCost(d.monthlyCost);
+            updateLineActiveProjects(d.activeProjects);
+        });
+    }
+
+    private void updatePieProjectStatus(Map<String, Integer> statusCounts) {
+        if (pieProjectStatus == null) return;
+
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        for (Map.Entry<String, Integer> e : statusCounts.entrySet()) {
+            data.add(new PieChart.Data(toDisplayStatus(e.getKey()), e.getValue()));
+        }
+        pieProjectStatus.setData(data);
+
+        Platform.runLater(() -> applyProjectStatusColors(pieProjectStatus));
+    }
+
+    private void applyProjectStatusColors(PieChart pie) {
+        for (PieChart.Data d : pie.getData()) {
+            Node n = d.getNode();
+            if (n == null) continue;
+
+            String key = normalizeStatus(d.getName());
+            String color = switch (key) {
+                case "planning" -> "#f59e0b";
+                case "inprogress" -> "#38bdf8";
+                case "delay" -> "#7c3aed";
+                case "finished" -> "#22c55e";
+                default -> "#94a3b8";
+            };
+            n.setStyle("-fx-pie-color: " + color + ";");
+        }
+    }
+
+    private void updatePieSchedule(int onTime, int delay) {
+        if (pieSchedule == null) return;
+
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        data.add(new PieChart.Data("On Time", onTime));
+        data.add(new PieChart.Data("Delay", delay));
+        pieSchedule.setData(data);
+
+        Platform.runLater(() -> applyScheduleColors(pieSchedule));
+    }
+
+    private void applyScheduleColors(PieChart pie) {
+        for (PieChart.Data d : pie.getData()) {
+            Node n = d.getNode();
+            if (n == null) continue;
+            if ("On Time".equalsIgnoreCase(d.getName())) n.setStyle("-fx-pie-color: #22c55e;");
+            else n.setStyle("-fx-pie-color: #7c3aed;");
+        }
+    }
+
+    private void updateTop3(List<TopCostRow> top3) {
+        top3.sort((a, b) -> Double.compare(b.usedCost, a.usedCost));
+        applyTopRow(0, top3, progressCostTyp1, progressCost1, progressbarTyp1);
+        applyTopRow(1, top3, progressCostTyp2, progressCost2, progressbarTyp2);
+        applyTopRow(2, top3, progressCostTyp3, progressCost3, progressbarTyp3);
+    }
+
+    private void applyTopRow(int index, List<TopCostRow> top3, Label nameLbl, Label costLbl, ProgressBar bar) {
+        if (nameLbl == null && costLbl == null && bar == null) return;
+
+        if (index >= top3.size()) {
+            if (nameLbl != null) nameLbl.setText("-");
+            if (costLbl != null) costLbl.setText("-");
+            if (bar != null) bar.setProgress(0);
+            return;
+        }
+
+        TopCostRow r = top3.get(index);
+
+        if (nameLbl != null) nameLbl.setText(r.projectName);
+        if (costLbl != null) costLbl.setText(formatMoney(r.usedCost) + " / " + formatMoney(r.totalCost));
+        if (bar != null) {
+            double p = (r.totalCost <= 0) ? 0 : Math.min(1.0, r.usedCost / r.totalCost);
+            bar.setProgress(p);
+        }
+    }
+
+    private void updateLineMonthlyCost(Map<String, Double> monthlyCost) {
+        if (linechartMonthlyCost == null) return;
+        linechartMonthlyCost.getData().clear();
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Monthly Cost");
+
+        for (Map.Entry<String, Double> e : monthlyCost.entrySet()) {
+            series.getData().add(new XYChart.Data<>(e.getKey(), e.getValue()));
+        }
+        linechartMonthlyCost.getData().add(series);
+    }
+
+    private void updateLineActiveProjects(Map<String, Integer> activeProjects) {
+        if (linechartActiveProject == null) return;
+        linechartActiveProject.getData().clear();
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Active Projects");
+
+        for (Map.Entry<String, Integer> e : activeProjects.entrySet()) {
+            series.getData().add(new XYChart.Data<>(e.getKey(), e.getValue()));
+        }
+        linechartActiveProject.getData().add(series);
+    }
+
+    // ======= helpers =======
+
+    private boolean isManager() {
+        return loginUser != null && role.MANAGER.toString().equalsIgnoreCase(loginUser.getUserRole());
+    }
+
+    private Integer supervisorIdOrNull() {
+        if (loginUser == null) return null;
+        if (!role.SUPERVISOR.toString().equalsIgnoreCase(loginUser.getUserRole())) return null;
+        return loginUser.getUserId();
+    }
+
+    private String formatMoney(double v) {
+        return String.format(Locale.ENGLISH, "%,.0f", v);
+    }
+
+    private String normalizeStatus(String s) {
+        if (s == null) return "";
+        String t = s.trim().toLowerCase(Locale.ENGLISH);
+        if (t.contains("progress")) return "inprogress";
+        if (t.contains("plan")) return "planning";
+        if (t.contains("finish")) return "finished";
+        if (t.contains("delay")) return "delay";
+        return t.replace(" ", "");
+    }
+
+    private String toDisplayStatus(String normalized) {
+        String n = normalizeStatus(normalized);
+        return switch (n) {
+            case "planning" -> "Planning";
+            case "inprogress" -> "In Progressing";
+            case "delay" -> "Delay";
+            case "finished" -> "Finished";
+            default -> normalized;
+        };
+    }
+
+    private StackPane findLoadPane(Node any) {
+        if (any == null) return null;
+        Node p = any;
+        while (p != null) {
+            if (p instanceof StackPane sp) return sp;
+            p = p.getParent();
+        }
+        return null;
     }
 }
-
