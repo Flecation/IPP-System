@@ -80,6 +80,16 @@ public class projectDetailsController implements loadPaneAware, SearchablePage, 
     private ObservableList<workItems> allWorkItems = FXCollections.observableArrayList();
     private String searchQuery = "";
 
+    /**
+     * Optional back behavior injected by the page that opened this controller.
+     * If null, we fall back to the default behavior (go to viewProjects.fxml).
+     */
+    private Runnable backAction;
+
+    public void setBackAction(Runnable backAction) {
+        this.backAction = backAction;
+    }
+
     @Override
     public void onSearch(String query) {
         this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
@@ -212,6 +222,13 @@ public class projectDetailsController implements loadPaneAware, SearchablePage, 
         pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
 
         backToViewProjectBtn.setOnAction(e -> {
+            // If the opener injected a back behavior (eg. return to mgSEPersonalDetail), use it.
+            if (backAction != null) {
+                backAction.run();
+                return;
+            }
+
+            // Default / legacy behavior
             sideBarPaneController n = requireNav();
             if (n == null) return;
             n.openInnerView("viewProjects.fxml", ctrl -> {});

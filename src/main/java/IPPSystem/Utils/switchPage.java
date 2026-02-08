@@ -360,9 +360,12 @@ public class switchPage extends utils {
 
             mgSEPersonalDetailController controller =
                     loader.getController();
-
             controller.setEngineer(user);
-            controller.setLoadPane(loadPane);
+
+            if (controller instanceof IPPSystem.Interfaces.loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
+            }
+
 
             loadPane.getChildren().setAll(page);
 

@@ -1,6 +1,8 @@
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.databaseConnection;
+import IPPSystem.Models.users;
+import IPPSystem.Utils.session;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,37 +17,28 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
+
+//import static jdk.vm.ci.aarch64.AArch64.lr;
 
 /**
- * Controller for View/CreateReportNew.fxml
+ * Create Daily Report (CreateReportNew.fxml) - Create path only.
  *
- * Flow:
- * 1) Default date = today
- * 2) When user selects workItem (or date changes):
- *    - Look up dailyReports by (assignProjectId, assignWorkItemId, reportDate)
- *    - If exists: load weather/generalRemark/issue + labors + tasks
- *    - If not: clear inputs for new report
+ * FIX for your FXML error:
+ *  - Any method referenced by onAction="#..." MUST be annotated with @FXML (or be public).
+ *  - This controller provides: addAssignedLabor, handleAddProgress, handleAddIssue, submitReport.
  *
- * Save behavior (matches your rule):
- * - dailyReports has UNIQUE(assignProjectId, assignWorkItemId, reportDate)
- * - If header is new: insert header, then insert labors + ensure assignWorkers
- * - If header already exists: do NOT insert labors again; tasks can be replaced/updated
+ * NOTE: column/table names follow your latest schema discussions:
+ *  - assignWorkers uses workerId (not laborId)
+ *  - assignWorkItemSkillDetails uses assignStatusId (not assignStatus)
  *
- * Material cost:
- * - Your current dailyReports table doesn't have a materialCost column.
- * - This controller stores material cost as a special row in dailyReportTasks:
- *     assignTaskId = NULL, progressDescription = '__MATERIAL_COST__', dailyCost = <materialCost>
+ * If your actual table/column names differ, tell me the exact names and I will adjust the SQL.
  */
 public class CreateReportNewController implements Initializable {
 
     // ---------------- FXML ----------------
-    @FXML private ScrollPane mainScrollPane;
-
     @FXML private Label currentAssignedProjectName;
 
     @FXML private ComboBox<WorkItemOption> workItemCombo;
@@ -53,10 +46,10 @@ public class CreateReportNewController implements Initializable {
     @FXML private DatePicker todayReportDate;
 
     @FXML private ComboBox<String> weatherConditionBox;
-    @FXML private TextArea otherWeatherCondition; // optional extra notes
+    @FXML private TextArea otherWeatherCondition;
 
     @FXML private ComboBox<SkillOption> laborSkillCombo;
-    @FXML private TextField laborName;
+    @FXML private ComboBox<LaborOption> laborNameCombo;
     @FXML private TextField laborDailyWadgePerDay;
     @FXML private TextField laborWorkHourPerDay;
     @FXML private TextArea remarkForLabor;
@@ -74,6 +67,7 @@ public class CreateReportNewController implements Initializable {
 
     @FXML private TextField remainTask;
     @FXML private TextField completedTask;
+
     @FXML private VBox progressContainer;
     @FXML private Button addProgressBtn;
 
@@ -85,64 +79,228 @@ public class CreateReportNewController implements Initializable {
     @FXML private Button submitReportBtn;
 
     // ---------------- STATE ----------------
-    private int assignProjectId = -1;
-    private int supervisorId = -1;
+    private Integer assignProjectId;      // current in-progress project
+    private String assignProjectName;
+    private Integer supervisorId;
 
-    private Integer currentDailyReportId = null;
-    private boolean currentReportIsNew = true;
+    private Integer selectedLaborId = null;
+//    private boolean laborSelectionCommitted = false;
+    private HBox progressAddRow;
+
+
 
     private final ObservableList<LaborRow> laborRows = FXCollections.observableArrayList();
-    private final ObservableList<ProgressRow> progressRows = FXCollections.observableArrayList();
+    // Progress descriptions are handled like Issues (dynamic rows in progressContainer)
 
-    private static final String MATERIAL_MARKER = "__MATERIAL_COST__";
-
-    // ---------------- Public context setter ----------------
-    /**
-     * Call this after loading FXML to set current project context.
-     */
-    public void setContext(int assignProjectId, String projectName, int supervisorId) {
-        this.assignProjectId = assignProjectId;
-        this.supervisorId = supervisorId;
-        if (currentAssignedProjectName != null) currentAssignedProjectName.setText(projectName);
-
-        loadWorkItemsForProject();
-        refreshReportView();
-    }
+    // Adjust these IDs to your DB constants
+    private static final int STATUS_IN_PROGRESS = 2;
+    private static final int STATUS_FINISHED = 4;
+    private static final int ASSIGN_STATUS_AUTO = 1;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupWeather();
+        setupDatePickerNoFuture();
         setupLaborTable();
-        todayLaborTable.setItems(laborRows);
+        setupNumericFilters();
+        if (progressContainer != null) {
+            progressContainer.getChildren().clear();
 
-        if (todayReportDate != null) {
-            todayReportDate.setValue(LocalDate.now());
-            todayReportDate.valueProperty().addListener((obs, o, n) -> refreshReportView());
+            // button row at bottom
+            progressAddRow = new HBox(10, addProgressBtn);
+            progressAddRow.setPadding(new Insets(5));
+            progressContainer.getChildren().add(progressAddRow);
+
+            // first progress row above it
+            addProgressRow(null);
         }
 
+
+        if (todayLaborTable != null) todayLaborTable.setItems(laborRows);
+
+        setFormEnabled(false);
+
+        // cascade workItem -> tasks/skills
         if (workItemCombo != null) {
             workItemCombo.valueProperty().addListener((obs, o, n) -> {
                 loadTasksForSelectedWorkItem();
-                refreshReportView();
+                loadSkillsForSelectedWorkItem();
+                refreshRemainQty();
             });
         }
+        if (taskCombo != null) {
+            taskCombo.valueProperty().addListener((obs, o, n) -> refreshRemainQty());
+        }
 
-        loadSkills();
+        if (todayReportDate != null) {
+            todayReportDate.setValue(LocalDate.now());
+            todayReportDate.valueProperty().addListener((obs, o, n) -> refreshRemainQty());
+        }
 
-        // start with one issue row
+        if (laborSkillCombo != null) {
+            laborSkillCombo.valueProperty().addListener((obs, o, n) -> {
+                selectedLaborId = null;
+
+                if (laborNameCombo != null) {
+                    laborNameCombo.getItems().clear();
+                    laborNameCombo.setValue(null);
+
+                    boolean enable = (n != null);
+                    laborNameCombo.setDisable(!enable);
+
+                    if (enable) {
+                        // load initial dropdown list immediately (top 20)
+                        laborNameCombo.getItems().setAll(queryLaborSuggestions(n.skillId(), ""));
+                    }
+                }
+
+                autoFillDailyWage();
+            });
+
+        }
+
+        setupLaborNameCombo();
+
         if (issuesContainer != null) {
             issuesContainer.getChildren().clear();
             addIssueRow(null);
         }
+
+        // (Optional) also wire in code, but FXML onAction will still work
+        if (addAssignedLaborBtn != null) addAssignedLaborBtn.setOnAction(this::addAssignedLabor);
+        if (addProgressBtn != null) addProgressBtn.setOnAction(this::handleAddProgress);
+        if (addIssuesBtn != null) addIssuesBtn.setOnAction(this::handleAddIssue);
+        if (submitReportBtn != null) submitReportBtn.setOnAction(this::submitReport);
+
+        loadCurrentProjectContext();
     }
 
+    // ---------------- Context ----------------
+    private void loadCurrentProjectContext() {
+        users u = session.getInstance().getUser();
+        if (u == null || u.getUserId() <= 0) {
+            showError("Login required", "No logged-in user found.");
+            return;
+        }
+        this.supervisorId = u.getUserId();
+
+        try (Connection con = databaseConnection.getConnection()) {
+            String sql = "SELECT assignProjectId, projectInstanceName " +
+                    "FROM assignProjects WHERE supervisorId=? AND projectStatus=? " +
+                    "ORDER BY assignProjectId DESC LIMIT 1";
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, supervisorId);
+                ps.setInt(2, STATUS_IN_PROGRESS);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        this.assignProjectId = rs.getInt("assignProjectId");
+                        this.assignProjectName = rs.getString("projectInstanceName");
+                    }
+                }
+            }
+
+            if (assignProjectId == null || assignProjectId <= 0) {
+                if (currentAssignedProjectName != null) currentAssignedProjectName.setText("No In-Progress Project");
+                setFormEnabled(false);
+                return;
+            }
+
+            if (currentAssignedProjectName != null) currentAssignedProjectName.setText(assignProjectName);
+            setFormEnabled(true);
+
+            loadWorkItemsForProject();
+            if (workItemCombo != null && !workItemCombo.getItems().isEmpty()) {
+                workItemCombo.getSelectionModel().selectFirst();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError("Load Error", ex.getMessage());
+        }
+    }
+
+    private void setFormEnabled(boolean enabled) {
+        if (workItemCombo != null) workItemCombo.setDisable(!enabled);
+        if (taskCombo != null) taskCombo.setDisable(!enabled);
+        if (todayReportDate != null) todayReportDate.setDisable(!enabled);
+        if (weatherConditionBox != null) weatherConditionBox.setDisable(!enabled);
+        if (otherWeatherCondition != null) otherWeatherCondition.setDisable(!enabled);
+
+        if (laborSkillCombo != null) laborSkillCombo.setDisable(!enabled);
+        if (laborNameCombo != null) laborNameCombo.setDisable(true); // until skill selected
+        if (laborDailyWadgePerDay != null) laborDailyWadgePerDay.setDisable(!enabled);
+        if (laborWorkHourPerDay != null) laborWorkHourPerDay.setDisable(!enabled);
+        if (remarkForLabor != null) remarkForLabor.setDisable(!enabled);
+        if (addAssignedLaborBtn != null) addAssignedLaborBtn.setDisable(!enabled);
+
+        if (todayLaborTable != null) todayLaborTable.setDisable(!enabled);
+
+        if (materialCostField != null) materialCostField.setDisable(!enabled);
+        if (remainTask != null) { remainTask.setDisable(true); remainTask.setEditable(false); }
+        if (completedTask != null) completedTask.setDisable(!enabled);
+
+        if (progressContainer != null) progressContainer.setDisable(!enabled);
+        if (addProgressBtn != null) addProgressBtn.setDisable(!enabled);
+
+        if (generalRemark != null) generalRemark.setDisable(!enabled);
+
+        if (issuesContainer != null) issuesContainer.setDisable(!enabled);
+        if (addIssuesBtn != null) addIssuesBtn.setDisable(!enabled);
+
+        if (submitReportBtn != null) submitReportBtn.setDisable(!enabled);
+    }
+
+    // ---------------- Setup: weather/date ----------------
     private void setupWeather() {
         if (weatherConditionBox == null) return;
         weatherConditionBox.setItems(FXCollections.observableArrayList(
-                "Sunny", "Cloudy", "Rainy", "Windy", "Stormy", "Foggy", "Other"
+                "Sunny", "Partly Cloudy", "Cloudy", "Light Rain", "Heavy Rain",
+                "Thunderstorm", "Windy", "Foggy", "Other"
         ));
+        weatherConditionBox.valueProperty().addListener((obs, o, n) -> {
+            if (otherWeatherCondition == null) return;
+            boolean isOther = "Other".equalsIgnoreCase(String.valueOf(n));
+            otherWeatherCondition.setDisable(!isOther);
+            if (!isOther) otherWeatherCondition.clear();
+        });
+        if (otherWeatherCondition != null) otherWeatherCondition.setDisable(true);
     }
 
+    private void setupDatePickerNoFuture() {
+        if (todayReportDate == null) return;
+        todayReportDate.setDayCellFactory(dp -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) return;
+                setDisable(item.isAfter(LocalDate.now()));
+            }
+        });
+    }
+
+    // ---------------- Numeric filters ----------------
+    private void setupNumericFilters() {
+        if (materialCostField != null) {
+            materialCostField.setTextFormatter(new TextFormatter<>(change -> {
+                String n = change.getControlNewText();
+                if (n.isEmpty()) return change;
+                return n.matches("\\d+") ? change : null;
+            }));
+        }
+        addDecimalFilter(laborDailyWadgePerDay);
+        addDecimalFilter(laborWorkHourPerDay);
+        addDecimalFilter(completedTask);
+    }
+
+    private void addDecimalFilter(TextField tf) {
+        if (tf == null) return;
+        tf.setTextFormatter(new TextFormatter<>(change -> {
+            String n = change.getControlNewText();
+            if (n.isEmpty()) return change;
+            return n.matches("\\d*(\\.\\d*)?") ? change : null;
+        }));
+    }
+
+    // ---------------- Labor table ----------------
     private void setupLaborTable() {
         if (laborNameCol != null) laborNameCol.setCellValueFactory(new PropertyValueFactory<>("laborName"));
         if (laborSkillCol != null) laborSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
@@ -152,49 +310,187 @@ public class CreateReportNewController implements Initializable {
 
         if (actionCol != null) {
             actionCol.setCellFactory(col -> new TableCell<>() {
-                private final Button btn = new Button("Remove");
+                private final Button edit = new Button("Edit");
+                private final Button del  = new Button("Delete");
+                private final HBox box = new HBox(8, edit, del);
+
                 {
-                    btn.setOnAction(e -> {
-                        LaborRow row = getTableView().getItems().get(getIndex());
+                    edit.setOnAction(e -> {
+                        int idx = getIndex();
+                        if (idx < 0 || idx >= getTableView().getItems().size()) return;
+                        LaborRow row = getTableView().getItems().get(idx);
+                        loadLaborRowToForm(row);
+                    });
+                    del.setOnAction(e -> {
+                        int idx = getIndex();
+                        if (idx < 0 || idx >= getTableView().getItems().size()) return;
+                        LaborRow row = getTableView().getItems().get(idx);
                         laborRows.remove(row);
                     });
                 }
+
                 @Override protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
-                    setGraphic(empty ? null : btn);
+                    setGraphic(empty ? null : box);
                 }
             });
         }
     }
 
-    // ---------------- UI actions ----------------
+    // ---------------- Labor Combo (editable, suggestion-only allowed) ----------------
+    private void setupLaborNameCombo() {
+        if (laborNameCombo == null) return;
+
+        laborNameCombo.setEditable(false);   // ✅ choicebox style
+        laborNameCombo.setDisable(true);     // until skill selected
+        laborNameCombo.setVisibleRowCount(12);
+
+        // converter only affects display text
+        laborNameCombo.setConverter(new javafx.util.StringConverter<>() {
+            @Override public String toString(LaborOption object) {
+                return object == null ? "" : object.name();
+            }
+            @Override public LaborOption fromString(String string) { return null; }
+        });
+
+        // when user selects
+        laborNameCombo.valueProperty().addListener((obs, o, n) -> {
+            selectedLaborId = (n == null) ? null : n.laborId();
+        });
+
+        // when user opens dropdown, refresh list (top 20) for current skill
+        laborNameCombo.setOnShowing(e -> {
+            SkillOption skill = laborSkillCombo == null ? null : laborSkillCombo.getValue();
+            if (skill == null) {
+                laborNameCombo.getItems().clear();
+                return;
+            }
+            laborNameCombo.getItems().setAll(queryLaborSuggestions(skill.skillId(), "")); // "" = no prefix, show list
+        });
+    }
+
+    /**
+     * Suggest labor if:
+     *  - assigned to current project OR
+     *  - not assigned anywhere OR
+     *  - not assigned to any OTHER in-progress project
+     */
+    private List<LaborOption> queryLaborSuggestions(int skillId, String prefix) {
+        List<LaborOption> list = new ArrayList<>();
+        if (assignProjectId == null || assignProjectId <= 0) return list;
+        String p = (prefix == null) ? "" : prefix.trim();
+
+
+
+        String sql =
+                "SELECT l.laborId, l.laborName " +
+                        "FROM labors l " +
+                        "WHERE l.skillId = ? " +
+                        "  AND l.laborName LIKE ?" +
+                        "  AND (" +
+                        "        EXISTS (SELECT 1 FROM assignWorkers aw WHERE aw.workerId = l.laborId AND aw.assignProjectId = ?)" +
+                        "        OR NOT EXISTS (SELECT 1 FROM assignWorkers aw WHERE aw.workerId = l.laborId)" +
+                        "        OR NOT EXISTS (" +
+                        "            SELECT 1 " +
+                        "            FROM assignWorkers aw " +
+                        "            JOIN assignProjects ap ON ap.assignProjectId = aw.assignProjectId " +
+                        "            WHERE aw.workerId = l.laborId " +
+                        "              AND aw.assignProjectId <> ? " +
+                        "              AND ap.projectStatus = ?" +
+                        "        )" +
+                        "      ) " +
+                        "ORDER BY " +
+                        "  (EXISTS(SELECT 1 FROM assignWorkers aw WHERE aw.workerId = l.laborId AND aw.assignProjectId = ?)) DESC, " +
+                        "  l.laborName " +
+                        "LIMIT 20";
+
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, skillId);
+            ps.setString(2, (prefix == null ? "" : prefix.trim()) + "%");
+            ps.setInt(3, assignProjectId);
+            ps.setInt(4, assignProjectId);
+            ps.setInt(5, STATUS_IN_PROGRESS);
+            ps.setInt(6, assignProjectId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new LaborOption(rs.getInt("laborId"), rs.getString("laborName")));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    private void autoFillDailyWage() {
+        if (laborDailyWadgePerDay == null) return;
+        SkillOption so = laborSkillCombo == null ? null : laborSkillCombo.getValue();
+        WorkItemOption wi = workItemCombo == null ? null : workItemCombo.getValue();
+        if (so == null || wi == null) return;
+
+        // assignWorkItemSkillDetails uses assignStatusId
+        String sql =
+                "SELECT awsd.dailyWagePerLabor " +
+                        "FROM assignWorkItemSkills aws " +
+                        "JOIN assignWorkItemSkillDetails awsd ON awsd.assignWorkItemSkillId = aws.assignWorkItemSkillId " +
+                        "WHERE aws.assignWorkItemId = ? AND aws.skillId = ? AND awsd.assignStatusId = ? " +
+                        "ORDER BY awsd.assignWorkItemSkillDetailId DESC LIMIT 1";
+
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, wi.assignWorkItemId());
+            ps.setInt(2, so.skillId());
+            ps.setInt(3, ASSIGN_STATUS_AUTO);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    laborDailyWadgePerDay.setText(String.valueOf(rs.getDouble("dailyWagePerLabor")));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // ===================== FXML HANDLERS =====================
+
     @FXML
     private void addAssignedLabor(ActionEvent event) {
         SkillOption skill = laborSkillCombo == null ? null : laborSkillCombo.getValue();
-        String name = trim(laborName == null ? null : laborName.getText());
+        if (skill == null) { warn("Validation", "Please select a skill."); return; }
+        if (selectedLaborId == null) { warn("Validation", "Please select a labor from suggestions."); return; }
 
-        double wage;
-        double hours;
-        try {
-            wage = Double.parseDouble(trim(laborDailyWadgePerDay == null ? null : laborDailyWadgePerDay.getText()));
-            hours = Double.parseDouble(trim(laborWorkHourPerDay == null ? null : laborWorkHourPerDay.getText()));
-        } catch (Exception ex) {
-            alert(Alert.AlertType.WARNING, "Validation", "Daily wage and work hours must be numbers.");
-            return;
+        String name = "";
+        if (laborNameCombo != null) {
+            LaborOption sel = laborNameCombo.getValue();
+            name = sel != null ? sel.name() : trim(laborNameCombo.getEditor().getText());
         }
-        if (skill == null) {
-            alert(Alert.AlertType.WARNING, "Validation", "Please select a skill.");
-            return;
-        }
-        if (name.isEmpty()) {
-            alert(Alert.AlertType.WARNING, "Validation", "Please enter labor name.");
-            return;
-        }
+        if (name.isEmpty()) { warn("Validation", "Please select a labor."); return; }
+
+        double wage = parseDouble(trim(laborDailyWadgePerDay == null ? null : laborDailyWadgePerDay.getText()));
+        double hours = parseDouble(trim(laborWorkHourPerDay == null ? null : laborWorkHourPerDay.getText()));
+        if (wage <= 0) { warn("Validation", "Daily wage must be > 0."); return; }
+        if (hours <= 0) { warn("Validation", "Work hours must be > 0."); return; }
 
         String remark = trim(remarkForLabor == null ? null : remarkForLabor.getText());
-        laborRows.add(new LaborRow(null, name, skill.skillId(), skill.skillName(), wage, hours, remark));
 
-        if (laborName != null) laborName.clear();
+        boolean dup = laborRows.stream().anyMatch(r -> Objects.equals(r.getLaborId(), selectedLaborId));
+        if (dup) { warn("Validation", "This labor is already added."); return; }
+
+        laborRows.add(new LaborRow(selectedLaborId, name, skill.skillId(), skill.skillName(), wage, hours, remark));
+
+        selectedLaborId = null;
+        if (laborNameCombo != null) {
+            laborNameCombo.getItems().clear();
+            laborNameCombo.setValue(null);
+            laborNameCombo.getEditor().clear();
+            laborNameCombo.setDisable(true);
+        }
+        if (laborSkillCombo != null) laborSkillCombo.getSelectionModel().clearSelection();
         if (laborDailyWadgePerDay != null) laborDailyWadgePerDay.clear();
         if (laborWorkHourPerDay != null) laborWorkHourPerDay.clear();
         if (remarkForLabor != null) remarkForLabor.clear();
@@ -203,20 +499,9 @@ public class CreateReportNewController implements Initializable {
     @FXML
     private void handleAddProgress(ActionEvent event) {
         TaskOption t = taskCombo == null ? null : taskCombo.getValue();
-        if (t == null) {
-            alert(Alert.AlertType.WARNING, "Validation", "Please choose a task first.");
-            return;
-        }
-        progressRows.add(new ProgressRow(
-                t.assignTaskId(),
-                t.taskName(),
-                "",          // description
-                0,           // workHours
-                0,           // completedQty
-                0,           // dailyCost
-                false        // isCompleted
-        ));
-        renderProgressRows();
+        if (t == null) { warn("Validation", "Please choose a task first."); return; }
+
+        addProgressRow(null);
     }
 
     @FXML
@@ -225,150 +510,97 @@ public class CreateReportNewController implements Initializable {
     }
 
     @FXML
-    private void submitReportBtn(ActionEvent event) {
-        if (assignProjectId <= 0) {
-            alert(Alert.AlertType.ERROR, "Missing Context", "assignProjectId is not set. Call setContext(...) first.");
+    private void submitReport(ActionEvent event) {
+        if (assignProjectId == null || assignProjectId <= 0) {
+            showError("No current project", "You don't have an in-progress project.");
             return;
         }
+
         WorkItemOption workItem = workItemCombo == null ? null : workItemCombo.getValue();
-        if (workItem == null) {
-            alert(Alert.AlertType.WARNING, "Validation", "Please select a work item.");
-            return;
-        }
+        if (workItem == null) { warn("Validation", "Please select a work item."); return; }
+
         LocalDate date = todayReportDate == null ? null : todayReportDate.getValue();
-        if (date == null) {
-            alert(Alert.AlertType.WARNING, "Validation", "Please choose a date.");
-            return;
-        }
+        if (date == null) { warn("Validation", "Please choose a date."); return; }
+        if (date.isAfter(LocalDate.now())) { warn("Validation", "Future date is not allowed."); return; }
 
         String weather = weatherConditionBox == null ? "" : Objects.toString(weatherConditionBox.getValue(), "");
-        String issuesText = collectTextAreas(issuesContainer);
-        String commentsText = trim(generalRemark == null ? null : generalRemark.getText());
+        if ("Other".equalsIgnoreCase(weather) && otherWeatherCondition != null) {
+            String extra = trim(otherWeatherCondition.getText());
+            if (!extra.isEmpty()) weather = "Other: " + extra;
+        }
 
-        double materialCost = parseDouble(materialCostField == null ? null : materialCostField.getText());
+        String issuesText = collectIssues();
+        String remark = trim(generalRemark == null ? null : generalRemark.getText());
 
         try (Connection con = databaseConnection.getConnection()) {
             con.setAutoCommit(false);
 
-            DailyReportHeaderResult hdr = getOrCreateDailyReport(con, assignProjectId, workItem.assignWorkItemId(), date,
-                    supervisorId, weather, commentsText, issuesText);
 
-            // Only insert labors when header is NEW (your rule)
-            if (hdr.isNew) {
-                for (LaborRow lr : laborRows) {
-                    Integer laborId = lr.laborId.get();
-                    if (laborId == null) {
-                        laborId = findLaborIdByName(con, lr.laborName.get());
-                    }
-                    if (laborId == null) {
-                        con.rollback();
-                        alert(Alert.AlertType.ERROR, "Labor not found",
-                                "Cannot find labor in DB: " + lr.laborName.get() + ".\n" +
-                                        "Please create/select labors from Labor module first (so laborId exists).");
-                        return;
-                    }
+            int dailyReportId = getOrCreateDailyReportId(
+                    con,
+                    assignProjectId,
+                    workItem.assignWorkItemId(),
+                    date,
+                    supervisorId == null ? 0 : supervisorId,
+                    weather,
+                    remark,
+                    issuesText
+            );
 
-                    // assignWorkers: workerId = laborId in your schema
-                    insertAssignWorkerIgnore(con, assignProjectId, laborId);
+            deleteDailyReportTasks(con, dailyReportId);
+            deleteDailyReportLabors(con, dailyReportId);
+            for (LaborRow lr : laborRows) {
+                Integer laborId = lr.getLaborId();
+                if (laborId == null) continue;
 
-                    // dailyReportLabors
-                    insertDailyReportLaborIgnore(con, hdr.dailyReportId, laborId,
-                            lr.workHours.get(), lr.dailyWage.get(), lr.remark.get());
-                }
+                insertAssignWorkerIgnore(con, assignProjectId, laborId);
+                callAddDailyReportLabor(con, dailyReportId, laborId, lr.workHours.get(), lr.dailyWage.get(), lr.remark.get());
             }
 
-            // Replace tasks for this report (simple + predictable)
-            replaceDailyReportTasks(con, hdr.dailyReportId, progressRows, materialCost);
-
-            con.commit();
-
-            // refresh view
-            refreshReportView();
-
-            alert(Alert.AlertType.INFORMATION, "Saved",
-                    hdr.isNew
-                            ? "Daily report created and saved."
-                            : "Daily report already existed. Labors skipped; tasks updated.");
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            alert(Alert.AlertType.ERROR, "Save Error", ex.getMessage());
-        }
-    }
-
-    // ---------------- Load / Refresh ----------------
-    private void refreshReportView() {
-        currentDailyReportId = null;
-        currentReportIsNew = true;
-
-        if (assignProjectId <= 0) return;
-        WorkItemOption wi = workItemCombo == null ? null : workItemCombo.getValue();
-        LocalDate date = todayReportDate == null ? null : todayReportDate.getValue();
-        if (wi == null || date == null) return;
-
-        try (Connection con = databaseConnection.getConnection()) {
-            DailyReportLoaded loaded = loadDailyReportByKey(con, assignProjectId, wi.assignWorkItemId(), date);
-
-            if (loaded == null) {
-                clearUI();
+            // Tasks: single selected task + progress descriptions (same style as issues)
+            TaskOption task = taskCombo == null ? null : taskCombo.getValue();
+            if (task == null) {
+                con.rollback();
+                warn("Validation", "Please choose a task.");
                 return;
             }
 
-            currentDailyReportId = loaded.dailyReportId;
-            currentReportIsNew = false;
+            String progressDesc = collectProgressDescriptions();
+            double completedQty = parseDouble(trim(completedTask == null ? null : completedTask.getText()));
+            double dailyCost = parseDouble(trim(materialCostField == null ? null : materialCostField.getText()));
+            double workHours = 0; // (you can add a dedicated task-hours field later)
 
-            if (weatherConditionBox != null) weatherConditionBox.setValue(loaded.weather);
+            double remain = parseDouble(trim(remainTask == null ? null : remainTask.getText()));
+            boolean isCompleted = remain > 0 && completedQty >= remain;
 
-            if (generalRemark != null) generalRemark.setText(nvl(loaded.commentsText));
+            deleteDailyReportTasks(con, dailyReportId);
+            // OLD
+// OLD
+// callAddDailyReportTask(con, dailyReportId, task.assignTaskId(), ...);
 
-            // issues
-            if (issuesContainer != null) {
-                issuesContainer.getChildren().clear();
-                if (loaded.issuesText != null && !loaded.issuesText.trim().isEmpty()) {
-                    for (String line : loaded.issuesText.split("\\r?\\n")) addIssueRow(line.trim());
-                } else {
-                    addIssueRow(null);
-                }
+// NEW
+            deleteDailyReportTasks(con, dailyReportId); // keep this if you want only 1 task row per report
+            insertDailyReportTask(con, dailyReportId, task.assignTaskId(),
+                    progressDesc, workHours, completedQty, dailyCost, isCompleted);
+
+
+            con.commit();
+            info("Saved", "Daily report saved successfully.");
+
+            laborRows.clear();
+            if (progressContainer != null) {
+                progressContainer.getChildren().clear();
+                addProgressRow(null);
             }
-
-            // labors
-            laborRows.setAll(loaded.labors);
-
-            // tasks
-            progressRows.setAll(loaded.tasks);
-            renderProgressRows();
-
-            // material cost pulled from special row
-            if (materialCostField != null) materialCostField.setText(String.valueOf(loaded.materialCost));
-
-            // completed/remain count
-            updateRemainCompleted(con, wi.assignWorkItemId(), loaded.tasks);
+            refreshRemainQty();
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            alert(Alert.AlertType.ERROR, "Load Error", ex.getMessage());
+            showError("Save Error", ex.getMessage());
         }
     }
 
-    private void clearUI() {
-        if (weatherConditionBox != null) weatherConditionBox.setValue(null);
-        if (generalRemark != null) generalRemark.clear();
-        if (materialCostField != null) materialCostField.clear();
-
-        if (issuesContainer != null) {
-            issuesContainer.getChildren().clear();
-            addIssueRow(null);
-        }
-
-        laborRows.clear();
-        progressRows.clear();
-        if (progressContainer != null) progressContainer.getChildren().clear();
-
-        if (completedTask != null) completedTask.setText("0");
-        if (remainTask != null) remainTask.setText("0");
-    }
-
-    // ---------------- Dynamic UI components ----------------
+    // ---------------- Progress UI ----------------
     private void addIssueRow(String initial) {
         if (issuesContainer == null) return;
 
@@ -379,88 +611,246 @@ public class CreateReportNewController implements Initializable {
         if (initial != null) ta.setText(initial);
 
         Button remove = new Button("Remove");
+        HBox box = new HBox(10, ta, remove);
+        box.setPadding(new Insets(5));
+
         remove.setOnAction(e -> {
-            issuesContainer.getChildren().removeIf(node -> node == ta.getParent());
+            issuesContainer.getChildren().remove(box);
             if (issuesContainer.getChildren().isEmpty()) addIssueRow(null);
         });
 
-        HBox box = new HBox(10, ta, remove);
-        box.setPadding(new Insets(5));
         issuesContainer.getChildren().add(box);
     }
 
-    private void renderProgressRows() {
+    // Progress description rows (same style as issues): "#" + TextField + Remove
+    // Progress description rows: "#" + TextArea (wrap) + Remove
+    private void addProgressRow(String initial) {
         if (progressContainer == null) return;
-        progressContainer.getChildren().clear();
 
-        for (ProgressRow pr : progressRows) {
-            VBox card = new VBox(8);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e8e8e8; -fx-border-radius: 10;");
+        Label hash = new Label("#");
+        hash.setMinWidth(18);
+        hash.setStyle("-fx-font-weight: bold;");
 
-            Label title = new Label(pr.taskName.get());
-            title.setStyle("-fx-font-weight: bold;");
+        TextArea ta = new TextArea();
+        ta.setWrapText(true);
+        ta.setPromptText("Progress description...");
+        ta.setPrefRowCount(2);
+        ta.setMinHeight(50);
+        if (initial != null) ta.setText(initial);
 
-            TextArea desc = new TextArea(pr.progressDescription.get());
-            desc.setPromptText("Progress description...");
-            desc.setPrefRowCount(2);
-            desc.setWrapText(true);
+        Button remove = new Button("Remove");
 
-            TextField hours = new TextField(String.valueOf(pr.workHours.get()));
-            hours.setPromptText("Work hours");
+        HBox row = new HBox(10, hash, ta, remove);
+        row.setPadding(new Insets(5));
+        HBox.setHgrow(ta, javafx.scene.layout.Priority.ALWAYS);
 
-            TextField qty = new TextField(String.valueOf(pr.completedQty.get()));
-            qty.setPromptText("Completed qty");
+        remove.setOnAction(e -> {
+            progressContainer.getChildren().remove(row);
 
-            TextField cost = new TextField(String.valueOf(pr.dailyCost.get()));
-            cost.setPromptText("Task cost");
+            // keep at least one progress row above the button
+            boolean hasRow = progressContainer.getChildren().stream()
+                    .anyMatch(n -> n instanceof HBox hb && hb != progressAddRow);
+            if (!hasRow) addProgressRow(null);
+        });
 
-            CheckBox completed = new CheckBox("Completed");
-            completed.setSelected(pr.isCompleted.get());
+        // insert above the add button row
+        int idx = (progressAddRow == null)
+                ? progressContainer.getChildren().size()
+                : progressContainer.getChildren().indexOf(progressAddRow);
 
-            Button remove = new Button("Remove");
-            remove.setOnAction(e -> {
-                progressRows.remove(pr);
-                renderProgressRows();
-            });
-
-            // bind
-            desc.textProperty().addListener((o, ov, nv) -> pr.progressDescription.set(nv));
-            hours.textProperty().addListener((o, ov, nv) -> pr.workHours.set(parseDouble(nv)));
-            qty.textProperty().addListener((o, ov, nv) -> pr.completedQty.set(parseDouble(nv)));
-            cost.textProperty().addListener((o, ov, nv) -> pr.dailyCost.set(parseDouble(nv)));
-            completed.selectedProperty().addListener((o, ov, nv) -> pr.isCompleted.set(nv));
-
-            HBox row1 = new HBox(10, new Label("Hours:"), hours, new Label("Qty:"), qty);
-            HBox row2 = new HBox(10, new Label("Cost:"), cost, completed, remove);
-
-            card.getChildren().addAll(title, desc, row1, row2);
-            progressContainer.getChildren().add(card);
-        }
+        if (idx < 0) idx = progressContainer.getChildren().size();
+        progressContainer.getChildren().add(idx, row);
     }
 
-    // ---------------- DB: load combos ----------------
-    private void loadSkills() {
-        if (laborSkillCombo == null) return;
-        laborSkillCombo.getItems().clear();
-        String sql = "SELECT skillId, skillName FROM skills ORDER BY skillId";
+
+
+    private String collectProgressDescriptions() {
+        if (progressContainer == null) return "";
+        StringBuilder sb = new StringBuilder();
+
+        for (var n : progressContainer.getChildren()) {
+            if (n instanceof HBox hb) {
+                for (var c : hb.getChildren()) {
+                    if (c instanceof TextArea ta) {
+                        String t = trim(ta.getText());
+                        if (!t.isEmpty()) {
+                            if (sb.length() > 0) sb.append("\n");
+                            sb.append(t);
+                        }
+                    }
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+
+    // ---------------- Remain qty ----------------
+    private void refreshRemainQty() {
+        if (remainTask != null) remainTask.setText("0");
+        TaskOption t = taskCombo == null ? null : taskCombo.getValue();
+        if (t == null) return;
+
+        String sql =
+                "SELECT at.plannedQty - COALESCE((" +
+                        "   SELECT SUM(drt.completedQty) " +
+                        "   FROM dailyReportTasks drt " +
+                        "   JOIN dailyReports dr ON dr.dailyReportId = drt.dailyReportId " +
+                        "   WHERE drt.assignTaskId = at.assignTaskId" +
+                        "), 0) AS remainQty " +
+                        "FROM assignTasks at WHERE at.assignTaskId = ?";
 
         try (Connection con = databaseConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                laborSkillCombo.getItems().add(new SkillOption(rs.getInt("skillId"), rs.getString("skillName")));
+            ps.setInt(1, t.assignTaskId());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && remainTask != null) {
+                    remainTask.setText(String.valueOf(rs.getDouble("remainQty")));
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    // ---------------- Save helpers ----------------
+    private int getOrCreateDailyReportId(Connection con,
+                                         int pid, int wid, LocalDate date,
+                                         int supervisorId,
+                                         String weather, String generalRemark, String issueText) throws SQLException {
+
+        String sql =
+                "INSERT INTO dailyReports(assignProjectId, assignWorkItemId, reportDate, supervisorId, weather, generalRemark, issue) " +
+                        "VALUES(?,?,?,?,?,?,?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "  supervisorId=VALUES(supervisorId), " +
+                        "  weather=VALUES(weather), " +
+                        "  generalRemark=VALUES(generalRemark), " +
+                        "  issue=VALUES(issue), " +
+                        "  dailyReportId = LAST_INSERT_ID(dailyReportId)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, pid);
+            ps.setInt(2, wid);
+            ps.setDate(3, Date.valueOf(date));
+            ps.setInt(4, supervisorId);
+            ps.setString(5, weather);
+            ps.setString(6, generalRemark);
+            ps.setString(7, issueText);
+
+            ps.executeUpdate();
+
+            // For MySQL, LAST_INSERT_ID trick makes generatedKeys return the existing id too.
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        }
+
+        // Fallback (should rarely happen)
+        String find = "SELECT dailyReportId FROM dailyReports WHERE assignProjectId=? AND assignWorkItemId=? AND reportDate=? LIMIT 1";
+        try (PreparedStatement ps = con.prepareStatement(find)) {
+            ps.setInt(1, pid);
+            ps.setInt(2, wid);
+            ps.setDate(3, Date.valueOf(date));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("dailyReportId");
+            }
+        }
+
+        throw new SQLException("Failed to create/find dailyReportId");
+    }
+
+
+    private void deleteDailyReportLabors(Connection con, int dailyReportId) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("DELETE FROM dailyReportLabors WHERE dailyReportId=?")) {
+            ps.setInt(1, dailyReportId);
+            ps.executeUpdate();
+        }
+    }
+
+
+    private void insertDailyReportLabor(Connection con, int dailyReportId, int laborId,
+                                        double workHours, double dailyWage, String remark) throws SQLException {
+
+        String sql =
+                "INSERT INTO dailyReportLabors(dailyReportId, laborId, workHours, dailyWage, remark) " +
+                        "VALUES(?,?,?,?,?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ps.setInt(2, laborId);
+            ps.setDouble(3, workHours);
+            ps.setDouble(4, dailyWage);
+            ps.setString(5, remark);
+            ps.executeUpdate();
+        }
+    }
+
+    private void insertDailyReportTask(Connection con,
+                                       int dailyReportId, int assignTaskId,
+                                       String progressDesc,
+                                       double workHours, double completedQty,
+                                       double dailyCost, boolean isCompleted) throws SQLException {
+
+        String sql =
+                "INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) " +
+                        "VALUES(?,?,?,?,?,?,?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ps.setInt(2, assignTaskId);
+            ps.setString(3, progressDesc);
+            ps.setDouble(4, workHours);
+            ps.setDouble(5, completedQty);
+            ps.setDouble(6, dailyCost);
+            ps.setBoolean(7, isCompleted);
+            ps.executeUpdate();
+        }
+    }
+
+
+    private void callAddDailyReportLabor(Connection con, int dailyReportId, int laborId,
+                                         double workHours, double dailyWage, String remark) throws SQLException {
+        try (CallableStatement cs = con.prepareCall("{CALL addDailyReportLabor(?,?,?,?,?)}")) {
+            cs.setInt(1, dailyReportId);
+            cs.setInt(2, laborId);
+            cs.setDouble(3, workHours);
+            cs.setDouble(4, dailyWage);
+            cs.setString(5, remark);
+            cs.execute();
+        }
+    }
+
+    private void deleteDailyReportTasks(Connection con, int dailyReportId) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("DELETE FROM dailyReportTasks WHERE dailyReportId=?")) {
+            ps.setInt(1, dailyReportId);
+            ps.executeUpdate();
+        }
+    }
+
+    private void insertAssignWorkerIgnore(Connection con, int pid, int laborId) throws SQLException {
+        String check = "SELECT 1 FROM assignWorkers WHERE assignProjectId=? AND workerId=? LIMIT 1";
+        try (PreparedStatement ps = con.prepareStatement(check)) {
+            ps.setInt(1, pid);
+            ps.setInt(2, laborId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return;
+            }
+        }
+        String ins = "INSERT INTO assignWorkers(assignProjectId, workerId) VALUES(?,?)";
+        try (PreparedStatement ps = con.prepareStatement(ins)) {
+            ps.setInt(1, pid);
+            ps.setInt(2, laborId);
+            ps.executeUpdate();
+        }
+    }
+
+    // ---------------- Combo loads ----------------
     private void loadWorkItemsForProject() {
         if (workItemCombo == null) return;
         workItemCombo.getItems().clear();
-        if (assignProjectId <= 0) return;
+        if (assignProjectId == null || assignProjectId <= 0) return;
 
         String sql =
                 "SELECT awi.assignWorkItemId, wi.projectWorkItemName " +
@@ -471,7 +861,6 @@ public class CreateReportNewController implements Initializable {
 
         try (Connection con = databaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setInt(1, assignProjectId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -481,9 +870,7 @@ public class CreateReportNewController implements Initializable {
                     ));
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     private void loadTasksForSelectedWorkItem() {
@@ -501,307 +888,152 @@ public class CreateReportNewController implements Initializable {
 
         try (Connection con = databaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setInt(1, wi.assignWorkItemId());
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     taskCombo.getItems().add(new TaskOption(rs.getInt("assignTaskId"), rs.getString("projectTaskName")));
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch (Exception ex) { ex.printStackTrace(); }
+
+        if (!taskCombo.getItems().isEmpty()) taskCombo.getSelectionModel().selectFirst();
     }
 
-    // ---------------- DB: load report by key ----------------
-    private DailyReportLoaded loadDailyReportByKey(Connection con, int pid, int wid, LocalDate date) throws SQLException {
-        String hdrSql = "SELECT dailyReportId, weather, issue, generalRemark FROM dailyReports " +
-                "WHERE assignProjectId=? AND assignWorkItemId=? AND reportDate=? LIMIT 1";
+    private void loadSkillsForSelectedWorkItem() {
+        if (laborSkillCombo == null) return;
+        laborSkillCombo.getItems().clear();
+        WorkItemOption wi = workItemCombo == null ? null : workItemCombo.getValue();
+        if (wi == null) return;
 
-        Integer dailyReportId;
-        String weather;
-        String issues;
-        String comments;
+        String sql =
+                "SELECT DISTINCT aws.skillId, s.skillName " +
+                        "FROM assignWorkItemSkills aws " +
+                        "JOIN skills s ON s.skillId = aws.skillId " +
+                        "WHERE aws.assignWorkItemId = ? " +
+                        "ORDER BY s.skillName";
 
-        try (PreparedStatement ps = con.prepareStatement(hdrSql)) {
-            ps.setInt(1, pid);
-            ps.setInt(2, wid);
-            ps.setDate(3, Date.valueOf(date));
-            try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return null;
-                dailyReportId = rs.getInt("dailyReportId");
-                weather = rs.getString("weather");
-                issues = rs.getString("issue");
-                comments = rs.getString("generalRemark");
-            }
-        }
-
-        // labors
-        ObservableList<LaborRow> labors = FXCollections.observableArrayList();
-        String laborSql = "SELECT drl.laborId, l.laborName, s.skillId, s.skillName, drl.dailyWage, drl.workHours, drl.remark " +
-                "FROM dailyReportLabors drl " +
-                "JOIN labors l ON l.laborId = drl.laborId " +
-                "JOIN skills s ON s.skillId = l.skillId " +
-                "WHERE drl.dailyReportId = ? ORDER BY l.laborName";
-
-        try (PreparedStatement ps = con.prepareStatement(laborSql)) {
-            ps.setInt(1, dailyReportId);
+        try (Connection con = databaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, wi.assignWorkItemId());
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    labors.add(new LaborRow(
-                            rs.getInt("laborId"),
-                            rs.getString("laborName"),
-                            rs.getInt("skillId"),
-                            rs.getString("skillName"),
-                            rs.getDouble("dailyWage"),
-                            rs.getDouble("workHours"),
-                            rs.getString("remark")
-                    ));
+                    laborSkillCombo.getItems().add(new SkillOption(rs.getInt("skillId"), rs.getString("skillName")));
+                }
+            }
+        } catch (Exception ex) { ex.printStackTrace(); }
+
+        selectedLaborId = null;
+        if (laborNameCombo != null) {
+            laborNameCombo.getItems().clear();
+            laborNameCombo.setValue(null);
+            laborNameCombo.getEditor().clear();
+            laborNameCombo.setDisable(true);
+        }
+        if (laborDailyWadgePerDay != null) laborDailyWadgePerDay.clear();
+    }
+
+    // ---------------- Misc utils ----------------
+    private void loadLaborRowToForm(LaborRow row) {
+        if (row == null) return;
+        laborRows.remove(row);
+
+        if (laborSkillCombo != null) {
+            for (SkillOption so : laborSkillCombo.getItems()) {
+                if (so.skillId() == row.skillId.get()) {
+                    laborSkillCombo.getSelectionModel().select(so);
+                    break;
                 }
             }
         }
 
-        // tasks + material cost row
-        ObservableList<ProgressRow> tasks = FXCollections.observableArrayList();
-        double materialCost = 0;
+        selectedLaborId = row.getLaborId();
+        if (laborNameCombo != null) {
+            laborNameCombo.setDisable(false);
+            LaborOption lo = new LaborOption(selectedLaborId == null ? -1 : selectedLaborId, row.laborName.get());
+            laborNameCombo.getItems().setAll(lo);
+            laborNameCombo.setValue(lo);
+            laborNameCombo.getEditor().setText(lo.name());
+        }
+        if (laborDailyWadgePerDay != null) laborDailyWadgePerDay.setText(String.valueOf(row.dailyWage.get()));
+        if (laborWorkHourPerDay != null) laborWorkHourPerDay.setText(String.valueOf(row.workHours.get()));
+        if (remarkForLabor != null) remarkForLabor.setText(row.remark.get());
+    }
 
-        String taskSql = "SELECT dailyReportTaskId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted " +
-                "FROM dailyReportTasks WHERE dailyReportId = ? ORDER BY dailyReportTaskId";
-
-        try (PreparedStatement ps = con.prepareStatement(taskSql)) {
-            ps.setInt(1, dailyReportId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Integer assignTaskId = (Integer) rs.getObject("assignTaskId");
-                    String desc = rs.getString("progressDescription");
-                    double hours = rs.getDouble("workHours");
-                    double qty = rs.getDouble("completedQty");
-                    double cost = rs.getDouble("dailyCost");
-                    boolean done = rs.getBoolean("isCompleted");
-
-                    if (assignTaskId == null && MATERIAL_MARKER.equals(desc)) {
-                        materialCost = cost;
-                        continue;
+    private String collectIssues() {
+        if (issuesContainer == null) return "";
+        StringBuilder sb = new StringBuilder();
+        for (var n : issuesContainer.getChildren()) {
+            if (n instanceof HBox hb) {
+                for (var c : hb.getChildren()) {
+                    if (c instanceof TextArea ta) {
+                        String t = trim(ta.getText());
+                        if (!t.isEmpty()) {
+                            if (sb.length() > 0) sb.append("\n");
+                            sb.append(t);
+                        }
                     }
-
-                    String taskName = assignTaskId == null ? "Other" : lookupTaskName(con, assignTaskId);
-                    tasks.add(new ProgressRow(assignTaskId, taskName, nvl(desc), hours, qty, cost, done));
                 }
             }
         }
-
-        return new DailyReportLoaded(dailyReportId, weather, issues, comments, materialCost, labors, tasks);
+        return sb.toString();
     }
 
-    private String lookupTaskName(Connection con, int assignTaskId) {
-        String sql = "SELECT t.projectTaskName " +
-                "FROM assignTasks at JOIN tasks t ON t.projectTaskId = at.projectTaskId " +
-                "WHERE at.assignTaskId = ? LIMIT 1";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, assignTaskId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getString("projectTaskName");
-            }
-        } catch (SQLException ignored) {}
-        return "Task #" + assignTaskId;
-    }
-
-    private void updateRemainCompleted(Connection con, int assignWorkItemId, ObservableList<ProgressRow> tasks) throws SQLException {
-        int total = 0;
-        String sql = "SELECT COUNT(*) AS c FROM assignTasks WHERE assignWorkItemId = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, assignWorkItemId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) total = rs.getInt("c");
-            }
-        }
-
-        int completed = 0;
-        for (ProgressRow pr : tasks) if (pr.isCompleted.get()) completed++;
-
-        if (completedTask != null) completedTask.setText(String.valueOf(completed));
-        if (remainTask != null) remainTask.setText(String.valueOf(Math.max(0, total - completed)));
-    }
-
-    // ---------------- DB: header insert/find ----------------
-    private DailyReportHeaderResult getOrCreateDailyReport(Connection con,
-                                                           int pid,
-                                                           int wid,
-                                                           LocalDate date,
-                                                           int supervisorId,
-                                                           String weather,
-                                                           String generalRemark,
-                                                           String issue) throws SQLException {
-        String findSql = "SELECT dailyReportId FROM dailyReports WHERE assignProjectId=? AND assignWorkItemId=? AND reportDate=? LIMIT 1";
-        try (PreparedStatement ps = con.prepareStatement(findSql)) {
-            ps.setInt(1, pid);
-            ps.setInt(2, wid);
-            ps.setDate(3, Date.valueOf(date));
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return new DailyReportHeaderResult(rs.getInt("dailyReportId"), false);
-            }
-        }
-
-        String insSql = "INSERT INTO dailyReports(assignProjectId, assignWorkItemId, reportDate, supervisorId, weather, generalRemark, issue) " +
-                "VALUES(?,?,?,?,?,?,?)";
-
-        try (PreparedStatement ps = con.prepareStatement(insSql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, pid);
-            ps.setInt(2, wid);
-            ps.setDate(3, Date.valueOf(date));
-            ps.setObject(4, supervisorId <= 0 ? null : supervisorId);
-            ps.setString(5, weather);
-            ps.setString(6, generalRemark);
-            ps.setString(7, issue);
-            ps.executeUpdate();
-
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) return new DailyReportHeaderResult(keys.getInt(1), true);
-            }
-        }
-        throw new SQLException("Failed to create daily report header (no key returned).");
-    }
-
-    // ---------------- DB: insert detail rows ----------------
-    private void insertAssignWorkerIgnore(Connection con, int pid, int laborId) throws SQLException {
-        // assignWorkers table uses workerId
-        String sql = "INSERT IGNORE INTO assignWorkers(assignProjectId, workerId) VALUES(?,?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, pid);
-            ps.setInt(2, laborId);
-            ps.executeUpdate();
-        }
-    }
-
-    private void insertDailyReportLaborIgnore(Connection con, int dailyReportId, int laborId,
-                                              double workHours, double dailyWage, String remark) throws SQLException {
-        String sql = "INSERT IGNORE INTO dailyReportLabors(dailyReportId, laborId, workHours, dailyWage, remark) VALUES(?,?,?,?,?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, dailyReportId);
-            ps.setInt(2, laborId);
-            ps.setDouble(3, workHours);
-            ps.setDouble(4, dailyWage);
-            ps.setString(5, remark);
-            ps.executeUpdate();
-        }
-    }
-
-    private void replaceDailyReportTasks(Connection con, int dailyReportId, ObservableList<ProgressRow> tasks, double materialCost) throws SQLException {
-        // delete old tasks (simple approach)
-        try (PreparedStatement del = con.prepareStatement("DELETE FROM dailyReportTasks WHERE dailyReportId = ?")) {
-            del.setInt(1, dailyReportId);
-            del.executeUpdate();
-        }
-
-        String ins = "INSERT INTO dailyReportTasks(dailyReportId, assignTaskId, progressDescription, workHours, completedQty, dailyCost, isCompleted) " +
-                "VALUES(?,?,?,?,?,?,?)";
-
-        try (PreparedStatement ps = con.prepareStatement(ins)) {
-            // 1) material cost row (if any)
-            if (materialCost > 0) {
-                ps.setInt(1, dailyReportId);
-                ps.setObject(2, null);
-                ps.setString(3, MATERIAL_MARKER);
-                ps.setDouble(4, 0);
-                ps.setDouble(5, 0);
-                ps.setDouble(6, materialCost);
-                ps.setBoolean(7, false);
-                ps.addBatch();
-            }
-
-            // 2) task rows
-            for (ProgressRow pr : tasks) {
-                ps.setInt(1, dailyReportId);
-                ps.setObject(2, pr.assignTaskId.get() == null ? null : pr.assignTaskId.get());
-                ps.setString(3, pr.progressDescription.get());
-                ps.setDouble(4, pr.workHours.get());
-                ps.setDouble(5, pr.completedQty.get());
-                ps.setDouble(6, pr.dailyCost.get());
-                ps.setBoolean(7, pr.isCompleted.get());
-                ps.addBatch();
-            }
-
-            ps.executeBatch();
-        }
-    }
-
-    private Integer findLaborIdByName(Connection con, String laborName) throws SQLException {
-        String sql = "SELECT laborId FROM labors WHERE laborName = ? LIMIT 1";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, laborName);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt("laborId");
-            }
-        }
-        return null;
-    }
-
-    // ---------------- helpers ----------------
     private static String trim(String s) { return s == null ? "" : s.trim(); }
-    private static String nvl(String s) { return s == null ? "" : s; }
 
     private static double parseDouble(String s) {
-        try { return Double.parseDouble(trim(s)); } catch (Exception e) { return 0; }
+        if (s == null) return 0;
+        String t = s.trim();
+        if (t.isEmpty()) return 0;
+        try { return Double.parseDouble(t); } catch (Exception e) { return 0; }
     }
 
-    private static void alert(Alert.AlertType type, String title, String msg) {
-        Alert a = new Alert(type);
+    private void warn(String title, String msg) { alert(Alert.AlertType.WARNING, title, msg); }
+    private void info(String title, String msg) { alert(Alert.AlertType.INFORMATION, title, msg); }
+    private void showError(String title, String msg) { alert(Alert.AlertType.ERROR, title, msg); }
+
+    private void alert(Alert.AlertType type, String title, String msg) {
+        Alert a = new Alert(type, msg, ButtonType.OK);
         a.setTitle(title);
         a.setHeaderText(null);
-        a.setContentText(msg);
         a.showAndWait();
     }
 
-    private static String collectTextAreas(VBox container) {
-        if (container == null) return "";
-        List<String> lines = new ArrayList<>();
-        for (var node : container.getChildren()) {
-            if (node instanceof HBox hb) {
-                for (var child : hb.getChildren()) {
-                    if (child instanceof TextArea ta) {
-                        String v = trim(ta.getText());
-                        if (!v.isEmpty()) lines.add(v);
-                    }
-                }
-            }
-        }
-        return String.join("\n", lines);
-    }
-
-    // ---------------- DTOs ----------------
+    // ---------------- Option + Row Types ----------------
     public record WorkItemOption(int assignWorkItemId, String name) {
         @Override public String toString() { return name; }
     }
-
     public record TaskOption(int assignTaskId, String taskName) {
         @Override public String toString() { return taskName; }
     }
-
     public record SkillOption(int skillId, String skillName) {
         @Override public String toString() { return skillName; }
     }
 
+    public record LaborOption(int laborId, String name) {
+        @Override public String toString() { return name; }
+    }
+
     public static class LaborRow {
-        private final IntegerProperty laborId = new SimpleIntegerProperty();
-        private final StringProperty laborName = new SimpleStringProperty();
-        private final IntegerProperty skillId = new SimpleIntegerProperty();
-        private final StringProperty skillName = new SimpleStringProperty();
-        private final DoubleProperty dailyWage = new SimpleDoubleProperty();
-        private final DoubleProperty workHours = new SimpleDoubleProperty();
-        private final StringProperty remark = new SimpleStringProperty();
+        public final IntegerProperty laborId = new SimpleIntegerProperty();
+        public final StringProperty laborName = new SimpleStringProperty();
+        public final IntegerProperty skillId = new SimpleIntegerProperty();
+        public final StringProperty skillName = new SimpleStringProperty();
+        public final DoubleProperty dailyWage = new SimpleDoubleProperty();
+        public final DoubleProperty workHours = new SimpleDoubleProperty();
+        public final StringProperty remark = new SimpleStringProperty();
 
         public LaborRow(Integer laborId, String laborName, int skillId, String skillName,
                         double dailyWage, double workHours, String remark) {
-            this.laborId.set(laborId == null ? 0 : laborId);
-            this.laborName.set(Objects.requireNonNullElse(laborName, ""));
+            this.laborId.set(laborId == null ? -1 : laborId);
+            this.laborName.set(laborName);
             this.skillId.set(skillId);
-            this.skillName.set(Objects.requireNonNullElse(skillName, ""));
+            this.skillName.set(skillName);
             this.dailyWage.set(dailyWage);
             this.workHours.set(workHours);
-            this.remark.set(Objects.requireNonNullElse(remark, ""));
+            this.remark.set(remark);
         }
 
-        public IntegerProperty laborIdProperty() { return laborId; }
+        public Integer getLaborId() { int v = laborId.get(); return v <= 0 ? null : v; }
         public String getLaborName() { return laborName.get(); }
         public String getSkillName() { return skillName.get(); }
         public double getDailyWage() { return dailyWage.get(); }
@@ -809,36 +1041,6 @@ public class CreateReportNewController implements Initializable {
         public String getRemark() { return remark.get(); }
     }
 
-    public static class ProgressRow {
-        private final ObjectProperty<Integer> assignTaskId = new SimpleObjectProperty<>();
-        private final StringProperty taskName = new SimpleStringProperty();
-        private final StringProperty progressDescription = new SimpleStringProperty();
-        private final DoubleProperty workHours = new SimpleDoubleProperty();
-        private final DoubleProperty completedQty = new SimpleDoubleProperty();
-        private final DoubleProperty dailyCost = new SimpleDoubleProperty();
-        private final BooleanProperty isCompleted = new SimpleBooleanProperty();
 
-        public ProgressRow(Integer assignTaskId, String taskName, String progressDescription,
-                           double workHours, double completedQty, double dailyCost, boolean isCompleted) {
-            this.assignTaskId.set(assignTaskId);
-            this.taskName.set(Objects.requireNonNullElse(taskName, ""));
-            this.progressDescription.set(Objects.requireNonNullElse(progressDescription, ""));
-            this.workHours.set(workHours);
-            this.completedQty.set(completedQty);
-            this.dailyCost.set(dailyCost);
-            this.isCompleted.set(isCompleted);
-        }
-    }
 
-    private record DailyReportHeaderResult(int dailyReportId, boolean isNew) {}
-
-    private record DailyReportLoaded(
-            int dailyReportId,
-            String weather,
-            String issuesText,
-            String commentsText,
-            double materialCost,
-            ObservableList<LaborRow> labors,
-            ObservableList<ProgressRow> tasks
-    ) {}
 }

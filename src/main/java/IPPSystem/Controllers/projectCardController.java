@@ -72,10 +72,25 @@ public class projectCardController implements NavAware {
         projectName.setText(p.getProjectInstanceName());
         // Use any node inside the current tab so utils can find the correct per-tab loadPane
         detailsBtn.setOnMouseClicked(event -> {
+
+            // Remember where we came from (viewProjects OR mgSEPersonalDetail etc.)
+            final String backFxml = nav.getCurrentInnerFxml();
+            final Object backCtrl = nav.getCurrentInnerController();
+
+            final java.util.Map<String, Object> backState =
+                    (backCtrl instanceof IPPSystem.Interfaces.TabStateful ts) ? ts.exportState() : null;
+
             nav.openInnerView("projectDetails.fxml", ctrl -> {
                 if (ctrl instanceof projectDetailsController c) {
                     c.setProjectData(project);
                     c.setNav(nav); // ✅ inject directly
+
+                    // ✅ dynamic back behavior
+                    c.setBackAction(() -> nav.openInnerView(backFxml, ctrl2 -> {
+                        if (backState != null && ctrl2 instanceof IPPSystem.Interfaces.TabStateful ts2) {
+                            ts2.importState(backState);
+                        }
+                    }));
                 }
             });
 

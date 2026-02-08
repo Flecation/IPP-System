@@ -57,9 +57,6 @@
          <Pane styleClass="overlay" />
 
          <HBox alignment="CENTER_LEFT" prefHeight="489.0" prefWidth="900.0" spacing="20.0">
-            <padding>
-               <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
-            </padding>
 
             <children>
 
@@ -85,13 +82,13 @@
                </VBox>
 
                <!-- RIGHT AREA (your original multi-page card, unchanged fx:ids) -->
-               <StackPane alignment="TOP_CENTER" maxHeight="550.0" maxWidth="320.0" minHeight="500.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0">
+               <StackPane alignment="TOP_CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0">
                   <children>
 
                      <VBox alignment="CENTER" styleClass="rightBlur" StackPane.alignment="CENTER" />
 
                      <!-- LOGIN -->
-                     <VBox fx:id="loginBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" styleClass="rightPane" visible="false">
+                     <VBox fx:id="loginBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" styleClass="rightPane" visible="false">
                         <children>
                            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="header-text" text="Sign in your Account" translateY="-20.0" />
 
@@ -144,7 +141,7 @@
                      </VBox>
 
                      <!-- OTP -->
-                     <VBox fx:id="otpBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
+                     <VBox fx:id="otpBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
                         <padding>
                            <Insets top="10.0" />
                         </padding>
@@ -177,7 +174,7 @@
                      </VBox>
 
                      <!-- FORGET PASSWORD -->
-                     <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
+                     <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
                         <padding>
                            <Insets right="10.0" />
                         </padding>
@@ -218,7 +215,7 @@
                      </VBox>
 
                      <!-- CHANGE NEW PASSWORD -->
-                     <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="515.0" maxWidth="320.0" minHeight="515.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="10.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
+                     <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="10.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
                         <padding>
                            <Insets left="50.0" right="10.0" top="10.0" />
                         </padding>
@@ -248,6 +245,9 @@
                </StackPane>
 
             </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
          </HBox>
 
          <!-- email open overlay (kept from original) -->

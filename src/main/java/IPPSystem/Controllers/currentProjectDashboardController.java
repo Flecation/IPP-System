@@ -71,6 +71,21 @@ public class currentProjectDashboardController implements loadPaneAware {
     private final DecimalFormat moneyFmt = new DecimalFormat("#,##0.00");
     private final DateTimeFormatter uiDateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private sideBarPaneController nav;
+
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+        if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return nav;
+    }
+
+    public void setAssignProject(Integer assignProjectId, String projectInstanceName) {
+        this.assignProjectId = assignProjectId;
+        this.projectInstanceName = projectInstanceName;
+    }
+
+
+
     @FXML
     public void initialize() {
         // supervisor only (as you requested)
@@ -89,8 +104,11 @@ public class currentProjectDashboardController implements loadPaneAware {
         Task<Void> t = new Task<>() {
             @Override
             protected Void call() {
-                loadCurrentInProgressProjectForSupervisor();
+                if (assignProjectId == null) {
+                    loadCurrentInProgressProjectForSupervisor();
+                }
                 loadCurrentInProgressWorkItemAndTask();
+
                 return null;
             }
         };
@@ -140,7 +158,11 @@ public class currentProjectDashboardController implements loadPaneAware {
         if (v == null) return;
 
         if ("Overall Project".equals(v)) {
-            utils.openFxml("allProjectDashboard.fxml", comboProjectList);
+            sideBarPaneController n = requireNav();
+            if (n != null) {
+                n.openInnerView("allProjectDashboard.fxml", ctrl -> {});
+            }
+
             return;
         }
 

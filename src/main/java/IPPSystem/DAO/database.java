@@ -218,4 +218,7 @@ public class database {
 
     public static Integer assignFullProjectAuto(projects p){return projectDatabase.assignFullProjectAuto(p);}
 
+    public static boolean reactivateLabor(int laborId){ return laborDatabase.reactivateLabor(laborId); }
+
+
 }

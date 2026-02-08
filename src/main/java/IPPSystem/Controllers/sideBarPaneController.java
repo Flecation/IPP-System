@@ -445,6 +445,11 @@ public class sideBarPaneController extends navigationPaneController{
         return currentInnerController;
     }
 
+    public String getCurrentInnerFxml() {
+        return currentInnerFxml;
+    }
+
+
 
     private static class ViewEntry {
         final Parent view;
@@ -460,8 +465,17 @@ public class sideBarPaneController extends navigationPaneController{
     private boolean isOverlayFormFxml(String fxml) {
         if (fxml == null) return false;
         String s = fxml.toLowerCase();
-        return s.startsWith("create") || s.startsWith("add");
+
+        // overlay forms (already)
+        if (s.startsWith("create") || s.startsWith("add")) return true;
+
+        // IMPORTANT: detail pages must NOT be cached, because you pass different engineer data each time
+        if (s.contains("personaldetail")) return true;
+        if (s.contains("mgsepersonal")) return true;
+
+        return false;
     }
+
 
 
 
@@ -473,6 +487,13 @@ public class sideBarPaneController extends navigationPaneController{
     }
     public void openInnerView(String fxml, java.util.function.Consumer<Object> controllerHook) {
         try {
+            // Fallback: some flows call openInnerView before @FXML loadPane is ready.
+            // Resolve per-tab loadPane dynamically (same approach as createViewProjectController).
+            if (loadPane == null) {
+                StackPane lp = utils.findTabLoadPane(searchTextField != null ? searchTextField : profileBox);
+                if (lp != null) loadPane = lp;
+            }
+
             boolean noCache = isOverlayFormFxml(fxml);
             ViewEntry entry = noCache ? null : viewCache.get(fxml);
 
@@ -500,7 +521,9 @@ public class sideBarPaneController extends navigationPaneController{
                 controllerHook.accept(entry.controller);
             }
 
-            loadPane.getChildren().setAll(entry.view);
+            if (loadPane != null) {
+                loadPane.getChildren().setAll(entry.view);
+            }
             entry.view.toFront();
             currentInnerFxml = fxml;
 
@@ -652,7 +675,7 @@ public class sideBarPaneController extends navigationPaneController{
         syncThemeToggleUI();
 
         setupAddOverlayOutsideClick();      // call once here
-        
+
         setupLogoutHandlers();
     }
 
@@ -840,7 +863,7 @@ public class sideBarPaneController extends navigationPaneController{
 
     // ... rest of your methods remain the same
     private void setFirstPage(){
-            openInnerView("allProjectDashboard.fxml");
+        openInnerView("allProjectDashboard.fxml");
 
     }
 
@@ -929,12 +952,12 @@ public class sideBarPaneController extends navigationPaneController{
         boolean isManager = loginUser.getUserRole().equals(role.MANAGER.toString());
         dashboardViewBtn.setOnMouseClicked(e -> {
 
-                openInnerView("allProjectDashboard.fxml");
+            openInnerView("allProjectDashboard.fxml");
 
         });
         dashboardIconBtn.setOnMouseClicked(e -> {
-                openInnerView("allProjectDashboard.fxml");
-                linkButton.setTabButtonName("Overall Dashboard");
+            openInnerView("allProjectDashboard.fxml");
+            linkButton.setTabButtonName("Overall Dashboard");
 
         });
 
