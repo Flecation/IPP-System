@@ -61,7 +61,7 @@ public class createViewProjectController implements loadPaneAware {
     @FXML private TextField pEDateTxt;
     @FXML private TextField pDurationTxt;
     @FXML private TextField pContractValueTxt;
-    @FXML private TextField areaTxt,heightTxt,storyTxt,unitsTxt;
+    @FXML private TextField areaTxt,heightTxt,storyTxt,unitsTxt,unitTxt;
 
     @FXML private Button projectConfirmBtn;
     @FXML private Button projectCancelBtn;
@@ -237,10 +237,11 @@ public class createViewProjectController implements loadPaneAware {
             if (pEDateTxt != null && d.endDate != null) pEDateTxt.setText(d.endDate.toString());
             if (pDurationTxt != null && d.duration != null) pDurationTxt.setText(String.valueOf(d.duration));
             if (pContractValueTxt != null && d.contractValue != null) pContractValueTxt.setText(String.valueOf(d.contractValue));
-            areaTxt.setText(d.area == null ? "" : String.valueOf(d.area));
-            unitsTxt.setText(d.units == null ? "" : String.valueOf(d.units));
-            storyTxt.setText(d.stories == null ? "" : String.valueOf(d.stories));
-            heightTxt.setText(d.height == null ? "" : String.valueOf(d.height));
+            safeSetNumber(areaTxt, d.area);
+            if (unitsTxt != null) safeSetNumber(unitsTxt, d.units);
+            if (unitTxt != null) safeSetNumber(unitTxt, d.units);
+            safeSetNumber(storyTxt, d.stories);
+            safeSetNumber(heightTxt, d.height);
 
 
             // ----- Auto-generate categories/skills/tasks from template -----
@@ -261,9 +262,9 @@ public class createViewProjectController implements loadPaneAware {
         if (categoryList.isEmpty()) return;
 
         // 2) skills + tasks templates (pre-fill)
-        int typeId = resolveProjectTypeId(pTypeTxt.getText());
-        int buildingId = resolveBuildingId(pBuildingTxt.getText());
-        int levelId = resolveLevelId(pLevelTxt.getText());
+        int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
+        int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
+        int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
 
         LocalDate projectStart = parseLocalDateOrNull(pSDateTxt == null ? null : pSDateTxt.getText());
         if (projectStart == null) projectStart = LocalDate.now();
@@ -367,6 +368,15 @@ public class createViewProjectController implements loadPaneAware {
         refreshSkillTaskTables();
     }
 
+
+    private void safeSetText(TextField tf, String val) {
+        if (tf != null) tf.setText(val == null ? "" : val);
+    }
+
+    private void safeSetNumber(TextField tf, Double val) {
+        if (tf != null) tf.setText(val == null ? "" : String.valueOf(val));
+    }
+
     private String nvlStr(String s) {
         return s == null ? "" : s;
     }
@@ -375,9 +385,9 @@ public class createViewProjectController implements loadPaneAware {
 
     private void loadWorkCategoriesFromTemplate() {
         try {
-            int typeId = resolveProjectTypeId(pTypeTxt.getText());
-            int buildingId = resolveBuildingId(pBuildingTxt.getText());
-            int levelId = resolveLevelId(pLevelTxt.getText());
+            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
+            int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
+            int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
 
             ObservableList<workItems> fromDb = database.getAllWorkItemsForAutoGeneration(typeId, buildingId, levelId);
             categoryList.setAll(fromDb);
@@ -447,7 +457,7 @@ public class createViewProjectController implements loadPaneAware {
         try {
             if (selectedWorkItem == null) { error("Select a Work Category first."); return; }
 
-            int typeId = resolveProjectTypeId(pTypeTxt.getText());
+            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
             ObservableList<skills> skillOptions = database.getSkillDetails(typeId, selectedWorkItem.getWorkItemId());
             if (skillOptions.isEmpty()) { error("No skill template found for this work item."); return; }
 
@@ -489,9 +499,9 @@ public class createViewProjectController implements loadPaneAware {
         try {
             if (selectedWorkItem == null) { error("Select a Work Category first."); return; }
 
-            int typeId = resolveProjectTypeId(pTypeTxt.getText());
-            int buildingId = resolveBuildingId(pBuildingTxt.getText());
-            int levelId = resolveLevelId(pLevelTxt.getText());
+            int typeId = getDraftOrResolveTypeId(pTypeTxt.getText());
+            int buildingId = getDraftOrResolveBuildingId(pBuildingTxt.getText());
+            int levelId = getDraftOrResolveLevelId(pLevelTxt.getText());
 
             ObservableList<tasks> taskOptions = database.getAllTasksForAutoGeneration(
                     typeId, selectedWorkItem.getWorkItemId(), buildingId, levelId
@@ -678,6 +688,23 @@ public class createViewProjectController implements loadPaneAware {
     }
 
     // ========================= ID RESOLVERS =========================
+
+
+    private int getDraftOrResolveTypeId(String typeName) {
+        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().projectTypeId;
+        if (id != null) return id;
+        return resolveProjectTypeId(typeName);
+    }
+    private int getDraftOrResolveBuildingId(String buildingName) {
+        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().buildingId;
+        if (id != null) return id;
+        return resolveBuildingId(buildingName);
+    }
+    private int getDraftOrResolveLevelId(String levelName) {
+        Integer id = createProjectDraft.getInstance() == null ? null : createProjectDraft.getInstance().levelId;
+        if (id != null) return id;
+        return resolveLevelId(levelName);
+    }
 
     private int resolveProjectTypeId(String typeName) {
         Map<Integer,String> map = database.getAllProjectTypes();

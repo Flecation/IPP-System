@@ -773,7 +773,7 @@ public class sideBarPaneController extends navigationPaneController{
 
         currentAddController = null;
         // prevent stale data if user opens again
-        createProjectDraft.getInstance().clear(); // only if your project uses this draft
+//        createProjectDraft.getInstance().clear(); // only if your project uses this draft
 
     }
 

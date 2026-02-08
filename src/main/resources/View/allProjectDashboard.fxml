@@ -17,9 +17,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.allProjectDashboardController">
+<VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.allProjectDashboardController">
    <children>
-      <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" prefWidth="1220.0" spacing="10.0" style="-fx-background-radius: 10;">
+      <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" spacing="10.0" style="-fx-background-radius: 10;">
          <children>
             <Label fx:id="projectName" alignment="TOP_LEFT" text="Enterprise Project Dashboard" textFill="#041a5bf7">
                <font>
@@ -30,14 +30,23 @@
                </HBox.margin>
             </Label>
             <Region prefWidth="423.0" HBox.hgrow="ALWAYS" />
-            <ComboBox fx:id="comboProjectList" maxHeight="40.0" maxWidth="180.0" minHeight="30.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
-            <ComboBox fx:id="comboProjectList1" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Year" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
-            <ComboBox fx:id="comboProjectList2" maxHeight="40.0" maxWidth="135.0" minHeight="30.0" onAction="#clickProjectSelect" promptText="Months" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
+            <VBox>
+               <children>
+                  <Label text="View Type" />
+                  <ComboBox fx:id="comboProjectList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Year" />
+                  <ComboBox fx:id="comboProjectList1" maxHeight="45.0" maxWidth="135.0" minWidth="100.0" onAction="#clickProjectSelect" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
+               </children>
+            </VBox>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1220.0" spacing="10.0">
+      <HBox alignment="CENTER" prefHeight="0.0" spacing="10.0">
          <children>
-            <VBox fx:id="vboxTtlProject" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxTtlProject" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox>
                      <children>
@@ -72,7 +81,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="vboxTtlRevenue" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxTtlRevenue" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox>
                      <children>
@@ -106,7 +115,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="vboxTtlExpense" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxTtlExpense" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox>
                      <children>
@@ -140,7 +149,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="vboxTtlWorkers" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="300.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxTtlWorkers" maxHeight="125.0" maxWidth="320.0" minHeight="80.0" minWidth="250.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox>
                      <children>
@@ -179,9 +188,9 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0">
+      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vboxProjectStatusDistribution" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxProjectStatusDistribution" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Project Status Distribution">
                      <font>
@@ -190,8 +199,13 @@
                   </Label>
                   <HBox prefHeight="265.0" prefWidth="387.0">
                      <children>
-                        <PieChart fx:id="pieProjectStatus" legendSide="LEFT" maxWidth="250.0" />
-                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0">
+                        <StackPane HBox.hgrow="ALWAYS">
+                           <children>
+                              <PieChart fx:id="pieProjectStatus" labelsVisible="false" legendSide="LEFT" legendVisible="false" maxWidth="250.0" StackPane.alignment="CENTER" />
+                              <Circle fill="WHITE" radius="40.0" stroke="WHITE" strokeType="INSIDE" StackPane.alignment="CENTER" />
+                           </children>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0" HBox.hgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                  <children>
@@ -229,7 +243,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="vboxSchedulePerformance" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxSchedulePerformance" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Schedule Performance Overview">
                      <font>
@@ -238,13 +252,13 @@
                   </Label>
                   <HBox prefHeight="265.0" prefWidth="387.0">
                      <children>
-                        <StackPane prefHeight="150.0" prefWidth="268.0">
+                        <StackPane prefHeight="150.0" prefWidth="268.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <PieChart fx:id="pieSchedule" labelsVisible="false" maxWidth="250.0" prefHeight="150.0" prefWidth="231.0" />
-                              <Circle fill="WHITE" radius="40.0" stroke="WHITE" strokeType="INSIDE" />
+                              <PieChart fx:id="pieSchedule" labelsVisible="false" legendVisible="false" maxWidth="250.0" prefHeight="150.0" prefWidth="231.0" StackPane.alignment="CENTER" />
+                              <Circle fill="WHITE" radius="40.0" stroke="WHITE" strokeType="INSIDE" StackPane.alignment="CENTER" />
                            </children>
                         </StackPane>
-                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0">
+                        <VBox alignment="CENTER_LEFT" prefHeight="265.0" prefWidth="126.0" spacing="15.0" HBox.hgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                  <children>
@@ -278,7 +292,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="vboxTop3Intensive" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxTop3Intensive" alignment="CENTER_LEFT" prefHeight="290.0" prefWidth="400.0" spacing="5.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Top 3 Cost-Intensive Project Types">
                      <font>
@@ -328,9 +342,9 @@
             </VBox>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0">
+      <HBox alignment="CENTER" prefWidth="1220.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vboxMonthlyProject" maxHeight="513.0" maxWidth="664.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="664.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxMonthlyProject" maxHeight="513.0" maxWidth="664.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="664.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <Label style="-fx-background-radius: 8;" text="Monthly Project Cost Trend">
                      <font>
@@ -340,7 +354,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </Label>
-                  <LineChart fx:id="linechartMonthlyCost" prefHeight="300.0" prefWidth="520.0">
+                  <LineChart fx:id="linechartMonthlyCost" prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -350,7 +364,7 @@
                   </LineChart>
                </children>
             </VBox>
-            <VBox fx:id="vboxActiveProject" maxHeight="513.0" maxWidth="670.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="670.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;" stylesheets="@../CSS/allProjectDashboard.css">
+            <VBox fx:id="vboxActiveProject" maxHeight="513.0" maxWidth="670.0" minHeight="210.0" minWidth="534.0" prefHeight="513.0" prefWidth="670.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
                <children>
                   <Label style="-fx-background-radius: 8;" text="Active Project Trend">
                      <font>
@@ -360,7 +374,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </Label>
-                  <LineChart fx:id="linechartActiveProject" prefHeight="300.0" prefWidth="520.0">
+                  <LineChart fx:id="linechartActiveProject" prefHeight="300.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -374,6 +388,6 @@
       </HBox>
    </children>
    <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </VBox>

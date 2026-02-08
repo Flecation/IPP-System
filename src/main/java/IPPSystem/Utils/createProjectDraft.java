@@ -39,6 +39,9 @@ public class createProjectDraft {
         startDate = null;
         endDate = null;
         duration = null;
+        projectTypeId = null;
+        buildingId = null;
+        levelId = null;
         area = null;
         units = null;
         stories = null;
