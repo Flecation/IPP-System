@@ -56,7 +56,7 @@
                <content>
                   <VBox prefHeight="29.0" prefWidth="298.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                            <children>
                               <ComboBox fx:id="filterBySupervisor" prefWidth="150.0" promptText="Supervisor" styleClass="filter-box" />
                            </children>
@@ -123,7 +123,7 @@
                                  <children>
                                     <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
                                        <children>
-                                          <Label text="Remain Qty">
+                                          <Label styleClass="sub-title" text="Remain Qty">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -142,7 +142,7 @@
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
                                     <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
                                        <children>
-                                          <Label text="Completed Qty">
+                                          <Label styleClass="sub-title" text="Completed Qty">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -161,7 +161,7 @@
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
                                     <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
                                        <children>
-                                          <Label text="Worked Hour ">
+                                          <Label styleClass="sub-title" text="Worked Hour ">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -180,7 +180,7 @@
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
                                     <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
                                        <children>
-                                          <Label text="Daily Cost">
+                                          <Label styleClass="sub-title" text="Daily Cost">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -242,7 +242,7 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <TextArea fx:id="issuesLabel" prefHeight="200.0" prefWidth="200.0" />
+                              <TextArea fx:id="issuesLabel" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" />
                            </children>
                            <VBox.margin>
                               <Insets top="32.0" />

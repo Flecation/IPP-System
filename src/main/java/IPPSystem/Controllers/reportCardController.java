@@ -20,7 +20,7 @@ public class reportCardController {
     private Label issueOrSolveTxt;
 
     @FXML
-    private Label projectId;
+    private Label reportId;
 
     @FXML
     private Label reportDate;
@@ -64,13 +64,13 @@ public class reportCardController {
             rpSupervisorName.setText("-");
             reportDate.setText("-");
             issueOrSolveTxt.setText("-");
-            projectId.setText("-");
+            reportId.setText("-");
             return;
         }
 
         rpPrjectName.setText(report.getProjectName());
         rpSupervisorName.setText(report.getSupervisorName());
-        reportDate.setText(report.getFormattedDate("dd-MM-yyyy"));
+        reportDate.setText(report.getFormattedDate("dd/MM/yyyy"));
         if (report.getIssues() != null && !report.getIssues().isEmpty()) {
             // There is an issue
             issueOrSolveTxt.setText("Issue");
@@ -81,7 +81,7 @@ public class reportCardController {
             statusCircle.setFill(javafx.scene.paint.Color.GREEN);
         }
 
-        projectId.setText("PRJ-" + String.valueOf(report.getAssignProjectId()));
+        reportId.setText(String.format("#RP-%03d", report.getReportId()));
 
     }
 }

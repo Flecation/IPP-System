@@ -15,28 +15,28 @@
          <children>
             <VBox alignment="CENTER_LEFT" maxWidth="80.0" spacing="10.0">
                <children>
-                  <Label fx:id="projectId" styleClass="sub-title" wrapText="true" VBox.vgrow="ALWAYS">
+                  <Label fx:id="reportId" styleClass="sub-title" text="#PRJ-1" wrapText="true" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="reportDate" wrapText="true" VBox.vgrow="ALWAYS">
+                  <Label fx:id="reportDate" text="15-2-2026" textFill="#00000095" wrapText="true" VBox.vgrow="ALWAYS">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="12.0" />
                      </font>
                   </Label>
                </children>
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="320.0" spacing="10.0">
                <children>
-                  <Label fx:id="rpPrjectName" styleClass="sub-title" wrapText="true" VBox.vgrow="ALWAYS">
+                  <Label fx:id="rpPrjectName" styleClass="sub-title" text="Project Name" wrapText="true" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="rpSupervisorName" wrapText="true" VBox.vgrow="ALWAYS">
+                  <Label fx:id="rpSupervisorName" text="Aung Aung" wrapText="true" VBox.vgrow="ALWAYS">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="12.0" />
                      </font>
                   </Label>
                </children>

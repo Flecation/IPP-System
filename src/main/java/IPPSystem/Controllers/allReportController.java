@@ -4,7 +4,9 @@ import IPPSystem.DAO.projectDatabase;
 import IPPSystem.DAO.reportDatabase;
 import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.projects;
+import IPPSystem.Models.users;
 import IPPSystem.Utils.session;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,11 +59,18 @@ public class allReportController {
 
     private boolean isManager;
 
+    //        // Load projects (filtered by status and supervisor if manager)
+//        applyProjectFilter();
+//
+//        // Load all reports first (today → older)
+//        loadAllReports();
+
 
     @FXML
     public void initialize() {
         // Load project status filter
         filterByProjectStatus.setItems(projectDatabase.getAllProjectStatus());
+        filterByProjectStatus.setPromptText("Filter By Project Status");
         filterByProjectStatus.setValue("All");
 
         isManager = session.getInstance()
@@ -71,33 +80,117 @@ public class allReportController {
 
         if (isManager) {
             filterBySupervisor.setItems(projectDatabase.getAllSupervisors());
+            filterBySupervisor.setPromptText("Choose Engineer");
             filterBySupervisor.setValue("All");
+
+            filterBySupervisor.setVisible(true);
+            filterBySupervisor.setManaged(true);
+
             addNewReport.setVisible(false);
+            addNewReport.setManaged(false);
 
+            // Unified supervisor filter logic
+            filterBySupervisor.setOnAction(e -> {
+                applyProjectFilter(); // refresh project cards
+
+                String selectedSupervisor = filterBySupervisor.getValue();
+
+                List<DailyReport> reportsToShow;
+
+                if (selectedSupervisor == null || "All".equalsIgnoreCase(selectedSupervisor)) {
+                    // Show all reports
+                    reportsToShow = isManager ? reportDatabase.getAllReports(null)
+                            : reportDatabase.getAllReports(session.getInstance().getUser().getUserId());
+                } else {
+                    // Show all reports of selected supervisor
+                    List<projects> supervisorProjects = projectDatabase.getAllProjects().stream()
+                            .filter(p -> p.getUserName() != null &&
+                                    p.getUserName().equalsIgnoreCase(selectedSupervisor))
+                            .collect(Collectors.toList());
+
+                    reportsToShow = new ArrayList<>();
+                    for (projects p : supervisorProjects) {
+                        reportsToShow.addAll(reportDatabase.getReportsByProjectId(p.getAssignProjectId()));
+                    }
+                }
+
+                // Apply date filter if set
+                LocalDate start = startDate.getValue();
+                LocalDate end = endDate.getValue();
+
+                if (start != null) {
+                    reportsToShow = reportsToShow.stream()
+                            .filter(r -> !r.getReportDate().isBefore(start))
+                            .collect(Collectors.toList());
+                }
+                if (end != null) {
+                    reportsToShow = reportsToShow.stream()
+                            .filter(r -> !r.getReportDate().isAfter(end))
+                            .collect(Collectors.toList());
+                }
+
+                // Sort descending
+                reportsToShow.sort((r1, r2) -> r2.getReportDate().compareTo(r1.getReportDate()));
+
+                // Load reports
+                loadReportsToUI(reportsToShow);
+            });
         } else {
+            // Supervisor sees add button
+            addNewReport.setVisible(true);
+            addNewReport.setManaged(true);
+
             filterBySupervisor.setVisible(false);
+            filterBySupervisor.setManaged(false);
         }
 
-        // Load projects (filtered by status and supervisor if manager)
-        applyProjectFilter();
-
-        // Load all reports first (today → older)
-        loadAllReports();
-
-        // Set filter actions
+        // Set project status filter
         filterByProjectStatus.setOnAction(event -> applyProjectFilter());
-        if (isManager) {
-            filterBySupervisor.setOnAction(event -> applyProjectFilter());
-        }
 
-        // ===== Add Date Pickers filter =====
+        // Date picker filters
         startDate.setOnAction(event -> applyDateFilter());
         endDate.setOnAction(event -> applyDateFilter());
 
-
+        // ===== LOAD INITIAL DATA =====
+        applyProjectFilter(); // load project cards
+        loadAllReports();     // load all reports initially
     }
 
-// Track currently selected project card
+
+
+
+//
+//        if (isManager) {
+//            filterBySupervisor.setItems(projectDatabase.getAllSupervisors());
+//            filterBySupervisor.setValue("All");
+//            filterBySupervisor.setPromptText("Choose Engineer...");
+//            filterBySupervisor.setValue(null);
+//
+//
+//
+//
+//            filterBySupervisor.setVisible(true);
+//            filterBySupervisor.setManaged(true);
+//
+//            addNewReport.setVisible(false);
+//            addNewReport.setManaged(false);
+//
+//            filterBySupervisor.setOnAction(e -> applyProjectFilter());
+//
+//        } else {
+//            // Supervisor sees add button
+//            addNewReport.setVisible(true);
+//            addNewReport.setManaged(true);
+//
+//            filterBySupervisor.setVisible(false);
+//            filterBySupervisor.setManaged(false);
+//        }
+//
+
+
+
+
+    // Track currently selected project card
     private Parent selectedProjectCard = null;
     private Integer selectedProjectId = null; // store selected project id for date filtering
 
@@ -122,8 +215,11 @@ public class allReportController {
                     selectedProjectCard.setStyle("");
                 }
                 row.setStyle("-fx-background-color: #FDCB90;");
+
+
                 selectedProjectCard = row;
             });
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,6 +295,8 @@ public class allReportController {
 
 //
 //    // ===================== PROJECTS =====================
+
+
     private void applyProjectFilter() {
         String selectedStatus = filterByProjectStatus.getValue();
         String selectedSupervisor = isManager ? filterBySupervisor.getValue() : null;
@@ -226,10 +324,74 @@ public class allReportController {
                     .filter(p -> p.getUserName() != null &&
                             p.getUserName().equalsIgnoreCase(selectedSupervisor))
                     .collect(Collectors.toList());
+
+            // ===== NEW PART: load all reports of this supervisor automatically =====
+            List<DailyReport> allSupervisorReports = new ArrayList<>();
+            for (projects p : projectsList) {
+                allSupervisorReports.addAll(reportDatabase.getReportsByProjectId(p.getAssignProjectId()));
+            }
+
+            // Apply date filter if any
+            LocalDate start = startDate.getValue();
+            LocalDate end = endDate.getValue();
+
+            if (start != null) {
+                allSupervisorReports = allSupervisorReports.stream()
+                        .filter(r -> !r.getReportDate().isBefore(start))
+                        .collect(Collectors.toList());
+            }
+
+            if (end != null) {
+                allSupervisorReports = allSupervisorReports.stream()
+                        .filter(r -> !r.getReportDate().isAfter(end))
+                        .collect(Collectors.toList());
+            }
+
+            // Sort descending
+            allSupervisorReports.sort((r1, r2) -> r2.getReportDate().compareTo(r1.getReportDate()));
+
+            // Load reports to UI
+            loadReportsToUI(allSupervisorReports);
         }
 
+        // Load projects to UI (highlight project cards)
         loadProjectsToUI(projectsList);
     }
+
+
+//
+//    private void applyProjectFilter() {
+//        String selectedStatus = filterByProjectStatus.getValue();
+//        String selectedSupervisor = isManager ? filterBySupervisor.getValue() : null;
+//
+//        List<projects> projectsList;
+//
+//        if (isManager) {
+//            projectsList = new ArrayList<>(projectDatabase.getAllProjects());
+//        } else {
+//            int engineerId = session.getInstance().getUser().getUserId();
+//            projectsList = projectDatabase.getProjectsByEngineer(engineerId);
+//        }
+//
+//        // Filter by project status
+//        if (!"All".equalsIgnoreCase(selectedStatus)) {
+//            projectsList = projectsList.stream()
+//                    .filter(p -> p.getProjectStatus() != null &&
+//                            p.getProjectStatus().equalsIgnoreCase(selectedStatus))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        // Filter by supervisor (only for managers)
+//        if (isManager && selectedSupervisor != null && !"All".equalsIgnoreCase(selectedSupervisor)) {
+//            projectsList = projectsList.stream()
+//                    .filter(p -> p.getUserName() != null &&
+//                            p.getUserName().equalsIgnoreCase(selectedSupervisor))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        loadProjectsToUI(projectsList);
+//    }
+
 
 
     private void loadProjectsToUI(List<projects> projectsList) {

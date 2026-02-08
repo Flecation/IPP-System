@@ -12,9 +12,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -109,8 +111,20 @@ public class reportViewDetailController {
 
     @FXML
     void clickBack(ActionEvent event) {
-
+//        try {
+//            Parent root = FXMLLoader.load(
+//                    getClass().getResource("/View/allReports.fxml")
+//            );
+//
+//            Stage stage = (Stage) backBtn.getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
+
 
 
     private boolean isManager;
