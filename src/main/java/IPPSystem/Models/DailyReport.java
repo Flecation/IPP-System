@@ -6,12 +6,64 @@ public class DailyReport {
     private int reportId; // ID လိုလာပြီ
     private int assignProjectId;
     private LocalDate reportDate;
-    private String weatherType, workAffect, weatherNote, issues, comments;
+    private String weatherType, workAffect, weatherNote, issues, comments,projectType,projectStatus;
     private int supervisorId;
+    private int assignWorkItemId;
 
     // UI Display အတွက် Field အပိုများ
     private String projectName;
     private String supervisorName;
+    private String projectTypeName; // NEW
+
+
+
+
+    public String getProjectTypeName() {
+        return projectTypeName;
+    }
+
+    public void setProjectTypeName(String projectTypeName) {
+        this.projectTypeName = projectTypeName;
+    }
+
+    public int getAssignWorkItemId() {
+        return assignWorkItemId;
+    }
+
+    public void setAssignWorkItemId(int assignWorkItemId) {
+        this.assignWorkItemId = assignWorkItemId;
+    }
+
+
+    public DailyReport(int reportId, int assignProjectId, String projectName, String projectTypeName,
+                       LocalDate reportDate, String issues, String weatherType,
+                       String comments, String supervisorName) {
+        this.reportId = reportId;
+        this.assignProjectId = assignProjectId;
+        this.projectName = projectName;
+        this.projectTypeName = projectTypeName;
+        this.reportDate = reportDate;
+        this.issues = issues;
+        this.weatherType = weatherType;
+        this.comments = comments;
+        this.supervisorName = supervisorName;
+    }
+
+    public String getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(String projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
 
     // ==== No-arg constructor ထပ်ထည့်မယ် ====
     public DailyReport() {
@@ -84,3 +136,4 @@ public class DailyReport {
         return reportDate.format(java.time.format.DateTimeFormatter.ofPattern(pattern));
     }
 }
+

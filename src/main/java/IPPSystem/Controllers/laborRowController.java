@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class laborRowController {
 
-    @FXML private Button actionResignBtn;
+    @FXML private Button actionKickBtn;
     @FXML private Label assignedProject;
     @FXML private Label laborEndDate;
     @FXML private Label laborNRC;
@@ -44,7 +44,7 @@ public class laborRowController {
     }
 
     @FXML
-    void actionResign(ActionEvent event) {
+    void actionKick(ActionEvent event) {
         if (currentLabor == null || !currentLabor.isActive()) return;
 
         boolean success = db.resignLabor(currentLabor.getLaborId());
@@ -74,15 +74,15 @@ public class laborRowController {
             laborStatus.setTextFill(Color.GREEN);
             laborStatus.getStyleClass().add("active");
 
-            actionResignBtn.setText("Resign");
-            actionResignBtn.setDisable(false);
+            actionKickBtn.setText("Kick");
+            actionKickBtn.setDisable(false);
         } else {
-            laborStatus.setText("Resigned");
+            laborStatus.setText("Inactive");
             laborStatus.setTextFill(Color.GRAY);
             laborStatus.getStyleClass().add("inactive");
 
-            actionResignBtn.setText("Resigned");
-            actionResignBtn.setDisable(true);
+            actionKickBtn.setText("Kicked");
+            actionKickBtn.setDisable(true);
         }
     }
 }

@@ -1,6 +1,7 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Controllers.navigationPaneController;
+import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,4 +44,15 @@ public class session {
             return navController;
         }
 
+
+    // ================== REPORT ==================
+    DailyReport currentReport;
+
+    public void setCurrentReport(DailyReport report) {
+        this.currentReport = report;
+    }
+
+    public DailyReport getCurrentReport() {
+        return currentReport;
+    }
 }

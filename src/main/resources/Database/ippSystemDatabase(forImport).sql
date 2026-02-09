@@ -1036,22 +1036,22 @@ proc: BEGIN
     DECLARE v_projectStatusId INT;
     DECLARE v_assignStatusId INT;
     DECLARE v_assignWorkItemId INT;
-    
+
     -- Work item values
     DECLARE v_workItemCost DOUBLE;
     DECLARE v_workItemDuration DOUBLE;
     DECLARE v_workItemLabors DOUBLE;
     DECLARE v_taskDuration DOUBLE;
-    
+
     -- Percentages
     DECLARE v_costPercent DOUBLE;
     DECLARE v_durationPercent DOUBLE;
     DECLARE v_taskDurationPercent DOUBLE;
-    
+
     -- Totals
     DECLARE v_totalLaborQty DOUBLE DEFAULT 0;
     DECLARE v_totalWorkItemCost DOUBLE DEFAULT 0;
-    
+
     -- Cursor variables for work items
     DECLARE c_workItemDetailId INT;
     DECLARE c_projectWorkItemId INT;
@@ -1061,13 +1061,13 @@ proc: BEGIN
     DECLARE c_maxDurationPercent DOUBLE;
     DECLARE c_minLabors DOUBLE;
     DECLARE c_maxLabors DOUBLE;
-    
+
     -- Cursor variables for tasks
     DECLARE c_taskDetailId INT;
     DECLARE c_projectTaskId INT;
     DECLARE c_minTaskDurationPercent DOUBLE;
     DECLARE c_maxTaskDurationPercent DOUBLE;
-    
+
     -- Skill variables
     DECLARE v_skillId INT;
     DECLARE v_assignWorkItemSkillId INT;
@@ -1075,19 +1075,19 @@ proc: BEGIN
     DECLARE v_maxRequireLabors DOUBLE;
     DECLARE v_minDailyWage DOUBLE;
     DECLARE v_maxDailyWage DOUBLE;
-    
+
     -- Quantity calculation variables
     DECLARE v_quantityFormula VARCHAR(255);
     DECLARE v_unitOfMeasure VARCHAR(50);
     DECLARE v_quantity DOUBLE;
     DECLARE v_sql TEXT;
-    
+
     -- Cursors
     DECLARE done INT DEFAULT 0;
-    
+
     -- WorkItem cursor
     DECLARE cur_workitems CURSOR FOR
-        SELECT 
+        SELECT
             wid.workItemDetailId,
             wid.projectWorkItemId,
             wid.minCost,
@@ -1101,31 +1101,31 @@ proc: BEGIN
         WHERE pd.projectTypeId = p_projectTypeId
           AND pd.projectLevelId = p_projectLevelId
           AND pd.projectBuildingId = p_projectBuildingId;
-    
+
     -- Task cursor
     DECLARE cur_tasks CURSOR FOR
-        SELECT 
+        SELECT
             td.taskDetailId,
             td.projectTaskId,
             td.minDuration,
             td.maxDuration
         FROM taskDetails td
         WHERE td.workItemDetailId = c_workItemDetailId;
-    
+
     -- Skill cursor
     DECLARE cur_skills CURSOR FOR
-        SELECT 
+        SELECT
             skillId,
             minRequireLabors,
             maxRequireLabors,
             minDailyWage,
             maxDailyWage
-        FROM workItemRequireSkills 
+        FROM workItemRequireSkills
         WHERE workItemDetailId = c_workItemDetailId;
-    
+
     -- Handlers
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-    
+
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -1138,7 +1138,7 @@ proc: BEGIN
     WHERE pd.projectTypeId = p_projectTypeId
       AND pd.projectLevelId = p_projectLevelId
       AND pd.projectBuildingId = p_projectBuildingId;
-    
+
     IF @config_exists = 0 THEN
         SELECT FALSE AS success, 'No project configuration found for the given type, level, and building combination' AS message;
         LEAVE proc;
@@ -1149,7 +1149,7 @@ proc: BEGIN
     FROM projectStatus
     WHERE projectStatusName = p_projectStatusName
     LIMIT 1;
-    
+
     IF v_projectStatusId IS NULL THEN
         SELECT FALSE AS success, CONCAT('Invalid project status: ', p_projectStatusName) AS message;
         LEAVE proc;
@@ -1220,7 +1220,7 @@ proc: BEGIN
         SET v_workItemCost = p_constructorCost * (v_costPercent / 100);
         SET v_workItemDuration = p_projectDurationDays * (v_durationPercent / 100);
         SET v_workItemLabors = (c_minLabors + c_maxLabors) / 2;
-        
+
         -- Accumulate totals
         SET v_totalWorkItemCost = v_totalWorkItemCost + v_workItemCost;
         SET v_totalLaborQty = v_totalLaborQty + v_workItemLabors;
@@ -1286,15 +1286,15 @@ proc: BEGIN
             SET v_quantityFormula = REPLACE(v_quantityFormula, 'area', p_projectArea);
             SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalStories', p_totalStories);
             SET v_quantityFormula = REPLACE(v_quantityFormula, 'totalUnits', p_totalUnits);
-            
+
             -- Use user-defined variable to store result
             SET @quantity = 0;
             SET @dyn_sql = CONCAT('SELECT ', v_quantityFormula, ' INTO @quantity');
-            
+
             PREPARE stmt FROM @dyn_sql;
             EXECUTE stmt;
             DEALLOCATE PREPARE stmt;
-            
+
             SET v_quantity = @quantity;
 
             -- INSERT TASK
@@ -1402,14 +1402,14 @@ proc: BEGIN
 
     -- 4. OPTIONAL: Calculate and update overhead cost if needed
     -- This could be based on project type and level
-    UPDATE assignProjects 
+    UPDATE assignProjects
     SET projectOverHeadCost = p_constructorCost * 0.1  -- Example: 10% overhead
     WHERE assignProjectId = v_assignProjectId;
 
     COMMIT;
 
     -- RETURN SUCCESS
-    SELECT 
+    SELECT
         TRUE AS success,
         v_assignProjectId AS assignProjectId,
         'Project successfully assigned with auto-planning' AS message,

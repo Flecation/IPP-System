@@ -207,7 +207,7 @@
     -fx-padding: 10;
     -fx-border-color:#E18600;
     -fx-border-radius: 10;
-    -fx-border-width:1;
+    -fx-border-width:0.5;
 }
 
 
@@ -226,14 +226,14 @@
 }
 
 .text-color{
-    -fx-text-fill: #75490b;
+    -fx-text-fill: #011121;
 }
 
 .box-qty{
     -fx-text-fill:  #E18600;
 }
 .box-qty-resign{
-    -fx-text-fill : #a1220e;
+    -fx-text-fill : #c44536;
 }
 
 .box-qty-active{
@@ -264,8 +264,18 @@
     -fx-border-color: #E18600;
     -fx-text-fill: #E18600;
     -fx-border-radius: 10;
-    -fx-background-color: #ffffff;
+    -fx-background-color: none;
     -fx-border-radius: 10;
     -fx-opacity: 0.8;
 
 }
+
+.popup-listview {
+    -fx-background-color: white;
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+    -fx-font-size: 14px;
+}
+
+
+

@@ -997,11 +997,11 @@ public class sideBarPaneController extends navigationPaneController{
 
         // Report navigation
         reportViewBtn.setOnMouseClicked(e -> {
-            openInnerView("report.fxml");
+            openInnerView("allReports.fxml");
             linkButton.setTabButtonName("Report View");
         });
         reportIconBtn.setOnMouseClicked(e -> {
-            openInnerView("report.fxml");
+            openInnerView("allReports.fxml");
             linkButton.setTabButtonName("Report View");
         });
     }

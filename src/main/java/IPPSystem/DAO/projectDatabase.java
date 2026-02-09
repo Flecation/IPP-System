@@ -283,4 +283,45 @@ public class projectDatabase {
 //            aa
         }
     }
+
+
+
+
+    public static ObservableList<String> getAllProjectStatus() {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        list.add("All");
+
+        String sql = "SELECT projectStatusName FROM projectstatus";
+
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(rs.getString("projectStatusName"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+    public static ObservableList<String> getAllSupervisors() {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        try (PreparedStatement ps = con.prepareStatement(
+                "SELECT userName FROM users WHERE userRole='supervisor' AND isActive=1")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString("userName"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        list.add(0, "All"); // Add "All" option at top
+        return list;
+    }
+
+
 }

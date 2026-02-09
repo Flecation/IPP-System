@@ -1,13 +1,13 @@
 package IPPSystem.DAO;
 
 import IPPSystem.Models.DailyReport;
+import IPPSystem.Models.DailyReportLaborView;
 import IPPSystem.Models.ReportLabor;
 import IPPSystem.Models.projects;
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 public class reportDatabase {
 
@@ -38,275 +38,332 @@ public class reportDatabase {
         return 0;
     }
 
-    // ======================== EXISTING METHODS ========================
+    public static List<DailyReport> getAllReports(Integer supervisorId) {
+        List<DailyReport> list = new ArrayList<>();
 
-    // createReport Method (ရှိပြီးသား - မဖျက်ပါနဲ့)
-    public static boolean createReport(DailyReport report, List<ReportLabor> laborList) {
-        // ... (မင်းရဲ့ create logic အဟောင်း) ...
-        return true; // placeholder
-    }
+        String sql = """
+        SELECT 
+            dr.dailyReportId,
+            dr.assignProjectId,
+            dr.assignWorkItemId,      -- ⭐ FIX
+            ap.projectInstanceName,
+            pt.typeName AS projectTypeName,
+            dr.reportDate,
+            dr.issue,
+            u.userName AS supervisorName
+        FROM dailyReports dr
+        JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId
+        LEFT JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId
+        LEFT JOIN users u ON dr.supervisorId = u.userId
+    """;
 
-    // ✅ Supervisor အတွက် Report အားလုံးဆွဲထုတ်ခြင်း
-    public static ArrayList<DailyReport> getAllReports(int supervisorId) {
-        ArrayList<DailyReport> list = new ArrayList<>();
-        String sql = "SELECT r.reportId, r.reportDate, r.issues, p.projectInstanceName, u.userName " +
-                "FROM dailyReports r " +
-                "JOIN assignProjects ap ON r.assignProjectId = ap.assignProjectId " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "JOIN users u ON r.supervisorId = u.userId " +
-                "WHERE r.supervisorId = ? ORDER BY r.reportDate DESC";
+        if (supervisorId != null) {
+            sql += " WHERE dr.supervisorId = ?";
+        }
+
+        sql += " ORDER BY dr.reportDate DESC";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, supervisorId);
+
+            if (supervisorId != null) {
+                ps.setInt(1, supervisorId);
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new DailyReport(
-                        rs.getInt("reportId"),
-                        rs.getString("projectInstanceName"),
-                        rs.getDate("reportDate").toLocalDate(),
-                        rs.getString("issues"),
-                        rs.getString("userName")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
 
-    // ✅ Manager အတွက် Report အားလုံးဆွဲထုတ်ခြင်း (အသစ်ထပ်ထည့်ရန်)
-    public static ArrayList<DailyReport> getAllReportsForManager() {
-        ArrayList<DailyReport> list = new ArrayList<>();
-        String sql = "SELECT r.reportId, r.reportDate, r.issues, p.projectInstanceName, u.userName " +
-                "FROM dailyReports r " +
-                "JOIN assignProjects ap ON r.assignProjectId = ap.assignProjectId " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "JOIN users u ON r.supervisorId = u.userId " +
-                "ORDER BY r.reportDate DESC";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new DailyReport(
-                        rs.getInt("reportId"),
-                        rs.getString("projectInstanceName"),
-                        rs.getDate("reportDate").toLocalDate(),
-                        rs.getString("issues"),
-                        rs.getString("userName")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    // ✅ Detail ကြည့်ဖို့ Report တစ်ခုတည်းဆွဲထုတ်ခြင်း
-    public static DailyReport getReportById(int reportId) {
-        String sql = "SELECT r.*, p.projectInstanceName, u.userName FROM dailyReports r " +
-                "JOIN assignProjects ap ON r.assignProjectId = ap.assignProjectId " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "JOIN users u ON r.supervisorId = u.userId " +
-                "WHERE r.reportId = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, reportId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new DailyReport(
-                        rs.getInt("reportId"),
+                DailyReport report = new DailyReport(
+                        rs.getInt("dailyReportId"),
                         rs.getInt("assignProjectId"),
                         rs.getString("projectInstanceName"),
+                        rs.getString("projectTypeName"),
                         rs.getDate("reportDate").toLocalDate(),
-                        rs.getString("weatherType"),
-                        rs.getString("workAffect"),
-                        rs.getString("weatherNote"),
-                        rs.getString("issues"),
-                        rs.getString("comments"),
-                        rs.getString("userName")
+                        rs.getString("issue"),
+                        null,
+                        null,
+                        rs.getString("supervisorName")
                 );
+
+                // ⭐⭐ CRITICAL LINE
+                report.setAssignWorkItemId(rs.getInt("assignWorkItemId"));
+
+                list.add(report);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return list;
     }
 
-    // ✅ Project List ကို ဆွဲထုတ်ခြင်း (Create Report အတွက်)
-    public static ArrayList<String> getProjectListForSupervisor(int supervisorId) {
-        ArrayList<String> projectList = new ArrayList<>();
-        String sql = "SELECT p.projectInstanceName FROM assignProjects ap " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "WHERE ap.supervisorId = ?";
+
+
+//    public static List<DailyReport> getAllReports(Integer engineerId) {
+//        List<DailyReport> list = new ArrayList<>();
+//
+//        String sql = "SELECT dr.dailyReportId, dr.assignProjectId, ap.projectInstanceName, dr.reportDate, dr.issue, u.userName AS supervisorName " +
+//                "FROM dailyReports dr " +
+//                "JOIN assignProjects ap ON dr.assignProjectId = ap.assignProjectId " +
+//                "JOIN users u ON dr.supervisorId = u.userId ";
+//
+//
+//        if (engineerId != null) {
+//            sql += "WHERE ap.supervisorId = ? ";
+//        }
+//
+//        sql += "ORDER BY dr.reportDate DESC"; // Most recent first
+//
+//        try (PreparedStatement ps = con.prepareStatement(sql)) {
+//            if (engineerId != null) {
+//                ps.setInt(1, engineerId);
+//            }
+//
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                list.add(new DailyReport(
+//                        rs.getInt("dailyReportId"),
+//                        rs.getInt("assignProjectId"),
+//                        rs.getString("projectInstanceName"),
+//                        rs.getDate("reportDate").toLocalDate(),
+//                        null, null, null,
+//                        rs.getString("issue"),
+//                        null,
+//                        rs.getString("supervisorName")
+//                ));
+//
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return list;
+//    }
+
+
+    public static List<DailyReport> getReportsByProjectId(int assignProjectId) {
+
+        List<DailyReport> reports = new ArrayList<>();
+
+        String sql = """
+        SELECT 
+            dr.dailyReportId AS reportId,
+            dr.assignProjectId,
+            dr.assignWorkItemId,
+            dr.reportDate,
+            dr.issue,
+            dr.weather AS weatherType,
+            dr.generalRemark AS comments,
+            p.projectInstanceName AS projectName,
+            ps.projectStatusName AS projectStatus,
+            u.userName AS supervisorName
+        FROM dailyReports dr
+        JOIN assignProjects p ON dr.assignProjectId = p.assignProjectId
+        LEFT JOIN users u ON dr.supervisorId = u.userId
+        LEFT JOIN projectStatus ps ON p.projectStatus = ps.projectStatusId
+        WHERE dr.assignProjectId = ?
+        ORDER BY dr.reportDate DESC
+    """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, supervisorId);
+
+            ps.setInt(1, assignProjectId);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                projectList.add(rs.getString("projectInstanceName"));
+                DailyReport report = new DailyReport();
+
+                report.setReportId(rs.getInt("reportId"));
+                report.setAssignProjectId(rs.getInt("assignProjectId"));
+                report.setAssignWorkItemId(rs.getInt("assignWorkItemId")); // ⭐
+                report.setReportDate(rs.getDate("reportDate").toLocalDate());
+                report.setIssues(rs.getString("issue"));
+                report.setWeatherType(rs.getString("weatherType"));
+                report.setComments(rs.getString("comments"));
+                report.setProjectName(rs.getString("projectName"));
+                report.setProjectStatus(rs.getString("projectStatus"));
+                report.setSupervisorName(rs.getString("supervisorName"));
+
+                reports.add(report);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return projectList;
+
+        return reports;
     }
 
-    // ✅ Project ID ရှာဖို့
-    public static int getProjectIdByName(String projectName, int supervisorId) {
-        String sql = "SELECT ap.assignProjectId FROM assignProjects ap " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "WHERE p.projectInstanceName = ? AND ap.supervisorId = ?";
+
+
+//    public static List<DailyReport> getReportsByProjectId(int assignProjectId) {
+//        List<DailyReport> reports = new ArrayList<>();
+//        String sql = """
+//            SELECT
+//                dr.dailyReportId AS reportId,
+//                dr.assignProjectId,
+//                dr.assignWorkItemId,
+//                dr.reportDate,
+//                dr.issue,
+//                dr.weather AS weatherType,
+//                dr.generalRemark AS comments,
+//                p.projectInstanceName AS projectName,
+//                ps.projectStatusName AS projectStatus,
+//                u.userName AS supervisorName
+//            FROM dailyReports dr
+//            JOIN assignProjects p ON dr.assignProjectId = p.assignProjectId
+//            LEFT JOIN users u ON dr.supervisorId = u.userId
+//            LEFT JOIN projectStatus ps ON p.projectStatus = ps.projectStatusId
+//            WHERE dr.assignProjectId = ?
+//            ORDER BY dr.reportDate DESC
+//        """;
+//
+//        try (PreparedStatement ps = con.prepareStatement(sql)) {
+//            ps.setInt(1, assignProjectId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                DailyReport report = new DailyReport();
+//                report.setReportId(rs.getInt("reportId"));
+//                report.setAssignProjectId(rs.getInt("assignProjectId"));
+//                report.setReportDate(rs.getDate("reportDate").toLocalDate());
+//                report.setIssues(rs.getString("issue"));
+//                report.setWeatherType(rs.getString("weatherType"));
+//                report.setComments(rs.getString("comments"));
+//                report.setProjectName(rs.getString("projectName"));
+//                report.setProjectStatus(rs.getString("projectStatus"));
+//                report.setSupervisorName(rs.getString("supervisorName"));
+//                report.setAssignWorkItemId(rs.getInt("assignWorkItemId"));
+//
+//
+//                reports.add(report);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return reports;
+//    }
+
+
+
+    public static List<DailyReportLaborView> getDailyReportLabors(int dailyReportId) {
+
+        List<DailyReportLaborView> list = new ArrayList<>();
+
+        String sql = """
+        SELECT 
+            l.laborName,
+            s.skillName,
+            drl.dailyWage,
+            drl.workHours,
+            drl.remark
+        FROM dailyReportLabors drl
+        JOIN labors l ON drl.laborId = l.laborId
+        LEFT JOIN skills s ON l.skillId = s.skillId
+        WHERE drl.dailyReportId = ?
+    """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, projectName);
-            ps.setInt(2, supervisorId);
+            ps.setInt(1, dailyReportId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("assignProjectId");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 
-    // ======================== NEW METHODS FOR SUPERVISOR REPORT ========================
-
-    // ✅ Supervisor အတွက် Filter စစ်ထားသော Reports များဆွဲထုတ်ခြင်း
-    public static ArrayList<DailyReport> getFilteredReports(int supervisorId, int projectId, Date startDate, Date endDate) {
-        ArrayList<DailyReport> list = new ArrayList<>();
-
-        StringBuilder sql = new StringBuilder(
-                "SELECT r.reportId, r.reportDate, r.issues, p.projectInstanceName, u.userName " +
-                        "FROM dailyReports r " +
-                        "JOIN assignProjects ap ON r.assignProjectId = ap.assignProjectId " +
-                        "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                        "JOIN users u ON r.supervisorId = u.userId " +
-                        "WHERE r.supervisorId = ? "
-        );
-
-        List<Object> params = new ArrayList<>();
-        params.add(supervisorId);
-
-        if (projectId > 0) {
-            sql.append("AND ap.assignProjectId = ? ");
-            params.add(projectId);
-        }
-
-        if (startDate != null) {
-            sql.append("AND r.reportDate >= ? ");
-            params.add(startDate);
-        }
-
-        if (endDate != null) {
-            sql.append("AND r.reportDate <= ? ");
-            params.add(endDate);
-        }
-
-        sql.append("ORDER BY r.reportDate DESC");
-
-        try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-
-            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new DailyReport(
-                        rs.getInt("reportId"),
-                        rs.getString("projectInstanceName"),
-                        rs.getDate("reportDate").toLocalDate(),
-                        rs.getString("issues"),
-                        rs.getString("userName")
+                list.add(new DailyReportLaborView(
+                        rs.getString("laborName"),
+                        rs.getString("skillName"),
+                        rs.getDouble("dailyWage"),
+                        rs.getDouble("workHours"),
+                        rs.getString("remark")
                 ));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
 
-    // ✅ Project Status အလိုက် Project List ဆွဲထုတ်ခြင်း
-    public static ArrayList<projects> getProjectsBySupervisorAndStatus(int supervisorId, String status) {
-        ArrayList<projects> list = new ArrayList<>();
 
-        String sql = "SELECT ap.assignProjectId, p.projectInstanceName, pt.typeName, " +
-                "ps.projectStatusName, ap.startDate, ap.endDate " +
-                "FROM assignProjects ap " +
-                "JOIN projects p ON ap.assignProjectId = p.assignProjectId " +
-                "JOIN projectStatus ps ON ap.projectStatus = ps.projectStatusId " +
-                "JOIN projectTypes pt ON ap.projectTypeId = pt.projectTypeId " +
-                "WHERE ap.supervisorId = ? ";
 
-        if (!status.equals("All Assigned")) {
-            sql += "AND ps.projectStatusName = ?";
-        }
+    public static double getTotalWorkedHours(int dailyReportId) {
+
+        String sql = """
+        SELECT COALESCE(SUM(workHours),0)
+        FROM dailyReportLabors
+        WHERE dailyReportId = ?
+    """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, supervisorId);
-
-            if (!status.equals("All Assigned")) {
-                ps.setString(2, status);
-            }
-
+            ps.setInt(1, dailyReportId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                projects p = new projects();
-                p.setAssignProjectId(rs.getInt("assignProjectId"));
-                p.setProjectInstanceName(rs.getString("projectInstanceName"));
-                p.setProjectTypeName(rs.getString("typeName"));
-                p.setProjectStatus(rs.getString("projectStatusName"));
-                p.setStartDate(rs.getDate("startDate"));
-                p.setEndDate(rs.getDate("endDate"));
-                list.add(p);
-            }
-        } catch (SQLException e) {
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+        return 0;
     }
 
-    // ✅ Report အရေအတွက်တွက်ချက်ခြင်း
-    public static Map<String, Integer> getReportStatistics(int supervisorId, int projectId, Date startDate, Date endDate) {
-        Map<String, Integer> stats = new HashMap<>();
 
-        StringBuilder sql = new StringBuilder(
-                "SELECT COUNT(*) as total, " +
-                        "SUM(CASE WHEN r.issues IS NOT NULL AND r.issues != '' THEN 1 ELSE 0 END) as withIssues " +
-                        "FROM dailyReports r " +
-                        "WHERE r.supervisorId = ? "
-        );
+    public static double getTotalDailyLaborCost(int dailyReportId) {
 
-        List<Object> params = new ArrayList<>();
-        params.add(supervisorId);
+        String sql = """
+        SELECT COALESCE(SUM(dailyWage),0)
+        FROM dailyReportLabors
+        WHERE dailyReportId = ?
+    """;
 
-        if (projectId > 0) {
-            sql.append("AND r.assignProjectId = ? ");
-            params.add(projectId);
-        }
-
-        if (startDate != null) {
-            sql.append("AND r.reportDate >= ? ");
-            params.add(startDate);
-        }
-
-        if (endDate != null) {
-            sql.append("AND r.reportDate <= ? ");
-            params.add(endDate);
-        }
-
-        try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                stats.put("total", rs.getInt("total"));
-                stats.put("withIssues", rs.getInt("withIssues"));
-            }
-        } catch (SQLException e) {
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return stats;
+        return 0;
     }
+
+
+    public static double getCompletedQty(int dailyReportId) {
+
+        String sql = """
+        SELECT COALESCE(SUM(completedQty),0)
+        FROM dailyReportTasks
+        WHERE dailyReportId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, dailyReportId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public static double getRemainQty(int assignWorkItemId) {
+
+        String sql = """
+        SELECT 
+            COALESCE(SUM(at.plannedQty),0) 
+            - COALESCE(SUM(drt.completedQty),0) AS remainQty
+        FROM assignTasks at
+        LEFT JOIN dailyReportTasks drt 
+            ON at.assignTaskId = drt.assignTaskId
+        WHERE at.assignWorkItemId = ?
+    """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, assignWorkItemId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble("remainQty");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 }

@@ -1,0 +1,202 @@
+
+.filter-box{
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+    -fx-background-color:#ffffff;
+    -fx-border-color: #E18600;
+}
+
+.projects-cards{
+    -fx-background-color: #fefefefe;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+
+}
+
+.projects-cards:hover{
+    -fx-background-color: none;
+    -fx-border-color: #E18600;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+}
+
+.sub-title{
+    -fx-text-fill: #011121;
+    -fx-font-weight: medium;
+}
+
+.date-picker{
+    -fx-border-color: #E18600;
+    -fx-background-color: transparent;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color:transparent;
+    -fx-background-radius: 12;
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.date-picker .arrow {
+    -fx-background-color: #f39c12;
+}
+
+
+
+
+
+
+
+
+.report-card{
+    -fx-background-color: #fefefefe;
+    -fx-border-color: #fefefefe;
+    -fx-border-width: 0.5;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+}
+
+
+
+
+/* Project name */
+.project-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Project status pills */
+.status-planning {
+    -fx-text-fill: #FFA500; /* Orange */
+    -fx-font-weight: bold;
+}
+
+.status-in-progress {
+    -fx-text-fill: #1E90FF; /* Blue */
+    -fx-font-weight: bold;
+}
+
+.status-finished {
+    -fx-text-fill: #28A745; /* Green */
+    -fx-font-weight: bold;
+}
+
+.status-delayed,
+.status-risk {
+    -fx-text-fill: #DC3545; /* Red */
+    -fx-font-weight: bold;
+}
+
+.status-cancelled {
+    -fx-text-fill: #6C757D; /* Gray */
+    -fx-font-weight: bold;
+}
+
+.status-default {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+
+.qty-txt{
+    -fx-text-fill: #ffffff;
+}
+
+
+.box-border{
+    -fx-background-color: #CFD6E0;
+    -fx-border-radius:10;
+    -fx-background-radius:10;
+    -fx-font-size:20;
+}
+
+.box-border:hover{
+    -fx-background-color: #CFD6E0;
+
+
+}
+
+
+
+
+/* Set table background */
+.table-view {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Set header style */
+.table-view .column-header {
+    -fx-background-color: #CFD6E0;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* Set row height */
+.table-row-cell {
+    -fx-pref-height: 35px; /* row height */
+}
+
+/* Alternate row color */
+.table-row-cell:odd {
+    -fx-background-color: #ffffff;
+}
+.table-row-cell:even {
+    -fx-background-color: #f1f1f1;
+}
+
+/* Selected row style */
+.table-row-cell:selected {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: black;
+}
+
+/* Cell text alignment */
+.table-cell {
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 14px;
+}
+
+
+
+
+
+.issue-textarea{
+    -fx-text-fill:#c44536;
+}
+
+/* Base style for TextArea */
+.text-area {
+    -fx-background-color: #c44536; /* light cream */
+    -fx-border-color: #E6CDCE; /* orange border */
+    -fx-border-width: 0.5;
+    -fx-border-radius: 5; /* rounded corners */
+    -fx-background-radius: 5; /* match border radius */
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #333333; /* text color */
+
+}
+
+/* Placeholder text style (if using promptText) */
+.text-area .text {
+    -fx-padding:10;
+
+    -fx-fill: #c44536;
+}
+
+
+
+
