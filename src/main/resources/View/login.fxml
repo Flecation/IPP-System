@@ -85,8 +85,6 @@
                <StackPane alignment="TOP_CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0">
                   <children>
 
-                     <VBox alignment="CENTER" styleClass="rightBlur" StackPane.alignment="CENTER" />
-
                      <!-- LOGIN -->
                      <VBox fx:id="loginBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" styleClass="rightPane" visible="false">
                         <children>
@@ -97,7 +95,7 @@
                                  <TextField fx:id="userEmailTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
                                  <Label fx:id="userEmailLbl" styleClass="info-text" text="User Email" StackPane.alignment="CENTER_LEFT">
                                     <StackPane.margin>
-                                       <Insets left="50.0" />
+                                       <Insets left="40.0" />
                                     </StackPane.margin>
                                  </Label>
                                  <Label fx:id="emailWrongLbl" minWidth="250.0" text="Label" StackPane.alignment="BOTTOM_LEFT">
@@ -114,7 +112,7 @@
                                  <PasswordField fx:id="hidePasswordTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
                                  <Label fx:id="passwordLbl" styleClass="info-text" text="Password" StackPane.alignment="CENTER_LEFT">
                                     <StackPane.margin>
-                                       <Insets left="50.0" />
+                                       <Insets left="40.0" />
                                     </StackPane.margin>
                                  </Label>
                                  <CheckBox fx:id="showPasswordCheckBox" alignment="TOP_LEFT" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="18.0" StackPane.alignment="BOTTOM_LEFT">
@@ -141,10 +139,7 @@
                      </VBox>
 
                      <!-- OTP -->
-                     <VBox fx:id="otpBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
-                        <padding>
-                           <Insets top="10.0" />
-                        </padding>
+                     <VBox fx:id="otpBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" StackPane.alignment="CENTER">
                         <children>
                            <Label styleClass="header-text" text="OTP Verification" />
                            <Label styleClass="info-text" text="One Time Password(OTP) has been sent">
@@ -158,12 +153,12 @@
 
                            <HBox alignment="CENTER" minHeight="70.0" prefWidth="200.0" spacing="10.0">
                               <children>
-                                 <TextField fx:id="otp1" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
-                                 <TextField fx:id="otp2" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
-                                 <TextField fx:id="otp3" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
-                                 <TextField fx:id="otp4" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
-                                 <TextField fx:id="otp5" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
-                                 <TextField fx:id="otp6" minHeight="50.0" minWidth="50.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp1" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp2" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp3" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp4" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp5" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
+                                 <TextField fx:id="otp6" maxWidth="30.0" minHeight="45.0" minWidth="30.0" styleClass="otpInput" />
                               </children>
                            </HBox>
 
@@ -175,9 +170,6 @@
 
                      <!-- FORGET PASSWORD -->
                      <VBox fx:id="forgetPwBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
-                        <padding>
-                           <Insets right="10.0" />
-                        </padding>
                         <children>
                            <Label alignment="CENTER" contentDisplay="CENTER" minWidth="272.0" prefHeight="27.0" prefWidth="272.0" styleClass="info-text" text="Forgot Password ?" />
 
@@ -196,7 +188,7 @@
                                     <StackPane.margin><Insets left="10.0" /></StackPane.margin>
                                  </TextField>
                                  <Label fx:id="forgetPwEmailLbl" styleClass="info-text" text="User Email" StackPane.alignment="CENTER_LEFT">
-                                    <StackPane.margin><Insets left="30.0" /></StackPane.margin>
+                                    <StackPane.margin><Insets left="15.0" /></StackPane.margin>
                                  </Label>
                               </children>
                            </StackPane>
@@ -215,10 +207,7 @@
                      </VBox>
 
                      <!-- CHANGE NEW PASSWORD -->
-                     <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="10.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
-                        <padding>
-                           <Insets left="50.0" right="10.0" top="10.0" />
-                        </padding>
+                     <VBox fx:id="changeNewPwBox" alignment="CENTER" maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="515.0" prefWidth="320.0" spacing="5.0" styleClass="rightPane" visible="false" StackPane.alignment="CENTER">
                         <children>
                            <Label styleClass="loginTitle" text="Change Password" />
 
@@ -227,10 +216,10 @@
                                  <TextField fx:id="showChangePwTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" StackPane.alignment="CENTER" />
                                  <PasswordField fx:id="hideChangePwTxt" maxHeight="40.0" maxWidth="250.0" minHeight="40.0" minWidth="250.0" prefHeight="40.0" prefWidth="396.0" StackPane.alignment="CENTER" />
                                  <Label fx:id="showChangePwLbl" styleClass="info-text" text="New Password" StackPane.alignment="CENTER_LEFT">
-                                    <StackPane.margin><Insets left="60.0" /></StackPane.margin>
+                                    <StackPane.margin><Insets left="40.0" /></StackPane.margin>
                                  </Label>
-                                 <CheckBox fx:id="showChangePwChoiceBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="15.0" StackPane.alignment="BOTTOM_LEFT">
-                                    <StackPane.margin><Insets left="50.0" /></StackPane.margin>
+                                 <CheckBox fx:id="showChangePwChoiceBox" mnemonicParsing="false" styleClass="info-text" text="Show Password" translateY="5.0" StackPane.alignment="BOTTOM_LEFT">
+                                    <StackPane.margin><Insets left="35.0" /></StackPane.margin>
                                  </CheckBox>
                               </children>
                            </StackPane>

@@ -65,9 +65,9 @@
                         <StackPane fx:id="notificationWrap" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0">
                            <children>
                               <Label fx:id="notificationBtn" alignment="CENTER" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" styleClass="icons" />
-                              <Circle fx:id="notificationDot" radius="4.0" fill="#ff3b30" stroke="TRANSPARENT" StackPane.alignment="TOP_RIGHT">
+                              <Circle fx:id="notificationDot" fill="#ff3b30" radius="4.0" stroke="TRANSPARENT" StackPane.alignment="TOP_RIGHT">
                                  <StackPane.margin>
-                                    <Insets top="6.0" right="6.0" />
+                                    <Insets right="6.0" top="6.0" />
                                  </StackPane.margin>
                               </Circle>
                            </children>
@@ -338,27 +338,24 @@
          </center>
       </BorderPane>
       <!-- ===== Notification dropdown ===== -->
-      <VBox fx:id="notificationDropdown" visible="false" managed="false" styleClass="noti-dropdown" maxWidth="320.0" StackPane.alignment="TOP_RIGHT">
+      <VBox fx:id="notificationDropdown" managed="false" maxWidth="320.0" styleClass="noti-dropdown" visible="false" StackPane.alignment="TOP_RIGHT">
          <StackPane.margin>
-            <Insets top="62.0" right="14.0" />
+            <Insets right="14.0" top="62.0" />
          </StackPane.margin>
          <children>
             <VBox fx:id="notificationList" spacing="8.0" />
          </children>
          <padding>
-            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <StackPane fx:id="addNewPane"
-                 visible="false"
-                 managed="false"
-                 pickOnBounds="true">
+      <StackPane fx:id="addNewPane" managed="false" pickOnBounds="true" visible="false">
 
          <!-- Full-screen click catcher + dim background -->
-         <Region fx:id="overlayCatcher" styleClass="overlay-catcher"/>
+         <Region fx:id="overlayCatcher" styleClass="overlay-catcher" />
 
          <!-- Your centered add form -->
-         <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="520.0" />
+         <StackPane fx:id="addNew" maxHeight="580.0" maxWidth="720.0" />
       </StackPane>
 
    </children>

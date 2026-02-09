@@ -1,23 +1,7 @@
 @import url("main.css");
 
-#root{
-    -fx-background-color: -primary-bg-color;
-}
-
-#minimizeBtn:hover {
-    -fx-background-color: -primary-bg-color;
-}
-
-#restoreBtn:hover {
-    -fx-background-color: -primary-bg-color;
-}
-
-#exitBtn:hover {
-    -fx-background-color: red;
-}
-
 #pageAddBtn{
-    -fx-fill: -secondary-text-color;
+    -fx-fill: -text;
     -fx-background-color: transparent;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
@@ -25,7 +9,7 @@
 }
 
 #pageAddBtn:hover {
-    -fx-background-color: -search-hover-color;
+        -fx-background-color: -shadow;
         -fx-border-width: 1px;
         -fx-border-radius: 6px;
         -fx-background-radius: 6px;
@@ -33,55 +17,63 @@
 }
 
 .tapBar {
-    -fx-background-color:-pane-color;
+    -fx-background-color: -bg;
     -fx-border-color: none;
     -fx-border-width: 0;
 }
 
 /* for the navigation bar of style */
 .linkButton {
-    -fx-background-color: -secondary-bg-color;
+    -fx-background-color: -bg;
     -fx-border-color: transparent;
     -fx-border-radius: 12 12 0 0;
     -fx-background-radius: 12 12 0 0;
-    -fx-text-fill: -focus-color;
     -fx-border-width: 1px;
     -fx-cursor: hand;
 }
 
 .linkButton:hover {
-    -fx-background-radius: 12 12 0 0;
-    -fx-border-radius: 12 12 0 0 ;
-    -fx-border-color: transparent;
-    -fx-border-width: 1 1 0 1;
+    -fx-background-radius:12px;
+    -fx-border-radius: 12px;
+    -fx-margin: 8px;
+    -fx-text-fill: -primary;
+    -fx-background-color : -shadow;
 }
 
+.linkButton:hover .pageBtn, .linkButton:hover .closeBtn,.linkButton:hover .closeIcon{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -primary;
+    -fx-fill: -primary;
+}
+.pageBtn{
+    -fx-background-color: transparent;
+}
 .active-tab {
-    -fx-background-color: -base-color;
+    -fx-background-color: -surface-2;
     -fx-background-radius: 12 12 0 0;
     -fx-border-radius: 12 12 0 0 ;
-
-    }
+}
 
 }
 
 .active-tab:hover {
-    -fx-background-color: -base-color;
     -fx-background-radius: 12 12 0 0;
     -fx-border-radius: 12 12 0 0 ;
-    -fx-text-fill: -hover-color;
+    -fx-text-fill: -primary;
 }
 
 
-.pageBtn, .pageAddIcon {
+.pageAddIcon {
     -fx-background-color:transparent;
     -fx-border-color: transparent;
     -fx-border-width:0;
-    -fx-text-fill: -secondary-text-color;
-    -fx-fill: -secondary-text-color;
+    -fx-text-fill: -text;
+    -fx-fill: -text;
 }
 
 .closeBtn {
+    -fx-text-fill : -text;
     -fx-background-radius: 0 12 0 0;
     -fx-border-radius: 0 12 0 0 ;
     -fx-background-color: transparent;
@@ -89,6 +81,8 @@
 }
 
 .closeBtn:hover {
+    -fx-fill: -primary;
+    -fx-text-fill : -primary;
     -fx-background-radius: 0 12 0 0;
     -fx-border-radius: 0 12 0 0 ;
     -fx-background-color: transparent;
@@ -98,14 +92,14 @@
 .closeIcon {
     -fx-border-radius: 0 12 0 0;
     -fx-background-radius: 0 12 0 0;
-    -fx-background-color: -primary-bg-color;
+    -fx-background-color: -bg;
     -fx-fill: -color;
 }
 
 .closeIcon:hover {
     -fx-border-radius: 0 12 0 0;
     -fx-background-radius: 12 0 0 0;
-    -fx-background-color: -primary-bg-color;
-    -fx-fill: -focus-color;
+    -fx-background-color: -shadow;
+    -fx-fill: -text-muted;
 }
 

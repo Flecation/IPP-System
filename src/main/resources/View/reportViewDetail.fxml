@@ -14,36 +14,29 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="675.0" prefWidth="1120.0" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.reportViewDetailController">
+<HBox prefHeight="675.0" prefWidth="1220.0" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.reportViewDetailController">
    <children>
-      <Region prefHeight="200.0" prefWidth="200.0" />
       <VBox minHeight="-Infinity" minWidth="300.0" prefWidth="300.0" style="-fx-background-color: #ffffff;" HBox.hgrow="ALWAYS">
          <children>
             <VBox alignment="CENTER" maxHeight="150.0" minHeight="150.0" prefHeight="139.0" prefWidth="300.0" spacing="12.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox alignment="CENTER" prefHeight="125.0" prefWidth="300.0" spacing="10.0" VBox.vgrow="NEVER">
-                     <children>
-                        <Label fx:id="rpProjectName" text="Sunrise Building Project" wrapText="true">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="rpProjectType" text="Industrial Building and Commercial Building">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
+                  <Label fx:id="rpProjectName" text="Sunrise Building Project" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="rpProjectType" text="Industrial Building and Commercial Building">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
                   <HBox alignment="CENTER_RIGHT" prefWidth="237.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <DatePicker fx:id="startDate" promptText="Start" styleClass="date-picker" HBox.hgrow="ALWAYS" />
                         <DatePicker fx:id="endDate" promptText="End" styleClass="date-picker" />
                      </children>
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
                   </HBox>
+                  <ComboBox fx:id="filterBySupervisor" prefWidth="150.0" promptText="Supervisor" styleClass="filter-box" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -52,24 +45,12 @@
                   <Insets bottom="10.0" top="10.0" />
                </padding>
             </VBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-border-color: none; -fx-background-color: none;" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-border-color: none; -fx-background-color: none;" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox prefHeight="29.0" prefWidth="298.0">
-                     <children>
-                        <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                           <children>
-                              <ComboBox fx:id="filterBySupervisor" prefWidth="150.0" promptText="Supervisor" styleClass="filter-box" />
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
-                           </padding>
-                        </HBox>
-                        <VBox fx:id="reportProjectScrollPane" alignment="CENTER" cacheShape="false" centerShape="false" fillWidth="false" scaleShape="false" spacing="10.0" style="-fx-border-color: none;" VBox.vgrow="ALWAYS">
-                           <padding>
-                              <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-                           </padding>
-                        </VBox>
-                     </children>
+                  <VBox fx:id="reportProjectScrollPane" alignment="CENTER" cacheShape="false" centerShape="false" scaleShape="false" spacing="10.0" style="-fx-border-color: none;">
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
                   </VBox>
                </content>
             </ScrollPane>

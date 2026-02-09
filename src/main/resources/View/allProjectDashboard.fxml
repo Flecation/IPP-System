@@ -17,7 +17,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.allProjectDashboardController">
    <content>
       <VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" styleClass="root" stylesheets="@../CSS/allProjectDashboard.css">
@@ -36,13 +35,13 @@
                   <VBox>
                      <children>
                         <Label styleClass="showLbl" text="View Type" />
-                        <ComboBox fx:id="comboProjectList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
+                        <ComboBox fx:id="comboProjectList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" styleClass="filter-box" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
                         <Label styleClass="showLbl" text="Year" />
-                        <ComboBox fx:id="comboYearList" maxHeight="45.0" maxWidth="180.0" onAction="#clickYearAction" prefWidth="120.0" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" />
+                        <ComboBox fx:id="comboYearList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" onAction="#clickYearAction" prefWidth="120.0" style="-fx-background-color: #fcf9f7; -fx-border-color: orange; -fx-border-radius: 10;" styleClass="filter-box" />
                      </children>
                   </VBox>
                </children>

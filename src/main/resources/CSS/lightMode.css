@@ -1,65 +1,29 @@
 *{
-    /* background colors */
-    -primary-bg-color: #EBEBEB;
-    -secondary-bg-color: #BDBDBD;
-    -color: black;
-    -search-box : #e8e8e8;
-    -search-hover-color :#faf6f0;
-    /* for the text color */
-    -primary-text-color: #212529;
-    -secondary-text-color: #495057;
-    -muted-text-color: #495057;
+   -bg: #F6F7FB;
+   -surface :#FFFFFF;
+   -surface-2 : #F3F4F6;
+   -border: #E5E7EB;
 
-    /* for the navigation bar */
-    -nav-color: #ffffff;
-    -base-color : #ffffff;
-    -pane-color : #edebeb;
-    /* for the underline */
-    -underline-color: #FF8C00;
-    -button-font-color : #ffffff;
-    /* for the border color */
-    -border-color: #BDBDBD;
+   -text: #111827;
+   -text-muted: #6B7280;
 
-    /* for the hover color */
-    -hover-color: #FFA500;
+  /* Primary becomes Safety Orange */
+   -primary: #F59E0B;
+   -primary-2: #D97706;   /* hover / pressed */
 
-    /* for the focus color */
-    -focus-color: #cccbca;
-}
+  /* Accent can be something else (optional) */
+   -accent: #06B6D4;      /* cyan */
 
-.miniIcon,.restoreIcon,.exitIcon{
-    -fx-fill: -secondary-text-color;
-}
+   /* status */
+   -ok: #22C55E;              /* on time */
+   -delay: #8B5CF6;           /* delay (purple) */
+   -progress: #2563EB;
+   -danger: #EF4444;
 
-.label{
-    -fx-text-fill: -primary-text-color;
-}
+    -pending: #FBBF24;      /* amber */
+    -pending-bg: #FFFBEB;   /* soft amber background */
 
-.text-field, .password-field{
-    -fx-text-fill: -secondary-text-color;
-    -fx-border-color: -secondary-text-color;
-}
-
-.text-field:focused , .password-field:focused{
-    -fx-border-color: -focus-color;
-    -fx-border-width: 0 0 2 0;
-}
-
-/* for the check box field */
-.check-box {
-    -fx-text-fill: -secondary-text-color;
-}
-
-.check-box .box {
-    -fx-border-color: -secondary-bg-color;
-}
-
-.check-box:selected .mark {
-    -fx-background-color: -primary-text-color;
-}
-
-.check-box:selected .box {
-    -fx-background-color: -info-color;
-    -fx-border-color: -info-color;
+    /* shadows */
+    -shadow: rgba(17, 24, 39, 0.10);
 }
 

@@ -2,60 +2,143 @@
     /* font family */
     -fx-font-family: "Poppins";
     -fx-font-weight: bold;
-
-    /* For the specific color */
-    -warning-color: #E09F3E;
-    -success-color : #3FA37A;
-    -danger-color : #C44536;
-    -info-color : #3A86A8;
-
-      /* aliases used by your messageBox.css */
-        -error-color: #C44536;
-        -wrong-color: #A855F7;
 }
 
-.cardPane {
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+.root, #root{
+    -fx-background-color: -bg;
 }
 
-.header-text{
-    -fx-font-size: 25px;
-}
-.info-text{
-    -fx-font-size: 18px;
-}
+ .miniIcon,.restoreIcon,.exitIcon{
+    -fx-fill: -text;
+ }
 
-.button {
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-    -fx-font-weight: bold;
-    -fx-border-radius: 2px;
-    -fx-background-radius: 2px;
+.label{
+    -fx-text-fill: -text;
 }
 
-
-.text-field{
-    -fx-font-size:18px;
+ /* fo the text field and password field of the colors */
+.text-field, .password-field{
+    -fx-font-size:12px;
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
     -fx-background-radius: 0;
-}
-.password-field{
-    -fx-font-size: 18px;
-    -fx-background-color: transparent;
-    -fx-border-width: 0 0 1 0;
-    -fx-background-radius:0;
+    -fx-text-fill: -text;
+    -fx-border-color:-border;
 }
 
+.text-field:focused , .password-field:focused{
+    -fx-border-color: -primary;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* for the check box field */
 .check-box {
     -fx-font-size : 12 px;
     -fx-cursor : hand;
+    -fx-text-fill: -text-muted;
+}
+.check-box: hover{
+    -fx-text-fill: -text;
+}
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-width: 1;
+    -fx-background-radius: 2;
+    -fx-border-color: -text-muted;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -text;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -progress;
+    -fx-border-color: -progress;
+}
+
+#dashboardViewBtn:hover, #projectViewBtn:hover,
+#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover,
+#backBtn:hover, #profileViewBtn:hover, #toggleBtn:hover, #changePasswordBtn:hover {
+
+      /* 1. Set the background to Orange */
+      -fx-background-color: -primary;
+
+      /* 2. REMOVE ALL BORDERS (This stops the bottom line appearing) */
+      -fx-border-color: transparent;
+      -fx-border-width: 0;
+
+      /* 3. Set text and icons to White */
+      -fx-text-fill: -text;
+
+      /* 4. Soft shadow to make the orange pop */
+      -fx-effect: dropshadow(three-pass-box, -shadow, 5, 0, 0, 2);
+}
+
+/* Ensure icons inside these white buttons are black for contrast */
+#dashboardViewBtn .icon-Style,
+#projectViewBtn .icon-Style,
+#userViewBtn .icon-Style,
+#reportViewBtn .icon-Style,
+#settingViewBtn .icon-Style {
+    -fx-icon-color: -text !important;
+    -fx-fill: -text !important;
+}
+
+/* Ensure icons turn white again when hovering over the orange background */
+#dashboardViewBtn:hover .icon-Style,
+#projectViewBtn:hover .icon-Style,
+#userViewBtn:hover .icon-Style,
+#reportViewBtn:hover .icon-Style,
+#settingViewBtn:hover .icon-Style {
+    -fx-icon-color: -accent !important;
+    -fx-fill: -accent !important;
+}
+
+/* Maintain your Orange Hover effect */
+#dashboardViewBtn:hover, #projectViewBtn:hover,
+#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover {
+    -fx-background-color: -primary-2 !important; /* Stays orange on hover */
+    -fx-text-fill: -accent !important;
+}
+
+
+.cardPane {
+    -fx-border-radius: 16px;
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-effect: dropshadow(gaussian, -shadow, 14, 0.18, 0, 3);
+    -fx-background-radius: 16px;
+}
+
+.header-text{
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+.info-text{
+    -fx-text-fill: -text;
+    -fx-font-size: 12px;
+}
+
+.button {
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-background-color: -primary-2;
+    -fx-text-fill: -text;
+}
+
+.button:hover{
+    -fx-background-color: -primary;
+    -fx-text-fill: -bg;
 }
 
 /*For the exit mini button*/
  #exitBtn ,#minimizeBtn  ,#restoreBtn{
-     -fx-font-size: 15px;
+     -fx-font-size: 20px;
      -fx-border-color: none;
      -fx-background-color: transparent;
      -fx-padding: 0;
@@ -70,30 +153,12 @@
  #exitBtn:hover .exitIcon, #minimizeBtn:hover .miniIcon,
  #restoreBtn:hover .restoreIcon{
     -fx-font-size: 20px;
+    -fx-fill: -primary;
  }
 
  #minimizeBtn:hover, #restoreBtn:hover{
     -fx-background-color : #314E63;
  }
-
-
-
-.check-box {
-    -fx-font-size: 12px;
-}
-
-/* Box */
-.check-box .box {
-    -fx-background-color: transparent;
-    -fx-border-width: 1;
-    -fx-background-radius: 2;
-}
-.table-view {
-    -fx-background-color: transparent;
-    -fx-border-color: -border-color;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
 /* =========================
    GLOBAL TABLEVIEW THEME
    ========================= */
@@ -101,7 +166,7 @@
 /* Apply to any TableView that has styleClass: table-general */
 .table-view {
     -fx-background-color: transparent;
-    -fx-border-color: #E6EAF2;
+    -fx-border-color: -primary;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 8;
@@ -109,7 +174,7 @@
 
 /* Header background */
 .table-view .column-header-background {
-    -fx-background-color: #F6F8FC;
+    -fx-background-color: -surface;
     -fx-background-radius: 12 12 0 0;
     -fx-padding: 6 8 6 8;
 }
@@ -118,26 +183,26 @@
 .table-view .column-header {
     -fx-background-color: transparent;
     -fx-size: 40px;
-    -fx-border-color: transparent transparent #E6EAF2 transparent;
+    -fx-border-color: transparent transparent -primary transparent;
 }
 
 /* Header text centered */
 .table-view .column-header .label {
-    -fx-text-fill: #1F2A44;
+    -fx-text-fill: -text;
     -fx-font-weight: bold;
 }
 
 /* rows + zebra */
-.table-row-cell { -fx-background-color: transparent; -fx-cell-size: 40px; }
-.table-row-cell:odd { -fx-background-color: rgba(255,255,255,0.02); }
-.table-row-cell:hover { -fx-background-color: rgba(255,255,255,0.05); }
-.table-row-cell:selected { -fx-background-color: rgba(58,134,168,0.22); }
+.table-row-cell { -fx-background-color: transparent; -fx-cell-size: 50px; }
+.table-row-cell:odd { -fx-background-color: -surface; }
+.table-row-cell:hover { -fx-background-color: -primary-2; }
+.table-row-cell:selected { -fx-background-color: -primary; }
 
 /* cells */
 .table-cell {
     -fx-padding: 8 12;
-    -fx-text-fill: -secondary-text-color;
-    -fx-font-size: 13px;
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 14px;
     -fx-alignment: CENTER;
 }
 
@@ -150,32 +215,32 @@
 /* Rows */
 .table-view .table-row-cell {
     -fx-cell-size: 44px;
-    -fx-border-color: transparent transparent #F0F2F7 transparent;
+    -fx-border-color: transparent transparent -border transparent;
 }
 
 /* Alternate row shading */
 .table-view .table-row-cell:odd {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: -bg;
 }
 .table-view .table-row-cell:even {
-    -fx-background-color: #FBFCFF;
+    -fx-background-color: -surface;
 }
 
 /* Hover row */
 .table-view .table-row-cell:hover {
-    -fx-background-color: #F2F6FF;
+    -fx-background-color: -primary;
 }
 
 /* Selected row */
 .table-view .table-row-cell:selected {
-    -fx-background-color: #DCE9FF;
+    -fx-background-color: -primary-2;
 }
 
 /* Cells (CENTER text by default) */
 .table-view .table-cell {
     -fx-alignment: CENTER;      /* ⭐ centers ALL cell content (text) */
     -fx-padding: 0 10 0 10;
-    -fx-text-fill: #1F2A44;
+    -fx-text-fill: -text;
     -fx-font-size: 12.5px;
     -fx-border-color: transparent;
 }
@@ -192,8 +257,13 @@
     -fx-background-color: transparent;
 }
 .table-view .scroll-bar .thumb {
-    -fx-background-color: #D7DDEA;
+    -fx-background-color: -surface-2;
     -fx-background-radius: 10;
+}
+/* Center all column headers */
+.table-view .column-header .label {
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
 }
 
 /* =========================
@@ -201,7 +271,7 @@
    ========================= */
 .table-action-btn {
     -fx-background-color: #2E6BFF;
-    -fx-text-fill: white;
+    -fx-text-fill: -text;
     -fx-font-weight: bold;
     -fx-background-radius: 8;
     -fx-padding: 6 12 6 12;
@@ -216,8 +286,8 @@
 
 /* Optional: secondary action button */
 .table-action-btn-secondary {
-    -fx-background-color: #EEF2FF;
-    -fx-text-fill: #2E6BFF;
+    -fx-background-color: -surface-2;
+    -fx-text-fill: -text;
     -fx-font-weight: bold;
     -fx-background-radius: 8;
     -fx-padding: 6 12 6 12;
@@ -234,22 +304,21 @@
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
-
 /* default */
 .status-pill-default {
-    -fx-background-color: #e9eef5;
-    -fx-text-fill: #1f2a44;
+    -fx-background-color: -primary-2;
+    -fx-text-fill: -text;
 }
 
 /* by status */
 .status-pill-active {
-    -fx-background-color: #e7f6ee;
-    -fx-text-fill: #16794c;
+    -fx-background-color: -progress;
+    -fx-text-fill: -text;          /* <- better contrast than -ok */
 }
 
 .status-pill-pending {
-    -fx-background-color: #fff5e6;
-    -fx-text-fill: #9a5b00;
+    -fx-background-color: -pending-bg;
+    -fx-text-fill: -pending;
 }
 
 .status-pill-completed {
@@ -261,4 +330,3 @@
     -fx-background-color: #fdecec;
     -fx-text-fill: #b42318;
 }
-

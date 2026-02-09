@@ -1,116 +1,33 @@
 *{
-    /* for background color */
-    -primary-bg-color: #1D2E4A;
-    -secondary-bg-color: #32548E;
-    -color: white;
+     -bg: #0B1220;
+     -surface: #111A2E;
+     -surface-2: #16223D;
+     -border: #24324A;
 
-    /* for the text color */
-    -primary-text-color: #F8FAFC;
-    -secondary-text-color: #CBD5E1;
-    -muted-text-color: #495057;
+    -text: #E5E7EB;
+    -text-muted: #9CA3AF;
 
-    /* for the navigation bar */
-    -nav-color: #011347;
-    -pane-color :#010b29;
-    -base-color :  #011347;
-    -search-box : #707173;
-    /* for the underline */
-    -underline-color: #FF8C00;
-    -search-hover-color :#7f8082;
+  /* Primary becomes Safety Orange */
+   -primary: #FBBF24;
+   -primary-2:#F59E0B;   /* hover / pressed */
 
-    /* for the border color */
-    -border-color : #32548E;
+  /* Accent can be something else (optional) */
+   -accent:#22D3EE;
 
-    /* for the focus color */
-    -focus-color: #FF8C00;
+   -ok: #22C55E;
+   -delay: #A78BFA;
+   -progress: #60A5FA;
+   -danger: #F87171;
 
-    /* for the hover color */
-    -hover-color: #32548E;
+    -pending: #F59E0B;
+    -pending-bg: #3A2A0A;
 
-
-}
- .miniIcon,.restoreIcon,.exitIcon{
-    -fx-fill: -secondary-text-color;
- }
-
-.label{
-    -fx-text-fill: -primary-text-color;
-}
-
- /* fo the text field and password field of the colors */
-.text-field, .password-field{
-    -fx-text-fill: -secondary-text-color;
-    -fx-border-color: -secondary-text-color;
-}
-
-.text-field:focused , .password-field:focused{
-    -fx-border-color: -focus-color;
-    -fx-border-width: 0 0 2 0;
-}
-
-/* for the check box field */
-.check-box {
-    -fx-text-fill: -secondary-text-color;
-}
-
-.check-box .box {
-    -fx-border-color: -secondary-bg-color;
-}
-
-.check-box:selected .mark {
-    -fx-background-color: -primary-text-color;
-}
-
-.check-box:selected .box {
-    -fx-background-color: -info-color;
-    -fx-border-color: -info-color;
-}
-
-#dashboardViewBtn:hover, #projectViewBtn:hover,
-#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover,
-#backBtn:hover, #profileViewBtn:hover, #toggleBtn:hover, #changePasswordBtn:hover {
-
-      /* 1. Set the background to Orange */
-      -fx-background-color: #FFA500;
-
-      /* 2. REMOVE ALL BORDERS (This stops the bottom line appearing) */
-      -fx-border-color: transparent;
-      -fx-border-width: 0;
-
-      /* 3. Set text and icons to White */
-      -fx-text-fill: white;
-
-      /* 4. Soft shadow to make the orange pop */
-      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+   -shadow: rgba(0, 0, 0, 0.35);
 }
 
 
 
-/* Ensure icons inside these white buttons are black for contrast */
-#dashboardViewBtn .icon-Style,
-#projectViewBtn .icon-Style,
-#userViewBtn .icon-Style,
-#reportViewBtn .icon-Style,
-#settingViewBtn .icon-Style {
-    -fx-icon-color: white !important;
-    -fx-fill: white !important;
-}
 
-/* Maintain your Orange Hover effect */
-#dashboardViewBtn:hover, #projectViewBtn:hover,
-#userViewBtn:hover, #reportViewBtn:hover, #settingViewBtn:hover {
-    -fx-background-color: #FFA500 !important; /* Stays orange on hover */
-    -fx-text-fill: white !important;
-}
 
-/* Ensure icons turn white again when hovering over the orange background */
-#dashboardViewBtn:hover .icon-Style,
-#projectViewBtn:hover .icon-Style,
-#userViewBtn:hover .icon-Style,
-#reportViewBtn:hover .icon-Style,
-#settingViewBtn:hover .icon-Style {
-    -fx-icon-color: white !important;
-    -fx-fill: white !important;
-}
 
 
