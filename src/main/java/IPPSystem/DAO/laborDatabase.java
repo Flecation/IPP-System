@@ -297,6 +297,7 @@ public static List<String> getAllSkillNames() {
         try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 labors labor = new labors();
+                labor.setAssignedProjectName(rs.getString("projectInstanceName"));
                 labor.setLaborId(rs.getInt("laborId"));
                 labor.setLaborName(rs.getString("laborName"));
                 labor.setLaborNRC(rs.getString("laborNRC"));
@@ -313,6 +314,20 @@ public static List<String> getAllSkillNames() {
         }
         return list;
     }
+
+    public static boolean reactivateLabor(int laborId) {
+        try {
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE labors SET isActive = 1, laborEndDate = NULL WHERE laborId = ?"
+            );
+            ps.setInt(1, laborId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 
 

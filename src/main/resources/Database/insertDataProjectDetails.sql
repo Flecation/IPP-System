@@ -226,7 +226,6 @@ INSERT INTO tasks (projectTaskName) VALUES
 -- =============================================
 
 -- Clear existing residential data (projectDetailId 1-8)
-DELETE FROM workItemDetails WHERE projectDetailId BETWEEN 1 AND 8;
 
 -- Apartment Low Rise (projectDetailId: 1)
 INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost) VALUES
@@ -384,7 +383,6 @@ INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, ma
 -- =============================================
 
 -- Clear existing industrial data
-DELETE FROM workItemDetails WHERE projectDetailId BETWEEN 19 AND 24;
 
 -- Insert ALL industrial building work items in ONE statement
 INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost) VALUES
@@ -449,7 +447,6 @@ INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, ma
 -- =============================================
 
 -- Clear existing infrastructure data
-DELETE FROM workItemDetails WHERE projectDetailId BETWEEN 25 AND 34;
 
 -- Insert ALL infrastructure work items in ONE statement
 INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost) VALUES
@@ -550,7 +547,6 @@ INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, ma
 -- =============================================
 
 -- Clear existing religious data
-DELETE FROM workItemDetails WHERE projectDetailId BETWEEN 35 AND 42;
 
 -- Insert ALL religious building work items in ONE statement
 INSERT INTO workItemDetails (projectDetailId, projectWorkItemId, minDuration, maxDuration, minLabors, maxLabors, minCost, maxCost) VALUES
@@ -664,7 +660,6 @@ INSERT INTO skills (skillName) VALUES
 -- =============================================
 
 -- Clear existing task details for residential
-DELETE FROM taskDetails WHERE workItemDetailId BETWEEN 1 AND 40;
 
 -- -----------------------------------------------------------
 -- SUBSTRUCTURE Tasks (workItemDetailId: 1, 6, 11, 16, 21, 26, 31, 36)
@@ -1028,3 +1023,214 @@ SET minDailyWage = ROUND(minDailyWage * 2100),
     maxDailyWage = ROUND(maxDailyWage * 2100) 
 where workitemrequireskills.workItemRequireSkillId != 0;
 
+
+
+-- ==========================================================
+-- FIX (Auto-generated): ensure ALL template work items have
+-- taskDetails + workItemRequireSkills, including Infrastructure
+-- and Religious projectTypes.
+--
+-- Your previous seed only filled workItemDetailId 1..40, so
+-- Infrastructure (projectDetailId 24..33) and Religious
+-- (projectDetailId 34..42) had NO tasks/skills, which is why
+-- createViewProject shows "No content in table".
+-- ==========================================================
+
+-- Rebuild ALL template taskDetails
+
+-- ========== Task templates for non-infrastructure (projectTypeId <> 4) ==========
+INSERT INTO taskDetails (workItemDetailId, projectTaskId, minDuration, maxDuration, quantityFormula, unitOfMeasure)
+SELECT wid.workItemDetailId, tt.projectTaskId, tt.minD, tt.maxD, tt.formula, tt.uom
+FROM workItemDetails wid
+JOIN projectDetails pd ON pd.projectDetailId = wid.projectDetailId
+JOIN workItems wi ON wi.projectWorkItemId = wid.projectWorkItemId
+JOIN (
+    -- Substructure
+    SELECT 'Substructure' wiName,  1 projectTaskId, 4.0 minD, 5.0 maxD, 'area * totalStories * 1.0' formula, 'm3' uom UNION ALL
+    SELECT 'Substructure',         2,               6.5,      8.5,      'area * totalStories * 0.6',        'm3' UNION ALL
+    SELECT 'Substructure',         3,               3.0,      4.0,      'area * totalStories * 0.5',        'm2' UNION ALL
+    SELECT 'Substructure',         4,               2.0,      3.0,      'area * totalStories * 0.25',       'ton' UNION ALL
+    SELECT 'Substructure',         5,               2.0,      3.0,      'area * totalStories * 0.6',        'm3' UNION ALL
+
+    -- Superstructure
+    SELECT 'Superstructure',       6,               10.0,     14.0,     'area * totalStories * 0.5',        'm3' UNION ALL
+    SELECT 'Superstructure',       7,               8.0,      12.0,     'area * totalStories * 0.4',        'm3' UNION ALL
+    SELECT 'Superstructure',       8,               7.0,      10.0,     'area * totalStories * 0.45',       'm3' UNION ALL
+    SELECT 'Superstructure',       9,               8.0,      11.0,     'area * totalStories * 0.35',       'm2' UNION ALL
+
+    -- Finishing
+    SELECT 'Finishing',            10,              5.0,      8.0,      'area * 1.0',                        'm2' UNION ALL
+    SELECT 'Finishing',            11,              4.0,      7.0,      'area * 1.0',                        'm2' UNION ALL
+    SELECT 'Finishing',            12,              5.0,      8.0,      'area * 1.0',                        'm2' UNION ALL
+    SELECT 'Finishing',            13,              4.0,      7.0,      'area * 1.0',                        'm2' UNION ALL
+
+    -- MEP
+    SELECT 'MEP',                  14,              4.0,      7.0,      'area * totalStories * 0.4',        'points' UNION ALL
+    SELECT 'MEP',                  15,              4.0,      7.0,      'totalUnits * 1.0',                  'points' UNION ALL
+    SELECT 'MEP',                  16,              3.0,      6.0,      'area * totalStories * 0.2',        'points' UNION ALL
+
+    -- External
+    SELECT 'External',             17,              2.0,      4.0,      'area * 0.15',                       'm2' UNION ALL
+    SELECT 'External',             18,              2.0,      4.0,      'area * 0.10',                       'm2' UNION ALL
+    SELECT 'External',             19,              2.0,      4.0,      'area * 0.08',                       'm' 
+) tt ON tt.wiName = wi.projectWorkItemName
+WHERE pd.projectTypeId <> 4;
+
+-- ========== Task templates for infrastructure (projectTypeId = 4) ==========
+-- Mapping by building:
+-- 12 Road/Highway, 13 Bridge, 14 Dam/Reservoir, 15 Utility/Pipeline
+INSERT INTO taskDetails (workItemDetailId, projectTaskId, minDuration, maxDuration, quantityFormula, unitOfMeasure)
+SELECT wid.workItemDetailId,
+       tt.projectTaskId,
+       tt.minD,
+       tt.maxD,
+       tt.formula,
+       tt.uom
+FROM workItemDetails wid
+JOIN projectDetails pd ON pd.projectDetailId = wid.projectDetailId
+JOIN workItems wi ON wi.projectWorkItemId = wid.projectWorkItemId
+JOIN (
+    -- -------- ROAD / HIGHWAY (buildingId=12) --------
+    SELECT 12 buildingId, 'Substructure' wiName, 20 projectTaskId, 3.0 minD, 6.0 maxD, 'area * 0.10' formula, 'm2' uom UNION ALL
+    SELECT 12,            'Substructure',        21,              5.0,      12.0,      'area * 0.30',          'm3' UNION ALL
+    SELECT 12,            'Substructure',        22,              4.0,      10.0,      'area * 0.25',          'm2' UNION ALL
+
+    SELECT 12,            'Superstructure',      23,              4.0,      10.0,      'area * 0.20',          'm3' UNION ALL
+    SELECT 12,            'Superstructure',      24,              6.0,      14.0,      'area * 0.30',          'm2' UNION ALL
+    SELECT 12,            'Superstructure',      25,              4.0,      10.0,      'area * 0.12',          'm'  UNION ALL
+
+    SELECT 12,            'Finishing',           31,              2.0,      6.0,       'area * 0.08',          'm2' UNION ALL
+    SELECT 12,            'Finishing',           32,              2.0,      6.0,       'area * 0.06',          'm'  UNION ALL
+
+    SELECT 12,            'MEP',                 34,              2.0,      6.0,       'totalUnits * 0.5',     'points' UNION ALL
+    SELECT 12,            'External',            33,              2.0,      6.0,       'area * 0.05',          'm2' UNION ALL
+
+    -- -------- BRIDGE (buildingId=13) --------
+    SELECT 13,            'Substructure',        20,              2.0,      5.0,       'area * 0.08',          'm2' UNION ALL
+    SELECT 13,            'Substructure',        21,              4.0,      10.0,      'area * 0.25',          'm3' UNION ALL
+    SELECT 13,            'Substructure',        27,              6.0,      14.0,      'area * 0.18',          'm3' UNION ALL
+
+    SELECT 13,            'Superstructure',      26,              8.0,      18.0,      'area * 0.22',          'm3' UNION ALL
+    SELECT 13,            'Superstructure',      25,              3.0,      8.0,       'area * 0.10',          'm'  UNION ALL
+
+    SELECT 13,            'Finishing',           31,              2.0,      5.0,       'area * 0.06',          'm2' UNION ALL
+    SELECT 13,            'Finishing',           32,              2.0,      5.0,       'area * 0.05',          'm'  UNION ALL
+
+    SELECT 13,            'External',            33,              2.0,      6.0,       'area * 0.04',          'm2' UNION ALL
+
+    -- -------- DAM / RESERVOIR (buildingId=14) --------
+    SELECT 14,            'Substructure',        20,              3.0,      7.0,       'area * 0.12',          'm2' UNION ALL
+    SELECT 14,            'Substructure',        21,              6.0,      16.0,      'area * 0.35',          'm3' UNION ALL
+    SELECT 14,            'Substructure',        22,              5.0,      14.0,      'area * 0.30',          'm2' UNION ALL
+
+    SELECT 14,            'Superstructure',      2,               6.0,      14.0,      'area * 0.20',          'm3' UNION ALL
+    SELECT 14,            'Superstructure',      5,               6.0,      14.0,      'area * 0.25',          'm3' UNION ALL
+
+    SELECT 14,            'MEP',                 34,              3.0,      10.0,      'totalUnits * 0.6',     'points' UNION ALL
+    SELECT 14,            'External',            33,              3.0,      10.0,      'area * 0.06',          'm2' UNION ALL
+
+    -- -------- UTILITY / PIPELINE (buildingId=15) --------
+    SELECT 15,            'Substructure',        28,              4.0,      12.0,      'area * 0.12',          'm'  UNION ALL
+    SELECT 15,            'Superstructure',      29,              4.0,      14.0,      'area * 0.10',          'm'  UNION ALL
+    SELECT 15,            'Finishing',           30,              3.0,      10.0,      'area * 0.08',          'm3' UNION ALL
+    SELECT 15,            'MEP',                 34,              3.0,      10.0,      'totalUnits * 0.5',     'points' UNION ALL
+    SELECT 15,            'External',            33,              2.0,      8.0,       'area * 0.04',          'm2'
+) tt ON tt.wiName = wi.projectWorkItemName
+WHERE pd.projectTypeId = 4
+  AND pd.projectBuildingId = tt.buildingId;
+
+-- Rebuild ALL template workItemRequireSkills
+
+-- ========== Skill templates for non-infrastructure (projectTypeId <> 4) ==========
+INSERT INTO workItemRequireSkills
+(workItemDetailId, skillId, minRequireLabors, maxRequireLabors, minDailyWage, maxDailyWage)
+SELECT wid.workItemDetailId, st.skillId, st.minL, st.maxL, st.minW, st.maxW
+FROM workItemDetails wid
+JOIN projectDetails pd ON pd.projectDetailId = wid.projectDetailId
+JOIN workItems wi ON wi.projectWorkItemId = wid.projectWorkItemId
+JOIN (
+    -- Substructure
+    SELECT 'Substructure' wiName, 10 skillId, 1 minL, 2 maxL, 90 minW, 150 maxW UNION ALL -- Foreman/Supervisor
+    SELECT 'Substructure',        11,         1,      2,      70,      120 UNION ALL -- Surveyor
+    SELECT 'Substructure',         9,         1,      3,      60,      105 UNION ALL -- Heavy Equipment Operator
+    SELECT 'Substructure',         7,         1,      3,      38,       70 UNION ALL -- Steel Fixer
+    SELECT 'Substructure',         1,         2,      6,      24,       42 UNION ALL -- General Laborer
+
+    -- Superstructure
+    SELECT 'Superstructure',      10,         1,      2,      90,      150 UNION ALL
+    SELECT 'Superstructure',       2,         2,      6,      33,       60 UNION ALL -- Mason
+    SELECT 'Superstructure',       3,         2,      6,      33,       66 UNION ALL -- Carpenter
+    SELECT 'Superstructure',       6,         1,      3,      40,       80 UNION ALL -- Welder
+    SELECT 'Superstructure',       7,         1,      4,      38,       70 UNION ALL -- Steel Fixer
+    SELECT 'Superstructure',       1,         2,      8,      24,       42 UNION ALL
+
+    -- Finishing
+    SELECT 'Finishing',           10,         1,      2,      90,      150 UNION ALL
+    SELECT 'Finishing',           13,         1,      4,      33,       62 UNION ALL -- Tile Setter
+    SELECT 'Finishing',           14,         1,      4,      28,       58 UNION ALL -- Painter
+    SELECT 'Finishing',           15,         1,      4,      31,       60 UNION ALL -- Plasterer
+    SELECT 'Finishing',            1,         2,      8,      24,       42 UNION ALL
+
+    -- MEP
+    SELECT 'MEP',                 10,         1,      2,      90,      150 UNION ALL
+    SELECT 'MEP',                  4,         1,      4,      42,       80 UNION ALL -- Electrician
+    SELECT 'MEP',                  5,         1,      4,      42,       80 UNION ALL -- Plumber
+    SELECT 'MEP',                 16,         0,      2,      48,       90 UNION ALL -- HVAC Technician
+    SELECT 'MEP',                  1,         1,      4,      24,       42 UNION ALL
+
+    -- External
+    SELECT 'External',            10,         1,      2,      90,      150 UNION ALL
+    SELECT 'External',            18,         1,      4,      32,       70 UNION ALL -- Landscaper
+    SELECT 'External',            19,         1,      4,      20,       46 UNION ALL -- Paving Specialist
+    SELECT 'External',             1,         1,      6,      24,       42
+) st ON st.wiName = wi.projectWorkItemName
+WHERE pd.projectTypeId <> 4;
+
+-- ========== Extra skills for infrastructure (projectTypeId = 4) ==========
+-- Add the base "construction" skills above PLUS infra specialists.
+INSERT INTO workItemRequireSkills
+(workItemDetailId, skillId, minRequireLabors, maxRequireLabors, minDailyWage, maxDailyWage)
+SELECT wid.workItemDetailId, st.skillId, st.minL, st.maxL, st.minW, st.maxW
+FROM workItemDetails wid
+JOIN projectDetails pd ON pd.projectDetailId = wid.projectDetailId
+JOIN workItems wi ON wi.projectWorkItemId = wid.projectWorkItemId
+JOIN (
+    -- Baseline infra skills for any infra work item
+    SELECT NULL buildingId, NULL wiName, 10 skillId, 1 minL, 2 maxL, 90 minW, 150 maxW UNION ALL
+    SELECT NULL,          NULL,          11,         1,      2,      70,      120 UNION ALL
+    SELECT NULL,          NULL,           9,         1,      4,      60,      105 UNION ALL
+    SELECT NULL,          NULL,           1,         2,      8,      24,       42 UNION ALL
+
+    -- Road / Highway specialists
+    SELECT 12,            'Finishing',   19,         1,      4,      22,       50 UNION ALL -- Paving Specialist
+    SELECT 12,            'External',    19,         1,      4,      22,       50 UNION ALL
+
+    -- Bridge specialists
+    SELECT 13,            NULL,          20,         1,      3,      60,      120 UNION ALL -- Bridge Specialist
+
+    -- Dam specialists
+    SELECT 14,            NULL,          22,         1,      3,      65,      130 UNION ALL -- Dam Construction Specialist
+
+    -- Pipeline specialists
+    SELECT 15,            NULL,          21,         1,      4,      45,      100            -- Pipe Layer
+) st
+WHERE pd.projectTypeId = 4
+  AND (
+        st.buildingId IS NULL
+        OR st.buildingId = pd.projectBuildingId
+      )
+  AND (
+        st.wiName IS NULL
+        OR st.wiName = wi.projectWorkItemName
+      )
+  AND (st.skillId IS NOT NULL)
+  AND (wid.workItemDetailId = wid.workItemDetailId) -- keep MySQL happy
+;
+
+-- Optional: Religious projects often need decorative / art skills (skillId 23 in your seed list)
+INSERT INTO workItemRequireSkills
+(workItemDetailId, skillId, minRequireLabors, maxRequireLabors, minDailyWage, maxDailyWage)
+SELECT wid.workItemDetailId, 23, 0, 2, 55, 120
+FROM workItemDetails wid
+JOIN projectDetails pd ON pd.projectDetailId = wid.projectDetailId
+WHERE pd.projectTypeId = 5;

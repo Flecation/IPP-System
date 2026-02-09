@@ -39,7 +39,12 @@ public class navigationPaneController{
     @FXML
     private StackPane modelBox;
 
-    @FXML private VBox alertLayer;
+    // ===== Alert includes (from navigationPane.fxml) =====
+    @FXML private Parent toastInclude;
+    @FXML private toastBoxController toastIncludeController;
+    @FXML private Parent confirmInclude;
+    @FXML private confirmBoxController confirmIncludeController;
+
 
 
     protected static users user = session.getInstance().getUser();
@@ -53,7 +58,9 @@ public class navigationPaneController{
         utils.setTitleBar(root,minimizeBtn,restoreBtn,exitBtn);
         utils.setTheme(root);
 
-        messageBoxService.init(alertLayer);
+        // Bind included toast/confirm so any controller can call messageBoxService.toast/confirm()
+        messageBoxService.bindIncluded(toastInclude, toastIncludeController, confirmInclude, confirmIncludeController);
+
 
         linkButton.bindHost(tapBar, loadPane);
         linkButton.createTab(tapBar,loadPane,"sideBarPane.fxml","Project View");
@@ -78,40 +85,43 @@ public class navigationPaneController{
 //        data.getALlUsers.addAll(database.getAllUsers());
     }
 
-
     public void showModal(String fxmlPath) {
+        showModalWithController(fxmlPath); // keep compatibility
+    }
+
+    public <T> T showModalWithController(String fxmlPath) {
         try {
             String resourcePath = fxmlPath.startsWith("/") ? fxmlPath : "/View/" + fxmlPath;
             java.net.URL location = getClass().getResource(resourcePath);
 
             if (location == null) {
                 System.err.println("!!! FXML NOT FOUND at: " + resourcePath);
-                return;
+                return null;
             }
 
-            Parent modalUI = FXMLLoader.load(location);
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent modalUI = loader.load();
 
-            // 1. Clear previous content and add new UI
             modelBox.getChildren().setAll(modalUI);
 
             AnchorPane.setTopAnchor(modelBox, 30.0);
             AnchorPane.setBottomAnchor(modelBox, 30.0);
             AnchorPane.setLeftAnchor(modelBox, 0.0);
             AnchorPane.setRightAnchor(modelBox, 0.0);
-            modelBox.getChildren().setAll(modalUI);
 
             modalLayer.setVisible(true);
             modalLayer.toFront();
+
+            return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
     public void closeModal() {
         modalLayer.setVisible(false);
-
     }
-
 
 
 

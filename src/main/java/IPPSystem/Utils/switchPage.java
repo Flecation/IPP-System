@@ -1,6 +1,7 @@
 package IPPSystem.Utils;
 
 import IPPSystem.Controllers.*;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Main.HelloApplication;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -19,10 +20,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import IPPSystem.Controllers.sideBarPaneController;
+import IPPSystem.Controllers.projectCardController;
+
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Stack;
 
 public class switchPage extends utils {
 
@@ -135,24 +137,47 @@ public class switchPage extends utils {
         blurIn.play();
     }
 
-    // Simple FXML opener utility
+    // Simple FXML opener utility (cached per tab)
+    @SuppressWarnings("unchecked")
     public void openFxml(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
-            Parent newContent = loader.load();
+        if (fxmlFile == null || fxmlFile.isBlank()) return;
 
-            // ✅ Inject this tab's loadPane into the loaded controller (if it supports it)
-            Object controller = loader.getController();
-            if (controller instanceof loadPaneAware aware) {
-                aware.setLoadPane(loadPane);
+        try {
+            // Per-tab cache (each tab has its own loadPane instance)
+            java.util.Map<String, Parent> cache =
+                    (java.util.Map<String, Parent>) loadPane.getProperties()
+                            .computeIfAbsent("FXML_CACHE", k -> new java.util.HashMap<String, Parent>());
+
+            Parent resolved = cache.get(fxmlFile);
+
+            // Load if not cached
+            if (resolved == null) {
+                FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/" + fxmlFile));
+                resolved = loader.load();
+
+                // Inject this tab's loadPane into controller (if supported)
+                Object controller = loader.getController();
+                if (controller instanceof loadPaneAware aware) {
+                    aware.setLoadPane(loadPane);
+                }
+
+                cache.put(fxmlFile, resolved);
             }
 
-            StackPane.setAlignment(newContent, javafx.geometry.Pos.CENTER);
+            final Parent newContent = resolved;
+
+            StackPane.setAlignment(newContent, Pos.CENTER);
             StackPane.setMargin(newContent, javafx.geometry.Insets.EMPTY);
 
+
             if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
+                // Bind only once (re-using cached nodes)
+                if (!region.prefWidthProperty().isBound()) {
+                    region.prefWidthProperty().bind(loadPane.widthProperty());
+                }
+                if (!region.prefHeightProperty().isBound()) {
+                    region.prefHeightProperty().bind(loadPane.heightProperty());
+                }
                 region.setMaxWidth(Double.MAX_VALUE);
                 region.setMaxHeight(Double.MAX_VALUE);
             }
@@ -273,6 +298,10 @@ public class switchPage extends utils {
         HBox row = null;
         int count = 0;
 
+        // ✅ get the sidebar controller for THIS TAB
+        sideBarPaneController nav =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+
         for (projects p : projectsList) {
             if (count % 3 == 0) {
                 row = new HBox(20);
@@ -281,29 +310,29 @@ public class switchPage extends utils {
             }
 
             try {
-                FXMLLoader loader = new FXMLLoader(
-                        utils.class.getResource("/View/projectCard.fxml")
-                );
-
+                FXMLLoader loader = new FXMLLoader(utils.class.getResource("/View/projectCard.fxml"));
                 Parent card = loader.load();
 
                 projectCardController controller = loader.getController();
-                controller.setData(p,loadPane);
-//                HBox.setHgrow(card, Priority.SOMETIMES);
 
+                // keep your existing pattern
+                controller.setData(p, loadPane);
 
-                if (row != null) {
-                    row.getChildren().add(card);
-//                    row.setSpacing(15);
-//                    row.setAlignment(Pos.CENTER);
+                // ✅ IMPORTANT: inject nav so card can open projectDetails safely
+                if (nav != null) {
+                    controller.setNav(nav);
                 }
+
+                if (row != null) row.getChildren().add(card);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            row.setAlignment(Pos.CENTER_RIGHT);
+
             count++;
         }
     }
+
 
     public void openWorkItemDetails(workItems item,projects project){
         if (item == null || loadPane == null) return;
@@ -331,9 +360,12 @@ public class switchPage extends utils {
 
             mgSEPersonalDetailController controller =
                     loader.getController();
-
             controller.setEngineer(user);
-            controller.setLoadPane(loadPane);
+
+            if (controller instanceof IPPSystem.Interfaces.loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
+            }
+
 
             loadPane.getChildren().setAll(page);
 
@@ -343,25 +375,18 @@ public class switchPage extends utils {
     }
 
 
-    public void openProjectDetails(projects project){
+    public void openProjectDetails(projects project) {
+        if (project == null) return;
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/projectDetails.fxml"));
-            Parent newContent = loader.load();
+        sideBarPaneController nav =
+                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        if (nav == null) return;
 
-            projectDetailsController controller = loader.getController();
-            controller.setProjectData(project);
-
-            if (newContent instanceof Region region) {
-                region.prefWidthProperty().bind(loadPane.widthProperty());
-                region.prefHeightProperty().bind(loadPane.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
+        nav.openInnerView("projectDetails.fxml", ctrl -> {
+            if (ctrl instanceof projectDetailsController c) {
+                c.setProjectData(project);
             }
-
-            loadPane.getChildren().setAll(newContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
+
 }

@@ -1,56 +1,63 @@
-@import url("main.css");
+/* messageBox_from_main.css
+   Uses your universal colors from main.css:
+   -warning-color, -success-color, -danger-color, -info-color,
+   -error-color, -wrong-color
+*/
 
-/* =========================
-   OVERLAY (dims background)
-   ========================= */
-.messageBoxRoot {
-    /* full-screen overlay inside your StackPane host */
+/* ====== Fallbacks (in case some vars are missing) ====== */
+.root {
+    -mb-text: #1f2a44;
+    -mb-text-2: rgba(31,42,68,0.75);
+    -mb-border: rgba(31,42,68,0.18);
+    -mb-surface: #ffffff;
+    -mb-surface-2: #f4f6f8;
+    -mb-overlay: rgba(0,0,0,0.35);
 
-    /* center children */
-    -fx-alignment: center;
-    -fx-padding: 30;
+    /* map to your main.css status colors when available */
+    -mb-success: -success-color;
+    -mb-warning: -warning-color;
+    -mb-danger:  -danger-color;
+    -mb-info:    -info-color;
 
-    /* fade looks nicer if you animate opacity later */
-    -fx-opacity: 1.0;
+    /* aliases you already defined in main.css */
+    -mb-error:   -error-color;
+    -mb-wrong:   -wrong-color;
+
+    /* optional app primary (fallback if not defined) */
+    -mb-primary: #2E6BFF;
 }
 
-/* =========================
-   CONFIRM MODAL (center box)
-   ========================= */
-.confirmMessageBox {
-    -fx-background-color: #3A86A8;
-    -fx-background-radius: 14;
-    -fx-border-radius: 14;
-    -fx-border-color: -border-color;
+/* ====== CONFIRM OVERLAY ====== */
+#confirmRoot {
+    -fx-background-color: -mb-overlay;
+}
+
+/* confirm card */
+#confirmMessageBox {
+    -fx-background-color: -mb-surface;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: -mb-border;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 20, 0, 0, 8);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 22, 0, 0, 10);
 }
 
-/* top title area */
-.confirmMessageBox .titleStyle {
-    -fx-background-color: -secondary-bg-color;
-    -fx-background-radius: 14 14 0 0;
-    -fx-border-radius: 14 14 0 0;
+/* header strip */
+.titleStyle {
+    -fx-background-color: -mb-surface-2;
+    -fx-background-radius: 12 12 0 0;
     -fx-padding: 14 18;
 }
 
-/* icon and title */
-#confirmMessageIcon {
-    -fx-font-size: 22;
-    -fx-text-fill: -primary-text-color;
-}
-
+/* title + message */
 #confirmMessageTitle {
     -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: -primary-text-color;
+    -fx-font-weight: 700;
+    -fx-text-fill: -mb-text;
 }
-
-/* body text */
 #confirmMessageLbl {
     -fx-font-size: 13;
-    -fx-text-fill: -secondary-text-color;
-    -fx-wrap-text: true;
+    -fx-text-fill: -mb-text-2;
 }
 
 /* buttons */
@@ -58,98 +65,67 @@
 #confirmMessageConfirmBtn {
     -fx-font-size: 13;
     -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-padding: 8 16;
+    -fx-cursor: hand;
 }
 
 #confirmMessageCancelBtn {
     -fx-background-color: transparent;
-    -fx-border-color: -border-color;
+    -fx-border-color: -mb-border;
     -fx-border-width: 1;
-    -fx-border-radius: 10;
-    -fx-text-fill: -primary-text-color;
+    -fx-text-fill: -mb-text;
 }
-
-#confirmMessageCancelBtn:hover {
-    -fx-background-color: rgba(255,255,255,0.05);
-}
+#confirmMessageCancelBtn:hover { -fx-background-color: rgba(0,0,0,0.03); }
+#confirmMessageCancelBtn:pressed { -fx-background-color: rgba(0,0,0,0.06); }
 
 #confirmMessageConfirmBtn {
-    -fx-background-color: -primary-color;
+    -fx-background-color: -mb-primary;
     -fx-text-fill: white;
 }
+#confirmMessageConfirmBtn:hover { -fx-opacity: 0.94; }
+#confirmMessageConfirmBtn:pressed { -fx-opacity: 0.88; }
 
-#confirmMessageConfirmBtn:hover {
-    -fx-opacity: 0.92;
-}
-
-/* =========================
-   TOAST (top/center toast box)
-   ========================= */
+/* ====== TOAST ====== */
 #toastBox {
     -fx-background-radius: 12;
-    -fx-padding: 12 16;
-    -fx-border-width: 1;
     -fx-border-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.20), 14, 0, 0, 6);
-
-    /* usually toast is a little transparent */
-    -fx-opacity: 0.98;
+    -fx-border-width: 1;
+    -fx-padding: 12 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.18), 14, 0, 0, 7);
 }
 
-/* icon/labels inside toast */
-#toastIcon {
-    -fx-font-size: 18;
-}
+#toastTitle { -fx-font-size: 14; -fx-font-weight: 700; }
+#toastMessage { -fx-font-size: 12.5; -fx-opacity: 0.95; }
+#toastIcon { -fx-font-size: 18; }
 
-#toastTitle {
-    -fx-font-size: 14;
-    -fx-font-weight: bold;
-}
-
-#toastMessage {
-    -fx-font-size: 12.5;
-    -fx-opacity: 0.95;
-}
-
-/* =========================
-   TOAST VARIANTS
-   - use border + background together
-   ========================= */
-.warning-toast {
-    -fx-background-color: -warning-color;
-    -fx-border-color: derive(-warning-color, -30%);
-    -fx-text-fill: -primary-bg-color;
-}
-
+/* toast variants (your controller adds: success-toast / warning-toast / error-toast / info-toast / wrong-toast) */
 .success-toast {
-    -fx-background-color: -success-color;
-    -fx-border-color: derive(-success-color, -30%);
-    -fx-text-fill: -primary-bg-color;
+    -fx-background-color: -mb-success;
+    -fx-border-color: derive(-mb-success, -30%);
 }
-
-.error-toast {
-    -fx-background-color: -error-color;
-    -fx-border-color: derive(-error-color, -30%);
-    -fx-text-fill: -primary-bg-color;
+.warning-toast {
+    -fx-background-color: -mb-warning;
+    -fx-border-color: derive(-mb-warning, -30%);
 }
-
 .info-toast {
-    -fx-background-color: -info-color;
-    -fx-border-color: derive(-info-color, -30%);
-    -fx-text-fill: -primary-bg-color;
+    -fx-background-color: -mb-info;
+    -fx-border-color: derive(-mb-info, -30%);
 }
-
+.error-toast {
+    -fx-background-color: -mb-error;
+    -fx-border-color: derive(-mb-error, -30%);
+}
 .wrong-toast {
-    -fx-background-color: -wrong-color;
-    -fx-border-color: derive(-wrong-color, -30%);
-    -fx-text-fill: -primary-bg-color;
+    -fx-background-color: -mb-wrong;
+    -fx-border-color: derive(-mb-wrong, -30%);
 }
 
-/* Make labels inside toast inherit the text color */
-.warning-toast .label,
+/* toast text to white on colored backgrounds */
 .success-toast .label,
-.error-toast .label,
+.warning-toast .label,
 .info-toast .label,
+.error-toast .label,
 .wrong-toast .label {
-    -fx-text-fill: inherit;
+    -fx-text-fill: white;
 }

@@ -1,4 +1,4 @@
-package IPPSystem.Utils;
+package IPPSystem.Interfaces;
 
 import javafx.scene.layout.StackPane;
 

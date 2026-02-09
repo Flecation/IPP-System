@@ -77,7 +77,7 @@ public class storage {
         return allLabors;
     }
 
-    private static final String PROFILE_DIR = "assets/profile/";
+    private static final String PROFILE_DIR = "/Photos/";
 
 
     public static String saveProfileImage(File source) {

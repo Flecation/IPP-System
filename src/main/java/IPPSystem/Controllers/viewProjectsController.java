@@ -4,12 +4,14 @@ import IPPSystem.Constants.projectStatus;
 import IPPSystem.Constants.role;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
-import IPPSystem.Utils.loadPaneAware;
+import IPPSystem.Interfaces.*;
 import IPPSystem.Utils.session;
 import IPPSystem.Utils.storage;
 import IPPSystem.Utils.utils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,10 +19,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import static IPPSystem.Controllers.navigationPaneController.user;
 import static IPPSystem.Utils.utils.showProjectCards;
 
-public class viewProjectsController implements loadPaneAware {
+public class viewProjectsController  implements loadPaneAware, SearchablePage, SuggestablePage, ReloadablePage {
 
     @FXML private VBox viewProjectPane;
     @FXML private Button activeBtn;
@@ -39,17 +46,21 @@ public class viewProjectsController implements loadPaneAware {
         ALL, ACTIVE, COMPLETED, PLANNING
     }
 
+    // Navigation can resolve the correct loadPane from any node inside the tab.
+    // We keep this field for backward compatibility with loadPaneAware injection.
     private StackPane loadPane;
 
     @Override
-    public void setLoadPane(StackPane loadPane) {
-        this.loadPane = loadPane;
-    }
+    public void setLoadPane(StackPane loadPane) { this.loadPane = loadPane; }
 
     @FXML
     private void onAddNewProject() {
+        // Resolve the current tab's loadPane from a node in this view
+        StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(viewProjectPane);
+        if (lp == null) return;
+
         sideBarPaneController parent =
-                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+                (sideBarPaneController) lp.getProperties().get("SIDEBAR_CONTROLLER");
 
         if (parent != null) {
             parent.openAddOverlay("createProject.fxml"); // <-- your add page fxml
@@ -60,10 +71,32 @@ public class viewProjectsController implements loadPaneAware {
 
     @FXML
     private void onClose() {
+        StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(viewProjectPane);
+        if (lp == null) return;
+
         sideBarPaneController parent =
-                (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+                (sideBarPaneController) lp.getProperties().get("SIDEBAR_CONTROLLER");
         if (parent != null) parent.closeAddOverlay();
     }
+
+    @Override
+    public void onReload() {
+        try {
+            // 1) Reload data from DB into your storage cache (if your storage reload does that)
+            data.reload();
+
+            // 2) Refresh choice boxes (supervisor list, project types, etc.)
+            // If this method already calls async internally, you can use it directly.
+            setAllDataInChoiceBox();
+
+            // 3) Re-apply all current filters + redraw cards
+            applyFilters();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
 
     private StatusFilter statusFilter = StatusFilter.ALL;
@@ -111,7 +144,8 @@ public class viewProjectsController implements loadPaneAware {
         choiceUsersBox.setOnAction(e -> applyFilters());
         choiceProjectTypesBox.setOnAction(e -> applyFilters());
 
-        applyFilters();
+        setAllDataInChoiceBoxAsync(() -> Platform.runLater(() -> allBtn.fire()));
+
     }
 
     private void applyFilters() {
@@ -133,6 +167,20 @@ public class viewProjectsController implements loadPaneAware {
 
         for (projects p : source) {
             if (p == null) continue;
+
+//            ==== for the search box  ======
+            // ===== sidebar search filter =====
+            if (searchQuery != null && !searchQuery.isBlank()) {
+                String name = p.getProjectInstanceName() == null ? "" : p.getProjectInstanceName().toLowerCase();
+                String sup  = p.getUserName() == null ? "" : p.getUserName().toLowerCase();
+                String type = p.getProjectTypeName() == null ? "" : p.getProjectTypeName().toLowerCase();
+                String st   = p.getProjectStatus() == null ? "" : p.getProjectStatus().toLowerCase();
+
+                if (!(name.contains(searchQuery) || sup.contains(searchQuery) || type.contains(searchQuery) || st.contains(searchQuery))) {
+                    continue;
+                }
+            }
+
 
             // ✅ FIXED: status filter using ProjectStatus enum
             if (statusFilter != StatusFilter.ALL) {
@@ -166,7 +214,8 @@ public class viewProjectsController implements loadPaneAware {
             filtered.add(p);
         }
 
-        showProjectCards(filtered, projectContainer, loadPane);
+        // Preferred: derive per-tab loadPane from any node in this view
+        showProjectCards(filtered, projectContainer, viewProjectPane);
 
 
         if (filtered.isEmpty()) {
@@ -198,4 +247,121 @@ public class viewProjectsController implements loadPaneAware {
         choiceProjectTypesBox.getSelectionModel().selectFirst();
         choiceUsersBox.getSelectionModel().selectFirst();
     }
+
+    private void setAllDataInChoiceBoxAsync(Runnable onDoneUi) {
+
+        Task<ChoiceData> task = new Task<>() {
+            @Override
+            protected ChoiceData call() {
+
+                ObservableList<String> userNames = FXCollections.observableArrayList();
+                ObservableList<String> types = FXCollections.observableArrayList();
+
+                userNames.add("All");
+                types.add("All");
+
+                // project types
+                data.getProjectTypes().values().forEach(t -> {
+                    if (t != null && !t.isBlank()) types.add(t);
+                });
+
+                // supervisors list
+                for (users u : data.getAllUsers()) {
+                    if (u != null
+                            && role.SUPERVISOR.toString().equals(u.getUserRole())
+                            && u.getUserName() != null
+                            && !u.getUserName().isBlank()) {
+                        userNames.add(u.getUserName());
+                    }
+                }
+
+                return new ChoiceData(userNames, types);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            ChoiceData cd = task.getValue();
+
+            choiceUsersBox.setItems(cd.userNames);
+            choiceProjectTypesBox.setItems(cd.types);
+
+            choiceUsersBox.getSelectionModel().selectFirst();
+            choiceProjectTypesBox.getSelectionModel().selectFirst();
+
+            if (onDoneUi != null) onDoneUi.run();
+        });
+
+        task.setOnFailed(e -> {
+            System.out.println("Failed to load choice boxes: " +
+                    (task.getException() == null ? "unknown" : task.getException().getMessage()));
+
+            choiceUsersBox.getItems().setAll("All");
+            choiceProjectTypesBox.getItems().setAll("All");
+            choiceUsersBox.getSelectionModel().selectFirst();
+            choiceProjectTypesBox.getSelectionModel().selectFirst();
+
+            if (onDoneUi != null) onDoneUi.run();
+        });
+
+        Thread t = new Thread(task, "load-choice-boxes");
+        t.setDaemon(true);
+        t.start();
+    }
+
+
+    private static class ChoiceData {
+        final ObservableList<String> userNames;
+        final ObservableList<String> types;
+
+        ChoiceData(ObservableList<String> userNames, ObservableList<String> types) {
+            this.userNames = userNames;
+            this.types = types;
+        }
+    }
+
+    //    ====== For the search box ===============
+    private String searchQuery = "";
+
+    @Override
+    public void onSearch(String query) {
+        this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
+        applyFilters(); // reuse your existing filter flow
+    }
+
+    @Override
+    public List<String> getSuggestions(String query) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        if (q.isEmpty()) return List.of();
+
+        boolean isSupervisor = loginUser.getUserRole().equals(role.SUPERVISOR.toString());
+
+        ObservableList<projects> source = FXCollections.observableArrayList();
+        if (isSupervisor) source.setAll(data.getProjectsByUserId(loginUser.getUserId()));
+        else source.setAll(data.getAllProjects());
+
+        Set<String> out = new LinkedHashSet<>();
+
+        for (projects p : source) {
+            if (p == null) continue;
+
+            // suggestions from multiple fields
+            addIfMatch(out,p.getProjectInstanceName(),q);
+            addIfMatch(out, p.getUserName(), q);          // supervisor name
+            addIfMatch(out, p.getProjectTypeName(), q);   // type
+            addIfMatch(out, p.getProjectStatus(), q);     // status text
+
+            if (out.size() >= 8) break;
+        }
+
+        return new ArrayList<>(out);
+    }
+
+    private void addIfMatch(Set<String> out, String value, String q) {
+        if (value == null) return;
+        String v = value.trim();
+        if (v.isEmpty()) return;
+        if (v.toLowerCase().contains(q)) out.add(v);
+    }
+
+
 }

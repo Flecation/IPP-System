@@ -1,126 +1,22 @@
-//package IPPSystem.Controllers;
-//
-//import IPPSystem.DAO.laborDatabase;
-//import IPPSystem.Models.labors;
-//import IPPSystem.Utils.session;
-//import javafx.collections.FXCollections;
-//import javafx.event.ActionEvent;
-//import javafx.fxml.FXML;
-//import javafx.scene.control.*;
-//
-//import java.sql.Date;
-//
-//public class createLaborController {
-//
-//    @FXML private Button addLaborBtn;
-//    @FXML private Button handleCancel;
-//
-//    @FXML private TextField laborName;
-//    @FXML private TextField laborPhone;
-//    @FXML private TextField laborNRC;
-//    @FXML private TextField experienceYear;
-//
-//    @FXML private ComboBox<String> skillCombo;
-//    @FXML private DatePicker startDatePicker;
-//
-//    @FXML
-//    public void initialize() {
-//
-//        // Load skills into dropdown
-//        skillCombo.setItems(FXCollections.observableArrayList(
-//                laborDatabase.getAllSkills()
-//        ));
-//    }
-//
-//    @FXML
-//    void clickAddLabor(ActionEvent event) {
-//
-//        if (!isValid()) return;
-//
-//        int skillId = laborDatabase.getSkillIdByName(skillCombo.getValue());
-//
-//        labors labor = new labors();
-//        labor.setLaborName(laborName.getText());
-//        labor.setLaborPhone(laborPhone.getText());
-//        labor.setLaborNRC(laborNRC.getText());
-//        labor.setSkillId(skillId);
-//        labor.setLaborStartDate(Date.valueOf(startDatePicker.getValue()));
-//
-//        boolean success = laborDatabase.addLabor(labor);
-//
-//        if (success) {
-//            showAlert("Labor added successfully!");
-//            closeModal();
-//
-////            session.getInstance()
-////                    .getNavigationController()
-////                    .refreshLaborView();
-//        } else {
-//            showAlert("Failed to add labor.");
-//        }
-//    }
-//
-//    @FXML
-//    void clickHandleCancel(ActionEvent event) {
-//        closeModal();
-//    }
-//
-//    // 🔒 Validation
-//    private boolean isValid() {
-//
-//        if (laborName.getText().isEmpty()
-//                || laborPhone.getText().isEmpty()
-//                || laborNRC.getText().isEmpty()
-//                || experienceYear.getText().isEmpty()
-//                || skillCombo.getValue() == null
-//                || startDatePicker.getValue() == null) {
-//
-//            showAlert("Please fill all fields.");
-//            return false;
-//        }
-//
-//        // Experience must be number
-//        try {
-//            Integer.parseInt(experienceYear.getText());
-//        } catch (Exception e) {
-//            showAlert("Experience must be a number.");
-//            return false;
-//        }
-//
-//        return true;
-//    }
-//
-//    private void closeModal() {
-//        session.getInstance().getNavigationController().closeModal();
-//    }
-//
-//    private void showAlert(String msg) {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setContentText(msg);
-//        alert.show();
-//    }
-//
-//    @FXML
-//    private void handleCreateEngineer() {
-//        session.getInstance()
-//                .getNavigationController()
-//                .showModal("createLaborModal.fxml");
-//    }
-//}
-
 package IPPSystem.Controllers;
 
-import IPPSystem.DAO.laborDatabase;
+import IPPSystem.Constants.notificationType;
+import IPPSystem.DAO.database;
+import IPPSystem.Interfaces.AddOverlayForm;
+import IPPSystem.Interfaces.loadPaneAware;
+import IPPSystem.Interfaces.ReloadablePage;
 import IPPSystem.Models.labors;
-import IPPSystem.Utils.session;
-import javafx.collections.FXCollections;
+import IPPSystem.Models.skills;
+import IPPSystem.Utils.messageBoxService;
+import IPPSystem.Utils.utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 
 import java.sql.Date;
 
-public class createLaborController {
+public class createLaborController implements loadPaneAware, AddOverlayForm {
 
     @FXML private Button addLaborBtn;
     @FXML private Button handleCancel;
@@ -130,190 +26,127 @@ public class createLaborController {
     @FXML private TextField laborNRC;
     @FXML private TextField experienceYear;
 
-    @FXML private ComboBox<String> skillCombo;
+    @FXML private ComboBox<skills> skillCombo;
     @FXML private DatePicker startDatePicker;
 
-    // Callback to notify parent controller
-    private Runnable onLaborAdded;
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
 
     @FXML
     public void initialize() {
-        skillCombo.setItems(FXCollections.observableArrayList(
-                laborDatabase.getAllSkills()
-        ));
+        // load all skills (id+name)
+        skillCombo.setItems(database.getAllSkill());
+
+        // display skillName
+        skillCombo.setButtonCell(new ListCell<>() {
+            @Override protected void updateItem(skills item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getSkillName());
+            }
+        });
+        skillCombo.setCellFactory(lv -> new ListCell<>() {
+            @Override protected void updateItem(skills item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getSkillName());
+            }
+        });
     }
 
-    // Set parent callback
-    public void setOnLaborAdded(Runnable callback) {
-        this.onLaborAdded = callback;
+    @FXML
+    void clickHandleCancel(ActionEvent event) {
+        sideBarPaneController sb = getSideBar();
+        if (sb != null) sb.closeAddOverlay();
     }
 
     @FXML
     void clickAddLabor(ActionEvent event) {
 
-        if (!isValid()) return;
+        if (!isFormValid()) {
+            messageBoxService.toast("Invalid", getValidationMessage(), notificationType.WARNING);
+            return;
+        }
 
-        int skillId = laborDatabase.getSkillIdByName(skillCombo.getValue());
+        skills selected = skillCombo.getValue();
+        if (selected == null || selected.getSkillId() <= 0) {
+            messageBoxService.toast("Invalid", "Please choose a valid skill.", notificationType.WARNING);
+            return;
+        }
 
         labors labor = new labors();
-        labor.setLaborName(laborName.getText());
-        labor.setLaborPhone(laborPhone.getText());
-        labor.setLaborNRC(laborNRC.getText());
-        labor.setSkillId(skillId);
+        labor.setSkillId(selected.getSkillId());
+        labor.setLaborName(laborName.getText().trim());
+        labor.setLaborPhone(laborPhone.getText().trim());
+        labor.setLaborNRC(laborNRC.getText().trim());
         labor.setLaborStartDate(Date.valueOf(startDatePicker.getValue()));
+        labor.setActive(true);
 
-        boolean success = laborDatabase.addLabor(labor);
+        boolean ok = database.createLabor(labor);
 
+        if (ok) {
+            messageBoxService.toast("Success", "Labor created successfully.", notificationType.SUCCESS);
 
+            sideBarPaneController sb = getSideBar();
+            if (sb != null) {
+                sb.closeAddOverlay();
 
-        if (success) {
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Labor created successfully.");
-            session.getInstance().getNavigationController().closeModal();
-            closeModal();
-
-            if (onLaborAdded != null) {
-                onLaborAdded.run();
+                // ✅ reload current inner page (labor view)
+                Object inner = sb.getCurrentInnerController();
+                if (inner instanceof ReloadablePage rp) rp.onReload();
             }
-
         } else {
-            showAlert(Alert.AlertType.ERROR, "Fail", "Failed to create labor.");
+            messageBoxService.toast("Fail", "Failed to create labor.", notificationType.ERROR);
         }
     }
 
-    @FXML
-    void clickHandleCancel(ActionEvent event) {
-        closeModal();
+    private sideBarPaneController getSideBar() {
+        StackPane lp = (loadPane != null) ? loadPane : utils.findTabLoadPane(handleCancel);
+        if (lp == null) return null;
+        Object p = lp.getProperties().get("SIDEBAR_CONTROLLER");
+        return (p instanceof sideBarPaneController sb) ? sb : null;
     }
 
-//    // 🔒 Validation
-//    private boolean isValid() {
-//        String name = laborName.getText().trim();
-//        String phone = laborPhone.getText().trim();
-//        String nrc = laborNRC.getText().trim();
-//        String exp = experienceYear.getText().trim();
-//        String skill = skillCombo.getValue();
-//
-//        if (name.isEmpty() || phone.isEmpty() || nrc.isEmpty() || exp.isEmpty()
-//                || skill == null || startDatePicker.getValue() == null) {
-//            showAlert("Please fill all fields.");
-//            markError(name);
-//            return false;
-//        }
-//
-//        if (!name.matches("[a-zA-Z\\s]+")) {
-//            showAlert("Name must contain letters only.");
-//            return false;
-//        }
-//
-//        if (!phone.matches("09\\d{9,10}")) {
-//            showAlert("Phone must start with 09 and be 11 or 12 digits.");
-//            return false;
-//        }
-//
-//        try {
-//            Integer.parseInt(exp);
-//        } catch (Exception e) {
-//            showAlert("Experience must be an integer.");
-//            return false;
-//        }
-//
-//        if (!nrc.matches("\\d{2}/[A-Z]{3}\\([A-Z]\\)/\\d{6}")) {
-//            showAlert("NRC format is invalid. Example: 12/ABC(N)/123456");
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    // ===== AddOverlayForm (for outside click confirm discard) =====
+    @Override
+    public boolean hasUnsavedChanges() {
+        return (laborName != null && !laborName.getText().trim().isEmpty())
+                || (laborPhone != null && !laborPhone.getText().trim().isEmpty())
+                || (laborNRC != null && !laborNRC.getText().trim().isEmpty())
+                || (experienceYear != null && !experienceYear.getText().trim().isEmpty())
+                || (skillCombo != null && skillCombo.getValue() != null)
+                || (startDatePicker != null && startDatePicker.getValue() != null);
+    }
 
+    @Override
+    public boolean isFormValid() {
+        String name = laborName == null ? "" : laborName.getText().trim();
+        String phone = laborPhone == null ? "" : laborPhone.getText().trim();
+        String nrc = laborNRC == null ? "" : laborNRC.getText().trim();
+        String exp = experienceYear == null ? "" : experienceYear.getText().trim();
+        skills s = skillCombo == null ? null : skillCombo.getValue();
 
-    private boolean isValid() {
-        String nameText = laborName.getText().trim();
-        String phoneText = laborPhone.getText().trim();
-        String nrcText = laborNRC.getText().trim();
-        String expText = experienceYear.getText().trim();
-        String skill = skillCombo.getValue();
-
-        // Clear previous error highlights
-        clearError(laborName, laborPhone, laborNRC, experienceYear, skillCombo, startDatePicker);
-
-        // Check all fields are filled
-        if (nameText.isEmpty() || phoneText.isEmpty() || nrcText.isEmpty()
-                || expText.isEmpty() || skill == null || startDatePicker.getValue() == null) {
-            showAlert("Please fill all fields.");
-            if(nameText.isEmpty()) markError(laborName);
-            if(phoneText.isEmpty()) markError(laborPhone);
-            if(nrcText.isEmpty()) markError(laborNRC);
-            if(expText.isEmpty()) markError(experienceYear);
-            if(skill == null) markError(skillCombo);
-            if(startDatePicker.getValue() == null) markError(startDatePicker);
+        if (name.isEmpty() || phone.isEmpty() || nrc.isEmpty() || exp.isEmpty() || s == null || startDatePicker.getValue() == null)
             return false;
-        }
 
-        // Name: only letters + spaces
-        if (!nameText.matches("[a-zA-Z\\s]+")) {
-            showAlert("Name must contain letters only.");
-            markError(laborName);
-            return false;
-        }
+        if (!name.matches("[a-zA-Z\\s]+")) return false;
+        if (!phone.matches("09\\d{9,10}")) return false;
 
-        // Phone: start with 09, 11–12 digits
-        if (!phoneText.matches("09\\d{9,10}")) {
-            showAlert("Phone must start with 09 and be 11 or 12 digits.");
-            markError(laborPhone);
-            return false;
-        }
+        try { Integer.parseInt(exp); } catch (Exception e) { return false; }
 
-        // Experience year: integer
-        try {
-            Integer.parseInt(expText);
-        } catch (Exception e) {
-            showAlert("Experience must be an integer.");
-            markError(experienceYear);
-            return false;
-        }
-
-        // NRC format
-        if (!nrcText.matches("\\d{2}/[A-Z]{3}\\([A-Z]\\)/\\d{6}")) {
-            showAlert("NRC format is invalid. Example: 12/ABC(N)/123456");
-            markError(laborNRC);
-            return false;
-        }
+        if (!nrc.matches("\\d{2}/[A-Z]{3}\\([A-Z]\\)/\\d{6}")) return false;
 
         return true;
     }
 
-
-    // Add red border to indicate error
-    private void markError(Control c) {
-        c.setStyle("-fx-border-color: #c44536;-fx-opacity: 0.8; -fx-border-width: 2px; -fx-border-radius: 4px;");
-    }
-
-    // Clear all previous error borders
-    private void clearError(Control... controls) {
-        for (Control c : controls) {
-            c.setStyle(""); // resets style
-        }
-    }
-
-
-    private void closeModal() {
-        session.getInstance().getNavigationController().closeModal();
-    }
-
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(msg);
-        alert.show();
-    }
-
-
-
-
-    private void showAlert(Alert.AlertType type, String title, String msg) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    @Override
+    public String getValidationMessage() {
+        return "Please fill all fields correctly.\n" +
+                "- Name: letters only\n" +
+                "- Phone: 09 + 11/12 digits\n" +
+                "- NRC: 12/ABC(N)/123456\n" +
+                "- Skill + Entrance Date required";
     }
 }

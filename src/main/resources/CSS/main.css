@@ -226,3 +226,39 @@
 .table-action-btn-secondary:hover {
     -fx-opacity: 0.9;
 }
+
+/* ===== Status pill (shared) ===== */
+.status-pill {
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 999;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* default */
+.status-pill-default {
+    -fx-background-color: #e9eef5;
+    -fx-text-fill: #1f2a44;
+}
+
+/* by status */
+.status-pill-active {
+    -fx-background-color: #e7f6ee;
+    -fx-text-fill: #16794c;
+}
+
+.status-pill-pending {
+    -fx-background-color: #fff5e6;
+    -fx-text-fill: #9a5b00;
+}
+
+.status-pill-completed {
+    -fx-background-color: #e8f0fe;
+    -fx-text-fill: #1a56db;
+}
+
+.status-pill-cancelled {
+    -fx-background-color: #fdecec;
+    -fx-text-fill: #b42318;
+}
+

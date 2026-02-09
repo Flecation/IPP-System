@@ -16,10 +16,10 @@ public class userDatabase {
 
     private static Connection con;
 
-        private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto,userAddress;
-        private static int userId;
-        private static boolean isActive;
-        private static java.util.Date userDOB,userStartDate,userEndDate;
+    private static String userName,userEmail,userPhone,userPassword,userRole,userPhoto,userAddress;
+    private static int userId;
+    private static boolean isActive;
+    private static java.util.Date userDOB,userStartDate,userEndDate;
 
     static {
         try {
@@ -74,7 +74,7 @@ public class userDatabase {
                 userPassword = rs.getString("userPassword");
                 userId = rs.getInt("userId");
                 userPhoto = rs.getString("userPhoto");
-              //  userAddress = rs.getString("userAddress");
+                //  userAddress = rs.getString("userAddress");
 
                 users users = new users(userId,userName,userEmail,userPhone,userRole,userDOB,userStartDate,userEndDate,isActive,userPassword,userPhoto,userAddress);
                 ls.add(users);
@@ -136,7 +136,7 @@ public class userDatabase {
                         rs.getString("userPhoto"),
                         rs.getString("userAddress")
 
-                        );
+                );
             }else {
                 return null;
             }
@@ -152,8 +152,8 @@ public class userDatabase {
         try {
             PreparedStatement pstmt = con.prepareStatement(
                     "INSERT INTO users (userName,userRole,userPhone," +
-                    "userEmail,userDOB,userPassword,userStartDate,userPhoto)" +
-                    " values (?,?,?,?,?,?,?,?)"
+                            "userEmail,userDOB,userPassword,userStartDate,userPhoto)" +
+                            " values (?,?,?,?,?,?,?,?)"
             );
             pstmt.setString(1,user.getUserName());
             pstmt.setString(2,user.getUserRole());
@@ -228,5 +228,22 @@ public class userDatabase {
 
 
 
+
+
+
+    /**
+     * UnResign / Reactivate user (set isActive = TRUE and clear userEndDate)
+     */
+    public static boolean reactivate(int id){
+        try {
+            PreparedStatement pstmt = con.prepareCall(
+                    "UPDATE users SET isActive = TRUE, userEndDate = NULL WHERE userId = ?;"
+            );
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

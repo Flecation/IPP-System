@@ -12,6 +12,13 @@ public class labors extends skills{
     private int skillId;
     private String skillName;
 
+    // Optional: shown in laborView TableView (Assign Project column)
+    private String assignedProjectName;
+
+    public String getAssignedProjectName() { return assignedProjectName; }
+    public void setAssignedProjectName(String assignedProjectName) { this.assignedProjectName = assignedProjectName; }
+
+
     public int getSkillId() { return skillId; }
     public void setSkillId(int skillId) { this.skillId = skillId; }
 

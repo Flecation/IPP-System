@@ -6,11 +6,8 @@ import IPPSystem.Constants.role;
 import IPPSystem.DAO.database;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.workItems;
-import IPPSystem.Utils.calculationHelper;
-import IPPSystem.Utils.loadPaneAware;
-import IPPSystem.Utils.messageBoxService;
-import IPPSystem.Utils.utils;
-import javafx.application.Platform;
+import IPPSystem.Utils.*;
+import IPPSystem.Interfaces.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,18 +18,19 @@ import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import java.util.*;
 
 import static IPPSystem.Controllers.dashboardController.loginUser;
 
-public class projectDetailsController  implements loadPaneAware {
+public class projectDetailsController implements loadPaneAware, SearchablePage, SuggestablePage, NavAware, TabStateful , ReloadablePage{
 
-    // ===== Header =====
     @FXML private Label projectName;
     @FXML private Label projectStatus;
     @FXML private Label projectGeneral;
     @FXML private Button backToViewProjectBtn;
 
-    // ===== Top cards =====
     @FXML private Label dayCompleteLbl;
     @FXML private Label completedDay;
     @FXML private Label totalDay;
@@ -48,7 +46,6 @@ public class projectDetailsController  implements loadPaneAware {
     @FXML private Label totalEarnValue;
     @FXML private ProgressBar earnValueProgress;
 
-    // ===== Project Info (view-only) =====
     @FXML private VBox viewOnlyProjectInfo;
     @FXML private Label projectViewLevel;
     @FXML private Label projectViewStartDate;
@@ -59,14 +56,6 @@ public class projectDetailsController  implements loadPaneAware {
     @FXML private ProgressBar projectProgress;
     @FXML private Label projectProgressLbl;
 
-
-    // floating labels (your note)
-//    @FXML private Label editContactLbl;   // Contract Value label (typo in FXML: Contact)
-//    @FXML private Label editDurationLbl;  // Duration label
-//    @FXML private Label editAddressLbl;   // Address label
-//    @FXML private Label levelLbl;         // exists in FXML header row
-
-    // ===== CPI / SPI widgets =====
     @FXML private Circle spiProgressCircle;
     @FXML private Label spiLbl;
     @FXML private Label spiStatusLbl;
@@ -79,7 +68,6 @@ public class projectDetailsController  implements loadPaneAware {
     @FXML private Label cpiPvLbl;
     @FXML private Label cpiEvLbl;
 
-    // ===== Work items table =====
     @FXML private TableView<workItems> workItemTable;
     @FXML private TableColumn<workItems, String> workItemNameCol;
     @FXML private TableColumn<workItems, String> workItemStatusCol;
@@ -87,69 +75,219 @@ public class projectDetailsController  implements loadPaneAware {
     @FXML private TableColumn<workItems, Number> workItemDurationCol;
     @FXML private TableColumn<workItems, java.sql.Date> workItemStartCol;
     @FXML private TableColumn<workItems, java.sql.Date> workItemEndCol;
-
     @FXML private Button pDetailEditBtn;
+
+    private ObservableList<workItems> allWorkItems = FXCollections.observableArrayList();
+    private String searchQuery = "";
+
+    /**
+     * Optional back behavior injected by the page that opened this controller.
+     * If null, we fall back to the default behavior (go to viewProjects.fxml).
+     */
+    private Runnable backAction;
+
+    public void setBackAction(Runnable backAction) {
+        this.backAction = backAction;
+    }
+
+    @Override
+    public void onSearch(String query) {
+        this.searchQuery = (query == null) ? "" : query.trim().toLowerCase();
+        applyWorkItemSearchFilter();
+    }
+
+    private void applyWorkItemSearchFilter() {
+        if (workItemTable == null) return;
+        if (allWorkItems == null) {
+            workItemTable.setItems(FXCollections.observableArrayList());
+            workItemTable.refresh();
+            return;
+        }
+
+        String q = (searchQuery == null) ? "" : searchQuery.trim();
+        if (q.isEmpty()) {
+            workItemTable.setItems(allWorkItems);
+            workItemTable.refresh();
+            return;
+        }
+
+        List<workItems> filtered = new ArrayList<>();
+        for (workItems wi : allWorkItems) {
+            if (wi == null) continue;
+
+            String name = safeLower(wi.getWorkItemName());
+            String st   = safeLower(wi.getProjectStatus());
+
+            // FIX: don’t copy status for cost/duration
+            String cost = String.valueOf(wi.getProjectCost());       // if your model has getProjectCost()
+            String dur  = String.valueOf(wi.getProjectDuration());   // if your model has getProjectDuration()
+
+            if (name.contains(q) || st.contains(q) || cost.contains(q) || dur.contains(q)) {
+                filtered.add(wi);
+            }
+        }
+
+        workItemTable.setItems(FXCollections.observableArrayList(filtered));
+        workItemTable.refresh();
+    }
+
+    @Override
+    public List<String> getSuggestions(String query) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        if (q.isEmpty()) return List.of();
+        if (allWorkItems == null || allWorkItems.isEmpty()) return List.of();
+
+        Set<String> out = new LinkedHashSet<>();
+        for (workItems wi : allWorkItems) {
+            if (wi == null) continue;
+
+            // suggestions from key work-item fields
+            addIfMatch(out, wi.getWorkItemName(), q);
+            addIfMatch(out, wi.getProjectStatus(), q);
+
+            // if you have more fields in workItems, you can enable these:
+            // addIfMatch(out, wi.getAssignStatus(), q);
+            // addIfMatch(out, wi.getSupervisorName(), q);
+
+            if (out.size() >= 8) break;
+        }
+        return new ArrayList<>(out);
+    }
+
+    private void addIfMatch(Set<String> out, String value, String q) {
+        if (value == null) return;
+        String v = value.trim();
+        if (v.isEmpty()) return;
+        if (v.toLowerCase().contains(q)) out.add(v);
+    }
+
+    private String safeLower(String s) { return s == null ? "" : s.toLowerCase(); }
+
+    private sideBarPaneController nav;
+    @Override public void setNav(sideBarPaneController nav){ this.nav = nav; }
+
+    protected storage data = storage.getInstance();
+
+    @Override
+    public Map<String, Object> exportState() {
+        Map<String, Object> s = new HashMap<>();
+        if (project != null) s.put("assignProjectId", project.getAssignProjectId());
+        return s;
+    }
+
+    @Override
+    public void importState(Map<String, Object> state) {
+        if (state == null) return;
+        Object idObj = state.get("assignProjectId");
+        if (!(idObj instanceof Integer assignProjectId)) return;
+
+        projects found = null;
+        for (projects p : data.getAllProjects()) {
+            if (p != null && p.getAssignProjectId() == assignProjectId) {
+                found = p;
+                break;
+            }
+        }
+        if (found != null) setProjectData(found);
+    }
 
     private projects project;
     private final calculationHelper helper = calculationHelper.getInstance();
 
-    private StackPane loadPane = utils.findTabLoadPane(viewOnlyProjectInfo);
-
+    private StackPane loadPane;
     @Override
     public void setLoadPane(StackPane loadPane) {
         this.loadPane = loadPane;
+        if (this.loadPane != null) {
+            this.nav = (sideBarPaneController) this.loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        }
     }
 
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+        if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return nav;
+    }
+
+    @Override
+    public void onReload() {
+        if (project == null) return;
+
+        // Re-run your existing loader (this refreshes header, workItems, dashboard, etc.)
+        setProjectData(project);
+    }
 
     @FXML
     public void initialize() {
-
         pDetailEditBtn.setGraphic(utils.iconSet(FontAwesomeSolid.EDIT));
 
         backToViewProjectBtn.setOnAction(e -> {
-            StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-            utils.openFxml("viewProjects.fxml", pane);
+            // If the opener injected a back behavior (eg. return to mgSEPersonalDetail), use it.
+            if (backAction != null) {
+                backAction.run();
+                return;
+            }
+
+            // Default / legacy behavior
+            sideBarPaneController n = requireNav();
+            if (n == null) return;
+            n.openInnerView("viewProjects.fxml", ctrl -> {});
+            linkButton.getInstance().setTabButtonName("Project View");
         });
 
         workItemTable.setRowFactory(tv -> {
             TableRow<workItems> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2 && !row.isEmpty()) {
-                    StackPane pane = utils.findTabLoadPane(viewOnlyProjectInfo);
-                    utils.openWorkItemDetails(row.getItem(), project, pane); // <-- pass pane, not null
+                    sideBarPaneController n = requireNav();
+                    if (n == null) return;
+                    nav.openInnerView("workItemDetails.fxml", ctrl -> {
+                        if (ctrl instanceof workItemDetailsController c) {
+                            c.setWorkItem(row.getItem(), project);
+                            c.setNav(nav);
+                        }
+                    });
+                    linkButton.getInstance().setTabButtonName(row.getItem().getWorkItemName() + " View");
                 }
             });
             return row;
         });
 
-        pDetailEditBtn.setOnAction(e -> {
-                messageBoxService.toast("Not Allow TO Edit","This version can't edit Data", notificationType.INFO);
+        workItemDurationCol.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.valueOf(utils.roundDays(item.doubleValue())));
+            }
         });
 
-    }
+        workItemCostCol.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : utils.formatCompactMoneyMMK(item.doubleValue()));
+            }
+        });
 
+        pDetailEditBtn.setOnAction(e -> {
+            messageBoxService.toast("Not Allow To Edit", "Buy Premium To Edit!!", notificationType.INFO);
+        });
+    }
 
     public void setProjectData(projects project) {
         this.project = project;
         if (project == null) return;
 
-        // Toggle view/edit by role (your old logic)
         boolean isSupervisor = loginUser != null && role.SUPERVISOR.toString().equals(loginUser.getUserRole());
-        if(isSupervisor){
-            pDetailEditBtn.setVisible(false);
-        }else{
-            pDetailEditBtn.setVisible(true);
-        }
+        pDetailEditBtn.setVisible(!isSupervisor);
 
-        // Header
         safeSet(projectName, project.getProjectInstanceName());
-        safeSet(projectStatus, project.getProjectStatus());
+        projectStatus.setText(project.getProjectStatus());
+        utils.applyStatusPill(projectStatus, projectStatus.getText());
+
         safeSet(projectGeneral,
                 (project.getProjectTypeName() != null ? project.getProjectTypeName() : "") +
                         (project.getProjectBuildingName() != null ? (", " + project.getProjectBuildingName()) : "")
         );
 
-        // View section
         safeSet(projectViewLevel, project.getProjectLevelName());
         safeSet(projectViewAddress, project.getProjectLocation());
         safeSet(projectViewContract, formatMoney(project.getProjectCost()));
@@ -157,30 +295,32 @@ public class projectDetailsController  implements loadPaneAware {
         safeSet(projectViewEndDate, utils.dateFormat(project.getEndDate()));
         safeSet(projectViewDuration, utils.getOnlyOneDuration(project.getProjectDuration(), enumDuration.DAY));
 
-
-        // Work items table
         refreshWorkItems();
 
-        // Dashboard metrics
         loadDashboardAsync(project.getAssignProjectId(), LocalDate.now());
     }
 
+    // VIEWMODEL to keep DB out of FX thread
+    private record ProjectDashVM(calculationHelper.ProjectDashboard d, int completedDaysCount) {}
+
     private void loadDashboardAsync(int projectId, LocalDate asOf) {
-        Task<calculationHelper.ProjectDashboard> task = new Task<>() {
+        Task<ProjectDashVM> task = new Task<>() {
             @Override
-            protected calculationHelper.ProjectDashboard call() {
-                return helper.getProjectDashboard(projectId, asOf);
+            protected ProjectDashVM call() {
+                calculationHelper.ProjectDashboard d = helper.getProjectDashboard(projectId, asOf);
+                int completedDaysCount = database.getCompletedDaysByAssignProject(projectId);
+                return new ProjectDashVM(d, completedDaysCount);
             }
 
             @Override
             protected void succeeded() {
-                calculationHelper.ProjectDashboard d = getValue();
-                if (d == null) return;
+                ProjectDashVM vm = getValue();
+                if (vm == null || vm.d == null) return;
 
-                // ===== Completed Days card =====
-                int completedDaysCount = database.getCompletedDaysByAssignProject(projectId); // ✅ from report
+                calculationHelper.ProjectDashboard d = vm.d;
+                int completedDaysCount = vm.completedDaysCount;
+
                 int total = d.totalDays();
-
                 double day01 = (total <= 0) ? 0 : clamp01(completedDaysCount / (double) total);
 
                 completedDay.setText(completedDaysCount + " days");
@@ -188,25 +328,19 @@ public class projectDetailsController  implements loadPaneAware {
                 dayCompleteLbl.setText(Math.round(day01 * 100) + "%");
                 dayCompleteProgress.setProgress(day01);
 
-
-                // ==== for the project progress =====
-
-                double progress01 = d.progressRatio();   // already 0..1
+                double progress01 = d.progressRatio();
                 projectProgress.setProgress(progress01);
                 projectProgressLbl.setText(Math.round(progress01 * 100) + "%");
 
-
-                // ===== Completed WorkItems card =====
                 int doneWi = d.completedWorkItems();
                 int totalWiCount = d.totalWorkItems();
                 double wi01 = (totalWiCount <= 0) ? 0 : clamp01(doneWi / (double) totalWiCount);
 
-                safeSet(completedWi, String.valueOf(doneWi) + " items");
-                safeSet(totalWi, String.valueOf(totalWiCount) + " items");
+                safeSet(completedWi, doneWi + " items");
+                safeSet(totalWi, totalWiCount + " items");
                 safeSet(wiCompleteLbl, formatPercent(wi01));
-                if (wiCompleteProgress != null) wiCompleteProgress.setProgress(wi01);
+                wiCompleteProgress.setProgress(wi01);
 
-                // ===== Earned Value card =====
                 double bac = d.bac();
                 double ev = d.ev();
                 double ev01 = (bac <= 0) ? 0 : clamp01(ev / bac);
@@ -214,24 +348,23 @@ public class projectDetailsController  implements loadPaneAware {
                 safeSet(usedEarnValue, formatMoney(ev));
                 safeSet(totalEarnValue, formatMoney(bac));
                 safeSet(earnedValueLbl, formatPercent(ev01));
-                if (earnValueProgress != null) earnValueProgress.setProgress(ev01);
+                earnValueProgress.setProgress(ev01);
 
-                // ===== SPI + CPI panels =====
                 safeSet(spiLbl, formatIndex(d.spi()));
                 safeSet(spiStatusLbl, statusTextForIndex(d.spi(), true));
                 safeSet(spiPvLbl, formatMoney(d.pv()));
                 safeSet(spiEvLbl, formatMoney(d.ev()));
-                applyCircleProgress(spiProgressCircle, d.spi()); // optional visual
+                applyCircleProgress(spiProgressCircle, d.spi());
 
                 safeSet(cpiLbl, formatIndex(d.cpi()));
                 safeSet(cpiStatusLbl, statusTextForIndex(d.cpi(), false));
                 safeSet(cpiPvLbl, formatMoney(d.pv()));
                 safeSet(cpiEvLbl, formatMoney(d.ev()));
-                applyCircleProgress(cpiProgressCircle, d.cpi()); // optional visual
+                applyCircleProgress(cpiProgressCircle, d.cpi());
             }
         };
 
-        Thread t = new Thread(task);
+        Thread t = new Thread(task, "project-dashboard");
         t.setDaemon(true);
         t.start();
     }
@@ -239,27 +372,33 @@ public class projectDetailsController  implements loadPaneAware {
     private void refreshWorkItems() {
         if (project == null || workItemTable == null) return;
 
-        Runnable r = () -> {
-            workItemTable.setItems(database.getAllWorkItemsByAssignProject(project.getAssignProjectId()));
-            workItemTable.refresh();
+        Task<ObservableList<workItems>> task = new Task<>() {
+            @Override
+            protected ObservableList<workItems> call() {
+                return database.getAllWorkItemsByAssignProject(project.getAssignProjectId());
+            }
         };
 
-        if (Platform.isFxApplicationThread()) r.run();
-        else Platform.runLater(r);
+        task.setOnSucceeded(e -> {
+            allWorkItems.setAll(task.getValue());
+            applyWorkItemSearchFilter();
+        });
+
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            try {
+                messageBoxService.toast("Failed to load work items",
+                        String.valueOf(task.getException().getMessage()),
+                        notificationType.ERROR);
+            } catch (Exception ignored) {}
+        });
+
+        new Thread(task, "load-workitems").start();
     }
 
-    // ------------------------------
-    // UI helpers
-    // ------------------------------
-    private void safeSet(Label lbl, String v) {
-        if (lbl != null) lbl.setText(v == null ? "" : v);
-    }
+    private void safeSet(Label lbl, String v) { if (lbl != null) lbl.setText(v == null ? "" : v); }
 
-    private double clamp01(double v) {
-        if (v < 0) return 0;
-        if (v > 1) return 1;
-        return v;
-    }
+    private double clamp01(double v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
 
     private String formatPercent(double p01) {
         int pct = (int) Math.round(clamp01(p01) * 100.0);
@@ -278,7 +417,6 @@ public class projectDetailsController  implements loadPaneAware {
 
     private String statusTextForIndex(Double idx, boolean isSchedule) {
         if (idx == null) return "No Data";
-
         if (isSchedule) {
             if (idx >= 1.05) return "Ahead of Schedule";
             if (idx >= 0.95) return "On Schedule";
@@ -292,16 +430,13 @@ public class projectDetailsController  implements loadPaneAware {
 
     private void applyCircleProgress(Circle circle, Double idx) {
         if (circle == null) return;
-        if (idx == null) {
-            circle.setStrokeDashOffset(2 * Math.PI * circle.getRadius());
-            return;
-        }
 
-        // simple static ring fill: treat 1.0 as full ring, clamp 0..1
         double radius = circle.getRadius();
         double circumference = 2 * Math.PI * radius;
-
         circle.getStrokeDashArray().setAll(circumference);
-        circle.setStrokeDashOffset(circumference * (1 - clamp01(idx)));
+
+        // optional scale improvement: show 0..2.0 range
+        double p = (idx == null) ? 0 : clamp01(idx / 2.0);
+        circle.setStrokeDashOffset(circumference * (1 - p));
     }
 }
