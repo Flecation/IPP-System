@@ -2,6 +2,7 @@ package IPPSystem.Controllers;
 
 import IPPSystem.DAO.projectDatabase;
 import IPPSystem.DAO.reportDatabase;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.projects;
 import IPPSystem.Models.users;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class allReportController {
+public class allReportController  extends sideBarPaneController implements loadPaneAware {
 
     @FXML
     private Button addNewReport;
@@ -51,9 +52,50 @@ public class allReportController {
     @FXML
     private Label countrepotsandissues;
 
+
+    private StackPane loadPane;
+
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+    }
+
     @FXML
     void clickAddNewReport(ActionEvent event) {
+        openInLoadPane("CreateReportNew.fxml");
 
+    }
+
+    private void openInLoadPane(String fxml) {
+        if (loadPane == null) {
+            showAlert("Navigation Error", "Cannot open page because loadPane is not available.");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/" + fxml));
+            Parent view = loader.load();
+            Object controller = loader.getController();
+
+            if (controller instanceof loadPaneAware aware) {
+                aware.setLoadPane(loadPane);
+            }
+
+            loadPane.getChildren().setAll(view);
+            view.toFront();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Navigation Error", "Failed to open: " + fxml + "\n" + ex.getMessage());
+        }
+    }
+
+
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 
@@ -448,6 +490,7 @@ public class allReportController {
         countrepotsandissues.setText("Show " + reportCount + " reports and " + issueCount + " with issues");
         countrepotsandissues.setStyle("-fx-text-fill: #E18600;");
     }
+
 
 
 }

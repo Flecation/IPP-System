@@ -111,7 +111,7 @@
             </HBox>
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: none;" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="reportCardContainer" alignment="TOP_CENTER" prefHeight="553.0" prefWidth="823.0" spacing="12.0">
+                  <VBox fx:id="reportCardContainer" prefHeight="553.0" prefWidth="823.0" spacing="12.0">
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>

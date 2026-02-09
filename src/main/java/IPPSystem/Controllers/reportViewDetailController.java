@@ -1,22 +1,321 @@
+//
+//package IPPSystem.Controllers;
+//
+//import IPPSystem.DAO.projectDatabase;
+//import IPPSystem.DAO.reportDatabase;
+//import IPPSystem.Models.DailyReport;
+//import IPPSystem.Models.DailyReportLaborView;
+//import IPPSystem.Models.projects;
+//import IPPSystem.Utils.session;
+//import javafx.collections.FXCollections;
+//import javafx.event.ActionEvent;
+//import javafx.fxml.FXML;
+//import javafx.fxml.FXMLLoader;
+//import javafx.scene.Parent;
+//import javafx.scene.Scene;
+//import javafx.scene.control.*;
+//import javafx.scene.control.cell.PropertyValueFactory;
+//import javafx.scene.layout.VBox;
+//import javafx.stage.Stage;
+//
+//import java.time.LocalDate;
+//import java.time.format.DateTimeFormatter;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.stream.Collectors;
+//
+//public class reportViewDetailController {
+//
+//
+//    @FXML
+//    private TableView<DailyReportLaborView> todayLaborTable;
+//
+//    @FXML
+//    private TableColumn<DailyReportLaborView, String> laborNameCol;
+//
+//    @FXML
+//    private TableColumn<DailyReportLaborView, String> laborSkillCol;
+//
+//    @FXML
+//    private TableColumn<DailyReportLaborView, Double> dailyWadgeCol;
+//
+//    @FXML
+//    private TableColumn<DailyReportLaborView, Double> workHourCol;
+//
+//    @FXML
+//    private TableColumn<DailyReportLaborView, String> remarkCol;
+//
+//
+//    @FXML
+//    private Button backBtn;
+//
+//    @FXML
+//    private Label completeQty;
+//
+//    @FXML
+//    private Label dailyCostQty;
+//
+//    @FXML
+//    private ComboBox<String> filterBySupervisor;
+//
+//    @FXML
+//    private DatePicker endDate;
+//
+//    @FXML
+//    private Label remainQty;
+//
+//    @FXML
+//    private Label reportDate;
+//
+//    @FXML
+//    private Label reportIdBySupervisor;
+//
+//    @FXML
+//    private Label rpProjectName;
+//    @FXML
+//    private Label rpProjectType;
+//
+//    @FXML
+//    private DatePicker startDate;
+//
+//    @FXML
+//    private Label workedHourQty;
+//
+//    @FXML
+//    private Label generalCommentLabel;
+//
+//    @FXML
+//    private Label weatherConditionLabel;
+//
+//    @FXML
+//    private TextArea issuesLabel;
+//    @FXML
+//    private VBox reportProjectScrollPane;
+//    private List<DailyReport> allReports; // store all reports
+//
+//
+//    @FXML
+//    void clickBack(ActionEvent event) {
+//
+//    }
+//
+//
+//
+//    private boolean isManager;
+//    private Parent selectedReportRow = null; // Track currently selected report
+//
+//    @FXML
+//    public void initialize() {
+//        isManager = session.getInstance()
+//                .getUser()
+//                .getUserRole()
+//                .equalsIgnoreCase("Manager");
+//
+//        if (isManager) {
+//            filterBySupervisor.setItems(FXCollections.observableArrayList(
+//                    projectDatabase.getAllSupervisors()
+//            ).sorted());
+//            filterBySupervisor.setValue("All");
+//            filterBySupervisor.setOnAction(e -> applyFilters());
+//        } else {
+//            filterBySupervisor.setVisible(false);
+//        }
+//
+//        startDate.setOnAction(e -> applyFilters());
+//        endDate.setOnAction(e -> applyFilters());
+//
+//        loadReports();
+//
+//
+//        laborNameCol.setCellValueFactory(new PropertyValueFactory<>("laborName"));
+//        laborSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
+//        dailyWadgeCol.setCellValueFactory(new PropertyValueFactory<>("dailyWage"));
+//        workHourCol.setCellValueFactory(new PropertyValueFactory<>("workHours"));
+//        remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
+//
+//    }
+//
+//    private void loadReports() {
+//        if (isManager) {
+//            allReports = new ArrayList<>(reportDatabase.getAllReports(null));
+//        } else {
+//            int supervisorId = session.getInstance().getUser().getUserId();
+//            allReports = new ArrayList<>(reportDatabase.getAllReports(supervisorId));
+//        }
+//
+//        allReports.sort((r1, r2) -> r2.getReportDate().compareTo(r1.getReportDate()));
+//        loadReportsToUI(allReports);
+//    }
+//
+//    private void applyFilters() {
+//        LocalDate start = startDate.getValue();
+//        LocalDate end = endDate.getValue();
+//        String selectedSupervisor = isManager ? filterBySupervisor.getValue() : null;
+//
+//        List<DailyReport> filtered = new ArrayList<>(allReports);
+//
+//        if (isManager && selectedSupervisor != null && !"All".equalsIgnoreCase(selectedSupervisor)) {
+//            filtered = filtered.stream()
+//                    .filter(r -> r.getSupervisorName() != null &&
+//                            r.getSupervisorName().equalsIgnoreCase(selectedSupervisor))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        if (start != null) {
+//            filtered = filtered.stream()
+//                    .filter(r -> !r.getReportDate().isBefore(start))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        if (end != null) {
+//            filtered = filtered.stream()
+//                    .filter(r -> !r.getReportDate().isAfter(end))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        filtered.sort((r1, r2) -> r2.getReportDate().compareTo(r1.getReportDate()));
+//
+//        loadReportsToUI(filtered);
+//    }
+//
+//    private void loadReportsToUI(List<DailyReport> reports) {
+//        reportProjectScrollPane.getChildren().clear();
+//
+//        if (reports == null || reports.isEmpty()) {
+//            Label emptyLabel = new Label("Reports are not here yet");
+//            emptyLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+//            reportProjectScrollPane.getChildren().add(emptyLabel);
+//            return;
+//        }
+//
+//        for (DailyReport report : reports) {
+//            try {
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/reportReport.fxml"));
+//                Parent reportRow = loader.load();
+//
+//                reportReportController controller = loader.getController();
+//                controller.setData(report);
+//
+//                reportRow.setOnMouseClicked(e -> {
+//
+//                    if (selectedReportRow != null) {
+//                        selectedReportRow.setStyle("");
+//                    }
+//                    reportRow.setStyle("-fx-background-color: #FDCB90;");
+//                    selectedReportRow = reportRow;
+//
+//                    rpProjectName.setText(report.getProjectName() != null ? report.getProjectName() : "-");
+//                    rpProjectType.setText(report.getProjectTypeName() != null ? report.getProjectTypeName() : "-");
+//
+//                    reportIdBySupervisor.setText(
+//                            String.format("#RP-%03d", report.getReportId()) +
+//                                    " By " + report.getSupervisorName()
+//                    );
+//
+//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//                    reportDate.setText(
+//                            report.getReportDate() != null
+//                                    ? report.getReportDate().format(formatter)
+//                                    : "-"
+//                    );
+//
+//                    todayLaborTable.setItems(
+//                            FXCollections.observableArrayList(
+//                                    reportDatabase.getDailyReportLabors(report.getReportId())
+//                            )
+//                    );
+//
+//
+//                    // ---- TOTALS ----
+//                    workedHourQty.setText(
+//                            String.format("%.1f hrs",
+//                                    reportDatabase.getTotalWorkedHours(report.getReportId()))
+//                    );
+//
+//                    dailyCostQty.setText(
+//                            String.format("%.2f",
+//                                    reportDatabase.getTotalDailyLaborCost(report.getReportId()))
+//                    );
+//
+//                    completeQty.setText(
+//                            String.format("%.2f",
+//                                    reportDatabase.getCompletedQty(report.getReportId()))
+//                    );
+//
+//                    remainQty.setText(
+//                            String.format("%.2f",
+//                                    reportDatabase.getRemainQty(report.getAssignWorkItemId()))
+//                    );
+//                    System.out.println("AssignWorkItemId = " + report.getAssignWorkItemId());
+//
+//
+//                    // ---- GENERAL COMMENT ----
+//                    generalCommentLabel.setText(
+//                            report.getComments() != null
+//                                    ? report.getComments()
+//                                    : "-"
+//                    );
+//
+//                    // ---- WEATHER ----
+//                    weatherConditionLabel.setText(
+//                            report.getWeatherNote() != null
+//                                    ? report.getWeatherNote()
+//                                    : "-"
+//                    );
+//
+//                    // ---- ISSUES (line by line) ----
+//                    String issues = report.getIssues();
+//
+//                    if (issues == null || issues.trim().isEmpty()) {
+//                        issuesLabel.setText("-");
+//                    } else {
+//                        issuesLabel.setText(
+//                                Arrays.stream(issues.split("//"))
+//                                        .map(String::trim)
+//                                        .filter(s -> !s.isEmpty())
+//                                        .map(s -> "• " + s)
+//                                        .collect(Collectors.joining("\n"))
+//                        );
+//                    }
+//
+//
+//
+//                });
+//
+//
+//
+//                reportProjectScrollPane.getChildren().add(reportRow);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
+//}
+
+
 
 package IPPSystem.Controllers;
 
 import IPPSystem.DAO.projectDatabase;
 import IPPSystem.DAO.reportDatabase;
+import IPPSystem.Interfaces.NavAware;
+import IPPSystem.Interfaces.loadPaneAware;
 import IPPSystem.Models.DailyReport;
 import IPPSystem.Models.DailyReportLaborView;
-import IPPSystem.Models.projects;
+import IPPSystem.Utils.linkButton;
 import IPPSystem.Utils.session;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,92 +324,83 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class reportViewDetailController {
+public class reportViewDetailController implements loadPaneAware, NavAware {
 
+    @FXML private TableView<DailyReportLaborView> todayLaborTable;
+    @FXML private TableColumn<DailyReportLaborView, String> laborNameCol;
+    @FXML private TableColumn<DailyReportLaborView, String> laborSkillCol;
+    @FXML private TableColumn<DailyReportLaborView, Double> dailyWadgeCol;
+    @FXML private TableColumn<DailyReportLaborView, Double> workHourCol;
+    @FXML private TableColumn<DailyReportLaborView, String> remarkCol;
 
-    @FXML
-    private TableView<DailyReportLaborView> todayLaborTable;
+    @FXML private Button backBtn;
 
-    @FXML
-    private TableColumn<DailyReportLaborView, String> laborNameCol;
+    @FXML private Label completeQty;
+    @FXML private Label dailyCostQty;
+    @FXML private ComboBox<String> filterBySupervisor;
+    @FXML private DatePicker endDate;
+    @FXML private Label remainQty;
+    @FXML private Label reportDate;
+    @FXML private Label reportIdBySupervisor;
+    @FXML private Label rpProjectName;
+    @FXML private Label rpProjectType;
+    @FXML private DatePicker startDate;
+    @FXML private Label workedHourQty;
+    @FXML private Label generalCommentLabel;
+    @FXML private Label weatherConditionLabel;
+    @FXML private TextArea issuesLabel;
 
-    @FXML
-    private TableColumn<DailyReportLaborView, String> laborSkillCol;
+    @FXML private VBox reportProjectScrollPane;
 
-    @FXML
-    private TableColumn<DailyReportLaborView, Double> dailyWadgeCol;
+    private List<DailyReport> allReports;
 
-    @FXML
-    private TableColumn<DailyReportLaborView, Double> workHourCol;
+    private StackPane loadPane;
+    private sideBarPaneController nav;
+    private Runnable backAction;
 
-    @FXML
-    private TableColumn<DailyReportLaborView, String> remarkCol;
-
-
-    @FXML
-    private Button backBtn;
-
-    @FXML
-    private Label completeQty;
-
-    @FXML
-    private Label dailyCostQty;
-
-    @FXML
-    private ComboBox<String> filterBySupervisor;
-
-    @FXML
-    private DatePicker endDate;
-
-    @FXML
-    private Label remainQty;
-
-    @FXML
-    private Label reportDate;
-
-    @FXML
-    private Label reportIdBySupervisor;
-
-    @FXML
-    private Label rpProjectName;
-    @FXML
-    private Label rpProjectType;
-
-    @FXML
-    private DatePicker startDate;
-
-    @FXML
-    private Label workedHourQty;
-
-    @FXML
-    private Label generalCommentLabel;
-
-    @FXML
-    private Label weatherConditionLabel;
-
-    @FXML
-    private TextArea issuesLabel;
-    @FXML
-    private VBox reportProjectScrollPane;
-    private List<DailyReport> allReports; // store all reports
-
+    private boolean isManager;
+    private Parent selectedReportRow = null;
 
     @FXML
     void clickBack(ActionEvent event) {
+        if (backAction != null) {
+            backAction.run();
+            return;
+        }
 
+        sideBarPaneController n = requireNav();
+        if (n == null) return;
+
+        n.openInnerView("allReports.fxml", ctrl -> {});
+        try { linkButton.getInstance().setTabButtonName("Daily Reports"); } catch (Exception ignore) {}
     }
 
+    @Override
+    public void setLoadPane(StackPane loadPane) {
+        this.loadPane = loadPane;
+        if (this.loadPane != null) {
+            this.nav = (sideBarPaneController) this.loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        }
+    }
 
+    @Override
+    public void setNav(sideBarPaneController nav) {
+        this.nav = nav;
+    }
 
-    private boolean isManager;
-    private Parent selectedReportRow = null; // Track currently selected report
+    public void setBackAction(Runnable backAction) {
+        this.backAction = backAction;
+    }
+
+    private sideBarPaneController requireNav() {
+        if (nav != null) return nav;
+        if (loadPane != null) nav = (sideBarPaneController) loadPane.getProperties().get("SIDEBAR_CONTROLLER");
+        return nav;
+    }
 
     @FXML
     public void initialize() {
-        isManager = session.getInstance()
-                .getUser()
-                .getUserRole()
-                .equalsIgnoreCase("Manager");
+        isManager = session.getInstance().getUser().getUserRole().equalsIgnoreCase("Manager");
 
         if (isManager) {
             filterBySupervisor.setItems(FXCollections.observableArrayList(
@@ -125,15 +415,13 @@ public class reportViewDetailController {
         startDate.setOnAction(e -> applyFilters());
         endDate.setOnAction(e -> applyFilters());
 
-        loadReports();
-
-
         laborNameCol.setCellValueFactory(new PropertyValueFactory<>("laborName"));
         laborSkillCol.setCellValueFactory(new PropertyValueFactory<>("skillName"));
         dailyWadgeCol.setCellValueFactory(new PropertyValueFactory<>("dailyWage"));
         workHourCol.setCellValueFactory(new PropertyValueFactory<>("workHours"));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
 
+        loadReports();
     }
 
     private void loadReports() {
@@ -175,8 +463,55 @@ public class reportViewDetailController {
         }
 
         filtered.sort((r1, r2) -> r2.getReportDate().compareTo(r1.getReportDate()));
-
         loadReportsToUI(filtered);
+    }
+
+    /** Called by reportCard to open this page with a pre-selected report. */
+    public void openReport(DailyReport report) {
+        if (report == null) return;
+        showReportDetails(report);
+    }
+
+    private void showReportDetails(DailyReport report) {
+        rpProjectName.setText(report.getProjectName() != null ? report.getProjectName() : "-");
+        rpProjectType.setText(report.getProjectTypeName() != null ? report.getProjectTypeName() : "-");
+
+        reportIdBySupervisor.setText(
+                String.format("#RP-%03d", report.getReportId()) +
+                        " By " + (report.getSupervisorName() != null ? report.getSupervisorName() : "-")
+        );
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        reportDate.setText(report.getReportDate() != null ? report.getReportDate().format(formatter) : "-");
+
+        todayLaborTable.setItems(FXCollections.observableArrayList(
+                reportDatabase.getDailyReportLabors(report.getReportId())
+        ));
+
+        workedHourQty.setText(String.format("%.1f hrs", reportDatabase.getTotalWorkedHours(report.getReportId())));
+        dailyCostQty.setText(String.format("%.2f", reportDatabase.getTotalDailyLaborCost(report.getReportId())));
+        completeQty.setText(String.format("%.2f", reportDatabase.getCompletedQty(report.getReportId())));
+        remainQty.setText(String.format("%.2f", reportDatabase.getRemainQty(report.getAssignWorkItemId())));
+
+        generalCommentLabel.setText(report.getComments() != null ? report.getComments() : "-");
+        weatherConditionLabel.setText(report.getWeatherNote() != null ? report.getWeatherNote() : "-");
+
+        String issues = report.getIssues();
+        if (issues == null || issues.trim().isEmpty()) {
+            issuesLabel.setText("-");
+        } else {
+            issuesLabel.setText(
+                    Arrays.stream(issues.split("//"))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
+                            .map(s -> "• " + s)
+                            .collect(Collectors.joining("\n"))
+            );
+        }
+
+        try {
+            linkButton.getInstance().setTabButtonName("Report #RP-" + String.format("%03d", report.getReportId()));
+        } catch (Exception ignore) {}
     }
 
     private void loadReportsToUI(List<DailyReport> reports) {
@@ -198,92 +533,12 @@ public class reportViewDetailController {
                 controller.setData(report);
 
                 reportRow.setOnMouseClicked(e -> {
-
-                    if (selectedReportRow != null) {
-                        selectedReportRow.setStyle("");
-                    }
+                    if (selectedReportRow != null) selectedReportRow.setStyle("");
                     reportRow.setStyle("-fx-background-color: #FDCB90;");
                     selectedReportRow = reportRow;
 
-                    rpProjectName.setText(report.getProjectName() != null ? report.getProjectName() : "-");
-                    rpProjectType.setText(report.getProjectTypeName() != null ? report.getProjectTypeName() : "-");
-
-                    reportIdBySupervisor.setText(
-                            String.format("#RP-%03d", report.getReportId()) +
-                                    " By " + report.getSupervisorName()
-                    );
-
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    reportDate.setText(
-                            report.getReportDate() != null
-                                    ? report.getReportDate().format(formatter)
-                                    : "-"
-                    );
-
-                    todayLaborTable.setItems(
-                            FXCollections.observableArrayList(
-                                    reportDatabase.getDailyReportLabors(report.getReportId())
-                            )
-                    );
-
-
-                    // ---- TOTALS ----
-                    workedHourQty.setText(
-                            String.format("%.1f hrs",
-                                    reportDatabase.getTotalWorkedHours(report.getReportId()))
-                    );
-
-                    dailyCostQty.setText(
-                            String.format("%.2f",
-                                    reportDatabase.getTotalDailyLaborCost(report.getReportId()))
-                    );
-
-                    completeQty.setText(
-                            String.format("%.2f",
-                                    reportDatabase.getCompletedQty(report.getReportId()))
-                    );
-
-                    remainQty.setText(
-                            String.format("%.2f",
-                                    reportDatabase.getRemainQty(report.getAssignWorkItemId()))
-                    );
-                    System.out.println("AssignWorkItemId = " + report.getAssignWorkItemId());
-
-
-                    // ---- GENERAL COMMENT ----
-                    generalCommentLabel.setText(
-                            report.getComments() != null
-                                    ? report.getComments()
-                                    : "-"
-                    );
-
-                    // ---- WEATHER ----
-                    weatherConditionLabel.setText(
-                            report.getWeatherNote() != null
-                                    ? report.getWeatherNote()
-                                    : "-"
-                    );
-
-                    // ---- ISSUES (line by line) ----
-                    String issues = report.getIssues();
-
-                    if (issues == null || issues.trim().isEmpty()) {
-                        issuesLabel.setText("-");
-                    } else {
-                        issuesLabel.setText(
-                                Arrays.stream(issues.split("//"))
-                                        .map(String::trim)
-                                        .filter(s -> !s.isEmpty())
-                                        .map(s -> "• " + s)
-                                        .collect(Collectors.joining("\n"))
-                        );
-                    }
-
-
-
+                    showReportDetails(report);
                 });
-
-
 
                 reportProjectScrollPane.getChildren().add(reportRow);
 
@@ -292,5 +547,4 @@ public class reportViewDetailController {
             }
         }
     }
-
 }
