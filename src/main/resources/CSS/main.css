@@ -643,3 +643,61 @@
 #backToProjectDetails:hover {
     -fx-background-color: -primary;
 }
+
+.icon-Style{
+    -fx-fill: -text;
+    -fx-text-fill : -text;
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+}
+
+.icon-Style:hover{
+    -fx-background-color: -shadow;
+    -fx-fill: -primary;
+    -fx-text-fill: -text;
+}
+/* Filter ComboBox */
+.filter-box {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 12px;
+    -fx-text-fill: -text;
+}
+
+.filter-box:hover {
+    -fx-border-color: -primary;
+}
+
+.filter-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-box .arrow {
+    -fx-background-color: -text-muted;
+}
+
+.filter-box .list-cell {
+    -fx-background-color: -surface;
+    -fx-text-fill: -text;
+    -fx-padding: 8px 12px;
+}
+
+.filter-box .list-view {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, -shadow, 10, 0.2, 0, 2);
+}
+
+.filter-box .list-cell:hover {
+    -fx-background-color: -surface-2;
+}
+
+.filter-box .list-cell:selected {
+    -fx-text-fill: -accent;
+
+}

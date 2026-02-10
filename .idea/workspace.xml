@@ -6,26 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="changes">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_2_2026_1_30_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_2_2026_1_30_PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/darkMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/darkMode.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/lightMode.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/login.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/navigationPane.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Database/ippSystemDatabase(forImport).sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/report.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/report.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/allReports.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/allReports.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createSupervisorModal.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createSupervisorModal.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/projectCardByOne.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportCard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportCard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportProjects.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportProjects.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportReport.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportReport.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/reportViewDetail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/reportViewDetail.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/sideBarPane.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/engineerView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/engineerView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -168,6 +156,13 @@
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="" />
@@ -175,22 +170,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765548299980</updated>
-    </task>
-    <task id="LOCAL-00012" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765853569220</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1765853569220</updated>
-    </task>
-    <task id="LOCAL-00013" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765853791140</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1765853791140</updated>
     </task>
     <task id="LOCAL-00014" summary="creation of the basic frame">
       <option name="closed" value="true" />
@@ -568,7 +547,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770601835538</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770649645946</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1770649645946</updated>
+    </task>
+    <task id="LOCAL-00062" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770688602996</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1770688602997</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

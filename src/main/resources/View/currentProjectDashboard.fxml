@@ -17,7 +17,7 @@
 
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.currentProjectDashboardController">
    <content>
-      <VBox alignment="CENTER" prefHeight="700.0" prefWidth="1250.0" spacing="15.0" styleClass="root" stylesheets="@../CSS/currentProjectDashboard.css">
+      <VBox alignment="CENTER" prefHeight="700.0" prefWidth="1250.0" spacing="15.0" styleClass="root" stylesheets="@../CSS/main.css">
          <children>
             <HBox alignment="CENTER" prefHeight="50.0" spacing="15.0" styleClass="titlePane">
                <children>
@@ -25,7 +25,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label fx:id="projectName" styleClass="title" text="Central Office Tower" wrapText="true" HBox.hgrow="ALWAYS" />
+                              <Label fx:id="projectName" styleClass="header-text" text="Central Office Tower" wrapText="true" HBox.hgrow="ALWAYS" />
                               <Label fx:id="lblProgressStatus" alignment="CENTER" prefHeight="22.0" prefWidth="85.0" text="Delay" wrapText="true" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
@@ -41,7 +41,7 @@
                   <VBox alignment="CENTER_LEFT">
                      <children>
                         <Label styleClass="showLbl" text="View Type" />
-                        <ComboBox fx:id="comboProjectList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" minWidth="180.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" />
+                        <ComboBox fx:id="comboProjectList" maxHeight="27.0" maxWidth="180.0" minHeight="27.0" minWidth="180.0" onAction="#clickProjectSelect" prefHeight="40.0" prefWidth="173.0" promptText="Project Overview" styleClass="filter-box" />
                      </children>
                   </VBox>
                   <VBox>
@@ -115,7 +115,7 @@
                         </HBox>
                         <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox prefHeight="105.0" prefWidth="210.0" styleClass="cardPange" HBox.hgrow="ALWAYS">
+                              <VBox prefHeight="105.0" prefWidth="210.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="CENTER">
                                        <children>

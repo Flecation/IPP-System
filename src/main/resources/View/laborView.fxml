@@ -14,10 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.laborViewController">
    <content>
-      <VBox alignment="CENTER" prefHeight="645.0" prefWidth="1120.0" spacing="10.0" styleClass="root" stylesheets="@../CSS/managerSupervisorList.css">
+      <VBox alignment="CENTER" prefHeight="645.0" prefWidth="1120.0" spacing="10.0" styleClass="root" stylesheets="@../CSS/main.css">
          <children>
             <HBox alignment="CENTER" prefHeight="27.0" prefWidth="1120.0" styleClass="titlePane" VBox.vgrow="NEVER">
                <children>
@@ -39,7 +38,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="81.0" prefWidth="1080.0" VBox.vgrow="NEVER">
                <children>
-                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 10;" styleClass="cardPane" HBox.hgrow="NEVER">
+                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" styleClass="cardPane" HBox.hgrow="NEVER">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
@@ -66,7 +65,7 @@
                      </padding>
                   </VBox>
                   <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;" styleClass="cardPane" HBox.hgrow="NEVER">
+                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" styleClass="cardPane" HBox.hgrow="NEVER">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
@@ -102,7 +101,7 @@
                      </padding>
                   </VBox>
                   <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;" styleClass="cardPane" HBox.hgrow="NEVER">
+                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" styleClass="cardPane" HBox.hgrow="NEVER">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
@@ -129,7 +128,7 @@
                      </padding>
                   </VBox>
                   <Region prefHeight="100.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" style="-fx-border-width: 0.5; -fx-border-color: #E18600; -fx-border-radius: 5;" styleClass="cardPane" HBox.hgrow="NEVER">
+                  <VBox alignment="CENTER_LEFT" minHeight="80.0" minWidth="250.0" prefHeight="50.0" styleClass="cardPane" HBox.hgrow="NEVER">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>

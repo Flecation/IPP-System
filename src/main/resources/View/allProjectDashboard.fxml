@@ -19,11 +19,11 @@
 
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.allProjectDashboardController">
    <content>
-      <VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" styleClass="root" stylesheets="@../CSS/allProjectDashboard.css">
+      <VBox prefHeight="675.0" prefWidth="1220.0" spacing="15.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" styleClass="root" stylesheets="@../CSS/main.css">
          <children>
-            <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" spacing="10.0" style="-fx-background-radius: 10;">
+            <HBox alignment="CENTER" minHeight="49.0" prefHeight="49.0" spacing="10.0" style="-fx-background-radius: 10;" styleClass="titlePane">
                <children>
-                  <Label fx:id="projectName" alignment="TOP_LEFT" text="Enterprise Project Dashboard" textFill="#041a5bf7">
+                  <Label fx:id="projectName" alignment="TOP_LEFT" styleClass="header-text" text="Enterprise Project Dashboard" textFill="#041a5bf7">
                      <font>
                         <Font name="Times New Roman Bold" size="25.0" />
                      </font>
