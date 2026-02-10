@@ -229,4 +229,9 @@ INSERT INTO labors (laborName, laborNRC, laborPhone, skillId, laborStartDate, is
 -- (Optional enhancement for your system)
 -- =============================================
 
+UPDATE workItemRequireSkills
+SET minDailyWage = ROUND(minDailyWage * 2100),
+    maxDailyWage = ROUND(maxDailyWage * 2100)
+where workitemrequireskills.workItemRequireSkillId != 0;
+
 

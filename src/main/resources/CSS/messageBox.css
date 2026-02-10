@@ -1,131 +1,382 @@
-/* messageBox_from_main.css
-   Uses your universal colors from main.css:
-   -warning-color, -success-color, -danger-color, -info-color,
-   -error-color, -wrong-color
+/* messageBox.css
+   Enhanced with your color theme from main.css
 */
 
-/* ====== Fallbacks (in case some vars are missing) ====== */
+/* ====== CSS Variables (using your theme) ====== */
 .root {
-    -mb-text: #1f2a44;
-    -mb-text-2: rgba(31,42,68,0.75);
-    -mb-border: rgba(31,42,68,0.18);
-    -mb-surface: #ffffff;
-    -mb-surface-2: #f4f6f8;
-    -mb-overlay: rgba(0,0,0,0.35);
+    /* Base colors from your theme */
+    -mb-surface: -surface;
+    -mb-surface-2: -surface-2;
+    -mb-text: -text;
+    -mb-text-muted: -text-muted;
+    -mb-border: -border;
+    -mb-primary: -primary;
+    -mb-primary-2: -primary-2;
 
-    /* map to your main.css status colors when available */
-    -mb-success: -success-color;
-    -mb-warning: -warning-color;
-    -mb-danger:  -danger-color;
-    -mb-info:    -info-color;
+    /* Status colors from your theme */
+    -mb-success: -ok;
+    -mb-warning: -pending;
+    -mb-danger: -danger;
+    -mb-info: -accent;
+    -mb-error: -danger;
+    -mb-wrong: -pending;
 
-    /* aliases you already defined in main.css */
-    -mb-error:   -error-color;
-    -mb-wrong:   -wrong-color;
+    /* Overlay and effects */
+    -mb-overlay: rgba(0, 0, 0, 0.5);
+    -mb-shadow: -shadow;
 
-    /* optional app primary (fallback if not defined) */
-    -mb-primary: #2E6BFF;
+    /* Typography */
+    -mb-font-family: "Poppins";
 }
 
 /* ====== CONFIRM OVERLAY ====== */
 #confirmRoot {
     -fx-background-color: -mb-overlay;
+    -fx-cursor: default;
 }
 
-/* confirm card */
+/* Confirm Card */
 #confirmMessageBox {
     -fx-background-color: -mb-surface;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
     -fx-border-color: -mb-border;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 22, 0, 0, 10);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, -mb-shadow, 25, 0.25, 0, 8);
+    -fx-padding: 0;
+    -fx-min-width: 380px;
+    -fx-max-width: 420px;
+    -fx-min-height: 170px;
+    -fx-max-height: 240px;
 }
 
-/* header strip */
+/* Header Strip */
 .titleStyle {
     -fx-background-color: -mb-surface-2;
-    -fx-background-radius: 12 12 0 0;
-    -fx-padding: 14 18;
+    -fx-background-radius: 16px 16px 0 0;
+    -fx-border-radius: 16px 16px 0 0;
+    -fx-border-color: transparent transparent -mb-border transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 16px 20px;
 }
 
-/* title + message */
+/* Icon Container */
+#confirmMessageIcon .ikonli-font-icon {
+    -fx-icon-color: -mb-primary;
+    -fx-icon-size: 20px;
+}
+
 #confirmMessageTitle {
-    -fx-font-size: 16;
-    -fx-font-weight: 700;
+    -fx-font-family: -mb-font-family;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
     -fx-text-fill: -mb-text;
 }
+
 #confirmMessageLbl {
-    -fx-font-size: 13;
-    -fx-text-fill: -mb-text-2;
+    -fx-font-family: -mb-font-family;
+    -fx-font-size: 14px;
+    -fx-text-fill: -mb-text-muted;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2px;
+    -fx-padding: 0 20px;
+    -fx-max-width: 380px;
 }
 
-/* buttons */
+/* Button Container */
+#confirmMessageBox > HBox {
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-alignment: center;
+}
+
+/* Buttons */
 #confirmMessageCancelBtn,
 #confirmMessageConfirmBtn {
-    -fx-font-size: 13;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 8 16;
+    -fx-font-family: -mb-font-family;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px 24px;
+    -fx-min-width: 120px;
+    -fx-pref-width: 170px;
     -fx-cursor: hand;
+    -fx-border-width: 1px;
+    -fx-transition: all 0.2s ease;
 }
 
 #confirmMessageCancelBtn {
-    -fx-background-color: transparent;
+    -fx-background-color: -mb-surface;
     -fx-border-color: -mb-border;
-    -fx-border-width: 1;
     -fx-text-fill: -mb-text;
 }
-#confirmMessageCancelBtn:hover { -fx-background-color: rgba(0,0,0,0.03); }
-#confirmMessageCancelBtn:pressed { -fx-background-color: rgba(0,0,0,0.06); }
+
+#confirmMessageCancelBtn:hover {
+    -fx-background-color: -mb-surface-2;
+    -fx-border-color: -mb-primary;
+    -fx-text-fill: -mb-primary;
+    -fx-effect: dropshadow(gaussian, -mb-shadow, 8, 0.2, 0, 2);
+}
+
+#confirmMessageCancelBtn:pressed {
+    -fx-background-color: derive(-mb-surface-2, -10%);
+    -fx-translate-y: 1px;
+}
 
 #confirmMessageConfirmBtn {
     -fx-background-color: -mb-primary;
-    -fx-text-fill: white;
+    -fx-border-color: -mb-primary;
+    -fx-text-fill: -mb-surface;
 }
-#confirmMessageConfirmBtn:hover { -fx-opacity: 0.94; }
-#confirmMessageConfirmBtn:pressed { -fx-opacity: 0.88; }
 
-/* ====== TOAST ====== */
+#confirmMessageConfirmBtn:hover {
+    -fx-background-color: -mb-primary-2;
+    -fx-border-color: -mb-primary-2;
+    -fx-effect: dropshadow(gaussian, -mb-shadow, 8, 0.2, 0, 2);
+}
+
+#confirmMessageConfirmBtn:pressed {
+    -fx-background-color: derive(-mb-primary-2, -10%);
+    -fx-translate-y: 1px;
+}
+
+/* ====== TOAST BOX ====== */
 #toastBox {
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-padding: 12 16;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.18), 14, 0, 0, 7);
+    -fx-background-color: -mb-surface;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-padding: 16px 20px;
+    -fx-effect: dropshadow(gaussian, -mb-shadow, 20, 0.3, 0, 5);
+    -fx-min-width: 320px;
+    -fx-max-width: 420px;
+    -fx-min-height: 70px;
+    -fx-max-height: 100px;
+    -fx-alignment: center-left;
+    -fx-spacing: 16px;
+    -fx-cursor: default;
 }
 
-#toastTitle { -fx-font-size: 14; -fx-font-weight: 700; }
-#toastMessage { -fx-font-size: 12.5; -fx-opacity: 0.95; }
-#toastIcon { -fx-font-size: 18; }
+/* Toast Icon Container */
+#toastIcon .ikonli-font-icon {
+    -fx-icon-size: 20px;
+}
 
-/* toast variants (your controller adds: success-toast / warning-toast / error-toast / info-toast / wrong-toast) */
+/* Toast Content */
+#toastBox VBox {
+    -fx-spacing: 4px;
+}
+
+#toastTitle {
+    -fx-font-family: -mb-font-family;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -mb-text;
+}
+
+#toastMessage {
+    -fx-font-family: -mb-font-family;
+    -fx-font-size: 13px;
+    -fx-text-fill: -mb-text-muted;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 1.5px;
+}
+
+/* ====== TOAST VARIANT STYLES ====== */
+
+/* Success Toast */
 .success-toast {
-    -fx-background-color: -mb-success;
-    -fx-border-color: derive(-mb-success, -30%);
-}
-.warning-toast {
-    -fx-background-color: -mb-warning;
-    -fx-border-color: derive(-mb-warning, -30%);
-}
-.info-toast {
-    -fx-background-color: -mb-info;
-    -fx-border-color: derive(-mb-info, -30%);
-}
-.error-toast {
-    -fx-background-color: -mb-error;
-    -fx-border-color: derive(-mb-error, -30%);
-}
-.wrong-toast {
-    -fx-background-color: -mb-wrong;
-    -fx-border-color: derive(-mb-wrong, -30%);
+    -fx-background-color: linear-gradient(to right, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+    -fx-border-color: rgba(34, 197, 94, 0.3);
 }
 
-/* toast text to white on colored backgrounds */
-.success-toast .label,
-.warning-toast .label,
-.info-toast .label,
-.error-toast .label,
-.wrong-toast .label {
-    -fx-text-fill: white;
+.success-toast #toastTitle {
+    -fx-text-fill: #22c55e;
+}
+
+.success-toast #toastIcon .ikonli-font-icon {
+    -fx-icon-color: #22c55e;
+}
+
+/* Warning Toast */
+.warning-toast {
+    -fx-background-color: linear-gradient(to right, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+    -fx-border-color: rgba(245, 158, 11, 0.3);
+}
+
+.warning-toast #toastTitle {
+    -fx-text-fill: #f59e0b;
+}
+
+.warning-toast #toastIcon .ikonli-font-icon {
+    -fx-icon-color: #f59e0b;
+}
+
+/* Error Toast */
+.error-toast {
+    -fx-background-color: linear-gradient(to right, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+    -fx-border-color: rgba(239, 68, 68, 0.3);
+}
+
+.error-toast #toastTitle {
+    -fx-text-fill: #ef4444;
+}
+
+.error-toast #toastIcon .ikonli-font-icon {
+    -fx-icon-color: #ef4444;
+}
+
+/* Wrong Toast (similar to warning) */
+.wrong-toast {
+    -fx-background-color: linear-gradient(to right, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.05));
+    -fx-border-color: rgba(168, 85, 247, 0.3);
+}
+
+.wrong-toast #toastTitle {
+    -fx-text-fill: #a855f7;
+}
+
+.wrong-toast #toastIcon .ikonli-font-icon {
+    -fx-icon-color: #a855f7;
+}
+
+/* Info Toast */
+.info-toast {
+    -fx-background-color: linear-gradient(to right, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+    -fx-border-color: rgba(6, 182, 212, 0.3);
+}
+
+.info-toast #toastTitle {
+    -fx-text-fill: #06b6d4;
+}
+
+.info-toast #toastIcon .ikonli-font-icon {
+    -fx-icon-color: #06b6d4;
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { -fx-translate-y: -20px; -fx-opacity: 0; }
+    to { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { -fx-translate-y: 0; -fx-opacity: 1; }
+    to { -fx-translate-y: -20px; -fx-opacity: 0; }
+}
+
+#confirmMessageBox {
+    -fx-opacity: 1;
+}
+
+/* Toast entrance animation */
+#toastBox.entering {
+    -fx-opacity: 0;
+    -fx-translate-y: -20px;
+    -fx-animation: slideDown 0.3s ease-out forwards;
+}
+
+/* Toast exit animation */
+#toastBox.exiting {
+    -fx-opacity: 1;
+    -fx-translate-y: 0;
+    -fx-animation: slideUp 0.3s ease-out forwards;
+}
+
+/* ====== RESPONSIVE ADJUSTMENTS ====== */
+@media (max-width: 768px) {
+    #confirmMessageBox {
+        -fx-min-width: 320px;
+        -fx-max-width: 360px;
+        -fx-min-height: 150px;
+    }
+
+    #toastBox {
+        -fx-min-width: 280px;
+        -fx-max-width: 320px;
+        -fx-min-height: 60px;
+    }
+
+    #confirmMessageCancelBtn,
+    #confirmMessageConfirmBtn {
+        -fx-min-width: 100px;
+        -fx-pref-width: 140px;
+        -fx-font-size: 13px;
+        -fx-padding: 8px 16px;
+    }
+
+    #confirmMessageTitle {
+        -fx-font-size: 16px;
+    }
+
+    #confirmMessageLbl {
+        -fx-font-size: 13px;
+    }
+
+    #toastTitle {
+        -fx-font-size: 14px;
+    }
+
+    #toastMessage {
+        -fx-font-size: 12px;
+    }
+}
+
+/* ====== DARK MODE SPECIFIC ADJUSTMENTS ====== */
+.root:dark-mode #confirmMessageBox,
+.root:dark-mode #toastBox {
+    -fx-background-color: -mb-surface;
+    -fx-border-color: -mb-border;
+}
+
+.root:dark-mode .titleStyle {
+    -fx-background-color: -mb-surface-2;
+}
+
+.root:dark-mode #confirmMessageCancelBtn {
+    -fx-background-color: -mb-surface-2;
+    -fx-text-fill: -mb-text;
+}
+
+.root:dark-mode #confirmMessageCancelBtn:hover {
+    -fx-background-color: derive(-mb-surface-2, -5%);
+}
+
+/* ====== ACCESSIBILITY ====== */
+#confirmMessageBox:focused,
+#toastBox:focused {
+    -fx-border-color: -mb-primary;
+    -fx-border-width: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #confirmMessageBox,
+    #toastBox {
+        -fx-border-width: 2px;
+    }
+
+    .success-toast,
+    .warning-toast,
+    .error-toast,
+    .wrong-toast,
+    .info-toast {
+        -fx-border-width: 2px;
+    }
+}
+
+/* ====== PRINT STYLES ====== */
+@media print {
+    #confirmRoot,
+    #toastBox {
+        -fx-opacity: 0 !important;
+        -fx-visible: false !important;
+        -fx-managed: false !important;
+    }
 }

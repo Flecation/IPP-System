@@ -9,6 +9,8 @@ import IPPSystem.Models.labors;
 import IPPSystem.Models.skills;
 import IPPSystem.Utils.messageBoxService;
 import IPPSystem.Utils.utils;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -23,8 +25,13 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
 
     @FXML private TextField laborName;
     @FXML private TextField laborPhone;
-    @FXML private TextField laborNRC;
     @FXML private TextField experienceYear;
+
+    // NRC fields
+    @FXML private TextField nrcPart1; // State/Division (2 digits)
+    @FXML private TextField nrcPart2; // Township code (3 letters)
+    @FXML private TextField nrcPart3; // NRC type (1 letter)
+    @FXML private TextField nrcPart4; // Registration number (6 digits)
 
     @FXML private ComboBox<skills> skillCombo;
     @FXML private DatePicker startDatePicker;
@@ -54,6 +61,109 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
                 setText(empty || item == null ? "" : item.getSkillName());
             }
         });
+
+        // Setup NRC field listeners for auto-advance and validation
+        setupNRCFields();
+    }
+
+    private void setupNRCFields() {
+        // Part 1: State/Division (2 digits max)
+        nrcPart1.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                nrcPart1.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            if (newValue.length() > 2) {
+                nrcPart1.setText(newValue.substring(0, 2));
+            }
+            if (newValue.length() == 2) {
+                nrcPart2.requestFocus();
+            }
+        });
+
+        // Part 2: Township code (3 letters max)
+        nrcPart2.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[A-Za-z]*")) {
+                nrcPart2.setText(newValue.replaceAll("[^A-Za-z]", ""));
+            }
+            String upper = newValue.toUpperCase();
+            if (!newValue.equals(upper)) {
+                nrcPart2.setText(upper);
+            }
+            if (newValue.length() > 3) {
+                nrcPart2.setText(newValue.substring(0, 3));
+            }
+            if (newValue.length() == 3) {
+                nrcPart3.requestFocus();
+            }
+        });
+
+        // Part 3: NRC type (1 letter)
+        nrcPart3.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[A-Za-z]*")) {
+                nrcPart3.setText(newValue.replaceAll("[^A-Za-z]", ""));
+            }
+            String upper = newValue.toUpperCase();
+            if (!newValue.equals(upper)) {
+                nrcPart3.setText(upper);
+            }
+            if (newValue.length() > 1) {
+                nrcPart3.setText(newValue.substring(0, 1));
+            }
+            if (newValue.length() == 1) {
+                nrcPart4.requestFocus();
+            }
+        });
+
+        // Part 4: Registration number (6 digits)
+        nrcPart4.textProperty().addListener((observable, oldValue, newValue) -> {
+        if (!newValue.matches("\\d*")) {
+            nrcPart4.setText(newValue.replaceAll("[^\\d]", ""));
+        }
+        if (newValue.length() > 6) {
+            nrcPart4.setText(newValue.substring(0, 6));
+        }
+        });
+    }
+
+    private String getFullNRC() {
+        String part1 = nrcPart1.getText().trim();
+        String part2 = nrcPart2.getText().trim();
+        String part3 = nrcPart3.getText().trim();
+        String part4 = nrcPart4.getText().trim();
+
+        if (part1.isEmpty() || part2.isEmpty() || part3.isEmpty() || part4.isEmpty()) {
+            return "";
+        }
+
+        return String.format("%s/%s(%s)/%s", part1, part2, part3, part4);
+    }
+
+    private boolean validateNRC() {
+        String part1 = nrcPart1.getText().trim();
+        String part2 = nrcPart2.getText().trim();
+        String part3 = nrcPart3.getText().trim();
+        String part4 = nrcPart4.getText().trim();
+
+        // Check if all parts are filled
+        if (part1.isEmpty() || part2.isEmpty() || part3.isEmpty() || part4.isEmpty()) {
+            return false;
+        }
+
+        // Validate each part
+        if (!part1.matches("\\d{2}")) return false; // Exactly 2 digits
+        if (!part2.matches("[A-Z]{3}")) return false; // Exactly 3 uppercase letters
+        if (!part3.matches("[A-Z]")) return false; // Exactly 1 uppercase letter
+        if (!part4.matches("\\d{6}")) return false; // Exactly 6 digits
+
+        // Validate Myanmar NRC specific rules
+        int stateCode = Integer.parseInt(part1);
+        if (stateCode < 1 || stateCode > 14) return false; // Myanmar has 14 states/regions
+
+        // Validate NRC type (common types: N=National, C=Citizen, etc.)
+        String validTypes = "NCA";
+        if (!validTypes.contains(part3)) return false;
+
+        return true;
     }
 
     @FXML
@@ -64,7 +174,6 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
 
     @FXML
     void clickAddLabor(ActionEvent event) {
-
         if (!isFormValid()) {
             messageBoxService.toast("Invalid", getValidationMessage(), notificationType.WARNING);
             return;
@@ -76,11 +185,16 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
             return;
         }
 
+        if (!validateNRC()) {
+            messageBoxService.toast("Invalid NRC", "Please enter a valid NRC format.\nFormat: 12/ABC(N)/123456", notificationType.WARNING);
+            return;
+        }
+
         labors labor = new labors();
         labor.setSkillId(selected.getSkillId());
         labor.setLaborName(laborName.getText().trim());
         labor.setLaborPhone(laborPhone.getText().trim());
-        labor.setLaborNRC(laborNRC.getText().trim());
+        labor.setLaborNRC(getFullNRC()); // Use the assembled NRC
         labor.setLaborStartDate(Date.valueOf(startDatePicker.getValue()));
         labor.setActive(true);
 
@@ -114,8 +228,11 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
     public boolean hasUnsavedChanges() {
         return (laborName != null && !laborName.getText().trim().isEmpty())
                 || (laborPhone != null && !laborPhone.getText().trim().isEmpty())
-                || (laborNRC != null && !laborNRC.getText().trim().isEmpty())
                 || (experienceYear != null && !experienceYear.getText().trim().isEmpty())
+                || (nrcPart1 != null && !nrcPart1.getText().trim().isEmpty())
+                || (nrcPart2 != null && !nrcPart2.getText().trim().isEmpty())
+                || (nrcPart3 != null && !nrcPart3.getText().trim().isEmpty())
+                || (nrcPart4 != null && !nrcPart4.getText().trim().isEmpty())
                 || (skillCombo != null && skillCombo.getValue() != null)
                 || (startDatePicker != null && startDatePicker.getValue() != null);
     }
@@ -124,19 +241,21 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
     public boolean isFormValid() {
         String name = laborName == null ? "" : laborName.getText().trim();
         String phone = laborPhone == null ? "" : laborPhone.getText().trim();
-        String nrc = laborNRC == null ? "" : laborNRC.getText().trim();
         String exp = experienceYear == null ? "" : experienceYear.getText().trim();
         skills s = skillCombo == null ? null : skillCombo.getValue();
 
-        if (name.isEmpty() || phone.isEmpty() || nrc.isEmpty() || exp.isEmpty() || s == null || startDatePicker.getValue() == null)
+        if (name.isEmpty() || phone.isEmpty() || exp.isEmpty() || s == null || startDatePicker.getValue() == null)
             return false;
 
         if (!name.matches("[a-zA-Z\\s]+")) return false;
         if (!phone.matches("09\\d{9,10}")) return false;
 
-        try { Integer.parseInt(exp); } catch (Exception e) { return false; }
-
-        if (!nrc.matches("\\d{2}/[A-Z]{3}\\([A-Z]\\)/\\d{6}")) return false;
+        try {
+            int expYear = Integer.parseInt(exp);
+            if (expYear < 0 || expYear > 50) return false; // Reasonable experience range
+        } catch (Exception e) {
+            return false;
+        }
 
         return true;
     }
@@ -145,8 +264,9 @@ public class createLaborController implements loadPaneAware, AddOverlayForm {
     public String getValidationMessage() {
         return "Please fill all fields correctly.\n" +
                 "- Name: letters only\n" +
-                "- Phone: 09 + 11/12 digits\n" +
-                "- NRC: 12/ABC(N)/123456\n" +
+                "- Phone: 09 + 9 or 10 digits (e.g., 09123456789)\n" +
+                "- Experience: 0-50 years\n" +
+                "- NRC: Enter in format 12/ABC(N)/123456\n" +
                 "- Skill + Entrance Date required";
     }
 }

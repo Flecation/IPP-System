@@ -14,27 +14,30 @@
 
 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="675.0" prefWidth="1220.0" vbarPolicy="NEVER" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.viewProjectsController">
    <content>
-      <VBox fx:id="viewProjectPane" alignment="CENTER" prefHeight="675.0" prefWidth="1220.0" spacing="10.0">
+      <VBox fx:id="viewProjectPane" alignment="CENTER" prefHeight="675.0" prefWidth="1220.0" spacing="10.0" styleClass="root" stylesheets="@../CSS/viewProjects.css">
          <children>
-            <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0">
+            <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" styleClass="titlePane">
                <children>
-                          <Label prefHeight="28.0" prefWidth="246.0" text="Project Activity">
+                          <Label prefHeight="28.0" prefWidth="246.0" styleClass="title" text="Project Activity">
                               <font>
                                   <Font name="System Bold" size="22.0" />
                               </font>
                           </Label>
-                  <Region maxWidth="780.0" minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="addBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: orange;" text="+ Add Project" wrapText="true" />
+                  <Region minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: orange;" styleClass="create-btn" text="+ Add Project" wrapText="true" />
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </HBox>
                   <HBox alignment="CENTER" maxHeight="50.0" minHeight="50.0" spacing="10.0">
                       <children>
-                          <Button fx:id="allBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: black; -fx-background-radius: 10;" text="All" textFill="WHITE">
+                          <Button fx:id="allBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" styleClass="click-btn all" text="All" textFill="WHITE" HBox.hgrow="ALWAYS">
                               <HBox.margin>
                                   <Insets />
                               </HBox.margin>
                           </Button>
-                          <Button fx:id="activeBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" text="Active">
+                          <Button fx:id="activeBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" styleClass="click-btn active" text="Active" HBox.hgrow="ALWAYS">
                               <HBox.margin>
                                   <Insets />
                               </HBox.margin>
@@ -45,7 +48,7 @@
                                   <DropShadow color="#8080808f" />
                               </effect>
                           </Button>
-                          <Button fx:id="completedBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" text="Completed">
+                          <Button fx:id="completedBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" styleClass="click-btn complete" text="Completed" HBox.hgrow="ALWAYS">
                               <HBox.margin>
                                   <Insets />
                               </HBox.margin>
@@ -56,7 +59,7 @@
                                   <DropShadow color="#8080808e" />
                               </effect>
                           </Button>
-                          <Button fx:id="planningBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" text="Planning">
+                          <Button fx:id="planningBtn" maxHeight="30.0" maxWidth="120.0" minHeight="30.0" minWidth="120.0" mnemonicParsing="false" style="-fx-background-color: white; -fx-background-radius: 10;" styleClass="click-btn planning" text="Planning" HBox.hgrow="ALWAYS">
                               <font>
                                   <Font name="System Bold" size="15.0" />
                               </font>
@@ -70,29 +73,29 @@
                   <Region minHeight="0.0" minWidth="0.0" HBox.hgrow="ALWAYS" />
                   <StackPane>
                      <children>
-                        <Label fx:id="choiceUserLbl" text="Supervisors" translateY="-10.0" StackPane.alignment="TOP_LEFT">
+                        <Label fx:id="choiceUserLbl" styleClass="info-text" text="Supervisors" translateY="-10.0" StackPane.alignment="TOP_LEFT">
                            <StackPane.margin>
                               <Insets />
                            </StackPane.margin>
                         </Label>
-                        <ComboBox fx:id="choiceUsersBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
+                        <ComboBox fx:id="choiceUsersBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" styleClass="fliter-box" />
                      </children>
                   </StackPane>
                   <StackPane>
                      <children>
-                        <Label text="Project Types" translateY="-10.0" StackPane.alignment="TOP_LEFT">
+                        <Label styleClass="info-text" text="Project Types" translateY="-10.0" StackPane.alignment="TOP_LEFT">
                            <StackPane.margin>
                               <Insets />
                            </StackPane.margin>
                         </Label>
-                        <ComboBox fx:id="choiceProjectTypesBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" />
+                        <ComboBox fx:id="choiceProjectTypesBox" maxHeight="30.0" maxWidth="220.0" minHeight="30.0" minWidth="220.0" styleClass="filter-box" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
                       </children>
                   </HBox>
             <VBox fx:id="projectContainer" alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label fx:id="noProjectLbl" text="There is no project to show you" />
+                  <Label fx:id="noProjectLbl" styleClass="info-text" text="There is no project to show you" />
                </children></VBox>
          </children>
          <padding>

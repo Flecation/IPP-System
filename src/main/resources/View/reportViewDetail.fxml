@@ -18,7 +18,7 @@
    <children>
       <VBox minHeight="-Infinity" minWidth="300.0" prefWidth="300.0" style="-fx-background-color: #ffffff;" HBox.hgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER" maxHeight="150.0" minHeight="150.0" prefHeight="139.0" prefWidth="300.0" spacing="12.0" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER" maxHeight="100.0" minHeight="100.0" prefHeight="139.0" prefWidth="300.0" spacing="10.0">
                <children>
                   <Label fx:id="rpProjectName" text="Sunrise Building Project" wrapText="true">
                      <font>
@@ -30,19 +30,18 @@
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_RIGHT" prefWidth="237.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <HBox alignment="CENTER" spacing="10.0">
                      <children>
-                        <DatePicker fx:id="startDate" promptText="Start" styleClass="date-picker" HBox.hgrow="ALWAYS" />
-                        <DatePicker fx:id="endDate" promptText="End" styleClass="date-picker" />
+                        <Label styleClass="info-text" text="Supervisors:" />
+                        <ComboBox fx:id="filterBySupervisor" prefWidth="150.0" promptText="Supervisor" styleClass="filter-box" />
                      </children>
                   </HBox>
-                  <ComboBox fx:id="filterBySupervisor" prefWidth="150.0" promptText="Supervisor" styleClass="filter-box" />
                </children>
                <VBox.margin>
-                  <Insets />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
                <padding>
-                  <Insets bottom="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-border-color: none; -fx-background-color: none;" VBox.vgrow="ALWAYS">
@@ -58,18 +57,18 @@
       </VBox>
       <VBox HBox.hgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER" prefHeight="82.0" prefWidth="820.0" spacing="10.0" style="-fx-background-color: #f2f2f2f2;" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER" maxHeight="100.0" minHeight="100.0" prefHeight="82.0" prefWidth="820.0" spacing="10.0" style="-fx-background-color: #f2f2f2f2;" VBox.vgrow="ALWAYS">
                <children>
                   <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="335.0" spacing="6.0">
                      <children>
-                        <Label fx:id="reportIdBySupervisor" prefHeight="30.0" prefWidth="368.0" styleClass="sub-title" text="#12 By Aung Aung" wrapText="true" VBox.vgrow="ALWAYS">
+                        <Label fx:id="reportIdBySupervisor" prefHeight="30.0" prefWidth="368.0" styleClass="header-text" text="#12 By Aung Aung" wrapText="true" VBox.vgrow="ALWAYS">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
                         <HBox>
                            <children>
-                              <Label fx:id="reportDate" prefHeight="17.0" prefWidth="183.0" text="01/02/26       ">
+                              <Label fx:id="reportDate" prefHeight="17.0" prefWidth="183.0" styleClass="info-text" text="01/02/26       ">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -79,117 +78,126 @@
                      </children>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="backBtn" minWidth="100.0" mnemonicParsing="false" onAction="#clickBack" prefHeight="35.0" prefWidth="146.0" styleClass="managerAccSpBtnView" stylesheets="@../CSS/managerSupervisorList.css" text="Back" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="backBtn" minWidth="100.0" mnemonicParsing="false" onAction="#clickBack" prefHeight="35.0" prefWidth="146.0" styleClass="back-btn" text="Back" HBox.hgrow="ALWAYS" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </HBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="675.0" style="-fx-background-color: none;">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="675.0" style="-fx-background-color: none;">
                <content>
-                  <VBox alignment="CENTER" style="-fx-background-color: none;">
+                  <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: none;">
                      <children>
                         <VBox spacing="12.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox prefHeight="17.0" prefWidth="294.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="294.0" spacing="10.0">
                                  <children>
-                                    <Label styleClass="sub-title" text="Project Progress">
+                                    <Label styleClass="header-text" text="Project Progress">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox>
+                                       <children>
+                                          <Label styleClass="info-text" text="Start Date" />
+                                          <DatePicker fx:id="startDate" promptText="Start" styleClass="date-picker" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label styleClass="info-text" text="End Date" />
+                                          <DatePicker fx:id="endDate" promptText="End" styleClass="date-picker" />
+                                       </children>
+                                    </VBox>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
                               </HBox>
-                              <HBox prefHeight="68.0" prefWidth="804.0">
+                              <HBox alignment="CENTER" prefHeight="68.0" prefWidth="804.0" spacing="10.0">
                                  <children>
-                                    <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
+                                    <VBox alignment="CENTER_LEFT" prefHeight="133.0" prefWidth="409.0" spacing="8.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label styleClass="sub-title" text="Remain Qty">
+                                          <Label styleClass="header-text" text="Remain Qty">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
-                                             <children>
-                                                <Label fx:id="remainQty" styleClass="qty-txt" text="10" textFill="WHITE">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
+                                          <Label fx:id="remainQty" styleClass="info-text" text="10" textFill="WHITE">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
                                     </VBox>
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
-                                    <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
+                                    <VBox alignment="CENTER_LEFT" prefHeight="133.0" prefWidth="409.0" spacing="8.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label styleClass="sub-title" text="Completed Qty">
+                                          <Label styleClass="header-text" text="Completed Qty">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
-                                             <children>
-                                                <Label fx:id="completeQty" styleClass="qty-txt" text="10">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
+                                          <Label fx:id="completeQty" styleClass="info-text" text="10">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
                                     </VBox>
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
-                                    <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
+                                    <VBox alignment="CENTER_LEFT" prefHeight="133.0" prefWidth="409.0" spacing="8.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label styleClass="sub-title" text="Worked Hour ">
+                                          <Label styleClass="header-text" text="Worked Hour ">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
-                                             <children>
-                                                <Label fx:id="workedHourQty" styleClass="qty-txt" text="10">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
+                                          <Label fx:id="workedHourQty" styleClass="info-text" text="10">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
                                     </VBox>
                                     <Region minWidth="10.0" prefHeight="97.0" prefWidth="14.0" />
-                                    <VBox prefHeight="133.0" prefWidth="409.0" spacing="8.0">
+                                    <VBox alignment="CENTER_LEFT" prefHeight="133.0" prefWidth="409.0" spacing="8.0" styleClass="cardPane" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label styleClass="sub-title" text="Daily Cost">
+                                          <Label styleClass="header-text" text="Daily Cost">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <HBox alignment="CENTER" minHeight="80.0" minWidth="0.0" styleClass="box-border" VBox.vgrow="ALWAYS">
-                                             <children>
-                                                <Label fx:id="dailyCostQty" styleClass="qty-txt" text="10">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
+                                          <Label fx:id="dailyCostQty" styleClass="info-text" text="10">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
                                     </VBox>
                                  </children>
                               </HBox>
                            </children>
                            <VBox.margin>
-                              <Insets top="32.0" />
+                              <Insets />
                            </VBox.margin>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="7.0" prefWidth="818.0" spacing="12.0" VBox.vgrow="ALWAYS">
+                        <VBox alignment="CENTER" prefHeight="7.0" prefWidth="818.0" spacing="12.0" styleClass="box" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox VBox.vgrow="ALWAYS">
+                              <VBox alignment="CENTER_LEFT" styleClass="boxTitle">
                                  <children>
                                     <Label styleClass="sub-title" text="Labors In Day">
                                        <font>
@@ -198,7 +206,7 @@
                                     </Label>
                                  </children>
                                  <padding>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </VBox>
                               <TableView fx:id="todayLaborTable" minHeight="300.0" prefHeight="144.0" VBox.vgrow="ALWAYS">
@@ -215,12 +223,12 @@
                               </TableView>
                            </children>
                            <VBox.margin>
-                              <Insets top="32.0" />
+                              <Insets />
                            </VBox.margin>
                         </VBox>
-                        <VBox prefHeight="113.0" prefWidth="818.0" spacing="12.0">
+                        <VBox alignment="CENTER" prefHeight="113.0" prefWidth="818.0" spacing="12.0">
                            <children>
-                              <HBox prefHeight="17.0" prefWidth="294.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="294.0">
                                  <children>
                                     <Label styleClass="issue-textarea" text="All About Issues" textFill="#e10f0f">
                                        <font>
@@ -232,45 +240,37 @@
                               <TextArea fx:id="issuesLabel" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" />
                            </children>
                            <VBox.margin>
-                              <Insets top="32.0" />
+                              <Insets />
                            </VBox.margin>
                         </VBox>
                         <HBox>
                            <children>
-                              <VBox prefHeight="113.0" prefWidth="641.0" spacing="12.0">
+                              <VBox alignment="CENTER_LEFT" prefHeight="113.0" prefWidth="641.0" spacing="12.0">
                                  <children>
                                     <HBox prefHeight="17.0" prefWidth="294.0">
                                        <children>
-                                          <Label text="General Commets">
+                                          <Label styleClass="header-text" text="General Commets">
                                              <font>
                                                 <Font size="20.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label fx:id="generalCommentLabel" prefHeight="17.0" prefWidth="124.0" text="- Exted blah blah" />
-                                       </children>
-                                    </VBox>
+                                    <Label fx:id="generalCommentLabel" prefHeight="17.0" prefWidth="124.0" styleClass="info-text" text="- Exted blah blah" />
                                  </children>
                               </VBox>
                               <VBox prefHeight="113.0" prefWidth="641.0" spacing="12.0">
                                  <children>
                                     <HBox prefHeight="17.0" prefWidth="294.0">
                                        <children>
-                                          <Label text=" Weather Condition">
+                                          <Label styleClass="header-text" text=" Weather Condition">
                                              <font>
                                                 <Font size="20.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label fx:id="weatherConditionLabel" prefHeight="17.0" prefWidth="124.0" text="- Exted blah blah" />
-                                       </children>
-                                    </VBox>
+                                    <Label fx:id="weatherConditionLabel" prefHeight="17.0" prefWidth="124.0" styleClass="info-text" text="- Exted blah blah" />
                                  </children>
                               </VBox>
                            </children>
@@ -280,7 +280,7 @@
                         </HBox>
                      </children>
                      <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </VBox>
                </content>

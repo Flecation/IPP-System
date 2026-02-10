@@ -186,22 +186,41 @@ public class userDatabase {
 
     }
 
-    public static boolean updatePasswordByEmail(String email, String hashedPassword) {
-        try {
-            PreparedStatement pstmt = con.prepareStatement(
-                    "UPDATE users SET userPassword = ? WHERE userEmail = ?"
-            );
-            pstmt.setString(1, hashedPassword);
-            pstmt.setString(2, email);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    
+public static boolean updatePasswordByEmail(String email, String hashedPassword) {
+    try {
+        PreparedStatement pstmt = con.prepareStatement(
+                "UPDATE users SET userPassword = ? WHERE userEmail = ?"
+        );
+        pstmt.setString(1, hashedPassword);
+        pstmt.setString(2, email);
+        return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+}
 
 
+/**
+ * Update basic profile fields for a user.
+ * Used by the sidebar "Edit Profile" feature.
+ */
+public static boolean updateProfileByUserId(int userId, String email, String phone) {
+    try {
+        PreparedStatement pstmt = con.prepareStatement(
+                "UPDATE users SET userEmail = ?, userPhone = ? WHERE userId = ?"
+        );
+        pstmt.setString(1, email);
+        pstmt.setString(2, phone);
+        pstmt.setInt(3, userId);
+        return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+}
 
-    public static boolean createSupervisor(users u) {
+
+public static boolean createSupervisor(users u) {
         String sql = """
             INSERT INTO users
             (userName, userRole, userPhone, userEmail, userDOB, userPassword, userPhoto, userStartDate)

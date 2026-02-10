@@ -1335,17 +1335,13 @@ BEGIN
     SET PV = IF(v_totalDays = 0, 0, BAC * (v_elapsedDays / v_totalDays));
 
     /* AC = tasks + labors for reports of this work item */
-    SET AC =
-        (SELECT IFNULL(SUM(drt.dailyCost),0)
-         FROM dailyReports dr
-         JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
-         WHERE dr.assignWorkItemId = p_assignWorkItemId
-           AND dr.reportDate <= p_asOfDate)
-      + (SELECT IFNULL(SUM(drl.dailyWage),0)
-         FROM dailyReports dr
-         JOIN dailyReportLabors drl ON dr.dailyReportId = drl.dailyReportId
-         WHERE dr.assignWorkItemId = p_assignWorkItemId
-           AND dr.reportDate <= p_asOfDate);
+   /* AC = final cost from tasks (already includes material + labor) */
+   SET AC =
+       (SELECT IFNULL(SUM(drt.dailyCost),0)
+        FROM dailyReports dr
+        JOIN dailyReportTasks drt ON dr.dailyReportId = drt.dailyReportId
+        WHERE dr.assignWorkItemId = p_assignWorkItemId
+          AND dr.reportDate <= p_asOfDate);
 
     /* Progress from completedQty / plannedQty */
     SELECT
@@ -1631,3 +1627,134 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS cascadeAfterDailyTaskUpdate $$
+CREATE PROCEDURE cascadeAfterDailyTaskUpdate(IN p_assignTaskId INT)
+BEGIN
+    DECLARE v_assignWorkItemId INT;
+    DECLARE v_assignProjectId INT;
+
+    DECLARE v_plannedQty DOUBLE;
+    DECLARE v_totalCompleted DOUBLE;
+
+    DECLARE v_statusPlanning INT;
+    DECLARE v_statusInProgress INT;
+    DECLARE v_statusFinished INT;
+
+    DECLARE v_taskDetailId INT;
+    DECLARE v_nextAssignTaskId INT;
+
+    DECLARE v_allTasksFinished INT;
+
+    DECLARE v_nextAssignWorkItemId INT;
+    DECLARE v_allWorkItemsFinished INT;
+
+    -- status ids
+    SELECT projectStatusId INTO v_statusPlanning  FROM projectStatus WHERE projectStatusName='planning'  LIMIT 1;
+    SELECT projectStatusId INTO v_statusInProgress FROM projectStatus WHERE projectStatusName='inProgress' LIMIT 1;
+    SELECT projectStatusId INTO v_statusFinished  FROM projectStatus WHERE projectStatusName='finished'  LIMIT 1;
+
+    -- get task -> workItem -> project
+    SELECT at.assignWorkItemId, awi.assignProjectId, at.plannedQty
+      INTO v_assignWorkItemId, v_assignProjectId, v_plannedQty
+    FROM assignTasks at
+    JOIN assignWorkItems awi ON awi.assignWorkItemId = at.assignWorkItemId
+    WHERE at.assignTaskId = p_assignTaskId;
+
+    -- total completed for this task across all reports in the project
+    SELECT IFNULL(SUM(drt.completedQty), 0)
+      INTO v_totalCompleted
+    FROM dailyReportTasks drt
+    JOIN dailyReports dr ON dr.dailyReportId = drt.dailyReportId
+    WHERE dr.assignProjectId = v_assignProjectId
+      AND drt.assignTaskId = p_assignTaskId;
+
+    -- If completed >= planned => finish task; else ensure it's inProgress
+    IF v_totalCompleted >= v_plannedQty THEN
+        UPDATE assignTasks
+        SET taskStatus = v_statusFinished
+        WHERE assignTaskId = p_assignTaskId;
+    ELSE
+        UPDATE assignTasks
+        SET taskStatus = v_statusInProgress
+        WHERE assignTaskId = p_assignTaskId
+          AND taskStatus <> v_statusFinished;
+    END IF;
+
+    -- Determine this task's template order (taskDetails.taskDetailId)
+    SELECT td.taskDetailId
+      INTO v_taskDetailId
+    FROM assignTasks at
+    JOIN assignWorkItems awi ON awi.assignWorkItemId = at.assignWorkItemId
+    JOIN workItemDetails wid ON wid.projectWorkItemId = awi.projectWorkItemId
+    JOIN taskDetails td ON td.workItemDetailId = wid.workItemDetailId
+                        AND td.projectTaskId = at.projectTaskId
+    WHERE at.assignTaskId = p_assignTaskId
+    LIMIT 1;
+
+    -- Find next task in same workItem by taskDetailId order
+    SELECT at2.assignTaskId
+      INTO v_nextAssignTaskId
+    FROM assignTasks at2
+    JOIN assignWorkItems awi2 ON awi2.assignWorkItemId = at2.assignWorkItemId
+    JOIN workItemDetails wid2 ON wid2.projectWorkItemId = awi2.projectWorkItemId
+    JOIN taskDetails td2 ON td2.workItemDetailId = wid2.workItemDetailId
+                         AND td2.projectTaskId = at2.projectTaskId
+    WHERE at2.assignWorkItemId = v_assignWorkItemId
+      AND td2.taskDetailId > v_taskDetailId
+    ORDER BY td2.taskDetailId
+    LIMIT 1;
+
+    -- If current task finished -> move next task to inProgress (only if it is still planning)
+    IF v_totalCompleted >= v_plannedQty AND v_nextAssignTaskId IS NOT NULL THEN
+        UPDATE assignTasks
+        SET taskStatus = v_statusInProgress
+        WHERE assignTaskId = v_nextAssignTaskId
+          AND taskStatus = v_statusPlanning;
+    END IF;
+
+    -- If all tasks of workItem are finished -> finish workItem
+    SELECT COUNT(*) INTO v_allTasksFinished
+    FROM assignTasks
+    WHERE assignWorkItemId = v_assignWorkItemId
+      AND taskStatus <> v_statusFinished;
+
+    IF v_allTasksFinished = 0 THEN
+        UPDATE assignWorkItems
+        SET workItemStatus = v_statusFinished
+        WHERE assignWorkItemId = v_assignWorkItemId;
+
+        -- Move next workItem in project to inProgress
+        SELECT awi3.assignWorkItemId
+          INTO v_nextAssignWorkItemId
+        FROM assignWorkItems awi3
+        WHERE awi3.assignProjectId = v_assignProjectId
+          AND awi3.assignWorkItemId > v_assignWorkItemId
+        ORDER BY awi3.assignWorkItemId
+        LIMIT 1;
+
+        IF v_nextAssignWorkItemId IS NOT NULL THEN
+            UPDATE assignWorkItems
+            SET workItemStatus = v_statusInProgress
+            WHERE assignWorkItemId = v_nextAssignWorkItemId
+              AND workItemStatus = v_statusPlanning;
+        END IF;
+    END IF;
+
+    -- Optional: If all workItems finished -> finish project
+    SELECT COUNT(*) INTO v_allWorkItemsFinished
+    FROM assignWorkItems
+    WHERE assignProjectId = v_assignProjectId
+      AND workItemStatus <> v_statusFinished;
+
+    IF v_allWorkItemsFinished = 0 THEN
+        UPDATE assignProjects
+        SET projectStatus = v_statusFinished
+        WHERE assignProjectId = v_assignProjectId;
+    END IF;
+END $$
+
+DELIMITER ;
+

@@ -20,7 +20,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -38,6 +40,7 @@ import IPPSystem.Interfaces.*;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Bounds;
+import java.io.File;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -279,6 +282,17 @@ public class sideBarPaneController extends navigationPaneController{
 
     @FXML
     private TextField userPhoneTxtField;
+
+    // ===== Profile panes (same sidebar area) =====
+    @FXML private VBox editProfilePane;
+    @FXML private VBox changePasswordPane;
+
+    // ===== Change password fields/buttons (in sidebar profileBox) =====
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmPasswordField;
+    @FXML private Button changePwCancelBtn;
+    @FXML private Button changePwSaveBtn;
 
     @FXML
     private Label userRoleLbl;
@@ -637,6 +651,10 @@ public class sideBarPaneController extends navigationPaneController{
         toggleCircle.setOnMouseClicked(event ->translateCircle(toggleCircle,settingToggleCircle));
 
         populateUserInfo();
+
+        // Profile fields should not be editable until user enters Edit Profile
+        setProfileFieldsEditable(false);
+        profileEditing = false;
 
         // ===== Notifications (dropdown) =====
         setupNotificationUI();
@@ -1022,27 +1040,224 @@ public class sideBarPaneController extends navigationPaneController{
         showSettingBtn.setOnMouseClicked(e -> showSidebar(settingBar, 200));
     }
 
-    private void setupProfileHandlers() {
-        if (profileViewBtn != null) {
-            profileViewBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
-        }
-        if (profileViewIconBtn != null) {
-            profileViewIconBtn.setOnMouseClicked(e -> showSidebar(profileBox, 200));
-        }
+    
+private boolean profileEditing = false;
 
-        if (revertBtn != null) {
-            revertBtn.setOnMouseClicked(e -> {
-            });
-        }
-
-        if (confirmBtn != null) {
-            confirmBtn.setOnMouseClicked(e -> {
-                showSidebar(sideBar, 200);
-            });
-        }
+private void setupProfileHandlers() {
+    // ===== Edit Profile =====
+    if (profileViewBtn != null) {
+        profileViewBtn.setOnMouseClicked(e -> {
+            showSidebar(profileBox, 200);
+            showEditProfilePane();
+            enterProfileEditMode();
+        });
+    }
+    if (profileViewIconBtn != null) {
+        profileViewIconBtn.setOnMouseClicked(e -> {
+            showSidebar(profileBox, 200);
+            showEditProfilePane();
+            enterProfileEditMode();
+        });
     }
 
-    private void showSidebar(VBox target, double width) {
+    // Optional: click the small pencil on the profile photo to edit
+    if (imageEditBtn != null) {
+        imageEditBtn.setOnMouseClicked(e -> {
+            showSidebar(profileBox, 200);
+            showEditProfilePane();
+            enterProfileEditMode();
+        });
+    }
+
+    if (revertBtn != null) {
+        revertBtn.setOnMouseClicked(e -> {
+            // Revert fields back to session user values
+            populateUserInfo();
+            exitProfileEditMode();
+            messageBoxService.toast("Reverted", "Profile changes were reverted.", notificationType.INFO);
+        });
+    }
+
+    if (confirmBtn != null) {
+        confirmBtn.setOnMouseClicked(e -> {
+            if (!profileEditing) {
+                // If user somehow clicked confirm while not in edit mode, just go back
+                showSidebar(sideBar, 200);
+                return;
+            }
+
+            String newEmail = userEmailTxtField == null ? "" : userEmailTxtField.getText().trim();
+            String newPhone = userPhoneTxtField == null ? "" : userPhoneTxtField.getText().trim();
+
+            if (loginUser == null) {
+                messageBoxService.toast("Error", "No logged-in user.", notificationType.ERROR);
+                return;
+            }
+            if (newEmail.isBlank()) {
+                messageBoxService.toast("Invalid", "Email cannot be empty.", notificationType.WARNING);
+                return;
+            }
+
+            try {
+                boolean ok = IPPSystem.DAO.userDatabase.updateProfileByUserId(
+                        loginUser.getUserId(),
+                        newEmail,
+                        newPhone
+                );
+
+                if (ok) {
+                    // Update session user object so the whole app sees the new values
+                    loginUser.setUserEmail(newEmail);
+                    loginUser.setUserPhone(newPhone);
+                    session.getInstance().setUser(loginUser);
+
+                    exitProfileEditMode();
+                    showSidebar(sideBar, 200);
+                    messageBoxService.toast("Saved", "Profile updated successfully.", notificationType.SUCCESS);
+                } else {
+                    messageBoxService.toast("Not saved", "No changes were applied.", notificationType.WARNING);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                messageBoxService.toast("Error", "Failed to update profile.", notificationType.ERROR);
+            }
+        });
+    }
+
+    // ===== Change Password =====
+    if (changePasswordBtn != null) {
+        changePasswordBtn.setOnMouseClicked(e -> {
+            showSidebar(profileBox, 200);
+            showChangePasswordPane();
+        });
+    }
+    if (changePasswordIconBtn != null) {
+        changePasswordIconBtn.setOnMouseClicked(e -> {
+            showSidebar(profileBox, 200);
+            showChangePasswordPane();
+        });
+    }
+
+    if (changePwCancelBtn != null) {
+        changePwCancelBtn.setOnMouseClicked(e -> {
+            clearChangePasswordFields();
+            showEditProfilePane();
+            enterProfileEditMode();
+        });
+    }
+
+    if (changePwSaveBtn != null) {
+        changePwSaveBtn.setOnMouseClicked(e -> handleChangePassword());
+    }
+}
+
+private void showEditProfilePane() {
+    if (editProfilePane != null) {
+        editProfilePane.setVisible(true);
+        editProfilePane.setManaged(true);
+    }
+    if (changePasswordPane != null) {
+        changePasswordPane.setVisible(false);
+        changePasswordPane.setManaged(false);
+    }
+}
+
+private void showChangePasswordPane() {
+    exitProfileEditMode();
+    if (editProfilePane != null) {
+        editProfilePane.setVisible(false);
+        editProfilePane.setManaged(false);
+    }
+    if (changePasswordPane != null) {
+        changePasswordPane.setVisible(true);
+        changePasswordPane.setManaged(true);
+    }
+    if (currentPasswordField != null) currentPasswordField.requestFocus();
+}
+
+private void enterProfileEditMode() {
+    profileEditing = true;
+    setProfileFieldsEditable(true);
+
+    // Focus first field
+    if (userEmailTxtField != null) userEmailTxtField.requestFocus();
+}
+
+private void exitProfileEditMode() {
+    profileEditing = false;
+    setProfileFieldsEditable(false);
+}
+
+private void setProfileFieldsEditable(boolean editable) {
+    if (userEmailTxtField != null) {
+        userEmailTxtField.setEditable(editable);
+        userEmailTxtField.setDisable(!editable);
+    }
+    if (userPhoneTxtField != null) {
+        userPhoneTxtField.setEditable(editable);
+        userPhoneTxtField.setDisable(!editable);
+    }
+}
+
+private void clearChangePasswordFields() {
+    if (currentPasswordField != null) currentPasswordField.clear();
+    if (newPasswordField != null) newPasswordField.clear();
+    if (confirmPasswordField != null) confirmPasswordField.clear();
+}
+
+private void handleChangePassword() {
+    if (loginUser == null) {
+        messageBoxService.toast("Error", "No logged-in user.", notificationType.ERROR);
+        return;
+    }
+
+    String current = currentPasswordField == null ? "" : currentPasswordField.getText();
+    String next = newPasswordField == null ? "" : newPasswordField.getText();
+    String confirm = confirmPasswordField == null ? "" : confirmPasswordField.getText();
+
+    if (current.isBlank() || next.isBlank() || confirm.isBlank()) {
+        messageBoxService.toast("Invalid", "Please fill all password fields.", notificationType.WARNING);
+        return;
+    }
+
+    // validate current password against session
+    if (!utils.checkPassword(current, loginUser.getUserPassword())) {
+        messageBoxService.toast("Invalid", "Current password is incorrect.", notificationType.ERROR);
+        return;
+    }
+
+    if (!next.equals(confirm)) {
+        messageBoxService.toast("Invalid", "New password and confirm password do not match.", notificationType.WARNING);
+        return;
+    }
+
+    if (next.length() < 6) {
+        messageBoxService.toast("Weak", "Password must be at least 6 characters.", notificationType.WARNING);
+        return;
+    }
+
+    try {
+        String hashed = utils.hashPassword(next);
+        boolean ok = IPPSystem.DAO.userDatabase.updatePasswordByEmail(loginUser.getUserEmail(), hashed);
+
+        if (ok) {
+            loginUser.setUserPassword(hashed);
+            session.getInstance().setUser(loginUser);
+
+            clearChangePasswordFields();
+            showSidebar(sideBar, 200);
+            messageBoxService.toast("Saved", "Password changed successfully.", notificationType.SUCCESS);
+        } else {
+            messageBoxService.toast("Not saved", "Password was not updated.", notificationType.ERROR);
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        messageBoxService.toast("Error", "Failed to change password.", notificationType.ERROR);
+    }
+}
+
+private void showSidebar(VBox target, double width) {
+
         setBoxVisible(sideBar, target == sideBar);
         setBoxVisible(iconSideBar, target == iconSideBar);
         setBoxVisible(settingBar, target == settingBar);
@@ -1094,6 +1309,37 @@ public class sideBarPaneController extends navigationPaneController{
         if (userPhoneTxtField != null) {
             userPhoneTxtField.setText(loginUser.getUserPhone() == null ? "" : loginUser.getUserPhone());
         }
+
+        // ===== Profile photo (fill sidebar circles + profile image) =====
+        try {
+            Image img = loadProfileImage(loginUser.getUserPhoto());
+
+            if (userImage != null) {
+                userImage.setImage(img);
+            }
+            if (imageCircle != null) {
+                imageCircle.setFill(new ImagePattern(img));
+            }
+            if (imageBtn != null) {
+                imageBtn.setFill(new ImagePattern(img));
+            }
+        } catch (Exception ignored) {
+            // if anything fails, keep defaults
+        }
+    }
+
+    private Image loadProfileImage(String path) {
+        try {
+            if (path != null && !path.isBlank()) {
+                File f = new File(path);
+                if (f.exists()) {
+                    return new Image(f.toURI().toString());
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        return new Image(getClass().getResource("/Photos/default.png").toExternalForm());
     }
 
     private void translateCircle(Circle circle, Circle circle1) {

@@ -583,6 +583,8 @@ public class CreateReportNewController implements Initializable {
             insertDailyReportTask(con, dailyReportId, task.assignTaskId(),
                     progressDesc, workHours, completedQty, dailyCost, isCompleted);
 
+            callCascadeAfterDailyTaskUpdate(con, task.assignTaskId());
+
 
             con.commit();
             info("Saved", "Daily report saved successfully.");
@@ -682,6 +684,13 @@ public class CreateReportNewController implements Initializable {
             }
         }
         return sb.toString();
+    }
+
+    private void callCascadeAfterDailyTaskUpdate(Connection con, int assignTaskId) throws SQLException {
+        try (CallableStatement cs = con.prepareCall("{CALL cascadeAfterDailyTaskUpdate(?)}")) {
+            cs.setInt(1, assignTaskId);
+            cs.execute();
+        }
     }
 
 

@@ -26,26 +26,29 @@
          </VBox.margin>
       </HBox>
 
-            <VBox prefHeight="486.0" prefWidth="620.0" spacing="15.0" VBox.vgrow="ALWAYS">
+      <VBox prefHeight="486.0" prefWidth="620.0" spacing="15.0" VBox.vgrow="ALWAYS">
          <children>
             <Label style="-fx-text-fill: #000000;" text="Name" />
             <TextField fx:id="laborName" prefHeight="35.0" promptText="U Zaw Zaw" styleClass="input-field" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="5.0" />
-               </font></TextField>
+               </font>
+            </TextField>
 
-                  <HBox VBox.vgrow="NEVER">
+            <HBox VBox.vgrow="NEVER">
                <children>
                   <VBox prefHeight="67.0" prefWidth="401.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label style="-fx-text-fill: #000000;" text="Phone">
                            <VBox.margin>
                               <Insets bottom="6.0" />
-                           </VBox.margin></Label>
+                           </VBox.margin>
+                        </Label>
                         <TextField fx:id="laborPhone" prefHeight="35.0" prefWidth="571.0" promptText="09123456789" styleClass="input-field">
                            <font>
                               <Font size="5.0" />
-                           </font></TextField>
+                           </font>
+                        </TextField>
                      </children>
                   </VBox>
                   <Region minWidth="10.0" prefHeight="63.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
@@ -64,6 +67,7 @@
                   </VBox>
                </children>
             </HBox>
+
             <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Label style="-fx-text-fill: #000000;" text="Skill" textFill="#666666">
@@ -77,30 +81,66 @@
                   <ComboBox fx:id="skillCombo" maxWidth="800.0" minWidth="600.0" prefHeight="48.0" prefWidth="781.0" promptText="Choose Skill" styleClass="input-field" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
+
+            <VBox spacing="5.0">
+               <children>
+                  <Label style="-fx-text-fill: #000000;" text="NRC (National Registration Card)" textFill="#666666">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                     <children>
+                        <!-- State/Division Number -->
+                        <TextField fx:id="nrcPart1" prefHeight="45.0" prefWidth="50.0" maxWidth="50.0" promptText="12" styleClass="nrc-input" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </TextField>
+
+                        <!-- Slash -->
+                        <Label text="/" style="-fx-font-size: 18px; -fx-text-fill: #666666;">
+                           <HBox.margin>
+                              <Insets top="5.0" left="2.0" right="2.0" />
+                           </HBox.margin>
+                        </Label>
+
+                        <!-- Township Code -->
+                        <TextField fx:id="nrcPart2" prefHeight="45.0" prefWidth="60.0" maxWidth="60.0" promptText="ABC" styleClass="nrc-input" HBox.hgrow="NEVER" />
+
+                        <!-- Opening Parenthesis -->
+                        <Label text="(" style="-fx-font-size: 18px; -fx-text-fill: #666666;">
+                           <HBox.margin>
+                              <Insets top="5.0" left="2.0" right="0.0" />
+                           </HBox.margin>
+                        </Label>
+
+                        <!-- NRC Type -->
+                        <TextField fx:id="nrcPart3" prefHeight="45.0" prefWidth="35.0" maxWidth="35.0" promptText="N" styleClass="nrc-input" HBox.hgrow="NEVER" />
+
+                        <!-- Closing Parenthesis and Slash -->
+                        <Label text=")/" style="-fx-font-size: 18px; -fx-text-fill: #666666;">
+                           <HBox.margin>
+                              <Insets top="5.0" left="0.0" right="2.0" />
+                           </HBox.margin>
+                        </Label>
+
+                        <!-- Registration Number -->
+                        <TextField fx:id="nrcPart4" prefHeight="45.0" prefWidth="100.0" maxWidth="100.0" promptText="123456" styleClass="nrc-input" HBox.hgrow="NEVER" />
+                     </children>
+                  </HBox>
+                  <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Format: 12/ABC(N)/123456" />
+               </children>
+            </VBox>
+
             <HBox>
                <children>
                   <VBox prefHeight="67.0" prefWidth="420.0" HBox.hgrow="ALWAYS">
                      <children>
-            
-                                    <Label style="-fx-text-fill: #000000;" text="NRC" textFill="#666666">
+                        <Label style="-fx-text-fill: #000000;" text="Entrance Date" textFill="#666666">
                            <font>
                               <Font size="14.0" />
                            </font>
-                           <VBox.margin>
-                              <Insets bottom="3.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="laborNRC" prefHeight="45.0" prefWidth="409.0" promptText="12/AAB(N)/123456" styleClass="input-field">
-                           <font>
-                              <Font size="8.0" />
-                           </font>
-                        </TextField>
-                     </children>
-                  </VBox>
-                  <Region minWidth="10.0" />
-                  <VBox>
-                     <children>
-                        <Label style="-fx-text-fill: #000000;" text="Entrance Date">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
@@ -112,10 +152,11 @@
                         </HBox>
                      </children>
                   </VBox>
+                  <Region minWidth="10.0" />
                </children>
             </HBox>
-      
-                  <HBox alignment="TOP_RIGHT" spacing="15.0">
+
+            <HBox alignment="TOP_RIGHT" spacing="15.0">
                <children>
                   <Button fx:id="handleCancel" mnemonicParsing="false" onAction="#clickHandleCancel" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-background-radius: 8;" styleClass="input-field" text="Cancel" />
                   <Button fx:id="addLaborBtn" mnemonicParsing="false" onAction="#clickAddLabor" prefHeight="40.0" prefWidth="113.0" styleClass="account-create-btn" text="ADD">

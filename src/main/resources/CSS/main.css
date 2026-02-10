@@ -8,9 +8,9 @@
     -fx-background-color: -bg;
 }
 
- .miniIcon,.restoreIcon,.exitIcon{
+.miniIcon,.restoreIcon,.exitIcon{
     -fx-fill: -text;
- }
+}
 
 .label{
     -fx-text-fill: -text;
@@ -159,6 +159,144 @@
  #minimizeBtn:hover, #restoreBtn:hover{
     -fx-background-color : #314E63;
  }
+
+/* =========================
+   Work Item Details Specific Styles
+   ========================= */
+
+/* Remove inline styles from FXML that should be handled by CSS */
+#actualCostPercent, #earnValuePercent,
+#spiCircleRate, #cpiCircleRate,
+#spiStatusLbl, #cpiStatusLbl {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-text-fill: -text;
+}
+
+#actualCost, #totalCost,
+#usedEarnValue, #totalEarnValue {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 10px;
+}
+
+#viewBudget, #viewPlanStartDate, #viewActualStartDate,
+#viewDuration, #viewTotalLabors, #viewPlanEndDate, #viewActualEndDate {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: -text;
+}
+
+/* Percentage labels in circle indicators */
+#spiCircleRate, #cpiCircleRate {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text;
+}
+
+/* Status labels in SPI/CPI cards */
+#spiStatusLbl, #cpiStatusLbl {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* Work item title status */
+#workItemTitleStatus {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+/* Edit button icon styling */
+#wItemEditBtn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+#wItemEditBtn:hover {
+    -fx-background-color: -surface-2;
+}
+
+#wItemEditBtn:pressed {
+    -fx-background-color: -border;
+}
+
+/* Progress bars specific styling */
+#actualCostProgress, #earnValueProgress {
+    -fx-accent: -progress-bar-fill;
+    -fx-background-color: -progress-bar-track;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 2;
+}
+
+#actualCostProgress .bar, #earnValueProgress .bar {
+    -fx-background-color: -progress-bar-fill;
+    -fx-background-radius: 10;
+}
+
+/* Circle stroke animations for SPI/CPI */
+#spiCircle {
+    -fx-stroke-line-cap: round;
+}
+
+#cpiCircle {
+    -fx-stroke-line-cap: round;
+}
+
+/* Table column headers in work item details */
+#viewSkillCol, #viewQtyCol,
+#taskNameCol, #taskDurationCol, #taskPlanStartDateCol,
+#taskPlanEndDateCol, #TaskStatusCol, #taskActionCol {
+    -fx-alignment: CENTER;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text;
+}
+
+/* Action column cells */
+#taskActionCol .table-cell {
+    -fx-alignment: CENTER;
+}
+
+/* Back button specific styling */
+#backToProjectDetails {
+    -fx-background-color: -primary-2;
+    -fx-text-fill: -text;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+#backToProjectDetails:hover {
+    -fx-background-color: -primary;
+    -fx-effect: dropshadow(gaussian, -shadow, 5, 0, 0, 2);
+}
+
+#backToProjectDetails:pressed {
+    -fx-background-color: -primary-2;
+    -fx-translate-y: 1;
+}
+
+/* Separator styling */
+.separator:vertical {
+    -fx-background-color: -border;
+    -fx-background-insets: 0;
+    -fx-padding: 0 1 0 0;
+}
+
+.separator:horizontal {
+    -fx-background-color: -border;
+    -fx-background-insets: 0;
+    -fx-padding: 1 0 0 0;
+}
+
 /* =========================
    GLOBAL TABLEVIEW THEME
    ========================= */
@@ -329,4 +467,179 @@
 .status-pill-cancelled {
     -fx-background-color: #fdecec;
     -fx-text-fill: #b42318;
+}
+
+/* ===== Work Item Status Colors ===== */
+.status-on-track {
+    -fx-text-fill: -ok !important;
+}
+
+.status-delayed {
+    -fx-text-fill: -delay !important;
+}
+
+.status-behind-schedule {
+    -fx-text-fill: -danger !important;
+}
+
+.status-ahead-of-schedule {
+    -fx-text-fill: -progress !important;
+}
+
+/* Circle progress colors based on value */
+.circle-excellent {
+    -fx-stroke: -ok !important;
+}
+
+.circle-good {
+    -fx-stroke: -progress !important;
+}
+
+.circle-warning {
+    -fx-stroke: -pending !important;
+}
+
+.circle-danger {
+    -fx-stroke: -danger !important;
+}
+/* Title Pane */
+.titlePane {
+    -fx-background-color: -surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, -shadow, 8, 0, 0, 2);
+}
+
+.title {
+    -fx-text-fill: -text;
+    -fx-font-size: 21;
+    -fx-font-weight: bold;
+}
+
+/* Card Panes */
+.cardPane {
+    -fx-background-color: -surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, -shadow, 6, 0, 0, 2);
+}
+
+/* Box Containers */
+.box {
+    -fx-background-color: -surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, -shadow, 8, 0, 0, 2);
+}
+
+.boxTitle {
+    -fx-background-color: -surface-2;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.box-title-header {
+    -fx-text-fill: -text;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+/* Progress Bars */
+.progress-bar {
+    -fx-accent: -progress-bar-fill;
+    -fx-background-color: -progress-bar-track;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.progress-bar .track {
+    -fx-background-color: -progress-bar-track;
+    -fx-background-radius: 10;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -progress-bar-fill;
+    -fx-background-radius: 10;
+    -fx-padding: 2;
+}
+
+/* Circle Indicators */
+.circle-background {
+    -fx-stroke: -circle-background;
+    -fx-stroke-width: 10;
+    -fx-fill: transparent;
+}
+
+.spi-circle {
+    -fx-stroke: -spi-circle;
+    -fx-stroke-width: 10;
+    -fx-fill: transparent;
+}
+
+.cpi-circle {
+    -fx-stroke: -cpi-circle;
+    -fx-stroke-width: 10;
+    -fx-fill: transparent;
+}
+
+/* Status Labels */
+#workItemTitleStatus {
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+/* Edit Button */
+#wItemEditBtn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+#wItemEditBtn:hover {
+    -fx-background-color: -surface-2;
+    -fx-background-radius: 6;
+}
+
+/* Separator */
+.separator {
+    -fx-background-color: -border;
+}
+
+/* Table Views in work item details */
+#viewSkillTable, #taskTable {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#viewSkillTable .table-cell,
+#taskTable .table-cell {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: -text;
+    -fx-font-size: 13;
+}
+
+#viewSkillTable .column-header,
+#taskTable .column-header {
+    -fx-background-color: -surface-2;
+}
+
+/* Back Button */
+#backToProjectDetails {
+    -fx-background-color: -primary-2;
+    -fx-text-fill: -text;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+#backToProjectDetails:hover {
+    -fx-background-color: -primary;
 }

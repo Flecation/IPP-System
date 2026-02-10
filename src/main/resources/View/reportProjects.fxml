@@ -7,10 +7,9 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox fx:id="reportCardBox" alignment="CENTER_LEFT" maxHeight="90.0" maxWidth="250.0" minHeight="90.0" minWidth="250.0" spacing="20.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.reportProjectController">
    <children>
-      <Rectangle fx:id="statusColor" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="50.0" stroke="BLACK" strokeType="INSIDE" width="10.0" />
+      <Rectangle fx:id="statusColor" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="50.0" stroke="TRANSPARENT" strokeType="INSIDE" width="10.0" />
       <VBox alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" prefHeight="83.0" styleClass="projects-cards">
          <children>
             <Label fx:id="projectName" styleClass="sub-title" text="Sunrise Building">

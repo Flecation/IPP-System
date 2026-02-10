@@ -190,20 +190,26 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                        <children>
-                                          <Circle fill="BLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                          <Circle fill="#22c55e" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                           <Label styleClass="info-text" text="Finished" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                        <children>
-                                          <Circle fill="#ff341f" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                          <Circle fill="#2563eb" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                           <Label styleClass="info-text" text="In Progress" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                        <children>
-                                          <Circle fill="#f8ff1f" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                          <Circle fill="#8b5cf6" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                           <Label styleClass="info-text" text="Delay" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
+                                       <children>
+                                          <Circle fill="#f59e0b" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                          <Label styleClass="info-text" text="Planning" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -238,7 +244,7 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                        <children>
-                                          <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#06bf00" strokeWidth="7.0" />
+                                          <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#22c55e" strokeWidth="7.0" />
                                           <Label styleClass="info-text" text="On Time " />
                                        </children>
                                        <padding>
@@ -247,7 +253,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="126.0" spacing="10.0">
                                        <children>
-                                          <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#db361a" strokeWidth="7.0" />
+                                          <Line endX="-100.0" endY="15.0" startX="-100.0" stroke="#8b5cf6" strokeWidth="7.0" />
                                           <Label styleClass="info-text" text="Delay" />
                                        </children>
                                        <padding>

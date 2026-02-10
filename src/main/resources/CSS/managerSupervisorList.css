@@ -6,7 +6,36 @@
     -paragraph-font-size: 15;
 
 }
+/* NRC input styling */
+.nrc-input {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
 
+.nrc-input:focused {
+    -fx-border-color: #E18600;
+    -fx-border-width: 2;
+}
+
+.nrc-input:error {
+    -fx-border-color: #ff4444;
+    -fx-border-width: 2;
+}
+
+/* Make NRC parts look like a single cohesive field */
+.nrc-container {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-spacing: 0;
+}
 
 /* View Supervisor */
 .createBtn{

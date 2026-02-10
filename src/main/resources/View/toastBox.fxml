@@ -6,33 +6,21 @@
 <?import javafx.scene.layout.VBox?>
 
 <!-- Root is HBox (no StackPane wrapper) -->
-<HBox fx:id="toastBox" id="toastBox"
-      visible="false" managed="false"
-      alignment="CENTER_LEFT"
-      prefHeight="60.0"
-      minHeight="60.0"
-      maxHeight="60.0"
-      prefWidth="420.0"
-      minWidth="320.0"
-      maxWidth="420.0"
-      spacing="12.0"
-      stylesheets="@../CSS/messageBox.css"
-      xmlns="http://javafx.com/javafx/24.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="IPPSystem.Controllers.toastBoxController">
+
+<HBox id="toastBox" fx:id="toastBox" alignment="CENTER_LEFT" managed="false" maxHeight="60.0" maxWidth="420.0" minHeight="60.0" minWidth="320.0" prefHeight="60.0" prefWidth="420.0" spacing="12.0" stylesheets="@../CSS/messageBox.css" visible="false" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.toastBoxController">
 
 
     <children>
         <StackPane minHeight="36.0" minWidth="36.0">
             <children>
-                <Label fx:id="toastIcon" text="✓"/>
+                <Label fx:id="toastIcon" text="✓" />
             </children>
         </StackPane>
 
         <VBox spacing="2.0" HBox.hgrow="ALWAYS">
             <children>
-                <Label fx:id="toastTitle" text="Success"/>
-                <Label fx:id="toastMessage" styleClass="textDetail" text="Operation completed successfully"/>
+                <Label fx:id="toastTitle" text="Success" />
+                <Label fx:id="toastMessage" styleClass="textDetail" text="Operation completed successfully" wrapText="true" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
     </children>

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="720.0" style="-fx-border-radius: 18; -fx-background-radius: 18; -fx-background-color: white;" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.createSupervisorController">
+<VBox prefHeight="750.0" prefWidth="800.0" style="-fx-border-radius: 18; -fx-background-radius: 18; -fx-background-color: white;" stylesheets="@../CSS/managerSupervisorList.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.createSupervisorController">
    <children>
       <HBox alignment="CENTER_LEFT">
          <VBox.margin>
@@ -28,9 +28,9 @@
             </Label>
          </children>
       </HBox>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <VBox alignment="TOP_CENTER">
+            <VBox alignment="TOP_CENTER" spacing="10.0">
                <children>
                   <StackPane styleClass="imgBox" translateY="-15.0">
                      <children>
@@ -48,33 +48,82 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="TOP_LEFT" spacing="15.0" HBox.hgrow="ALWAYS">
                <children>
-                  <TextField fx:id="userName" maxHeight="45.0" minHeight="45.0" promptText="Name" styleClass="input-field" VBox.vgrow="NEVER" />
+                  <!-- Name Field with Label -->
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Full Name *" />
+                        <TextField fx:id="userName" maxHeight="45.0" minHeight="45.0" promptText="Enter full name" styleClass="input-field" VBox.vgrow="NEVER" />
+                     </children>
+                  </VBox>
+
+                  <!-- Email and Date of Birth Row -->
                   <HBox alignment="CENTER_LEFT" spacing="20.0" VBox.vgrow="NEVER">
                      <children>
-                        <TextField fx:id="Email" maxHeight="45.0" minHeight="45.0" minWidth="240.0" promptText="Email" styleClass="input-field" HBox.hgrow="ALWAYS" />
-                        <DatePicker fx:id="DOBPicker" maxHeight="45.0" maxWidth="200.0" minHeight="45.0" promptText="DD/MM/YY" styleClass="input-field" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Email Address *" />
+                              <TextField fx:id="Email" maxHeight="45.0" minHeight="45.0" minWidth="240.0" promptText="example@domain.com" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Date of Birth *" />
+                              <DatePicker fx:id="DOBPicker" maxHeight="45.0" maxWidth="200.0" minHeight="45.0" promptText="DD/MM/YYYY" styleClass="input-field" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
+
+                  <!-- Role and Phone Row -->
                   <HBox alignment="CENTER_LEFT" spacing="20.0">
                      <children>
-                        <ComboBox fx:id="RoleCombo" maxHeight="45.0" maxWidth="200.0" minHeight="45.0" promptText="Role" styleClass="input-field" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="PhoneNO" maxHeight="45.0" minHeight="45.0" minWidth="240.0" promptText="Phone" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Role *" />
+                              <ComboBox fx:id="RoleCombo" maxHeight="45.0" maxWidth="200.0" minHeight="45.0" promptText="Select role" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Phone Number *" />
+                              <TextField fx:id="PhoneNO" maxHeight="45.0" minHeight="45.0" minWidth="240.0" promptText="09XXXXXXXXX" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
-                  <TextField fx:id="Password" maxHeight="45.0" minHeight="45.0" promptText="Password" styleClass="input-field" />
-                  <TextArea fx:id="Address" minHeight="100.0" promptText="Address" styleClass="input-field" wrapText="true" VBox.vgrow="NEVER">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </TextArea>
+
+                  <!-- Password Field with Label -->
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Password *" />
+                        <TextField fx:id="Password" maxHeight="45.0" minHeight="45.0" promptText="Enter password" styleClass="input-field" />
+                     </children>
+                  </VBox>
+
+                  <!-- Address Field with Label -->
+                  <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-text-fill: #333333; -fx-font-size: 14px;" text="Address" />
+                        <TextArea fx:id="Address" minHeight="100.0" promptText="Enter full address" styleClass="input-field" wrapText="true" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+
+                  <!-- Buttons Row -->
                   <HBox alignment="CENTER_RIGHT">
                      <children>
-                        <Button fx:id="Cancelbtn" mnemonicParsing="false" onAction="#ClickCancel" prefHeight="34.0" prefWidth="125.0" styleClass="input-field" text="Cancel" />
+                        <Button fx:id="Cancelbtn" mnemonicParsing="false" onAction="#ClickCancel" prefHeight="40.0" prefWidth="130.0" styleClass="input-field" text="Cancel" />
                         <Region minWidth="10.0" />
-                        <Button fx:id="Createbtn" mnemonicParsing="false" onAction="#ClickCreate" prefHeight="47.0" prefWidth="123.0" styleClass="account-create-btn" text="Create" />
+                        <Button fx:id="Createbtn" mnemonicParsing="false" onAction="#ClickCreate" prefHeight="47.0" prefWidth="130.0" styleClass="account-create-btn" text="Create" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </HBox>
                </children>
                <padding>
@@ -88,6 +137,6 @@
       </HBox>
    </children>
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
 </VBox>

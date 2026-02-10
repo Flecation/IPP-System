@@ -15,7 +15,6 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="CENTER" prefHeight="675.0" prefWidth="1220.0" spacing="10.0" styleClass="root" stylesheets="@../CSS/workItemDetails.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.workItemDetailsController">
 
           <padding>
@@ -55,7 +54,7 @@
                   <children>
 
                       <!-- Actual Cost -->
-                <VBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                <VBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" styleClass="cardPane" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="info-text" text="Actual Cost" textFill="#6b7a99">
                             <font>
@@ -93,7 +92,7 @@
                 </VBox>
 
                       <!-- Earned Value -->
-                <VBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                <VBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" styleClass="cardPane" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="info-text" text="Earned Value" textFill="#6b7a99">
                             <font>
@@ -131,7 +130,7 @@
                 </VBox>
 
                       <!-- SPI -->
-                <HBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER" prefHeight="135.0" prefWidth="280.0" style="-fx-background-color: white; -fx-background-radius: 12;" styleClass="cardPane" HBox.hgrow="ALWAYS">
                     <children>
                         <VBox alignment="CENTER" prefHeight="100.0" prefWidth="115.0" HBox.hgrow="ALWAYS">
                             <children>
@@ -219,7 +218,7 @@
                           <children>
                   <HBox alignment="CENTER_LEFT" styleClass="boxTitle">
                      <children>
-                              <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" text="Work Item Info" />
+                              <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" styleClass="box-title-header" text="Work Item Info" />
                         <Region HBox.hgrow="ALWAYS" />
                         <Button fx:id="wItemEditBtn" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: none;" />
                      </children>
@@ -236,7 +235,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Budget:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Budget:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewBudget" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -244,7 +243,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Planned Start:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Planned Start:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewPlanStartDate" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -252,7 +251,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Actual Start:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Actual Start:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewActualStartDate" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -260,7 +259,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Duration:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Duration:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewDuration" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -276,7 +275,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Total Labors:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Total Labors:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewTotalLabors" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -284,7 +283,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Planned End:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Planned End:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewPlanEndDate" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -292,7 +291,7 @@
 
                                           <HBox alignment="CENTER_LEFT" spacing="8.0">
                                         <children>
-                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" text="Actual End:" />
+                                            <Label minWidth="100.0" style="-fx-text-fill:#6b7a99; -fx-font-size:13px;" styleClass="info-text" text="Actual End:" />
                                             <Region maxWidth="20.0" HBox.hgrow="ALWAYS" />
                                             <Label fx:id="viewActualEndDate" style="-fx-font-weight:bold; -fx-font-size:13px;" text="-" />
                                         </children>
@@ -348,7 +347,7 @@
                   <children>
             <HBox alignment="CENTER_LEFT" styleClass="boxTitle">
                <children>
-                      <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" text="Task Details" />
+                      <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2a44;" styleClass="boxTitleHeader" text="Task Details" />
                </children>
                <VBox.margin>
                   <Insets />

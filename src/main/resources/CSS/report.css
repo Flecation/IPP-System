@@ -1,0 +1,378 @@
+@import url("main.css");
+
+/* =========================
+   ALL REPORTS PAGE ROOT
+   ========================= */
+.root {
+    -fx-background-color: -bg;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+/* =========================
+   LEFT PANEL (Projects List)
+   ========================= */
+.leftRoot {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 1px 0 0;
+    -fx-effect: dropshadow(gaussian, -shadow, 10, 0.1, 2, 0);
+}
+
+.leftTitle {
+    -fx-background-color: -surface-2;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+/* Filter ComboBox */
+.filter-box {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 12px;
+    -fx-text-fill: -text;
+}
+
+.filter-box:hover {
+    -fx-border-color: -primary;
+}
+
+.filter-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-box .arrow {
+    -fx-background-color: -text-muted;
+}
+
+.filter-box .list-cell {
+    -fx-background-color: -surface;
+    -fx-text-fill: -text;
+    -fx-padding: 8px 12px;
+}
+
+.filter-box .list-view {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, -shadow, 10, 0.2, 0, 2);
+}
+
+.filter-box .list-cell:hover {
+    -fx-background-color: -surface-2;
+}
+
+.filter-box .list-cell:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: -bg;
+}
+
+/* Project Cards */
+.projects-cards {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 15px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, -shadow, 5, 0.05, 1, 1);
+}
+
+.projects-cards:hover {
+    -fx-background-color: -surface-2;
+    -fx-border-color: -primary;
+    -fx-effect: dropshadow(gaussian, -shadow, 10, 0.1, 2, 2);
+}
+
+.projects-cards:selected {
+    -fx-background-color: rgba(245, 158, 11, 0.15);
+    -fx-border-color: -primary;
+    -fx-border-width: 2px;
+}
+
+.project-name {
+    -fx-text-fill: -text;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Project Status Labels */
+.status-default {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+    -fx-background-color: -surface-2;
+}
+
+.status-planning {
+    -fx-text-fill: #f59e0b;
+    -fx-background-color: rgba(245, 158, 11, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+.status-in-progress {
+    -fx-text-fill: #38bdf8;
+    -fx-background-color: rgba(56, 189, 248, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+.status-delayed {
+    -fx-text-fill: #7c3aed;
+    -fx-background-color: rgba(124, 58, 237, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+.status-finished {
+    -fx-text-fill: #22c55e;
+    -fx-background-color: rgba(34, 197, 94, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+.status-cancelled {
+    -fx-text-fill: #ef4444;
+    -fx-background-color: rgba(239, 68, 68, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+.status-risk {
+    -fx-text-fill: #f97316;
+    -fx-background-color: rgba(249, 115, 22, 0.1);
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 999px;
+}
+
+/* =========================
+   RIGHT PANEL (Daily Reports)
+   ========================= */
+.rightRoot {
+    -fx-background-color: transparent;
+}
+
+.rightTilte {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 15px;
+}
+
+.header-text {
+    -fx-text-fill: -text;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.info-text {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 12px;
+}
+
+/* Create New Report Button */
+.create-btn {
+    -fx-background-color: -primary;
+    -fx-text-fill: -bg;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, -shadow, 5, 0.1, 1, 1);
+}
+
+.create-btn:hover {
+    -fx-background-color: -primary-2;
+    -fx-effect: dropshadow(gaussian, -shadow, 10, 0.2, 2, 2);
+}
+
+.create-btn:pressed {
+    -fx-background-color: #d97706;
+    -fx-effect: dropshadow(gaussian, -shadow, 3, 0.05, 0, 0);
+}
+
+/* Date Picker */
+.date-picker {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 12px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: -surface-2;
+    -fx-border-radius: 0 8px 8px 0;
+}
+
+.date-picker .arrow {
+    -fx-background-color: -text-muted;
+}
+
+.date-picker:hover {
+    -fx-border-color: -primary;
+}
+
+.date-picker:focused {
+    -fx-border-color: -primary;
+    -fx-border-width: 2px;
+}
+
+/* Calendar popup */
+.date-picker-popup {
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, -shadow, 15, 0.2, 0, 3);
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: -surface-2;
+}
+
+.date-picker-popup .spinner {
+    -fx-background-color: transparent;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text;
+    -fx-border-color: transparent;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -surface-2;
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: -primary;
+    -fx-text-fill: -bg;
+}
+
+.date-picker-popup .day-cell:today {
+    -fx-border-color: -primary;
+    -fx-border-width: 1px;
+}
+
+/* =========================
+   REPORT CARDS CONTAINER
+   ========================= */
+#reportCardContainer {
+    -fx-background-color: transparent;
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical,
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .track,
+.scroll-pane .scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb,
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: -surface-2;
+    -fx-background-radius: 5px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover,
+.scroll-pane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: -primary;
+}
+
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane .scroll-bar .increment-arrow,
+.scroll-pane .scroll-bar .decrement-arrow {
+    -fx-background-color: -text-muted;
+}
+
+/* =========================
+   EMPTY STATE (when no reports)
+   ========================= */
+.empty-state {
+    -fx-background-color: transparent;
+    -fx-padding: 40px;
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+.empty-state-icon {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 48px;
+}
+
+.empty-state-text {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 14px;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 300px;
+}
+
+/* =========================
+   RESPONSIVE ADJUSTMENTS
+   ========================= */
+@media (max-width: 1200px) {
+    .leftRoot {
+        -fx-pref-width: 240px;
+        -fx-min-width: 240px;
+    }
+
+    .rightRoot {
+        -fx-pref-width: 560px;
+    }
+}
+
+/* =========================
+   ANIMATIONS (Optional)
+   ========================= */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+.projects-cards {
+    -fx-opacity: 0;
+    -fx-animation: fadeIn 0.3s ease-out forwards;
+}
+
+.projects-cards:nth-child(1) { -fx-animation-delay: 0.1s; }
+.projects-cards:nth-child(2) { -fx-animation-delay: 0.2s; }
+.projects-cards:nth-child(3) { -fx-animation-delay: 0.3s; }
+.projects-cards:nth-child(4) { -fx-animation-delay: 0.4s; }
