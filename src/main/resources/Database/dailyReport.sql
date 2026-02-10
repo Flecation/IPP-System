@@ -1,6 +1,7 @@
+DROP PROCEDURE IF EXISTS createDailyReport;
+
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS createDailyReport $$
 CREATE PROCEDURE createDailyReport(
     IN  p_assignProjectId INT,
     IN  p_assignWorkItemId INT,
@@ -12,16 +13,38 @@ CREATE PROCEDURE createDailyReport(
     OUT o_dailyReportId INT
 )
 BEGIN
-    INSERT INTO dailyReports (
-        assignProjectId, assignWorkItemId, reportDate,
-        supervisorId, weather, generalRemark, issue
-    ) VALUES (
-        p_assignProjectId, p_assignWorkItemId, p_reportDate,
-        p_supervisorId, p_weather, p_generalRemark, p_issue
-    );
+    DECLARE v_id INT;
 
-    SET o_dailyReportId = LAST_INSERT_ID();
-END $$
+    -- check existing
+    SELECT dailyReportId INTO v_id
+    FROM dailyReports
+    WHERE assignProjectId = p_assignProjectId
+      AND assignWorkItemId = p_assignWorkItemId
+      AND reportDate = p_reportDate
+    LIMIT 1;
+
+    IF v_id IS NOT NULL THEN
+        -- update existing row (optional)
+        UPDATE dailyReports
+        SET supervisorId = p_supervisorId,
+            weather = p_weather,
+            generalRemark = p_generalRemark,
+            issue = p_issue
+        WHERE dailyReportId = v_id;
+
+        SET o_dailyReportId = v_id;
+    ELSE
+        INSERT INTO dailyReports (
+            assignProjectId, assignWorkItemId, reportDate,
+            supervisorId, weather, generalRemark, issue
+        ) VALUES (
+            p_assignProjectId, p_assignWorkItemId, p_reportDate,
+            p_supervisorId, p_weather, p_generalRemark, p_issue
+        );
+
+        SET o_dailyReportId = LAST_INSERT_ID();
+    END IF;
+END$$
 
 DELIMITER ;
 
