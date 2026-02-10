@@ -156,7 +156,7 @@
                               <VBox alignment="CENTER_LEFT" minWidth="118.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label fx:id="roleViewText" text="Manager" wrapText="true" VBox.vgrow="ALWAYS" />
-                                    <Label fx:id="nameViewText" text="Mg Aung Zaw Myo" wrapText="true" VBox.vgrow="ALWAYS" />
+                                    <Label fx:id="nameViewText" styleClass="info-text" text="Mg Aung Zaw Myo" wrapText="true" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </children>

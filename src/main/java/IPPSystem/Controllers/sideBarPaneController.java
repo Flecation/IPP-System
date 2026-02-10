@@ -695,6 +695,7 @@ public class sideBarPaneController extends navigationPaneController{
         setupAddOverlayOutsideClick();      // call once here
 
         setupLogoutHandlers();
+        nameViewText.setText(user.getUserName());
     }
 
     private void playReloadSpin(Node node) {
