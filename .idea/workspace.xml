@@ -6,15 +6,54 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="changes">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026,_12_00_PM_[Changes]/HelloController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026,_12_00_PM_[Changes]/databaseConnection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026,_12_00_PM_[Changes]/dotenv.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026,_12_00_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026,_12_00_PM_[Changes]/titleBar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_04_02_2026__12_00_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_3_2026_3_51_PM_[Changes]/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_3_2026_3_51_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_3_2026_3_51_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_3_2026_6_24_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_3_2026_6_24_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_2_13_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_2_13_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_00_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_00_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_01_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_01_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_36_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_2026_3_36_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_26,_10_11 AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_4_26__10_11AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_3_2026_6_28_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_3_2026_6_28_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_3_26,_3_37 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_3_26__3_37PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_4_26,_10_14 AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2_4_26__10_14AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026,_12_10_PM_[Changes]1/HelloController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026,_12_10_PM_[Changes]1/databaseConnection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026,_12_10_PM_[Changes]1/dotenv.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026,_12_10_PM_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026,_12_10_PM_[Changes]1/titleBar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_04_02_2026__12_10_PM__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_3_2026_3_41_PM_[Changes]/Launcher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_3_2026_3_41_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_3_2026_3_41_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_3_26,_3_38 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_3_26__3_38PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_2026_2_13_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_2026_2_13_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_2026_3_36_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_2026_3_36_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_26,_10_12 AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2_4_26__10_12AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/CSS/report.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/CSS/report.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/allProjectDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/createDailyReport.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/currentProjectDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/engineerView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/engineerView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/laborView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CSS/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CSS/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.zip" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/CreateReportNew.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/CreateReportNew.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/View/mgSEPersonalDetail.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,13 +195,6 @@
       </method>
     </configuration>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8aa0c896-6f5c-4b8c-a953-98d227d66e59" name="Changes" comment="" />
@@ -170,30 +202,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765548299980</updated>
-    </task>
-    <task id="LOCAL-00014" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765895069922</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1765895069922</updated>
-    </task>
-    <task id="LOCAL-00015" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765895353615</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1765895353615</updated>
-    </task>
-    <task id="LOCAL-00016" summary="creation of the basic frame">
-      <option name="closed" value="true" />
-      <created>1765895503520</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1765895503520</updated>
     </task>
     <task id="LOCAL-00017" summary="creation of the basic frame">
       <option name="closed" value="true" />
@@ -563,7 +571,31 @@
       <option name="project" value="LOCAL" />
       <updated>1770688602997</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770690239560</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1770690239561</updated>
+    </task>
+    <task id="LOCAL-00064" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770693217572</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1770693217572</updated>
+    </task>
+    <task id="LOCAL-00065" summary="changes">
+      <option name="closed" value="true" />
+      <created>1770693962071</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1770693962071</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -611,6 +643,14 @@
           <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/CreateReportNewController.java</url>
           <line>552</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/IPPSystem/Controllers/reportCardController.java</url>
+          <line>130</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$USER_HOME$/Document/ippsystem/src/main/java/IPPSystem/DAO/projectDatabase.java</url>

@@ -115,12 +115,12 @@
                                 </HBox>
                             </children>
                         </VBox>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="250.0" minHeight="250.0" minWidth="300.0" style="-fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="250.0" maxWidth="400.0" minHeight="250.0" minWidth="300.0" prefHeight="250.0" prefWidth="461.0" style="-fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </padding>
                             <content>
-                                <VBox fx:id="otherEngineersPane" alignment="TOP_CENTER" fillWidth="false" prefHeight="243.0" spacing="10.0" />
+                                <VBox fx:id="otherEngineersPane" alignment="TOP_CENTER" fillWidth="false" maxWidth="644.0" minWidth="300.0" prefHeight="230.0" prefWidth="444.0" spacing="10.0" />
                             </content>
                         </ScrollPane>
                     </children>

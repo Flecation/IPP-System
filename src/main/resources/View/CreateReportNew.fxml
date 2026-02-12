@@ -16,16 +16,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="mainScrollPane"
-            fitToWidth="true"
-            fitToHeight="true"
-            xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="@../CSS/createrReport.css"
-            fx:controller="IPPSystem.Controllers.CreateReportNewController">
+<ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" stylesheets="@../CSS/createrReport.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IPPSystem.Controllers.CreateReportNewController">
 
     <content>
-        <VBox spacing="15" fillWidth="true" style="-fx-background-color: transparent;">
+        <VBox fillWidth="true" spacing="15" style="-fx-background-color: transparent;">
         <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
@@ -251,6 +245,9 @@
                                 <TableColumn fx:id="remarkCol" prefWidth="100.89511108398438" text="Remark" />
                                 <TableColumn fx:id="actionCol" prefWidth="98.16546630859375" text="Action" />
                             </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                         </TableView>
                     </children>
                     <VBox.margin>
@@ -352,11 +349,11 @@
                                                     </font>
                                                 </Label>
                                                 <VBox spacing="8">
-                                                    <VBox fx:id="progressContainer" spacing="6"/>
+                                                    <VBox fx:id="progressContainer" spacing="6" />
 
                                                     <!-- Add button lives under the container so it goes down naturally -->
                                                     <HBox alignment="CENTER_LEFT">
-                                                        <Button fx:id="addProgressBtn" text="Add Progress" onAction="#handleAddProgress"/>
+                                                        <Button fx:id="addProgressBtn" onAction="#handleAddProgress" text="Add Progress" />
                                                     </HBox>
                                                 </VBox>
 
